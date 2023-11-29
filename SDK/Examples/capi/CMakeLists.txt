@@ -1,0 +1,3 @@
+project(examples C)
+
+
