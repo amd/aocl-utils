@@ -26,15 +26,20 @@
 
 # au_add_application(<name> PACKAGE <package>
 #   SOURCES source...
-#   [COMPONENTS component...]
+#   HEADERS headers...
+#   [LIBS component...]
 # )
 #
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 function(au_add_application NAME)
   set(fPrefix APP)
   set(fOptions )
-  set(fOneArg PACKAGE)
-  set(fMultiArgs "INCLUDES;SOURCES;COMPONENTS")
+  set(fOneArg )
+  set(fMultiArgs "INCLUDES;SOURCES;HEADERS;LIBS")
 
   cmake_parse_arguments(
     ${fPrefix}
@@ -49,11 +54,12 @@ function(au_add_application NAME)
   add_executable(${NAME} ${APP_SOURCES})
   add_executable(${APP_PACKAGE}::${NAME} ALIAS ${NAME})
 
-  if(DEFINED APP_COMPONENTS)
+  if(DEFINED APP_LIBS)
     target_link_libraries(${NAME}
       PRIVATE
-        ${APP_COMPONENTS}
-        ${AU_MODULE}::base
+        ${APP_LIBS}
+        au::core
     )
   endif()
+
 endfunction(au_add_application)

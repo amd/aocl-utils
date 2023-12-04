@@ -36,3 +36,59 @@ Note: To build with tests enabled use
 To run the unit tests, use the following command:
 ``` ctest ```
 
+
+
+
+
+
+
+
+ find_package(aocl_utils)
+ # au_core
+ # au_cpuid
+ # au_memory
+ # au_alloc
+ add_executable(hello hello.cc)
+ target_link_libraries(hello
+  au_cpuid
+  au_core)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
