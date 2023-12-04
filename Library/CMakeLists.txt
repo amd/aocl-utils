@@ -88,7 +88,7 @@ set(CORE_SRC_FILES
   #${AVX2_FILES}
 )
 
-au_cc_library(base
+au_cc_library(core
  PUBLIC
  SOURCES ${CORE_SRC_FILES}
  HEADERS 

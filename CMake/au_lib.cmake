@@ -136,8 +136,14 @@ function(au_cc_library NAME)
       #target_link_libraries(${__target_name} INTERFACE ${cclib_DEPENDS})
     endif()
 
-    add_library(
-      au::${AU_MODULE} ALIAS ${__target_name})
+
+    install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+            RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+            LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+            ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+    )
+
+    add_library(au::${AU_MODULE} ALIAS ${__target_name})
 
 endfunction(au_cc_library)
 
