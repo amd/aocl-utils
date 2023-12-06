@@ -31,8 +31,6 @@
 #include "Au/Defs.hh"
 
 #include "Au/Au.hh"
-#include "Au/Assert.hh"
-#include "Au/Misc.hh" /* for enum->int */
 #include "Au/Types.hh"
 
 #include <cstdint>
@@ -118,13 +116,7 @@ class CacheInfo
      * @param[in] type  Cache type.
      *
      */
-    CacheInfo(CacheLevel level, CacheType type)
-        : m_level{ level }
-        , m_type{ type }
-    {
-        AUD_ASSERT(*level > 0, "Level should be > 0");
-        AUD_ASSERT(*type > 0, "Type should be > 0");
-    }
+    CacheInfo(CacheLevel level, CacheType type);
 
     /**
      * @brief   Get Cache size (Kb) based on Cache Level and Cache Type.
@@ -180,32 +172,41 @@ class CacheInfo
         return a.m_level == b.m_level && a.m_type == b.m_type;
     }
 
-    void setLevel(CacheLevel lvl) { m_level = lvl; }
-    void setType(CacheType ct) { m_type = ct; }
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setLevel(CacheLevel lvl);
 
-    void setSize(Uint64 size)
-    {
-        AUD_ASSERT(size == 0, "Size is 0");
-        m_size = size;
-    }
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setType(CacheType ct);
 
-    void setWay(Uint64 way_size)
-    {
-        AUD_ASSERT(way_size == 0, "Way is 0");
-        m_way = way_size;
-    }
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setSize(Uint64 size);
 
-    void setLane(Uint64 lane_size)
-    {
-        AUD_ASSERT(lane_size == 0, "Lane is 0");
-        m_lane = lane_size;
-    }
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setWay(Uint64 way_size);
 
-    void setSets(Uint64 sets)
-    {
-        AUD_ASSERT(sets == 0, "Set is 0");
-        m_set = sets;
-    }
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setLane(Uint64 lane_size);
+
+    /**
+     * @brief
+     * FIXME: Documentation
+     */
+    void setSets(Uint64 sets);
 
   private:
     CacheLevel m_level;    /**< Identifies the cache level - L1/L2/L3. */

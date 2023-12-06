@@ -10,7 +10,7 @@
  *    and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holder nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
- * without specific prior written permission.
+ *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,34 +26,46 @@
  *
  */
 
-#include "Au/Cpuid/Cpuid.hh"
+#include "Au/Cpuid/CacheInfo.hh"
 #include "Au/Assert.hh"
+#include "Au/Misc.hh" /* for enum->int */
 
 namespace Au {
 
-CpuInfo::CpuInfo(CpuNumT idx)
-    : m_logical_core_num{ idx }
-    , m_physical_core_num{ idx }
+CacheInfo::CacheInfo(CacheLevel level, CacheType type)
+    : m_level{ level }
+    , m_type{ type }
 {
-#if !defined(AU_CPU_ARCH_X86)
-    AUD_ASSERT(false, "Not an x86 Cpu");
-#endif
+    AUD_ASSERT(*level > 0, "Level should be > 0");
+    AUD_ASSERT(*type > 0, "Type should be > 0");
 }
 
-std::ostream&
-operator<<(std::ostream& os, EGoverner const& gov)
+void
+CacheInfo::setSize(Uint64 size)
 {
-    using G = EGoverner;
+    AUD_ASSERT(size == 0, "Size is 0");
+    m_size = size;
+}
 
-    switch (gov) {
-        case G::Performance: os << "Performance"; break;
-        case G::Powersave: os << "Power Save"; break;
-        case G::Userspace: os << "User Defined"; break;
-        case G::Ondemand: os << "On Demand"; break;
-        default: os << "Unknown"; break;
-    }
+void
+CacheInfo::setWay(Uint64 way_size)
+{
+    AUD_ASSERT(way_size == 0, "Way is 0");
+    m_way = way_size;
+}
 
-    return os;
+void
+CacheInfo::setLane(Uint64 lane_size)
+{
+    AUD_ASSERT(lane_size == 0, "Lane is 0");
+    m_lane = lane_size;
+}
+
+void
+CacheInfo::setSets(Uint64 sets)
+{
+    AUD_ASSERT(sets == 0, "Set is 0");
+    m_set = sets;
 }
 
 } // namespace Au

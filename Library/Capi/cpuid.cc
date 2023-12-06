@@ -27,6 +27,7 @@
  */
 
 #include "Au/Cpuid/Cpuid.hh"
+#include "Au/Assert.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Defs.hh"
 

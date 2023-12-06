@@ -55,8 +55,8 @@ if(AU_VERSION_SUFFIX)
    set(AU_VERSION_STRING "${AU_VERSION_STRING}.${AU_VERSION_SUFFIX}${AU_VERSION_SUFFIX_EXTRA}")
 endif()
 
-set(PACKAGE           "libaf")
-set(PACKAGE_NAME      "af")
+set(PACKAGE           "libau")
+set(PACKAGE_NAME      "au")
 set(PACKAGE_STRING    "${PACKAGE_NAME} ${AU_VERSION_STRING}")
 set(PACKAGE_TARNAME   "${PACKAGE_NAME}-${AU_VERSION_STRING}")
 set(PACKAGE_BUGREPORT "aocl@amd.com")
@@ -106,7 +106,6 @@ endif()
 option(INSTALL_GTEST OFF)
 
 # Config.h generation
-set (AU_CONFIG_OUTPUT_FILE ${AU_CONFIG_DIR}/Au/Config.h)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
 include_directories("${AU_CONFIG_DIR}")
 

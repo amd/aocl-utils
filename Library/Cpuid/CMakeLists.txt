@@ -28,6 +28,7 @@
 set(AU_MODULE "cpuid")
 
 set(CPUID_SRC_FILES
+  CacheInfo.cc
   Cache.cc
   Cpuid.cc
   RawData.cc

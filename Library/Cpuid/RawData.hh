@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "Au/Assert.hh"
 #include "Au/Au.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 

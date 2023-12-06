@@ -32,15 +32,19 @@ endif()
 
 option(AU_CMAKE_VERBOSE "Set cmake verbosity" ON)
 
+# Figure out where to put the Config.h
+# Input for this is config.h.in in ${CMAKE_SOURCE_DIR}/Library
 if (NOT DEFINED AU_CONFIG_DIR)
   set(AU_CONFIG_DIR "${CMAKE_BINARY_DIR}/generated")
 endif()
+set (AU_CONFIG_OUTPUT_FILE ${AU_CONFIG_DIR}/Au/Config.h)
 
 if (NOT DEFINED AU_CXX_STANDARD)
   set(AU_CXX_STANDARD 20)
 endif()
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
+
 
 set(AU_INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
 set(AU_INSTALL_BIN_DIR   "${CMAKE_INSTALL_BINDIR}")

@@ -34,10 +34,24 @@ if(NOT "${AUROOT}/CMake/au_examples.cmake")
 endif()
 
 list(PREPEND CMAKE_MODULE_PATH 
-  "${AUROOT}/CMake" 
+  "${AUROOT}/lib/cmake" 
 )
+list(PREPEND CMAKE_PREFIX_PATH
+  "${AUROOT}" 
+)
+#set(CMAKE_MODULE_PATH
+#  "${AUROOT}/lib/cmake" 
+#   ${CMAKE_MODULE_PATH}
+#)
 
-include(au_examples)
+set(aocl-utils_DIR ${AUROOT}/lib/cmake)
+find_package(aocl-utils)
+get_property(importTargetsAfter DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTY IMPORTED_TARGETS)
+list(REMOVE_ITEM importTargetsAfter ${importTargets})
+
+message("${importTargetsAfter}")
+
+include(au_examples CONFIG)
 
 project(aocl_utils_examples LANGUAGES CXX)
 
@@ -45,6 +59,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${AUROOT}/Include
+    ${AUROOT}/include
     )
 
 link_directories(
@@ -55,13 +70,7 @@ link_directories(
 au_add_application(
 	cpuid_example
 	SOURCES cpuid_example.cc
-    LIBS au_cpuid
+    LIBS au::au_cpuid
 )
 
-au_add_application(
- malloc_example
- SOUCES malloc_init.cc malloc_example.cc
- HEADERS malloc_example.hh
- LIBS au_memory
- )
 

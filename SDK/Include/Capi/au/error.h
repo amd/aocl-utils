@@ -35,34 +35,35 @@
 AUD_EXTERN_C_BEGIN
 
 #define AUD_BAD_PTR_ERR_RET(ptr, err)                                          \
-  do {                                                                         \
-    if (nullptr == ptr) {                                                      \
-      return (au_error_t)eAf_Error_BadPointer;                                 \
-    }                                                                          \
-  } while (0)
+    do {                                                                       \
+        if (nullptr == ptr) {                                                  \
+            return (au_error_t)eError_BadPointer;                              \
+        }                                                                      \
+    } while (0)
 
 #define AUD_ZERO_LEN_ERR_RET(len, err)                                         \
-  do {                                                                         \
-    if (0 == len) {                                                            \
-      return (au_error_t)eAf_Error_InvalidArgument;                            \
-    }                                                                          \
-  } while (0)
+    do {                                                                       \
+        if (0 == len) {                                                        \
+            return (au_error_t)eError_InvalidArgument;                         \
+        }                                                                      \
+    } while (0)
 
-typedef enum __au_error_code {
-  eAf_Ok = 0,
-  eAf_Error_None = eAf_Ok,
+typedef enum __au_error_code
+{
+    eError_Ok   = 0,
+    eError_None = eError_Ok,
 
-  eAf_Error_Generic,
+    eError_Generic,
 
-  eAf_Error_NotSupported,
+    eError_NotSupported,
 
-  eAf_Error_InvalidArgument,
+    eError_InvalidArgument,
 
-  eAf_Error_BadPointer,
+    eError_BadPointer,
 
-  eAf_Error_NoMemory,
+    eError_NoMemory,
 
-  eAf_Error_InvalidSize,
+    eError_InvalidSize,
 } au_error_code_t;
 
 #if !defined(au_error_t)
@@ -71,18 +72,23 @@ typedef Uint64 au_error_t;
 
 #ifndef __cplusplus
 #ifndef bool
-typedef enum __au_bool { false = 0, true } bool;
+typedef enum __au_bool
+{
+    false = 0,
+    true
+} bool;
 #endif
 #endif
 
 /**
  * @brief  Checks if an value returned by an API is an error
  *
- * @param	err	an au_error_t
+ * @param[in]  err     an au_error_t
  *
  * @returns true if an error has occured, false otherwise
  */
-bool au_is_error(const au_error_t err);
+bool
+au_is_error(const au_error_t err);
 
 AUD_EXTERN_C_END
 

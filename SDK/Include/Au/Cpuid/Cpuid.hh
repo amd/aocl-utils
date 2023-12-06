@@ -28,8 +28,7 @@
 #pragma once
 
 #include "Au/Au.hh"
-#include "Au/Assert.hh"
-#include "Au/Interface/ICpu.hh"
+#include "Au/Interface/Cpuid/ICpu.hh"
 
 #include <iostream>
 
@@ -37,36 +36,13 @@ namespace Au {
 
 #define AU_CPUID_OVERRIDE "AU_CPUID_OVERRIDE"
 
-enum class EGoverner
-{
-    Performance,
-    Powersave,
-    Userspace,
-    Ondemand,
-};
-
 /**
- * @brief cout<< helper to pring EGoverner
- *
- * @param[in]    gov     EGoverner type
- * @param[out]   os      std::ostream type to which name of the governer is
- *                        written
- * @return ostream&
- */
-std::ostream&
-operator<<(std::ostream& os, EGoverner const& gov);
-
+ * @brief placeholder for ICpu, to return 'something'
+ * */
 class CpuInfo : public ICpu
 {
   public:
-    explicit CpuInfo(CpuNumT idx)
-        : m_logical_core_num{ idx }
-        , m_physical_core_num{ idx }
-    {
-#if !defined(AU_CPU_ARCH_X86)
-        AUD_ASSERT(false, "Not an x86 Cpu");
-#endif
-    }
+    explicit CpuInfo(CpuNumT idx);
 
     virtual ~CpuInfo() {}
 
@@ -79,46 +55,22 @@ class CpuInfo : public ICpu
 
   public:
     /* FIXME: All the virtual from ICpu */
-    virtual String getFreq() override
-    {
-        return "Unknown-Freq";
-    }
+    virtual String getFreq() const override { return "Unknown-Freq"; }
 
-    virtual String getName() override
-    {
-        return "Unknown-Name";
-    }
+    virtual String getName() const override { return "Unknown-Name"; }
 
-    virtual String getModel() override
-    {
-        return "Unknown-Model";
-    }
+    virtual String getModel() const override { return "Unknown-Model"; }
 
-    virtual CpuNumT getLogicalIdx() override
-    {
-        return 0;
-    }
+    virtual CpuNumT getLogicalIdx() const override { return 0; }
 
-    virtual CpuNumT getPhysicalIdx() override
-    {
-        return 0;
-    }
+    virtual CpuNumT getPhysicalIdx() const override { return 0; }
 
-    virtual Uint32 getNumCores() override
-    {
-        return 0;
-    }
+    virtual Uint32 getNumCores() const override { return 0; }
 
   protected:
-    void setLogicalIdx(CpuNumT physicalId)
-    {
-        m_physical_core_num = physicalId;
-    }
+    void setLogicalIdx(CpuNumT physicalId) { m_physical_core_num = physicalId; }
 
-    void setPhysicalIdx(CpuNumT logicalId)
-    {
-        m_logical_core_num = logicalId;
-    }
+    void setPhysicalIdx(CpuNumT logicalId) { m_logical_core_num = logicalId; }
 
   private:
     CpuNumT m_logical_core_num;

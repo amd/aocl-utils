@@ -42,16 +42,87 @@ enum class EGoverner
 std::ostream&
 operator<<(std::ostream& os, const EGoverner& gov);
 
-class ICpu
+#if defined(cpu_num_t)
+typedef cpu_num_t CpuNumT;
+#else
+typedef Uint32 CpuNumT;
+#endif
+
+/**
+ * Sample information that can be gathered
+ *
+ * Package Info:
+ *       Sockets : 02
+ *       Cores   : 10 (per socket)
+ *       Threads : 04 (per core)
+ *
+ * CPU Info:
+ *       Vendor      : AMD
+ *       Name        : Ryzen 7 PRO 2700U w/ Radeon Vega Mobile Gfx
+ *       Family      : 0x17 (Zen/Zen+)
+ *       Frequency   : 1.8 GHz
+ *       Governer    : Performance
+ *       Model       : 12   (Zen+)
+ *       Stepping    : 0
+ *         ID        : 0:2:3 (Socket:Core:Thread)
+ *
+ * Cache Info:
+ *       L1 Cache  (D)  :
+ *       L1 Cache  (I)  : 24 KB (2-way set-associative)
+ *       L2 Cache  (U)  : 01 MB (fully associative)
+ *       L3 Cache  (U)  : 32 MB (fully associative)
+ */
+
+class AUD_API_EXPORT ICpu
 {
+  protected:
+    virtual ~ICpu();
+
   public:
-    virtual String    getFreq()        = 0;
-    virtual EGoverner getGoverner()    = 0;
-    virtual String    getName()        = 0;
-    virtual String    getModel()       = 0;
-    virtual CpuNumT   getLogicalIdx()  = 0;
-    virtual CpuNumT   getPhysicalIdx() = 0;
-    virtual Uint32    getNumCores()    = 0;
+    /**
+     * @brief Interface to get frequency
+     *
+     * @return String containing frequency of processor
+     */
+    virtual String getFreq() const = 0;
+
+    /**
+     * @brief Interface to get Name of processor
+     *
+     * @return Full name of the processor
+     */
+    virtual String getName() const = 0;
+
+    /**
+     * @brief Interface to get Model of processor
+     *
+     * @return String containing frequency of processor
+     */
+    virtual String getModel() const = 0;
+
+    /**
+     * @brief Interface to get numerical index, as seen by the Operating system
+     *
+     * @return Numerical identifier of given processor
+     */
+    virtual CpuNumT getLogicalIdx() const = 0;
+
+    /**
+     * @brief Interface to get numerical index, as assigned by Firmware/BIOS
+     *
+     * @return Numerical identifier as assigned by BIOS
+     */
+    virtual CpuNumT getPhysicalIdx() const = 0;
+
+    /**
+     * @brief Interface to get number of cores in this processor.
+     *
+     * @return Integer specifying number of cores.
+     */
+    virtual Uint32 getNumCores() const = 0;
+
+
+    virtual EGoverner getGoverner() const = 0;
 };
 
 } // namespace Au

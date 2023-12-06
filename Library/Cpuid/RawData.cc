@@ -25,8 +25,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
 #include "RawData.hh"
+
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Misc.hh" /* for enum->int */
 
@@ -378,7 +378,7 @@ X86Cpu::Impl::isAMD() const
 
 /**
  * @brief Checks if processor is x86_64-v3 compliant
- * 
+ *
  * @details
  *       Based on GCC following flags account for x86_64-v2
  *          cx16       lahf_lm
