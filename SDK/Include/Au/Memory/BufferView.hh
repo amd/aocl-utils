@@ -52,7 +52,7 @@ class BufferView final : public BufferBase<T>
     explicit BufferView(pointerT mem_block, size_t c_size)
         : BufferBase<T>{ mem_block, c_size }
     {
-        AUD_ASSERT(BufferBase<T>::data() == nullptr, "Invalid Pointer");
+        AUD_ASSERT(BufferBase<T>::data() != nullptr, "Invalid Pointer");
         AUD_ASSERT(BufferBase<T>::size() >= 0, "Invalid size");
     }
 
@@ -70,11 +70,9 @@ class BufferView final : public BufferBase<T>
     T& operator[](size_t idx)
     {
         auto arr = reinterpret_cast<T*>(BufferBase<T>::data());
-        AUD_ASSERT(idx < BufferBase<T>::size(), "Invalid Size");
+        AUD_ASSERT(idx < BufferBase<T>::size(), "Index out of bound");
         return arr[idx];
     }
-
-    int getSizeBytes() const { return sizeof(T) * BufferBase<T>::size(); }
 
     // Disable all heap allocations
     void* operator new(std::size_t)   = delete;
