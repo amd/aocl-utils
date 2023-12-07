@@ -43,28 +43,28 @@ CacheInfo::CacheInfo(CacheLevel level, CacheType type)
 void
 CacheInfo::setSize(Uint64 size)
 {
-    AUD_ASSERT(size == 0, "Size is 0");
+    AUD_ASSERT(size != 0, "Size is 0");
     m_size = size;
 }
 
 void
 CacheInfo::setWay(Uint64 way_size)
 {
-    AUD_ASSERT(way_size == 0, "Way is 0");
+    AUD_ASSERT(way_size != 0, "Way is 0");
     m_way = way_size;
 }
 
 void
 CacheInfo::setLane(Uint64 lane_size)
 {
-    AUD_ASSERT(lane_size == 0, "Lane is 0");
+    AUD_ASSERT(lane_size != 0, "Lane is 0");
     m_lane = lane_size;
 }
 
 void
 CacheInfo::setSets(Uint64 sets)
 {
-    AUD_ASSERT(sets == 0, "Set is 0");
+    AUD_ASSERT(sets != 0, "Set is 0");
     m_set = sets;
 }
 
