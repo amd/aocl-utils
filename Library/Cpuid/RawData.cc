@@ -213,6 +213,28 @@ static const std::array<QueryT, *EFlag::MAX> cpuidMap = {{
 }};
 // clang-format on
 
+/**
+ * @brief       Extract specified bits from 32-bit value.
+ *
+ * Extracts length number of bits starting from bit position
+ * start in 32-bit value.
+ *
+ * @param[in]   value  32-bit value.
+ * @param[in]   start  Starting bit position.
+ * @param[in]   length Number of bits to be extracted.
+ *
+ * @return      integer Extracted value.
+ */
+
+Uint32
+extract32(Uint32 value, int start, int length)
+{
+    AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
+               "Invalid start/size");
+
+    return (value >> start) & (~0U >> (32 - length));
+}
+
 static void
 __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
 {
