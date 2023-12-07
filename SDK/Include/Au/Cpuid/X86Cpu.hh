@@ -255,7 +255,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      */
     void update();
 
-    virtual EGoverner getGoverner() const override;
+    virtual EGoverner getGoverner() const override {}
 
     CacheView getCacheView() const;
 

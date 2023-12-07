@@ -76,7 +76,7 @@ typedef Uint32 CpuNumT;
 class AUD_API_EXPORT ICpu
 {
   protected:
-    virtual ~ICpu();
+    virtual ~ICpu(){};
 
   public:
     /**
@@ -121,7 +121,11 @@ class AUD_API_EXPORT ICpu
      */
     virtual Uint32 getNumCores() const = 0;
 
-
+    /**
+     * @brief Interface to get Freqency scaling governer
+     *
+     * @return EGoverner type
+     */
     virtual EGoverner getGoverner() const = 0;
 };
 
