@@ -25,7 +25,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#include "RawData.hh"
+#include "X86RawData.hh"
 
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Misc.hh" /* for enum->int */

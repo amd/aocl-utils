@@ -31,7 +31,7 @@ set(CPUID_SRC_FILES
   CacheInfo.cc
   Cache.cc
   Cpuid.cc
-  RawData.cc
+  X86RawData.cc
   X86Cpu.cc
 )
 
@@ -42,8 +42,8 @@ au_cc_library(cpuid
     ${CPUID_SRC_FILES}
 
   HEADERS 
-  RawData.hh
-  #af::sdk::include:/Rawdata.hh
+  X86RawData.hh
+  #af::sdk::include:/X86Rawdata.hh
 
   USING
  )
