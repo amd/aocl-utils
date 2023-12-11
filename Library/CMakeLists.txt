@@ -72,13 +72,13 @@ set_source_files_properties(
 )
 
 set(CORE_SRC_FILES
-  Core/Buffer.cc
+  #Core/Buffer.cc
   Core/Status.cc
   Core/GenericError.cc
   Core/SourceLocation.cc
   Core/StatusOr.cc
   Core/Environ.cc
-  Core/DynamicLoader.cc
+  #Core/DynamicLoader.cc
   #${BASE64_SRC_FILES}
   #  ${LOGGER_SRC_FILES}
   #${MEMORY_SRC_FILES}
@@ -115,3 +115,4 @@ set(AU_SUBMODULE_DIRS
 foreach(__moddir ${AU_SUBMODULE_DIRS})
   add_subdirectory(${__moddir})
 endforeach()
+

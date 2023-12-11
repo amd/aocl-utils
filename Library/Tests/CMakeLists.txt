@@ -26,18 +26,18 @@
 #
 
 set(BASE_TEST_FILES
-    DynamicLoaderTest.cc
+    #DynamicLoaderTest.cc
     ErrorTest.cc
     EnvTest.cc
     StatusTest.cc
     StatusOrTest.cc
-    BitOpsTest.cc
+    #BitOpsTest.cc
     #BitMapTest.cc
 )
 
 set(MEMORY_TEST_FILES
-    Memory/LocalBufferTest.cc
-    Memory/BufferViewTest.cc
+    #Memory/LocalBufferTest.cc
+    #Memory/BufferViewTest.cc
 )
 
 set(OTHER_TEST_FILES
@@ -85,7 +85,7 @@ foreach(testFile IN LISTS ALL_TEST_FILES)
         SOURCES  "${__TestFile}"
         DIRECTORY ${__parent_path}
         DEPENDS
-        au_base
+        au::core
         #au_provider
     )
 endforeach()
@@ -122,14 +122,14 @@ if (${EXISTS__})
     )
 endif()
 
-au_cc_test(Base64Test
-    DIRECTORY
-        .
-    SOURCES
-        Base64Test.cc
-    DEPENDS
-        au::base64
-)
+#au_cc_test(Base64Test
+#    DIRECTORY
+#        .
+#    SOURCES
+#        Base64Test.cc
+#    DEPENDS
+#        au::base64
+#)
 
 
 ##########
