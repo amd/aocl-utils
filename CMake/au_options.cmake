@@ -32,6 +32,10 @@ option(AU_ENABLE_SLOW_TESTS "Option to Enable SLOW tests" OFF)
 option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
 option(AU_ENABLE_ASSERTIONS "Enable asserts in the code, Default enabled in Debug mode" OFF)
 
+# Define the processor type
+string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)
+cmake_dependent_option(AU_CPU_ARCH_X86 "" OFF "${upper_CMAKE_SYSTEM_PROCESSOR} MATCHES ^x86" ON)
+
 # Lets make the build
 string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_CMAKE_BUILD_TYPE)
 if (CMAKE_BUILD_TYPE AND

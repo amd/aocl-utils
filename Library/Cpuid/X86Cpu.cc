@@ -27,7 +27,7 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "RawData.hh"
+#include "X86RawData.hh"
 
 /* #include <array> */
 /* #include <type_traits> */

@@ -25,7 +25,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#include "RawData.hh"
+#include "X86RawData.hh"
 
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Misc.hh" /* for enum->int */
@@ -212,6 +212,28 @@ static const std::array<QueryT, *EFlag::MAX> cpuidMap = {{
     {{.eax=0xC0000001}, {.eax=0, .ebx=0, .ecx=0, .edx=0x00002000}, EFlag::pmm_en},
 }};
 // clang-format on
+
+/**
+ * @brief       Extract specified bits from 32-bit value.
+ *
+ * Extracts length number of bits starting from bit position
+ * start in 32-bit value.
+ *
+ * @param[in]   value  32-bit value.
+ * @param[in]   start  Starting bit position.
+ * @param[in]   length Number of bits to be extracted.
+ *
+ * @return      integer Extracted value.
+ */
+
+Uint32
+extract32(Uint32 value, int start, int length)
+{
+    AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
+               "Invalid start/size");
+
+    return (value >> start) & (~0U >> (32 - length));
+}
 
 static void
 __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
