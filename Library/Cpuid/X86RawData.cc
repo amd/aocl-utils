@@ -384,7 +384,7 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    update_cache_view(m_cache_view);
+    //update_cache_view(m_cache_view);
 }
 
 ResponseT

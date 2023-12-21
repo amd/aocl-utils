@@ -27,15 +27,39 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-
+#include "Capi/au/cpuid/cpuid.h"
 #include "gtest/gtest.h"
 
 namespace {
+using namespace Au;
+TEST(X86Cpuid, DISABLED_isAMD)
+{
+	X86Cpu c{0};
+	EXPECT_TRUE(c.isAMD() == true);
+	EXPECT_TRUE(au_cpuid_is_amd(0) == true);
+}
 
-TEST(Cpuid, "ZenTest") {}
+TEST(X86Cpuid, DISABLED_isX86_64v2) {
 
-TEST(Cpuid, "Zen2Test") {}
+	X86Cpu c{0};
+  EXPECT_TRUE(c.isX86_64v2() == true);
+}
 
-TEST(Cpuid, "Zen3Test") {}
+TEST(X86Cpuid, DISABLED_isX86_64v3) {
 
+	X86Cpu c{0};
+  EXPECT_TRUE(c.isX86_64v3() == true);
+}
+
+TEST(X86Cpuid, DISABLED_isX86_64v4) {
+
+	X86Cpu c{0};
+  EXPECT_TRUE(c.isX86_64v4() == true);
+}
+TEST(X86Cpuid, DISABLED_isIntel) {
+
+	X86Cpu c{0};
+  EXPECT_TRUE(c.isIntel() == true);
+}
+TEST(X86Cpuid, DISABLED_hasFlag) {}
 } // namespace

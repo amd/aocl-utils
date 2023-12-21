@@ -40,6 +40,11 @@ set(MEMORY_TEST_FILES
     #Memory/BufferViewTest.cc
 )
 
+set(CPUID_TEST_FILES
+    Cpuid/CpuidTest.cc
+    Cpuid/CpuidQemuTest.cc
+)
+
 set(OTHER_TEST_FILES
 )
 
@@ -131,7 +136,14 @@ endif()
 #        au::base64
 #)
 
-
+au_cc_test(CpuidTest
+  SOURCES
+  ${CPUID_TEST_FILES}
+  DEPENDS
+  au::cpuid
+  EXTLIBRARY
+  Python3
+)
 ##########
 # Dynamic Loader Tests
 ##########

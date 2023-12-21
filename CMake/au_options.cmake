@@ -36,6 +36,9 @@ option(AU_ENABLE_ASSERTIONS "Enable asserts in the code, Default enabled in Debu
 string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)
 cmake_dependent_option(AU_CPU_ARCH_X86 "" OFF "${upper_CMAKE_SYSTEM_PROCESSOR} MATCHES ^x86" ON)
 
+add_compile_definitions(PROJECT_BUILD_DIR="${CMAKE_BINARY_DIR}")
+add_compile_definitions(PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
 # Lets make the build
 string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_CMAKE_BUILD_TYPE)
 if (CMAKE_BUILD_TYPE AND
