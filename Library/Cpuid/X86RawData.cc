@@ -356,9 +356,13 @@ X86Cpu::Impl::update()
 
 
     for (auto& query : cpuidMap) {
+        std::map<RequestT, ResponseT> RawCpuid;
         auto& [req, expected, flg] = query;
-        ResponseT resp             = at(req);
-        updateflag(flg, __has_flag(expected, resp));
+        if (RawCpuid.find(req) == RawCpuid.end()) {
+            RawCpuid[req] = at(req);
+
+        }
+        updateflag(flg, __has_flag(expected, RawCpuid[req]));
     }
 
     /* manufacturer details */
@@ -400,7 +404,7 @@ X86Cpu::Impl::isAMD() const
 }
 
 /**
- * @brief Checks if processor is x86_64-v3 compliant
+ * @brief Checks if processor is x86_64-v2 compliant
  *
  * @details
  *       Based on GCC following flags account for x86_64-v2
@@ -438,8 +442,8 @@ bool
 X86Cpu::Impl::isX86_64v3() const
 {
     static const std::vector<EFlag> feature_arr{
-        EFlag::avx, EFlag::avx2, EFlag::bmi1,  EFlag::bmi2, EFlag::f16c,
-        EFlag::fma, EFlag::abm,  EFlag::movbe, EFlag::xsave
+        EFlag::avx, EFlag::avx2, EFlag::bmi1, EFlag::bmi2, EFlag::f16c,
+        EFlag::fma, EFlag::abm, EFlag::movbe, EFlag::xsave
     };
 
     return isX86_64v2() && isUsable(feature_arr);

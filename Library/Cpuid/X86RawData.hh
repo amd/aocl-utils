@@ -50,12 +50,11 @@ struct cpuid_regs
         return eax == o.eax && ebx == o.ebx && ecx == o.ecx && edx == o.edx;
     }
 
-#if 0
     bool const operator<(cpuid_regs const& o) const
     {
         return eax < o.eax || ebx < o.ebx || ecx < o.ecx || edx < o.edx;
     }
-#endif
+
     bool const operator&(cpuid_regs const& o) const
     {
         return eax & o.eax || ebx & o.ebx || ecx & o.ecx || edx & o.edx;
