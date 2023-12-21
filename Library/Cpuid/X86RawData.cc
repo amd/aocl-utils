@@ -238,10 +238,12 @@ extract32(Uint32 value, int start, int length)
 static void
 __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
 {
-    /* "AuthenticAMD" */
-    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
-        && regs.edx == 0x69746e65) {
+    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163 &&
+            regs.edx == 0x69746e65) {
         vinfo.m_mfg = EVendor::Amd;
+    } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e &&
+            regs.edx == 0x49656e69) {
+        vinfo.m_mfg = EVendor::Intel;
     } else {
         vinfo.m_mfg = EVendor::Other;
     }
@@ -352,7 +354,6 @@ X86Cpu::Impl::update()
 
     __update_vendor_info(vinfo, at(RequestT{ 0, 0, 0, 0 }));
 
-    AUD_ASSERT(vinfo.m_mfg == EVendor::Amd, "CPU is not AMD");
 
     for (auto& query : cpuidMap) {
         auto& [req, expected, flg] = query;
