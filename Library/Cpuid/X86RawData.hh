@@ -222,10 +222,18 @@ class X86Cpu::Impl
 static inline void
 __raw_cpuid(RequestT& req, ResponseT& resp)
 {
-    asm volatile(
-        "cpuid"
-        : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-        : "0"(req.eax), "1"(req.ebx), "2"(req.ecx), "3"(req.edx));
+    if (req.eax == 0x00000007) {
+        asm volatile(
+                "cpuid"
+                : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+                : "0"(req.eax), "2"(req.ecx));
+
+    } else {
+         asm volatile(
+                 "cpuid"
+                 : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+                 : "0"(req.eax));
+    }
 }
 
 static inline ResponseT
