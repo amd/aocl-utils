@@ -267,7 +267,7 @@ __update_mfg_info(ResponseT const& resp)
 static inline bool
 __has_flag(ResponseT const& expected, ResponseT const& actual)
 {
-    return expected == actual;
+    return expected & actual;
 }
 
 using CacheLevel = CacheInfo::CacheLevel;
