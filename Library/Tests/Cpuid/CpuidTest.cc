@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,6 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "Capi/au/cpuid/cpuid.h"
 #include "gtest/gtest.h"
 
 namespace {
@@ -36,7 +35,6 @@ TEST(X86Cpuid, DISABLED_isAMD)
 {
 	X86Cpu c{0};
 	EXPECT_TRUE(c.isAMD() == true);
-	EXPECT_TRUE(au_cpuid_is_amd(0) == true);
 }
 
 TEST(X86Cpuid, DISABLED_isX86_64v2) {

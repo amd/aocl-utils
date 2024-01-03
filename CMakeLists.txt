@@ -97,6 +97,8 @@ set(AU_TARGET_IS_LITTLE_ENDIAN TRUE)
 endif()
 
 include(au_options)
+add_compile_definitions(PROJECT_BUILD_DIR="${CMAKE_BINARY_DIR}")
+add_compile_definitions(PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 if(MSVC)
   include(au_compiler_msvc)
