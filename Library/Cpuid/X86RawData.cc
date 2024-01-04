@@ -238,11 +238,11 @@ extract32(Uint32 value, int start, int length)
 static void
 __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
 {
-    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163 &&
-            regs.edx == 0x69746e65) {
+    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
+        && regs.edx == 0x69746e65) {
         vinfo.m_mfg = EVendor::Amd;
-    } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e &&
-            regs.edx == 0x49656e69) {
+    } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e
+               && regs.edx == 0x49656e69) {
         vinfo.m_mfg = EVendor::Intel;
     } else {
         vinfo.m_mfg = EVendor::Other;
@@ -277,10 +277,18 @@ static CacheLevel
 InttoLevel(Uint32 lvl)
 {
     switch (lvl) {
-        case 1: return CacheLevel::L1; break;
-        case 2: return CacheLevel::L2; break;
-        case 3: return CacheLevel::L3; break;
-        default: AUD_ASSERT(true, "Invalid Cache Level"); break;
+        case 1:
+            return CacheLevel::L1;
+            break;
+        case 2:
+            return CacheLevel::L2;
+            break;
+        case 3:
+            return CacheLevel::L3;
+            break;
+        default:
+            AUD_ASSERT(true, "Invalid Cache Level");
+            break;
     }
 
     return CacheLevel::Unknown;
@@ -290,10 +298,18 @@ static CacheType
 InttoType(Uint32 tp)
 {
     switch (tp) {
-        case 1: return CacheType::DCache; break;
-        case 2: return CacheType::ICache; break;
-        case 3: return CacheType::Unified; break;
-        default: AUD_ASSERT(true, "Invalid Cache Type"); break;
+        case 1:
+            return CacheType::DCache;
+            break;
+        case 2:
+            return CacheType::ICache;
+            break;
+        case 3:
+            return CacheType::Unified;
+            break;
+        default:
+            AUD_ASSERT(true, "Invalid Cache Type");
+            break;
     }
     return CacheType::Unknown;
 }
@@ -354,13 +370,11 @@ X86Cpu::Impl::update()
 
     __update_vendor_info(vinfo, at(RequestT{ 0, 0, 0, 0 }));
 
-
     for (auto& query : cpuidMap) {
         std::map<RequestT, ResponseT> RawCpuid;
         auto& [req, expected, flg] = query;
         if (RawCpuid.find(req) == RawCpuid.end()) {
             RawCpuid[req] = at(req);
-
         }
         updateflag(flg, __has_flag(expected, RawCpuid[req]));
     }
@@ -384,7 +398,7 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    //update_cache_view(m_cache_view);
+    // update_cache_view(m_cache_view);
 }
 
 ResponseT
@@ -442,8 +456,8 @@ bool
 X86Cpu::Impl::isX86_64v3() const
 {
     static const std::vector<EFlag> feature_arr{
-        EFlag::avx, EFlag::avx2, EFlag::bmi1, EFlag::bmi2, EFlag::f16c,
-        EFlag::fma, EFlag::abm, EFlag::movbe, EFlag::xsave
+        EFlag::avx, EFlag::avx2, EFlag::bmi1,  EFlag::bmi2, EFlag::f16c,
+        EFlag::fma, EFlag::abm,  EFlag::movbe, EFlag::xsave
     };
 
     return isX86_64v2() && isUsable(feature_arr);
@@ -509,7 +523,8 @@ X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
             /* FIXME: we silently fail here, we could also raise exceptions or
              * return Status().
              */
-        default: return;
+        default:
+            return;
     }
 
     const auto found = std::ranges::find_if(

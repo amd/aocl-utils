@@ -46,11 +46,21 @@ operator<<(std::ostream& os, EGoverner const& gov)
     using G = EGoverner;
 
     switch (gov) {
-        case G::Performance: os << "Performance"; break;
-        case G::Powersave: os << "Power Save"; break;
-        case G::Userspace: os << "User Defined"; break;
-        case G::Ondemand: os << "On Demand"; break;
-        default: os << "Unknown"; break;
+        case G::Performance:
+            os << "Performance";
+            break;
+        case G::Powersave:
+            os << "Power Save";
+            break;
+        case G::Userspace:
+            os << "User Defined";
+            break;
+        case G::Ondemand:
+            os << "On Demand";
+            break;
+        default:
+            os << "Unknown";
+            break;
     }
 
     return os;

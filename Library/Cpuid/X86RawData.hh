@@ -223,15 +223,15 @@ __raw_cpuid(RequestT& req, ResponseT& resp)
 {
     if (req.eax == 0x00000007) {
         asm volatile(
-                "cpuid"
-                : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-                : "0"(req.eax), "2"(req.ecx));
+            "cpuid"
+            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+            : "0"(req.eax), "2"(req.ecx));
 
     } else {
-         asm volatile(
-                 "cpuid"
-                 : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-                 : "0"(req.eax));
+        asm volatile(
+            "cpuid"
+            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+            : "0"(req.eax));
     }
 }
 

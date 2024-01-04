@@ -33,31 +33,35 @@ namespace {
 using namespace Au;
 TEST(X86Cpuid, DISABLED_isAMD)
 {
-	X86Cpu c{0};
-	EXPECT_TRUE(c.isAMD() == true);
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isAMD() == true);
 }
 
-TEST(X86Cpuid, DISABLED_isX86_64v2) {
+TEST(X86Cpuid, DISABLED_isX86_64v2)
+{
 
-	X86Cpu c{0};
-  EXPECT_TRUE(c.isX86_64v2() == true);
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v2() == true);
 }
 
-TEST(X86Cpuid, DISABLED_isX86_64v3) {
+TEST(X86Cpuid, DISABLED_isX86_64v3)
+{
 
-	X86Cpu c{0};
-  EXPECT_TRUE(c.isX86_64v3() == true);
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v3() == true);
 }
 
-TEST(X86Cpuid, DISABLED_isX86_64v4) {
+TEST(X86Cpuid, DISABLED_isX86_64v4)
+{
 
-	X86Cpu c{0};
-  EXPECT_TRUE(c.isX86_64v4() == true);
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v4() == true);
 }
-TEST(X86Cpuid, DISABLED_isIntel) {
+TEST(X86Cpuid, DISABLED_isIntel)
+{
 
-	X86Cpu c{0};
-  EXPECT_TRUE(c.isIntel() == true);
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isIntel() == true);
 }
 TEST(X86Cpuid, DISABLED_hasFlag) {}
 } // namespace

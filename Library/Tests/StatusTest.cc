@@ -43,7 +43,7 @@ TEST(Status, check_eok)
 
 TEST(Status, check_eexists)
 {
-    String s{"here"};
+    String s{ "here" };
     Status sts = StatusAlreadyExists(s);
 
     EXPECT_EQ(sts.code(), AlreadyExistsError().code());
@@ -52,7 +52,7 @@ TEST(Status, check_eexists)
 
 TEST(Status, check_einvalid)
 {
-    String s{"my_var is invalid"};
+    String s{ "my_var is invalid" };
     Status sts = StatusInvalidArgument(s);
 
     EXPECT_EQ(sts.code(), InvalidArgumentError().code());
@@ -61,7 +61,7 @@ TEST(Status, check_einvalid)
 
 TEST(Status, check_enotfound)
 {
-    String s{"exhausted"};
+    String s{ "exhausted" };
     Status sts = StatusNotFound(s);
 
     EXPECT_EQ(sts.code(), NotFoundError().code());
@@ -70,7 +70,7 @@ TEST(Status, check_enotfound)
 
 TEST(Status, check_enotavail)
 {
-    String s{"list exhausted"};
+    String s{ "list exhausted" };
     Status sts = StatusNotAvailable(s);
 
     EXPECT_EQ(sts.code(), NotAvailableError().code());
@@ -79,7 +79,7 @@ TEST(Status, check_enotavail)
 
 TEST(Status, check_enotimpl)
 {
-    String s{"myimpl"};
+    String s{ "myimpl" };
     Status sts = StatusNotImplemented(s);
 
     EXPECT_EQ(sts.code(), NotImplementedError().code());
@@ -88,12 +88,11 @@ TEST(Status, check_enotimpl)
 
 TEST(Status, check_eunknown)
 {
-    String s{"Known"};
+    String s{ "Known" };
     Status sts = StatusUnknown(s);
 
     EXPECT_EQ(sts.code(), UnknownError().code());
     EXPECT_TRUE(sts.message().ends_with(s));
 }
-
 
 } // namespace

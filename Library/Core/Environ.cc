@@ -183,8 +183,8 @@ Environ::init(const char** envp)
 
         auto keyval     = Os::Env::split(s);
         auto [key, val] = keyval;
-        AUD_ASSERT(key.length() != 0, String{"Invalid Key: " + key});
-        AUD_ASSERT(val.length() != 0, String{"Value is empty for "+ key});
+        AUD_ASSERT(key.length() != 0, String{ "Invalid Key: " + key });
+        AUD_ASSERT(val.length() != 0, String{ "Value is empty for " + key });
 
         _set(key, val);
     }

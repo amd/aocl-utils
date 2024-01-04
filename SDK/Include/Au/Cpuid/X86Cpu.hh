@@ -212,7 +212,6 @@ enum class ECpuidFlag : Uint64
     MAX
 };
 
-
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
   public:

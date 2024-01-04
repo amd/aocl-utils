@@ -41,5 +41,4 @@
 
 template<class Object>
 class ObjectPool
-{
-};
+{};

@@ -45,11 +45,21 @@ operator<<(std::ostream& os, CacheLevel const& level)
 {
     using Cl = CacheLevel;
     switch (level) {
-        case Cl::L1: os << "L1"; break;
-        case Cl::L2: os << "L2"; break;
-        case Cl::L3: os << "L3"; break;
-        case Cl::L4: os << "L4"; break;
-        default: os << "Unknown"; break;
+        case Cl::L1:
+            os << "L1";
+            break;
+        case Cl::L2:
+            os << "L2";
+            break;
+        case Cl::L3:
+            os << "L3";
+            break;
+        case Cl::L4:
+            os << "L4";
+            break;
+        default:
+            os << "Unknown";
+            break;
     }
     return os;
 }
@@ -59,10 +69,18 @@ operator<<(std::ostream& os, CacheType const& type)
 {
     using Ct = CacheType;
     switch (type) {
-        case Ct::ICache: os << "I$"; break;
-        case Ct::DCache: os << "D$"; break;
-        case Ct::Unified: os << "Unified Cache"; break;
-        default: os << "Unkown"; break;
+        case Ct::ICache:
+            os << "I$";
+            break;
+        case Ct::DCache:
+            os << "D$";
+            break;
+        case Ct::Unified:
+            os << "Unified Cache";
+            break;
+        default:
+            os << "Unkown";
+            break;
     }
     return os;
 }
