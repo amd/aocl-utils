@@ -277,18 +277,12 @@ static CacheLevel
 InttoLevel(Uint32 lvl)
 {
     switch (lvl) {
-        case 1:
-            return CacheLevel::L1;
-            break;
-        case 2:
-            return CacheLevel::L2;
-            break;
-        case 3:
-            return CacheLevel::L3;
-            break;
-        default:
-            AUD_ASSERT(true, "Invalid Cache Level");
-            break;
+            // clang-format off
+        case 1:return CacheLevel::L1;break;
+        case 2:return CacheLevel::L2;break;
+        case 3:return CacheLevel::L3;break;
+        default:AUD_ASSERT(true, "Invalid Cache Level");break;
+            // clang-format on
     }
 
     return CacheLevel::Unknown;
@@ -298,18 +292,12 @@ static CacheType
 InttoType(Uint32 tp)
 {
     switch (tp) {
-        case 1:
-            return CacheType::DCache;
-            break;
-        case 2:
-            return CacheType::ICache;
-            break;
-        case 3:
-            return CacheType::Unified;
-            break;
-        default:
-            AUD_ASSERT(true, "Invalid Cache Type");
-            break;
+            // clang-format off
+        case 1:return CacheType::DCache;break;
+        case 2:return CacheType::ICache;break;
+        case 3:return CacheType::Unified;break;
+        default:AUD_ASSERT(true, "Invalid Cache Type");break;
+            // clang-format on
     }
     return CacheType::Unknown;
 }
