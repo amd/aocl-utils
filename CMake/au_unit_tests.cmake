@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@ function(au_cc_test testName)
   set(fPrefix test)
   set(fOptions BROKEN;SKIP;WINDOWS_DISABLED)
   set(fOneArg CONTENTS;DIRECTORY)
-  set(fMultiArgs SOURCES;HEADERS;DEPENDS)
+  set(fMultiArgs SOURCES;HEADERS;DEPENDS;EXTLIBRARY)
 
   cmake_parse_arguments(
     ${fPrefix}
@@ -137,7 +137,11 @@ function(au_cc_test testName)
   if(${fPrefix}_DEPENDS)
       target_link_libraries(${_target_name} PRIVATE ${${fPrefix}_DEPENDS})
   endif()
-  
+  if(${fPrefix}_EXTLIBRARY)
+      find_package(${${fPrefix}_EXTLIBRARY} COMPONENTS Development REQUIRED)
+      target_include_directories(${_target_name} PRIVATE ${${${fPrefix}_EXTLIBRARY}_INCLUDE_DIRS})
+      target_link_libraries(${_target_name} PRIVATE ${${${fPrefix}_EXTLIBRARY}_LIBRARIES})
+  endif()
   #message("cxx standard" ${AU_CXX_STANDARD})
   set_target_properties(
     ${_target_name}

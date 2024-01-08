@@ -65,7 +65,6 @@ au_env_get(const char* name)
     return val.data();
 }
 
-
 void AUD_API_EXPORT
 au_env_unset(const char* name)
 {
@@ -94,8 +93,10 @@ au_env_is_enabled(const char* cc)
     if (!cc)
         return false;
 
-    String sv {Env::get(cc).data()};  /* returned string from Env::get() is a const */
-    auto   val = str_tolower(sv);
+    String sv{
+        Env::get(cc).data()
+    }; /* returned string from Env::get() is a const */
+    auto val = str_tolower(sv);
 
     if (val == String("yes") || val == String("1") || val == String("true"))
         return true;

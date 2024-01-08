@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -238,10 +238,12 @@ extract32(Uint32 value, int start, int length)
 static void
 __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
 {
-    /* "AuthenticAMD" */
     if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
         && regs.edx == 0x69746e65) {
         vinfo.m_mfg = EVendor::Amd;
+    } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e
+               && regs.edx == 0x49656e69) {
+        vinfo.m_mfg = EVendor::Intel;
     } else {
         vinfo.m_mfg = EVendor::Other;
     }
@@ -265,7 +267,7 @@ __update_mfg_info(ResponseT const& resp)
 static inline bool
 __has_flag(ResponseT const& expected, ResponseT const& actual)
 {
-    return expected == actual;
+    return expected & actual;
 }
 
 using CacheLevel = CacheInfo::CacheLevel;
@@ -275,10 +277,12 @@ static CacheLevel
 InttoLevel(Uint32 lvl)
 {
     switch (lvl) {
-        case 1: return CacheLevel::L1; break;
-        case 2: return CacheLevel::L2; break;
-        case 3: return CacheLevel::L3; break;
-        default: AUD_ASSERT(true, "Invalid Cache Level"); break;
+            // clang-format off
+        case 1:return CacheLevel::L1;break;
+        case 2:return CacheLevel::L2;break;
+        case 3:return CacheLevel::L3;break;
+        default:AUD_ASSERT(true, "Invalid Cache Level");break;
+            // clang-format on
     }
 
     return CacheLevel::Unknown;
@@ -288,10 +292,12 @@ static CacheType
 InttoType(Uint32 tp)
 {
     switch (tp) {
-        case 1: return CacheType::DCache; break;
-        case 2: return CacheType::ICache; break;
-        case 3: return CacheType::Unified; break;
-        default: AUD_ASSERT(true, "Invalid Cache Type"); break;
+            // clang-format off
+        case 1:return CacheType::DCache;break;
+        case 2:return CacheType::ICache;break;
+        case 3:return CacheType::Unified;break;
+        default:AUD_ASSERT(true, "Invalid Cache Type");break;
+            // clang-format on
     }
     return CacheType::Unknown;
 }
@@ -352,12 +358,13 @@ X86Cpu::Impl::update()
 
     __update_vendor_info(vinfo, at(RequestT{ 0, 0, 0, 0 }));
 
-    AUD_ASSERT(vinfo.m_mfg == EVendor::Amd, "CPU is not AMD");
-
     for (auto& query : cpuidMap) {
+        std::map<RequestT, ResponseT> RawCpuid;
         auto& [req, expected, flg] = query;
-        ResponseT resp             = at(req);
-        updateflag(flg, __has_flag(expected, resp));
+        if (RawCpuid.find(req) == RawCpuid.end()) {
+            RawCpuid[req] = at(req);
+        }
+        updateflag(flg, __has_flag(expected, RawCpuid[req]));
     }
 
     /* manufacturer details */
@@ -379,7 +386,7 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    update_cache_view(m_cache_view);
+    // update_cache_view(m_cache_view);
 }
 
 ResponseT
@@ -399,7 +406,7 @@ X86Cpu::Impl::isAMD() const
 }
 
 /**
- * @brief Checks if processor is x86_64-v3 compliant
+ * @brief Checks if processor is x86_64-v2 compliant
  *
  * @details
  *       Based on GCC following flags account for x86_64-v2
@@ -504,7 +511,8 @@ X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
             /* FIXME: we silently fail here, we could also raise exceptions or
              * return Status().
              */
-        default: return;
+        default:
+            return;
     }
 
     const auto found = std::ranges::find_if(

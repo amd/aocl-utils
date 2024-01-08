@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -38,6 +38,11 @@ set(BASE_TEST_FILES
 set(MEMORY_TEST_FILES
     #Memory/LocalBufferTest.cc
     #Memory/BufferViewTest.cc
+)
+
+set(CPUID_TEST_FILES
+    Cpuid/CpuidTest.cc
+    Cpuid/CpuidQemuTest.cc
 )
 
 set(OTHER_TEST_FILES
@@ -131,7 +136,14 @@ endif()
 #        au::base64
 #)
 
-
+au_cc_test(CpuidTest
+  SOURCES
+  ${CPUID_TEST_FILES}
+  DEPENDS
+  au::cpuid
+  EXTLIBRARY
+  Python3
+)
 ##########
 # Dynamic Loader Tests
 ##########

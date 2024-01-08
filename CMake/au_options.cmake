@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -35,6 +35,7 @@ option(AU_ENABLE_ASSERTIONS "Enable asserts in the code, Default enabled in Debu
 # Define the processor type
 string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)
 cmake_dependent_option(AU_CPU_ARCH_X86 "" OFF "${upper_CMAKE_SYSTEM_PROCESSOR} MATCHES ^x86" ON)
+
 
 # Lets make the build
 string(TOUPPER "${CMAKE_BUILD_TYPE}" upper_CMAKE_BUILD_TYPE)

@@ -50,12 +50,15 @@ struct cpuid_regs
         return eax == o.eax && ebx == o.ebx && ecx == o.ecx && edx == o.edx;
     }
 
-#if 0
     bool const operator<(cpuid_regs const& o) const
     {
         return eax < o.eax || ebx < o.ebx || ecx < o.ecx || edx < o.edx;
     }
-#endif
+
+    bool const operator&(cpuid_regs const& o) const
+    {
+        return eax & o.eax || ebx & o.ebx || ecx & o.ecx || edx & o.edx;
+    }
 };
 using RequestT  = const cpuid_regs;
 using ResponseT = cpuid_regs;
@@ -218,10 +221,18 @@ class X86Cpu::Impl
 static inline void
 __raw_cpuid(RequestT& req, ResponseT& resp)
 {
-    asm volatile(
-        "cpuid"
-        : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-        : "0"(req.eax), "1"(req.ebx), "2"(req.ecx), "3"(req.edx));
+    if (req.eax == 0x00000007) {
+        asm volatile(
+            "cpuid"
+            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+            : "0"(req.eax), "2"(req.ecx));
+
+    } else {
+        asm volatile(
+            "cpuid"
+            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
+            : "0"(req.eax));
+    }
 }
 
 static inline ResponseT

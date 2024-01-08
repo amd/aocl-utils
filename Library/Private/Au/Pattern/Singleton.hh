@@ -33,7 +33,7 @@ namespace Au {
 
 /**
  * @brief: A Singleton Pattern class
- * @details: An Object of Class which inherits from 'Singleton' class 
+ * @details: An Object of Class which inherits from 'Singleton' class
  *           will be a single instance and prevent creation of objects
  *
  */

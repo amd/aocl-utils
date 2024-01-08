@@ -27,7 +27,7 @@
  */
 
 #ifndef __AU_CPUID_CPUID_H__
-#define __AU_CPUID_CPUID_H_
+#define __AU_CPUID_CPUID_H__
 
 #include "Capi/au/au.h"
 #include "Capi/au/macros.h"

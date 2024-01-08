@@ -39,7 +39,7 @@
     extern "C"                                                                 \
     {
 #ifndef AUD_EXTERN_C_END
-#define AUD_EXTERN_C_END    }
+#define AUD_EXTERN_C_END }
 #endif
 #define AUD_EXTERN_C_END1() }
 

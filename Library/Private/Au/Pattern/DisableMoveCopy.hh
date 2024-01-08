@@ -44,6 +44,7 @@ class DisableMove
 {
   public:
     virtual ~DisableMove() {}
+
   protected:
     DisableMove(void)                     = default;
     DisableMove(DisableMove&&)            = delete;
@@ -56,6 +57,7 @@ class DisableCopyMove
 {
   public:
     virtual ~DisableCopyMove() {}
+
   protected:
     DisableCopyMove(void) = default;
 };

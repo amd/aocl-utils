@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,15 +27,41 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-
 #include "gtest/gtest.h"
 
 namespace {
+using namespace Au;
+TEST(X86Cpuid, DISABLED_isAMD)
+{
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isAMD() == true);
+}
 
-TEST(Cpuid, "ZenTest") {}
+TEST(X86Cpuid, DISABLED_isX86_64v2)
+{
 
-TEST(Cpuid, "Zen2Test") {}
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v2() == true);
+}
 
-TEST(Cpuid, "Zen3Test") {}
+TEST(X86Cpuid, DISABLED_isX86_64v3)
+{
 
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v3() == true);
+}
+
+TEST(X86Cpuid, DISABLED_isX86_64v4)
+{
+
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isX86_64v4() == true);
+}
+TEST(X86Cpuid, DISABLED_isIntel)
+{
+
+    X86Cpu cpu{ 0 };
+    EXPECT_TRUE(cpu.isIntel() == true);
+}
+TEST(X86Cpuid, DISABLED_hasFlag) {}
 } // namespace
