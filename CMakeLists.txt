@@ -82,7 +82,6 @@ if(NOT CMAKE_CXX_CLANG_TIDY)
   find_program(CLANG_TIDY "clang-tidy")
   if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
      set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
-     message(${CLANG_TIDY})
   endif()
 endif()
 

@@ -41,7 +41,7 @@ using CacheLevel = cache_attr::ELevel;
 using CacheType  = cache_attr::EType;
 
 std::ostream&
-operator<<(std::ostream& os, CacheLevel const& level)
+operator<<(std::ostream& os, CacheLevel const& level) // NOLINT
 {
     using Cl = CacheLevel;
     // clang-format off
@@ -57,7 +57,7 @@ operator<<(std::ostream& os, CacheLevel const& level)
 }
 
 std::ostream&
-operator<<(std::ostream& os, CacheType const& type)
+operator<<(std::ostream& os, CacheType const& type) // NOLINT
 {
     using Ct = CacheType;
     // clang-format off
