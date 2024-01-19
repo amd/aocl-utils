@@ -240,12 +240,12 @@ __update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
 {
     if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
         && regs.edx == 0x69746e65) {
-        vinfo.m_mfg = EVendor::Amd;
+        vinfo.mMfg = EVendor::Amd;
     } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e
                && regs.edx == 0x49656e69) {
-        vinfo.m_mfg = EVendor::Intel;
+        vinfo.mMfg = EVendor::Intel;
     } else {
-        vinfo.m_mfg = EVendor::Other;
+        vinfo.mMfg = EVendor::Other;
     }
 }
 
@@ -375,7 +375,7 @@ X86Cpu::Impl::update()
      * *_USABLE flags, so that
      * all ifunc's sees them
      */
-    if (vinfo.m_mfg == EVendor::Amd && vinfo.m_family >= EFamily::Zen) {
+    if (vinfo.mMfg == EVendor::Amd && vinfo.mFamily >= EFamily::Zen) {
         /* todo */
     }
 
@@ -402,7 +402,7 @@ X86Cpu::Impl::at(RequestT& req) const
 bool
 X86Cpu::Impl::isAMD() const
 {
-    return m_vendor_info.m_mfg == EVendor::Amd;
+    return m_vendor_info.mMfg == EVendor::Amd;
 }
 
 /**
@@ -479,7 +479,7 @@ X86Cpu::Impl::isX86_64v4() const
 bool
 X86Cpu::Impl::isIntel() const
 {
-    return m_vendor_info.m_mfg == EVendor::Intel;
+    return m_vendor_info.mMfg == EVendor::Intel;
 }
 
 bool

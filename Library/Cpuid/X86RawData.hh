@@ -31,73 +31,11 @@
 #include "Au/Assert.hh"
 #include "Au/Au.hh"
 #include "Au/Cpuid/X86Cpu.hh"
+#include "Au/Cpuid/CpuidUtils.hh"
 
 #include <map>
 
 namespace Au {
-
-/* ID return values */
-struct cpuid_regs
-{
-    Uint32 eax;
-    Uint32 ebx;
-    Uint32 ecx;
-    Uint32 edx;
-
-    /* following are required for making this key in a std::map */
-    bool const operator==(cpuid_regs const& o) const
-    {
-        return eax == o.eax && ebx == o.ebx && ecx == o.ecx && edx == o.edx;
-    }
-
-    bool const operator<(cpuid_regs const& o) const
-    {
-        return eax < o.eax || ebx < o.ebx || ecx < o.ecx || edx < o.edx;
-    }
-
-    bool const operator&(cpuid_regs const& o) const
-    {
-        return eax & o.eax || ebx & o.ebx || ecx & o.ecx || edx & o.edx;
-    }
-};
-using RequestT  = const cpuid_regs;
-using ResponseT = cpuid_regs;
-
-/**
- * @enum  Vendor
- * @brief CPU vendors.
- */
-enum class EVendor : Uint32
-{
-    Amd = 1, /**< AMD. */
-    Intel,   /**< Intel. */
-    Other    /**< Others. */
-};
-
-/* Processor family info */
-enum class EFamily : Uint16
-{
-    Zen      = 0x17,
-    Zen_Plus = 0x17,
-    Zen2     = 0x17,
-    Zen3     = 0x19,
-    Zen4     = 0x19,
-    Max      = 0x19, /* Always set to latest family ID */
-};
-
-/**
- * @struct  VendorInfo
- * @brief   CPU core info.
- */
-class VendorInfo
-{
-    /* TODO: Make this private and provide accessors */
-  public:
-    EVendor m_mfg;      /**< CPU manufacturing vendor. */
-    EFamily m_family;   /**< CPU family ID. */
-    Uint16  m_model;    /**< CPU model number. */
-    Uint16  m_stepping; /**< CPU stepping. */
-};
 
 using EFlag = ECpuidFlag;
 
