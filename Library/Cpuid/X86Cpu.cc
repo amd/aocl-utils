@@ -35,10 +35,10 @@
 namespace Au {
 
 /* Precise identification */
-#define MAKE_MODEL(base, ext) ((ext << 4) | (base))
+#define MAKE_MODEL(base, ext) (((ext) << 4) | (base))
 
 /* Zen, Naples, Whitehaven, Summit Ridge, Snowy Owl */
-enum class EUarch : Uint8
+enum class E_UARCH : Uint8
 {
     Naples        = MAKE_MODEL(0x1, 0x0),
     Ravenridge    = MAKE_MODEL(0x1, 0x1),
@@ -142,8 +142,8 @@ X86Cpu::isIntel() const
 }
 
 bool
-X86Cpu::hasFlag(ECpuidFlag const& ef) const
+X86Cpu::hasFlag(ECpuidFlag const& eflag) const
 {
-    return pImpl()->hasFlag(ef);
+    return pImpl()->hasFlag(eflag);
 }
 } // namespace Au

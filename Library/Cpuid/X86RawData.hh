@@ -31,11 +31,75 @@
 #include "Au/Assert.hh"
 #include "Au/Au.hh"
 #include "Au/Cpuid/X86Cpu.hh"
-#include "Au/Cpuid/CpuidUtils.hh"
+#include <functional>
 
 #include <map>
 
 namespace Au {
+
+/* ID return values */
+struct CpuidRegs
+{
+    Uint32 eax;
+    Uint32 ebx;
+    Uint32 ecx;
+    Uint32 edx;
+
+    /* following are required for making this key in a std::map */
+    bool operator==(CpuidRegs const& o) const
+    {
+        return eax == o.eax && ebx == o.ebx && ecx == o.ecx && edx == o.edx;
+    }
+
+    bool operator<(CpuidRegs const& o) const
+    {
+        return eax < o.eax || ebx < o.ebx || ecx < o.ecx || edx < o.edx;
+    }
+
+    bool operator&(CpuidRegs const& o) const
+    {
+        return ((eax & o.eax) != 0u) || ((ebx & o.ebx) != 0u)
+               || ((ecx & o.ecx) != 0u) || ((edx & o.edx) != 0u);
+    }
+};
+using RequestT  = const CpuidRegs;
+using ResponseT = CpuidRegs;
+
+/**
+ * @enum  Vendor
+ * @brief CPU vendors.
+ */
+enum class EVendor : Uint32
+{
+    Amd = 1, /**< AMD. */
+    Intel,   /**< Intel. */
+    Other    /**< Others. */
+};
+
+/* Processor family info */
+enum class EFamily : Uint16
+{
+    Zen      = 0x17,
+    Zen_Plus = 0x17,
+    Zen2     = 0x17,
+    Zen3     = 0x19,
+    Zen4     = 0x19,
+    Max      = 0x19, /* Always set to latest family ID */
+};
+
+/**
+ * @struct  VendorInfo
+ * @brief   CPU core info.
+ */
+class VendorInfo
+{
+    /* TODO: Make this private and provide accessors */
+  public:
+    EVendor mMfg;      /**< CPU manufacturing vendor. */
+    EFamily mFamily;   /**< CPU family ID. */
+    Uint16   mModel;    /**< CPU model number. */
+    Uint16   mStepping; /**< CPU stepping. */
+};
 
 using EFlag = ECpuidFlag;
 
@@ -65,22 +129,13 @@ class X86Cpu::Impl
 
   public:
     Impl()
-        : m_vendor_info{}
-        , m_avail_flags{}
-        , m_usable_flags{}
-        , m_cache_view{}
+        : mVendorInfo{}
+        , mAvailableFlags{}
+        , mUsableFlags{}
+        , mCacheView{}
+
     {
     }
-
-    bool isAMD() const;
-
-    bool isX86_64v2() const;
-    bool isX86_64v3() const;
-    bool isX86_64v4() const;
-
-    bool isIntel() const;
-
-    bool hasFlag(EFlag const& ef) const;
 
     /**
      * @brief  Update Raw Data by re-reading the registers
@@ -88,6 +143,16 @@ class X86Cpu::Impl
      * @return None
      */
     void update();
+
+    bool isIntel() const;
+    bool isAMD() const;
+
+    bool isX86_64v2() const;
+    bool isX86_64v3() const;
+    bool isX86_64v4() const;
+
+    bool hasFlag(EFlag const& ef) const;
+
 
     /**
      * @brief       Get CPUID output based on eax, ecx register values as
@@ -104,11 +169,10 @@ class X86Cpu::Impl
      * @brief Helper to manually override some settings
      *
      * @param[in]       regs  Request registers to be given to cpuid instruction
-     * @param[in]       resp  Corresponding response of 'regs'
      *
      * @return     void
      */
-    void apply(RequestT& regs, ResponseT const& resp);
+    void apply(RequestT& regs);
 
     /**
      * @brief Setter for usable flag to override, by default usable = available
@@ -123,17 +187,17 @@ class X86Cpu::Impl
   private:
     bool isUsable(EFlag const& flg) const
     {
-        auto __usable = m_usable_flags.find(flg);
-        if (__usable != m_usable_flags.end())
+        auto __usable = mUsableFlags.find(flg);
+        if (__usable != mUsableFlags.end())
             return __usable->second;
 
         return false;
     }
 
     /* All or None flags check */
-    bool isUsable(std::vector<EFlag> const& __arr) const
+    bool isUsable(std::vector<EFlag> const& _arr) const
     {
-        for (auto& i : __arr) {
+        for (const auto& i : _arr) {
             if (!isUsable(i))
                 return false;
         }
@@ -142,18 +206,18 @@ class X86Cpu::Impl
 
     void updateflag(EFlag const& flg, bool res = true)
     {
-        m_avail_flags[flg] = m_usable_flags[flg] = res;
+        mAvailableFlags[flg] = mUsableFlags[flg] = res;
     }
 
-    VendorInfo m_vendor_info;
+    VendorInfo                    mVendorInfo;
 
     /*
      * FIXME : Eventually change to a bitmap
      */
-    std::map<EFlag, bool> m_avail_flags;
-    std::map<EFlag, bool> m_usable_flags;
+    std::map<EFlag, bool> mAvailableFlags;
+    std::map<EFlag, bool> mUsableFlags;
 
-    CacheView m_cache_view;
+    CacheView mCacheView;
 };
 
 static inline void

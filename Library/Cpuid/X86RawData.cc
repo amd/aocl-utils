@@ -38,7 +38,7 @@ namespace Au {
 
 // clang-format off
 using QueryT = std::tuple<RequestT, ResponseT, EFlag>;
-static const std::array<QueryT, *EFlag::MAX> cpuidMap = {{
+static const std::array<QueryT, *EFlag::MAX> CPUID_MAP = {{
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000001}, EFlag::sse3},
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000002}, EFlag::pclmulqdq},
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000004}, EFlag::dtes64},
@@ -274,7 +274,7 @@ using CacheLevel = CacheInfo::CacheLevel;
 using CacheType  = CacheInfo::CacheType;
 
 static CacheLevel
-InttoLevel(Uint32 lvl)
+inttoLevel(Uint32 lvl)
 {
     switch (lvl) {
             // clang-format off
@@ -289,7 +289,7 @@ InttoLevel(Uint32 lvl)
 }
 
 static CacheType
-InttoType(Uint32 tp)
+inttoType(Uint32 tp)
 {
     switch (tp) {
             // clang-format off
@@ -303,11 +303,11 @@ InttoType(Uint32 tp)
 }
 
 static inline void
-update_cache_info(CacheInfo& ci, ResponseT const& resp)
+updateCacheInfo(CacheInfo& ci, ResponseT const& resp)
 {
-    ci.setType(InttoType(Au::extract32(resp.eax, 0, 5)));
+    ci.setType(inttoType(Au::extract32(resp.eax, 0, 5)));
 
-    auto lvl = InttoLevel(Au::extract32(resp.eax, 5, 3));
+    auto lvl = inttoLevel(Au::extract32(resp.eax, 5, 3));
     ci.setLevel(lvl);
 
     auto sets = resp.ecx + 1;
@@ -324,30 +324,30 @@ update_cache_info(CacheInfo& ci, ResponseT const& resp)
 }
 
 static inline void
-update_cache_view(CacheView& cv)
+updateCacheView(CacheView& cv)
 {
-    bool last_level = false;
-    int  cur_level  = 1;
+    bool lastLevel = false;
+    int  curLevel  = 1;
 
-    while (!last_level || cur_level > *CacheLevel::L5) {
+    while (!lastLevel || curLevel > *CacheLevel::L5) {
         CacheInfo ci{ CacheLevel::L1,
                       CacheType::DCache }; /* dummy, will be overriden */
-        RequestT  req{ 0x8000'001D, 0, (Uint32)cur_level, 0 };
+        RequestT  req{ 0x8000'001D, 0, (Uint32)curLevel, 0 };
         ResponseT resp = __raw_cpuid(req);
 
         if ((resp.eax & 0x1f) == 0x0) /* beyond last cache levels */
             break;
 
-        update_cache_info(ci, resp);
+        updateCacheInfo(ci, resp);
 
-        cur_level++;
+        curLevel++;
     }
 }
 
 void
 X86Cpu::Impl::update()
 {
-    auto& vinfo = m_vendor_info;
+    auto& vinfo = mVendorInfo;
 
     /* FIXME:
      * We need to make sure that
@@ -357,18 +357,17 @@ X86Cpu::Impl::update()
      */
 
     __update_vendor_info(vinfo, at(RequestT{ 0, 0, 0, 0 }));
-
-    for (auto& query : cpuidMap) {
-        std::map<RequestT, ResponseT> RawCpuid;
-        auto& [req, expected, flg] = query;
-        if (RawCpuid.find(req) == RawCpuid.end()) {
-            RawCpuid[req] = at(req);
-        }
-        updateflag(flg, __has_flag(expected, RawCpuid[req]));
-    }
-
     /* manufacturer details */
     __update_mfg_info(at(RequestT{ 0x0000'0001, 0, 0, 0 }));
+
+    for (const auto& query : CPUID_MAP) {
+        std::map<RequestT, ResponseT> rawCpuid;
+        const auto& [req, expected, flg] = query;
+        if (rawCpuid.find(req) == rawCpuid.end()) {
+            rawCpuid[req] = at(req);
+        }
+        updateflag(flg, __has_flag(expected, rawCpuid[req]));
+    }
 
     /*
      * Globally disable some
@@ -386,7 +385,7 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    // update_cache_view(m_cache_view);
+    // update_cache_view(mCacheView);
 }
 
 ResponseT
@@ -400,9 +399,15 @@ X86Cpu::Impl::at(RequestT& req) const
 }
 
 bool
+X86Cpu::Impl::isIntel() const
+{
+    return mVendorInfo.mMfg == EVendor::Intel;
+}
+
+bool
 X86Cpu::Impl::isAMD() const
 {
-    return m_vendor_info.mMfg == EVendor::Amd;
+    return mVendorInfo.mMfg == EVendor::Amd;
 }
 
 /**
@@ -420,11 +425,11 @@ X86Cpu::Impl::isAMD() const
 bool
 X86Cpu::Impl::isX86_64v2() const
 {
-    static const std::vector<EFlag> feature_arr{
+    static const std::vector<EFlag> featureArr{
         EFlag::cx16, EFlag::lahf_lm, EFlag::popcnt, EFlag::sse4_2, EFlag::ssse3
     };
 
-    return isUsable(feature_arr);
+    return isUsable(featureArr);
 }
 
 /**
@@ -443,12 +448,12 @@ X86Cpu::Impl::isX86_64v2() const
 bool
 X86Cpu::Impl::isX86_64v3() const
 {
-    static const std::vector<EFlag> feature_arr{
+    static const std::vector<EFlag> featureArr{
         EFlag::avx, EFlag::avx2, EFlag::bmi1,  EFlag::bmi2, EFlag::f16c,
         EFlag::fma, EFlag::abm,  EFlag::movbe, EFlag::xsave
     };
 
-    return isX86_64v2() && isUsable(feature_arr);
+    return isX86_64v2() && isUsable(featureArr);
 }
 
 /**
@@ -467,35 +472,29 @@ bool
 X86Cpu::Impl::isX86_64v4() const
 {
 
-    static const std::vector<EFlag> feature_arr{ EFlag::avx512f,
+    static const std::vector<EFlag> featureArr{ EFlag::avx512f,
                                                  EFlag::avx512bw,
                                                  EFlag::avx512cd,
                                                  EFlag::avx512dq,
                                                  EFlag::avx512vl };
 
-    return isX86_64v3() && isUsable(feature_arr);
+    return isX86_64v3() && isUsable(featureArr);
 }
 
 bool
-X86Cpu::Impl::isIntel() const
+X86Cpu::Impl::hasFlag(EFlag const& eflag) const
 {
-    return m_vendor_info.mMfg == EVendor::Intel;
-}
-
-bool
-X86Cpu::Impl::hasFlag(EFlag const& ef) const
-{
-    return m_avail_flags.at(ef) && m_usable_flags.at(ef);
+    return mAvailableFlags.at(eflag) && mUsableFlags.at(eflag);
 }
 
 void
-X86Cpu::Impl::setUsableFlag(EFlag const& ef, bool res)
+X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
 {
-    m_usable_flags[ef] = res;
+    mUsableFlags[eflag] = res;
 }
 
 void
-X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
+X86Cpu::Impl::apply(RequestT& regs)
 {
     switch (regs.eax) {
         case 0x0000'0001:
@@ -515,21 +514,20 @@ X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
             return;
     }
 
-    const auto found = std::ranges::find_if(
-        begin(cpuidMap), end(cpuidMap), [&](const auto& input) {
-            auto& [req, expected, flg] = input;
+    const auto* const found = std::ranges::find_if(
+        begin(CPUID_MAP), end(CPUID_MAP), [&](const auto& input) {
+            const auto& [req, expected, flg] = input;
             return req == regs;
         });
 
-    if (found != end(cpuidMap)) {
-        auto& [_, __, flg] = *found;
+    if (found != end(CPUID_MAP)) {
+        const auto& [_, __, flg] = *found; // NOLINT
         updateflag(flg, true);
     }
 
     /* FIXME: we silently fail here, we could also raise exceptions or
      * return Status().
      */
-    return;
 }
 
 } // namespace Au
