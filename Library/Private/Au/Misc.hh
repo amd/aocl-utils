@@ -47,7 +47,13 @@ namespace Au {
  * @return      integer Extracted value.
  */
 Uint32
-extract32(Uint32 value, int start, int length);
+extract32(Uint32 value, int start, int length)
+{
+    AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
+               "Invalid start/size");
+
+    return (value >> start) & (~0U >> (32 - length));
+}
 
 /**
  * @brief        Helper function to convert Enum->Int

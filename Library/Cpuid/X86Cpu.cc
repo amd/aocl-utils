@@ -26,11 +26,7 @@
  *
  */
 
-#include "Au/Cpuid/X86Cpu.hh"
 #include "X86RawData.hh"
-
-/* #include <array> */
-/* #include <type_traits> */
 
 namespace Au {
 
@@ -38,7 +34,7 @@ namespace Au {
 #define MAKE_MODEL(base, ext) (((ext) << 4) | (base))
 
 /* Zen, Naples, Whitehaven, Summit Ridge, Snowy Owl */
-enum class E_UARCH : Uint8
+enum class EUarch : Uint8 // NOLINT
 {
     Naples        = MAKE_MODEL(0x1, 0x0),
     Ravenridge    = MAKE_MODEL(0x1, 0x1),
@@ -96,9 +92,16 @@ enum class E_UARCH : Uint8
  */
 // clang-format on
 
+X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
+    : CpuInfo{ num }
+    , mPimpl{ new X86Cpu::Impl{ cUtils } }
+{
+    pImpl()->update();
+}
+
 X86Cpu::X86Cpu(CpuNumT num)
     : CpuInfo{ num }
-    , m_pimpl{ new X86Cpu::Impl{} }
+    , mPimpl{ new X86Cpu::Impl{} }
 {
     pImpl()->update();
 }

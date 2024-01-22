@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Au/Cpuid/CacheInfo.hh"
 #include "Au/Cpuid/Cpuid.hh"
+#include "Au/Cpuid/CpuidUtils.hh"
 
 #include <memory>
 
@@ -215,7 +215,9 @@ enum class ECpuidFlag : Uint64
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
   public:
+    X86Cpu(CpuidUtils* cUtils, CpuNumT num);
     X86Cpu(CpuNumT num = 0);
+
     ~X86Cpu();
 
     /**
@@ -225,8 +227,45 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      */
     bool isAMD() const;
 
+    /**
+     * @brief Checks if processor is x86_64-v2 compliant
+     *
+     * @details
+     *       Based on GCC following flags account for x86_64-v2
+     *          cx16       lahf_lm
+     *          popcnt     sse4_1
+     *          sse4_2     ssse3
+     *
+     * @return  true if cpu supports all features above,
+     *          false otherwise
+     */
     bool isX86_64v2() const;
+    /**
+     * @brief Checks if processor is x86_64-v3 compliant
+     *
+     * @details
+     *      Based on GCC following flags account for x86_64-v3
+     *      (in addition to x86_64-v2)
+     *        avx    avx2    bmi1
+     *        bmi2   f16c    fma
+     *        abm    movbe   xsave
+     *
+     * @return  true if cpu supports all features above,
+     *          false otherwise
+     */
     bool isX86_64v3() const;
+    /**
+     * @brief Checks if processor is x86_64-v4 compliant
+     *
+     * @details
+     *      Based on GCC following flags account for x86_64-v4
+     *      (in addition to x86_64-v2 + x86_64-v3)
+     *       avx512f   avx512bw  avx512cd
+     *       avx512dq  avx512vl
+     *
+     * @return  true if cpu supports all features above,
+     *          false otherwise
+     */
     bool isX86_64v4() const;
 
     /**
@@ -239,11 +278,11 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     /**
      * @brief   Check if a given x86 cpu has a needed flag
      *
-     * @param[in] ef    ECpuidFlag that needs to be checked
+     * @param[in] eflag    ECpuidFlag that needs to be checked
      *
      * @return true if 'num' was an AMD x86-64, false otherwise
      */
-    bool hasFlag(ECpuidFlag const& ef) const;
+    bool hasFlag(ECpuidFlag const& eflag) const;
 
     /**
      * @brief Re-read all the cpuid functions and upate internal structures
@@ -260,9 +299,9 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
   private:
     class Impl;
-    const Impl*           pImpl() const { return m_pimpl.get(); }
-    Impl*                 pImpl() { return m_pimpl.get(); }
-    std::unique_ptr<Impl> m_pimpl;
+    const Impl*           pImpl() const { return mPimpl.get(); }
+    Impl*                 pImpl() { return mPimpl.get(); }
+    std::unique_ptr<Impl> mPimpl;
 };
 
 } // namespace Au
