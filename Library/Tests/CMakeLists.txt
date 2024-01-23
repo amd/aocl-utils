@@ -42,6 +42,7 @@ set(MEMORY_TEST_FILES
 
 set(CPUID_TEST_FILES
     Cpuid/CpuidTest.cc
+    Cpuid/CpuidMockTest.cc
     Cpuid/CpuidQemuTest.cc
 )
 
