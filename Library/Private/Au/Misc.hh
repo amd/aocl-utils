@@ -28,8 +28,10 @@
 
 #pragma once
 
-#include "Au/Types.hh"
+#include "Au/Assert.hh"
+#include "Au/Au.hh"
 
+#include <iostream>
 #include <type_traits>
 
 namespace Au {
@@ -46,13 +48,36 @@ namespace Au {
  *
  * @return      integer Extracted value.
  */
-Uint32
+inline Uint32
 extract32(Uint32 value, int start, int length)
 {
     AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
                "Invalid start/size");
 
     return (value >> start) & (~0U >> (32 - length));
+}
+
+template<typename EnumType, typename UnderlyingType>
+UnderlyingType
+enumToValue(EnumType enumValue)
+{
+    if (static_cast<UnderlyingType>(enumValue)
+            < std::numeric_limits<UnderlyingType>::min()
+        || static_cast<UnderlyingType>(enumValue)
+               > std::numeric_limits<UnderlyingType>::max()) {
+        AUD_ASSERT(0,
+                   "Enum value out of range for conversion to underlying type");
+    }
+
+    return static_cast<UnderlyingType>(enumValue);
+}
+
+template<typename EnumType, typename UnderlyingType>
+EnumType
+valueToEnum(UnderlyingType value)
+{
+    // Do the boundary checking inside the calling function.
+    return static_cast<EnumType>(value);
 }
 
 /**

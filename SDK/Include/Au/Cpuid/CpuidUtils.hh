@@ -3,9 +3,10 @@
 
 #include "Au/Assert.hh"
 #include "Au/Au.hh"
+#include "Au/Cpuid/CacheInfo.hh"
+#include "Au/Misc.hh"
 #include "Au/Types.hh"
 
-#include "Au/Cpuid/CacheInfo.hh"
 #include <iostream>
 #include <type_traits>
 using namespace std;
@@ -64,20 +65,6 @@ enum class EFamily : Uint16
     Max      = 0x19, /* Always set to latest family ID */
 };
 
-/**
- * @struct  VendorInfo
- * @brief   CPU core info.
- */
-class VendorInfo
-{
-    /* TODO: Make this private and provide accessors */
-  public:
-    EVendor mMfg;      /**< CPU manufacturing vendor. */
-    EFamily mFamily;   /**< CPU family ID. */
-    Uint16  mModel;    /**< CPU model number. */
-    Uint16  mStepping; /**< CPU stepping. */
-};
-
 class CpuidUtils
 {
   public:
@@ -103,16 +90,42 @@ class CpuidUtils
      * \param[in]  ResponseT    The CPUID Register Data.
      * @return The EVendor [AMD, Intel or Other]
      */
-    EVendor __update_vendor_info(ResponseT const& regs);
+    EVendor getMfgInfo(ResponseT const& regs);
     /**
-     * \brief   Get CPU manufacturing info from CPUID instruction.
+     * \brief       Get Family ID from given 32-bit input value.
      *
-     * It gives CPU Family, Model & Stepping.
+     * Family[7:0] = (ExtendedFamily[7:0] + {0000b,BaseFamily[3:0]})
+     * where ExtendedFamily[7:0] = var[27:20], BaseFamily[3:0] = var[11, 8]
      *
-     * \param[in]   cpuid_regs  CpuId registers result values.
-     * \param[out]  mfg_info    Updates CPU manufacturing info.
+     * \param[in]   var  32-bit value.
+     *
+     * \return      Returns Family ID value.
      */
-    void __update_mfg_info(ResponseT const& resp);
+    EFamily getFamily(Uint32 var);
+    /**
+     * \brief       Get Model number from given input value.
+     *
+     *  Model[7:0] = {ExtendedModel[3:0],BaseModel[3:0]}
+     *  where ExtendedModel[3:0] = var[29:16], BaseModel[3:0] = var[7, 4]
+     *
+     * \param[in]   var  32-bit value.
+     *
+     * \return      Returns Model number value.
+     */
+    Uint16 getModel(Uint32 var);
+    /**
+     * \brief       Get Stepping ID from given input value.
+     *
+     * Get Stepping ID from given input value.
+     * Model[7:0] = {ExtendedModel[3:0],BaseModel[3:0]}
+     * where ExtendedModel[3:0] = var[29:16], BaseModel[3:0] = var[7, 4]
+     * For now, model number is stepping. TODO: need to revisit for each family.
+     *
+     * \param[in]   var  32-bit value.
+     *
+     * \return      Returns Stepping ID value.
+     */
+    Uint16 getStepping(Uint32 var);
     /**
      * @details Issues the cpuid instruction using EAX/ECX gets response and
      * checks a flag in appropriate register
@@ -123,6 +136,8 @@ class CpuidUtils
      *
      * @return true if cpu has flag, false otherwise
      */
-    bool __has_flag(ResponseT const& expected, ResponseT const& actual);
+    bool hasFlag(ResponseT const& expected, ResponseT const& actual);
+    void updateCacheView(CacheView& cView);
+    void updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp);
 };
 } // namespace Au

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 
 #include <map>
@@ -47,6 +46,20 @@ enum class ECpuidReg
 };
 
 using EFlag = ECpuidFlag;
+
+/**
+ * @struct  VendorInfo
+ * @brief   CPU core info.
+ */
+class VendorInfo
+{
+    /* TODO: Make this private and provide accessors */
+  public:
+    EVendor mMfg;      /**< CPU manufacturing vendor. */
+    EFamily mFamily;   /**< CPU family ID. */
+    Uint16  mModel;    /**< CPU model number. */
+    Uint16  mStepping; /**< CPU stepping. */
+};
 
 /**
  * @brief   Updates CPU vendor info internal.

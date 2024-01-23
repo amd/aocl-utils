@@ -280,7 +280,8 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *
      * @param[in] eflag    ECpuidFlag that needs to be checked
      *
-     * @return true if 'num' was an AMD x86-64, false otherwise
+     * @return true if eflag is present in the availableflags and usable flags,
+     * false otherwise
      */
     bool hasFlag(ECpuidFlag const& eflag) const;
 

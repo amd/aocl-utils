@@ -27,8 +27,6 @@
  */
 #include "X86RawData.hh"
 
-#include "Au/Misc.hh" /* for enum->int */
-
 #include <array>
 #include <list>
 #include <tuple>
@@ -224,17 +222,20 @@ X86Cpu::Impl::update()
      */
 
     std::map<RequestT, ResponseT> rawCpuid;
-    mVendorInfo.mMfg =
-        mCUtils->__update_vendor_info(at(RequestT{ 0, 0, 0, 0 }));
+
     /* manufacturer details */
-    mCUtils->__update_mfg_info(at(RequestT{ 0x0000'0001, 0, 0, 0 }));
+    auto resp             = at(RequestT{ 0x0000'0001, 0, 0, 0 });
+    mVendorInfo.mMfg      = mCUtils->getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
+    mVendorInfo.mFamily   = mCUtils->getFamily(resp.eax);
+    mVendorInfo.mModel    = mCUtils->getModel(resp.eax);
+    mVendorInfo.mStepping = mCUtils->getStepping(resp.eax);
 
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
             rawCpuid.insert(std::make_pair(req, at(req)));
         }
-        updateflag(flg, mCUtils->__has_flag(expected, rawCpuid[req]));
+        updateflag(flg, mCUtils->hasFlag(expected, rawCpuid[req]));
     }
 
     /*
@@ -254,7 +255,7 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    // update_cache_view(mCacheView);
+    mCUtils->updateCacheView(mCacheView);
 }
 
 ResponseT
