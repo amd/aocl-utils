@@ -64,13 +64,15 @@ CacheInfo::setLane(Uint64 lane_size)
 void
 CacheInfo::setType(CacheType type)
 {
-    AUD_ASSERT(type != CacheType::Unknown, "Type is Unknown");
+    AUD_ASSERT(*type > 0, "Type is Unknown");
+    AUD_ASSERT(type < CacheType::Unknown, "Type is Unknown");
     m_type = type;
 }
 void
 CacheInfo::setLevel(CacheLevel lvl)
 {
-    AUD_ASSERT(lvl != CacheLevel::Unknown, "Level is Unknown");
+    AUD_ASSERT(*lvl > 0, "Level is Unknown");
+    AUD_ASSERT(lvl < CacheLevel::Unknown, "Level is Unknown");
     m_level = lvl;
 }
 void

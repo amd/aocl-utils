@@ -60,7 +60,7 @@ class QemuTest
         if (pModule != NULL) {
             PyObject* pFunc = PyObject_GetAttrString(pModule, "run_qemu");
 
-            if (pFunc != NULL && PyCallable_Check(pFunc) !=0) {
+            if (pFunc != NULL && PyCallable_Check(pFunc) != 0) {
                 /* Call the run_qemu function with arguments */
                 std::string binary_path = PROJECT_BUILD_DIR;
                 binary_path += "/Release/core_CpuidTest";
@@ -86,7 +86,7 @@ class QemuTest
 
   protected:
     static std::vector<bool> testAll(const std::string&              cpuType,
-                              const std::vector<std::string>& testNames)
+                                     const std::vector<std::string>& testNames)
     {
         std::vector<bool> results;
         for (const auto& testName : testNames) {
@@ -136,8 +136,9 @@ INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
 
 TEST_P(QemuTest, CpuTypeTest)
 {
-    const auto                     params    = GetParam();
-    const std::string              cpuType   = std::get<0>(params);
+    const auto        params  = GetParam();
+    const std::string cpuType = std::get<0>(params);
+    std::cout << "Emulating " << cpuType << std::endl;
     const std::vector<std::string> testNames = {
         "X86Cpuid.DISABLED_isAMD",
         "X86Cpuid.DISABLED_isIntel",

@@ -48,20 +48,6 @@ enum class ECpuidReg
 using EFlag = ECpuidFlag;
 
 /**
- * @struct  VendorInfo
- * @brief   CPU core info.
- */
-class VendorInfo
-{
-    /* TODO: Make this private and provide accessors */
-  public:
-    EVendor mMfg;      /**< CPU manufacturing vendor. */
-    EFamily mFamily;   /**< CPU family ID. */
-    Uint16  mModel;    /**< CPU model number. */
-    Uint16  mStepping; /**< CPU stepping. */
-};
-
-/**
  * @brief   Updates CPU vendor info internal.
  *
  * @details
@@ -93,11 +79,7 @@ class X86Cpu::Impl
     }
     Impl(const Impl& other)            = default;
     Impl& operator=(const Impl& other) = default;
-    ~Impl()
-    {
-        // Release the allocated memory
-        delete mCUtils;
-    }
+    ~Impl()                            = default;
 
     void update();
 

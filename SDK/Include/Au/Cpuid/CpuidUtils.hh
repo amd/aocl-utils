@@ -65,6 +65,20 @@ enum class EFamily : Uint16
     Max      = 0x19, /* Always set to latest family ID */
 };
 
+/**
+ * @struct  VendorInfo
+ * @brief   CPU core info.
+ */
+class VendorInfo
+{
+    /* TODO: Make this private and provide accessors */
+  public:
+    EVendor mMfg;      /**< CPU manufacturing vendor. */
+    EFamily mFamily;   /**< CPU family ID. */
+    Uint16  mModel;    /**< CPU model number. */
+    Uint16  mStepping; /**< CPU stepping. */
+};
+
 class CpuidUtils
 {
   public:

@@ -57,6 +57,19 @@ extract32(Uint32 value, int start, int length)
     return (value >> start) & (~0U >> (32 - length));
 }
 
+/**
+ * @brief        Helper function to convert Enum->Int
+ *
+ * @return       Integer type of T
+ */
+template<typename T>
+inline constexpr auto
+operator*(T const e) noexcept
+    -> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
+{
+    return static_cast<std::underlying_type_t<T>>(e);
+}
+
 template<typename EnumType, typename UnderlyingType>
 UnderlyingType
 enumToValue(EnumType enumValue)
@@ -76,21 +89,10 @@ template<typename EnumType, typename UnderlyingType>
 EnumType
 valueToEnum(UnderlyingType value)
 {
-    // Do the boundary checking inside the calling function.
-    return static_cast<EnumType>(value);
-}
+    /*if (value < EnumMin<EnumType> || value > EnumMax<EnumType>)
+        return static_cast<EnumType>();*/
 
-/**
- * @brief        Helper function to convert Enum->Int
- *
- * @return       Integer type of T
- */
-template<typename T>
-inline constexpr auto
-operator*(T const e) noexcept
-    -> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
-{
-    return static_cast<std::underlying_type_t<T>>(e);
+    return static_cast<EnumType>(value);
 }
 
 } // namespace Au
