@@ -224,18 +224,25 @@ X86Cpu::Impl::update()
     std::map<RequestT, ResponseT> rawCpuid;
 
     /* manufacturer details */
-    auto resp             = at(RequestT{ 0x0000'0001, 0, 0, 0 });
-    mVendorInfo.mMfg      = mCUtils->getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
-    mVendorInfo.mFamily   = mCUtils->getFamily(resp.eax);
-    mVendorInfo.mModel    = mCUtils->getModel(resp.eax);
-    mVendorInfo.mStepping = mCUtils->getStepping(resp.eax);
-
+    auto resp                = at(RequestT{ 0x0000'0001, 0, 0, 0 });
+    m_vendor_info.m_mfg      = m_cutils->getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
+    m_vendor_info.m_family   = m_cutils->getFamily(resp.eax);
+    m_vendor_info.m_model    = m_cutils->getModel(resp.eax);
+    m_vendor_info.m_stepping = m_cutils->getStepping(resp.eax);
+    std::cout << "m_mfg      : " << std::hex << *m_vendor_info.m_mfg
+              << std::endl;
+    std::cout << "m_family   : " << std::hex << *m_vendor_info.m_family
+              << std::endl;
+    std::cout << "m_model    : " << std::hex << m_vendor_info.m_model
+              << std::endl;
+    std::cout << "m_stepping : " << std::hex << m_vendor_info.m_stepping
+              << std::endl;
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
             rawCpuid.insert(std::make_pair(req, at(req)));
         }
-        updateflag(flg, mCUtils->hasFlag(expected, rawCpuid[req]));
+        updateflag(flg, m_cutils->hasFlag(expected, rawCpuid[req]));
     }
 
     /*
@@ -243,8 +250,8 @@ X86Cpu::Impl::update()
      * *_USABLE flags, so that
      * all ifunc's sees them
      */
-    if (mVendorInfo.mMfg == EVendor::Amd
-        && mVendorInfo.mFamily >= EFamily::Zen) {
+    if (m_vendor_info.m_mfg == EVendor::Amd
+        && m_vendor_info.m_family >= EFamily::Zen) {
         /* todo */
     }
 
@@ -255,25 +262,25 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    mCUtils->updateCacheView(mCacheView);
+    m_cutils->updateCacheView(m_cache_view);
 }
 
 ResponseT
 X86Cpu::Impl::at(RequestT& req) const
 {
-    return mCUtils->__raw_cpuid(req);
+    return m_cutils->__raw_cpuid(req);
 }
 
 bool
 X86Cpu::Impl::isIntel() const
 {
-    return mVendorInfo.mMfg == EVendor::Intel;
+    return m_vendor_info.m_mfg == EVendor::Intel;
 }
 
 bool
 X86Cpu::Impl::isAMD() const
 {
-    return mVendorInfo.mMfg == EVendor::Amd;
+    return m_vendor_info.m_mfg == EVendor::Amd;
 }
 
 bool
@@ -313,13 +320,13 @@ X86Cpu::Impl::isX86_64v4() const
 bool
 X86Cpu::Impl::hasFlag(EFlag const& eflag) const
 {
-    return mAvailableFlags.at(eflag) && mUsableFlags.at(eflag);
+    return m_avail_flags.at(eflag) && m_usable_flags.at(eflag);
 }
 
 void
 X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
 {
-    mUsableFlags[eflag] = res;
+    m_usable_flags[eflag] = res;
 }
 
 void

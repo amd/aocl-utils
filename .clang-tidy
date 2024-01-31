@@ -1,6 +1,6 @@
 ---
 Checks:          '-*,-readability-identifier-length, clang-diagnostic-*,-clang-diagnostic-unused-value,clang-analyzer-*,-*,bugprone-*,performance-*,readability-*,-readability-magic-numbers,-readability-braces-around-statements,-readability-inconsistent-declaration-parameter-name,-readability-named-parameter'
-HeaderFilterRegex: ''
+  #HeaderFilterRegex: ''
 WarningsAsErrors: '*'
 AnalyzeTemporaryDtors: false
 WarningsAsErrors: ''
@@ -44,6 +44,6 @@ CheckOptions:
   readability-identifier-naming.MemberCase: camelBack
   readability-identifier-naming.MemberConstantCase: camelBack
   readability-identifier-naming.MemberFunctionCase: camelBack
-  readability-identifier-naming.MemberVariableCase: camelBack
+  readability-identifier-naming.MemberVariableCase: snake_case
 ...
 

@@ -36,32 +36,33 @@ namespace Au {
 /* Zen, Naples, Whitehaven, Summit Ridge, Snowy Owl */
 enum class EUarch : Uint8 // NOLINT
 {
-    Naples        = MAKE_MODEL(0x1, 0x0),
-    Ravenridge    = MAKE_MODEL(0x1, 0x1),
-    Bandedkestrel = MAKE_MODEL(0x8, 0x1),
-    Dali          = MAKE_MODEL(0x0, 0x2),
+    /* Zen 17H */
+    Naples        = MAKE_MODEL(0x1, 0x0), /* 1 */
+    Ravenridge    = MAKE_MODEL(0x1, 0x1), /* 17 */
+    Bandedkestrel = MAKE_MODEL(0x8, 0x1), /* 24 */
+    Dali          = MAKE_MODEL(0x0, 0x2), /* 32 */
 
-    /* Zen+ */
-    Pinnacleridge = MAKE_MODEL(0x8, 0x0),
-    Picasso       = MAKE_MODEL(0x8, 0x1),
+    /* Zen+ 17H*/
+    Pinnacleridge = MAKE_MODEL(0x8, 0x0), /* 8 */
+    Picasso       = MAKE_MODEL(0x8, 0x1), /* 24 */
 
-    /* Zen2 */
-    Rome    = MAKE_MODEL(0x1, 0x3),
-    Renoir  = MAKE_MODEL(0x0, 0x6),
-    Matisse = MAKE_MODEL(0x1, 0x7),
+    /* Zen2 17H*/
+    Rome    = MAKE_MODEL(0x1, 0x3), /* 49 */
+    Renoir  = MAKE_MODEL(0x0, 0x6), /* 96 */
+    Matisse = MAKE_MODEL(0x1, 0x7), /* 113 */
 
-    /* Zen3 */
+    /* Zen3 19H*/
     Zen3_Min = MAKE_MODEL(0x0, 0x0), /* 00 */
-    Milan    = MAKE_MODEL(0x1, 0x0), /* 10 */
+    Milan    = MAKE_MODEL(0x1, 0x0), /* 1 */
     Vermeer  = MAKE_MODEL(0x1, 0x2), /* 33 */
     Chagall  = MAKE_MODEL(0x8, 0x0), /* 08 */
     Rembrant = MAKE_MODEL(0x0, 0x4), /* 64 */
     Cezanne  = MAKE_MODEL(0x0, 0x5), /* 80 */
-    Zen3_Max = MAKE_MODEL(0x0, 0xF), /* 0f */
+    Zen3_Max = MAKE_MODEL(0x0, 0xF), /* 240 */
 
-    /* Zen4 */
-    Zen4_Min    = MAKE_MODEL(0x0, 0x1), /* 0x10 */
-    Genoa       = MAKE_MODEL(0x0, 0x1),
+    /* Zen4 19H*/
+    Zen4_Min    = MAKE_MODEL(0x0, 0x1), /* 16 */
+    Genoa       = MAKE_MODEL(0x8, 0x5), /* 88 */
     Warhol      = MAKE_MODEL(0x0, 0x1), /* FIXME: ?? */
     Raphael     = MAKE_MODEL(0x0, 0x1),
     DragonRidge = MAKE_MODEL(0x0, 0x2), /* FIXME: ?? */
@@ -74,34 +75,16 @@ enum class EUarch : Uint8 // NOLINT
     Turin        = 0x0, /* Server */
 };
 
-// clang-format off
-/**-----------------------------------------------------------------------------------------------------------+
- * |                                      Processor Version Information                                       |
- * -----------------------------------------------------------------------------------------------------------+
- * |                                                    EAX = 1                                               |
- * -----------------------------------------------------------------------------------------------------------+
- * |  31 .. 28  | 27 .. 25 .. 20  |  19 18 17 16  |  15  14  | 13 12    |  11 10 9 8  |  7 6 5 4  |  3 2 1 0  |
- * -----------------------------------------------------------------------------------------------------------+
- * |  Reserved  | Ext Family ID   |  Ext Model ID | Reserved | Cpu Type |  Family ID  |   Model   | Stepping  |
- * -----------------------------------------------------------------------------------------------------------+
- *
- *
- * Family[7:0] = (ExtendedFamily[7:0] + {0000b,BaseFamily[3:0]})
- *       where ExtendedFamily[7:0] = EAX[27:20],
- *             BaseFamily[3:0]     = EAX[11:8]
- */
-// clang-format on
-
 X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
     : CpuInfo{ num }
-    , mPimpl{ new X86Cpu::Impl{ cUtils } }
+    , m_pimpl{ new X86Cpu::Impl{ cUtils } }
 {
     pImpl()->update();
 }
 
 X86Cpu::X86Cpu(CpuNumT num)
     : CpuInfo{ num }
-    , mPimpl{ new X86Cpu::Impl{} }
+    , m_pimpl{ new X86Cpu::Impl{} }
 {
     pImpl()->update();
 }

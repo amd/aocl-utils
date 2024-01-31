@@ -60,21 +60,20 @@ class X86Cpu::Impl
 {
 
   public:
-    CpuidUtils* mCUtils;
     Impl(CpuidUtils* cUtils)
-        : mCUtils{ cUtils }
-        , mVendorInfo{}
-        , mAvailableFlags{}
-        , mUsableFlags{}
-        , mCacheView{}
+        : m_avail_flags{}
+        , m_usable_flags{}
+        , m_cutils{ cUtils }
+        , m_vendor_info{}
+        , m_cache_view{}
     {
     }
     Impl()
-        : mCUtils{ new CpuidUtils{} }
-        , mVendorInfo{}
-        , mAvailableFlags{}
-        , mUsableFlags{}
-        , mCacheView{}
+        : m_avail_flags{}
+        , m_usable_flags{}
+        , m_cutils{ new CpuidUtils{} }
+        , m_vendor_info{}
+        , m_cache_view{}
     {
     }
     Impl(const Impl& other)            = default;
@@ -126,8 +125,8 @@ class X86Cpu::Impl
   private:
     bool isUsable(EFlag const& flg) const
     {
-        auto usable = mUsableFlags.find(flg);
-        if (usable != mUsableFlags.end())
+        auto usable = m_usable_flags.find(flg);
+        if (usable != m_usable_flags.end())
             return usable->second;
 
         return false;
@@ -145,17 +144,17 @@ class X86Cpu::Impl
 
     void updateflag(EFlag const& flg, bool res = true)
     {
-        mAvailableFlags[flg] = mUsableFlags[flg] = res;
+        m_avail_flags[flg] = m_usable_flags[flg] = res;
     }
-
-    VendorInfo mVendorInfo;
 
     /*
      * FIXME : Eventually change to a bitmap
      */
-    std::map<EFlag, bool> mAvailableFlags;
-    std::map<EFlag, bool> mUsableFlags;
-    CacheView             mCacheView;
+    std::map<EFlag, bool> m_avail_flags;
+    std::map<EFlag, bool> m_usable_flags;
+    CpuidUtils*           m_cutils;
+    VendorInfo            m_vendor_info;
+    CacheView             m_cache_view;
 };
 
 } // namespace Au
