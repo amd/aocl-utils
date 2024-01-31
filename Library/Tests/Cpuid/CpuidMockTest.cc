@@ -50,13 +50,13 @@ class MockCpuidBase : public testing::Test
             ResponseT response{};
 
             sscanf(requestStr.c_str(),
-                   "{%u,%u,%u,%u}",
+                   "{%x,%x,%x,%x}",
                    &request.eax,
                    &request.ebx,
                    &request.ecx,
                    &request.edx);
             sscanf(respStr.c_str(),
-                   "{%u,%u,%u,%u}",
+                   "{%x,%x,%x,%x}",
                    &response.eax,
                    &response.ebx,
                    &response.ecx,
@@ -177,7 +177,7 @@ INSTANTIATE_TEST_SUITE_P(MockX86CpuTestSuite,
 TEST_P(MockX86Cpu, MockX86CpuTest)
 {
     // There are only 11 calls to the function which is fixed
-    // EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(12);
+    // EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(11);
 
     const auto         params          = GetParam();
     const vector<bool> expectedResults = get<1>(params);
