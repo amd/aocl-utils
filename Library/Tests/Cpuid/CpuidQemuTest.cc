@@ -26,6 +26,7 @@
  *
  */
 
+#include "CpuidTest.hh"
 #include <Python.h>
 #include <filesystem>
 #include <gtest/gtest.h>
@@ -60,7 +61,7 @@ class QemuTest
         if (pModule != NULL) {
             PyObject* pFunc = PyObject_GetAttrString(pModule, "run_qemu");
 
-            if (pFunc != NULL && PyCallable_Check(pFunc) !=0) {
+            if (pFunc != NULL && PyCallable_Check(pFunc) != 0) {
                 /* Call the run_qemu function with arguments */
                 std::string binary_path = PROJECT_BUILD_DIR;
                 binary_path += "/Release/core_CpuidTest";
@@ -86,7 +87,7 @@ class QemuTest
 
   protected:
     static std::vector<bool> testAll(const std::string&              cpuType,
-                              const std::vector<std::string>& testNames)
+                                     const std::vector<std::string>& testNames)
     {
         std::vector<bool> results;
         for (const auto& testName : testNames) {
@@ -103,41 +104,15 @@ class QemuTest
     }
 };
 
-const std::vector<std::tuple<std::string, std::vector<bool>>> testParameters = {
-    /*The expected value of x86_64v4 is intetionally set to false, as it is not
-     * currently supported on qemu
-     */
-    { "EPYC-Genoa-v1", { true, false, true, true, false } },
-    { "EPYC-Milan-v1", { true, false, true, true, false } },
-    { "EPYC-Milan-v2", { true, false, true, true, false } },
-    { "EPYC-Rome-v1", { true, false, true, true, false } },
-    { "EPYC-Rome-v2", { true, false, true, true, false } },
-    { "EPYC-Rome-v3", { true, false, true, true, false } },
-    { "EPYC-Rome-v4", { true, false, true, true, false } },
-    { "EPYC-v1", { true, false, true, true, false } },
-    { "EPYC-v2", { true, false, true, true, false } },
-    { "EPYC-v3", { true, false, true, true, false } },
-    { "EPYC-v4", { true, false, true, true, false } },
-    { "Opteron_G1-v1", { true, false, false, false, false } },
-    { "Opteron_G2-v1", { true, false, false, false, false } },
-    { "Opteron_G3-v1", { true, false, false, false, false } },
-    { "Opteron_G4-v1", { true, false, true, false, false } },
-    { "Opteron_G5-v1", { true, false, true, false, false } },
-    { "phenom-v1", { true, false, false, false, false } },
-    { "Broadwell-v1", { false, true, true, true, false } },
-    { "Denverton-v1", { false, true, true, false, false } },
-    { "Conroe-v1", { false, true, false, false, false } },
-    { "Skylake-Server-v1", { false, true, true, true, true } }
-};
-
 INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
                          QemuTest,
-                         ::testing::ValuesIn(testParameters));
+                         ::testing::ValuesIn(testParametersX86Cpu));
 
 TEST_P(QemuTest, CpuTypeTest)
 {
-    const auto                     params    = GetParam();
-    const std::string              cpuType   = std::get<0>(params);
+    const auto        params  = GetParam();
+    const std::string cpuType = std::get<0>(params);
+    std::cout << "Emulating " << cpuType << std::endl;
     const std::vector<std::string> testNames = {
         "X86Cpuid.DISABLED_isAMD",
         "X86Cpuid.DISABLED_isIntel",

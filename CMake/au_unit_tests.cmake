@@ -127,7 +127,7 @@ function(au_cc_test testName)
   )
 
   # Add gtest with main() as dependency
-  target_link_libraries(${_target_name} PRIVATE gtest_main)
+  target_link_libraries(${_target_name} PRIVATE gmock_main)
 
   #
   # Add additional dependencies,

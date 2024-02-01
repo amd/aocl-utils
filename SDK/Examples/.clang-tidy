@@ -1,0 +1,7 @@
+# File: project/external/.clang-tidy
+
+# Disable all checks in this folder.
+#
+Checks: '-*,misc-definitions-in-headers'
+CheckOptions:
+  {HeaderFileExtensions: "x" }

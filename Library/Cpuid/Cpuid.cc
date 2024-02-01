@@ -41,7 +41,7 @@ CpuInfo::CpuInfo(CpuNumT idx)
 }
 
 std::ostream&
-operator<<(std::ostream& os, EGoverner const& gov)
+operator<<(std::ostream& os, EGoverner const& gov) // NOLINT
 {
     using G = EGoverner;
 

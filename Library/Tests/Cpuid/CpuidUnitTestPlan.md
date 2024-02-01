@@ -48,7 +48,7 @@ AMD Cpus
 | IsIntel                 | False         | False         | False         | False        | False        | False        | False        | False   | False   | False   | False   |
 | isX86_64V2              | True          | True          | True          | True         | True         | True         | True         | True    | True    | True    | True    |
 | isX86_64V3              | True          | True          | True          | True         | True         | True         | True         | True    | True    | True    | True    |
-| isX86_64V4              | False         | False         | False         | False        | False        | False        | False        | False   | False   | False   | False   |
+| isX86_64V4              | True          | False         | False         | False        | False        | False        | False        | False   | False   | False   | False   |
 
 AMD Cpus(Continued)
 | CPU TYPE/function name | Opteron_G1-v1 | Opteron_G2-v1 | Opteron_G3-v1 | Opteron_G4-v1 | Opteron_G5-v1 | phenom-v1 |
@@ -102,6 +102,7 @@ X86_64v4
 | avx512vl      | True          | False        | False         | False     | True              | False
 
 ### Utility Function Test Matrix TBD
+EPYC-Genoa-v1
 
 ### The C Interfaces TBD
 

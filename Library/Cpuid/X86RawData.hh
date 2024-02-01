@@ -28,78 +28,11 @@
 
 #pragma once
 
-#include "Au/Assert.hh"
-#include "Au/Au.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 
 #include <map>
 
 namespace Au {
-
-/* ID return values */
-struct cpuid_regs
-{
-    Uint32 eax;
-    Uint32 ebx;
-    Uint32 ecx;
-    Uint32 edx;
-
-    /* following are required for making this key in a std::map */
-    bool const operator==(cpuid_regs const& o) const
-    {
-        return eax == o.eax && ebx == o.ebx && ecx == o.ecx && edx == o.edx;
-    }
-
-    bool const operator<(cpuid_regs const& o) const
-    {
-        return eax < o.eax || ebx < o.ebx || ecx < o.ecx || edx < o.edx;
-    }
-
-    bool const operator&(cpuid_regs const& o) const
-    {
-        return eax & o.eax || ebx & o.ebx || ecx & o.ecx || edx & o.edx;
-    }
-};
-using RequestT  = const cpuid_regs;
-using ResponseT = cpuid_regs;
-
-/**
- * @enum  Vendor
- * @brief CPU vendors.
- */
-enum class EVendor : Uint32
-{
-    Amd = 1, /**< AMD. */
-    Intel,   /**< Intel. */
-    Other    /**< Others. */
-};
-
-/* Processor family info */
-enum class EFamily : Uint16
-{
-    Zen      = 0x17,
-    Zen_Plus = 0x17,
-    Zen2     = 0x17,
-    Zen3     = 0x19,
-    Zen4     = 0x19,
-    Max      = 0x19, /* Always set to latest family ID */
-};
-
-/**
- * @struct  VendorInfo
- * @brief   CPU core info.
- */
-class VendorInfo
-{
-    /* TODO: Make this private and provide accessors */
-  public:
-    EVendor m_mfg;      /**< CPU manufacturing vendor. */
-    EFamily m_family;   /**< CPU family ID. */
-    Uint16  m_model;    /**< CPU model number. */
-    Uint16  m_stepping; /**< CPU stepping. */
-};
-
-using EFlag = ECpuidFlag;
 
 /** \enum  ECpuidReg
  *  \brief CPUID registers.
@@ -111,7 +44,8 @@ enum class ECpuidReg
     Ecx,     /**< ECX register. */
     Edx      /**< EDX register. */
 };
-using EReg = ECpuidReg;
+
+using EFlag = ECpuidFlag;
 
 /**
  * @brief   Updates CPU vendor info internal.
@@ -126,30 +60,36 @@ class X86Cpu::Impl
 {
 
   public:
-    Impl()
-        : m_vendor_info{}
-        , m_avail_flags{}
+    Impl(CpuidUtils* cUtils)
+        : m_avail_flags{}
         , m_usable_flags{}
+        , m_cutils{ cUtils }
+        , m_vendor_info{}
         , m_cache_view{}
     {
     }
+    Impl()
+        : m_avail_flags{}
+        , m_usable_flags{}
+        , m_cutils{ new CpuidUtils{} }
+        , m_vendor_info{}
+        , m_cache_view{}
+    {
+    }
+    Impl(const Impl& other)            = default;
+    Impl& operator=(const Impl& other) = default;
+    ~Impl()                            = default;
 
+    void update();
+
+    bool isIntel() const;
     bool isAMD() const;
 
     bool isX86_64v2() const;
     bool isX86_64v3() const;
     bool isX86_64v4() const;
 
-    bool isIntel() const;
-
     bool hasFlag(EFlag const& ef) const;
-
-    /**
-     * @brief  Update Raw Data by re-reading the registers
-     *
-     * @return None
-     */
-    void update();
 
     /**
      * @brief       Get CPUID output based on eax, ecx register values as
@@ -170,7 +110,7 @@ class X86Cpu::Impl
      *
      * @return     void
      */
-    void apply(RequestT& regs, ResponseT const& resp);
+    void apply(RequestT& regs);
 
     /**
      * @brief Setter for usable flag to override, by default usable = available
@@ -185,17 +125,17 @@ class X86Cpu::Impl
   private:
     bool isUsable(EFlag const& flg) const
     {
-        auto __usable = m_usable_flags.find(flg);
-        if (__usable != m_usable_flags.end())
-            return __usable->second;
+        auto usable = m_usable_flags.find(flg);
+        if (usable != m_usable_flags.end())
+            return usable->second;
 
         return false;
     }
 
     /* All or None flags check */
-    bool isUsable(std::vector<EFlag> const& __arr) const
+    bool isUsable(std::vector<EFlag> const& arr) const
     {
-        for (auto& i : __arr) {
+        for (auto& i : arr) {
             if (!isUsable(i))
                 return false;
         }
@@ -207,41 +147,14 @@ class X86Cpu::Impl
         m_avail_flags[flg] = m_usable_flags[flg] = res;
     }
 
-    VendorInfo m_vendor_info;
-
     /*
      * FIXME : Eventually change to a bitmap
      */
     std::map<EFlag, bool> m_avail_flags;
     std::map<EFlag, bool> m_usable_flags;
-
-    CacheView m_cache_view;
+    CpuidUtils*           m_cutils;
+    VendorInfo            m_vendor_info;
+    CacheView             m_cache_view;
 };
-
-static inline void
-__raw_cpuid(RequestT& req, ResponseT& resp)
-{
-    if (req.eax == 0x00000007) {
-        asm volatile(
-            "cpuid"
-            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "0"(req.eax), "2"(req.ecx));
-
-    } else {
-        asm volatile(
-            "cpuid"
-            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "0"(req.eax));
-    }
-}
-
-static inline ResponseT
-__raw_cpuid(RequestT& req)
-{
-    ResponseT resp;
-    __raw_cpuid(req, resp);
-
-    return resp;
-}
 
 } // namespace Au

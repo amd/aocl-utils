@@ -1,7 +1,6 @@
 .vscode
 .ccls
 .dir-locals.el
-.clang-format
 **/CMakeCache.txt
 **/CMakeFiles
 CTestTestfile.cmake

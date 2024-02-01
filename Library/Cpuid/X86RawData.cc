@@ -27,9 +27,6 @@
  */
 #include "X86RawData.hh"
 
-#include "Au/Cpuid/X86Cpu.hh"
-#include "Au/Misc.hh" /* for enum->int */
-
 #include <array>
 #include <list>
 #include <tuple>
@@ -38,7 +35,7 @@ namespace Au {
 
 // clang-format off
 using QueryT = std::tuple<RequestT, ResponseT, EFlag>;
-static const std::array<QueryT, *EFlag::MAX> cpuidMap = {{
+static const std::array<QueryT, *EFlag::MAX> CPUID_MAP = {{
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000001}, EFlag::sse3},
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000002}, EFlag::pclmulqdq},
     {{.eax=0x00000001}, {.eax=0, .ebx=0, .ecx=0x00000004}, EFlag::dtes64},
@@ -213,141 +210,9 @@ static const std::array<QueryT, *EFlag::MAX> cpuidMap = {{
 }};
 // clang-format on
 
-/**
- * @brief       Extract specified bits from 32-bit value.
- *
- * Extracts length number of bits starting from bit position
- * start in 32-bit value.
- *
- * @param[in]   value  32-bit value.
- * @param[in]   start  Starting bit position.
- * @param[in]   length Number of bits to be extracted.
- *
- * @return      integer Extracted value.
- */
-
-Uint32
-extract32(Uint32 value, int start, int length)
-{
-    AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
-               "Invalid start/size");
-
-    return (value >> start) & (~0U >> (32 - length));
-}
-
-static void
-__update_vendor_info(VendorInfo& vinfo, ResponseT const& regs)
-{
-    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
-        && regs.edx == 0x69746e65) {
-        vinfo.m_mfg = EVendor::Amd;
-    } else if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e
-               && regs.edx == 0x49656e69) {
-        vinfo.m_mfg = EVendor::Intel;
-    } else {
-        vinfo.m_mfg = EVendor::Other;
-    }
-}
-
-static void
-__update_mfg_info(ResponseT const& resp)
-{
-}
-
-/**
- * @details Issues the cpuid instruction using EAX/ECX gets response and checks
- * a flag in appropriate register
- *
- * @param[in] expected Expected bit(s) to check
- *
- * @param[in] actual   Actula value of E{A,B,C,D}X after 'cpuid' issued
- *
- * @return true if cpu has flag, false otherwise
- */
-static inline bool
-__has_flag(ResponseT const& expected, ResponseT const& actual)
-{
-    return expected & actual;
-}
-
-using CacheLevel = CacheInfo::CacheLevel;
-using CacheType  = CacheInfo::CacheType;
-
-static CacheLevel
-InttoLevel(Uint32 lvl)
-{
-    switch (lvl) {
-            // clang-format off
-        case 1:return CacheLevel::L1;break;
-        case 2:return CacheLevel::L2;break;
-        case 3:return CacheLevel::L3;break;
-        default:AUD_ASSERT(true, "Invalid Cache Level");break;
-            // clang-format on
-    }
-
-    return CacheLevel::Unknown;
-}
-
-static CacheType
-InttoType(Uint32 tp)
-{
-    switch (tp) {
-            // clang-format off
-        case 1:return CacheType::DCache;break;
-        case 2:return CacheType::ICache;break;
-        case 3:return CacheType::Unified;break;
-        default:AUD_ASSERT(true, "Invalid Cache Type");break;
-            // clang-format on
-    }
-    return CacheType::Unknown;
-}
-
-static inline void
-update_cache_info(CacheInfo& ci, ResponseT const& resp)
-{
-    ci.setType(InttoType(Au::extract32(resp.eax, 0, 5)));
-
-    auto lvl = InttoLevel(Au::extract32(resp.eax, 5, 3));
-    ci.setLevel(lvl);
-
-    auto sets = resp.ecx + 1;
-    ci.setSets(sets);
-
-    auto lane = extract32(resp.ebx, 0, 12) + 1;
-    ci.setLane(lane);
-
-    auto way = extract32(resp.ebx, 22, 10) + 1;
-    ci.setWay(way);
-
-    auto partitions = extract32(resp.ebx, 12, 10) + 1;
-    ci.setSize(way * partitions * lane * sets);
-}
-
-static inline void
-update_cache_view(CacheView& cv)
-{
-    bool last_level = false;
-    int  cur_level  = 1;
-
-    while (!last_level || cur_level > *CacheLevel::L5) {
-        CacheInfo ci{ CacheLevel::L1,
-                      CacheType::DCache }; /* dummy, will be overriden */
-        RequestT  req{ 0x8000'001D, 0, (Uint32)cur_level, 0 };
-        ResponseT resp = __raw_cpuid(req);
-
-        if ((resp.eax & 0x1f) == 0x0) /* beyond last cache levels */
-            break;
-
-        update_cache_info(ci, resp);
-
-        cur_level++;
-    }
-}
-
 void
 X86Cpu::Impl::update()
 {
-    auto& vinfo = m_vendor_info;
 
     /* FIXME:
      * We need to make sure that
@@ -356,26 +221,37 @@ X86Cpu::Impl::update()
      * sched_setaffinity()
      */
 
-    __update_vendor_info(vinfo, at(RequestT{ 0, 0, 0, 0 }));
-
-    for (auto& query : cpuidMap) {
-        std::map<RequestT, ResponseT> RawCpuid;
-        auto& [req, expected, flg] = query;
-        if (RawCpuid.find(req) == RawCpuid.end()) {
-            RawCpuid[req] = at(req);
-        }
-        updateflag(flg, __has_flag(expected, RawCpuid[req]));
-    }
+    std::map<RequestT, ResponseT> rawCpuid;
 
     /* manufacturer details */
-    __update_mfg_info(at(RequestT{ 0x0000'0001, 0, 0, 0 }));
+    auto resp                = at(RequestT{ 0x0000'0001, 0, 0, 0 });
+    m_vendor_info.m_mfg      = m_cutils->getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
+    m_vendor_info.m_family   = m_cutils->getFamily(resp.eax);
+    m_vendor_info.m_model    = m_cutils->getModel(resp.eax);
+    m_vendor_info.m_stepping = m_cutils->getStepping(resp.eax);
+    std::cout << "m_mfg      : " << std::hex << *m_vendor_info.m_mfg
+              << std::endl;
+    std::cout << "m_family   : " << std::hex << *m_vendor_info.m_family
+              << std::endl;
+    std::cout << "m_model    : " << std::hex << m_vendor_info.m_model
+              << std::endl;
+    std::cout << "m_stepping : " << std::hex << m_vendor_info.m_stepping
+              << std::endl;
+    for (const auto& query : CPUID_MAP) {
+        const auto& [req, expected, flg] = query;
+        if (rawCpuid.find(req) == rawCpuid.end()) {
+            rawCpuid.insert(std::make_pair(req, at(req)));
+        }
+        updateflag(flg, m_cutils->hasFlag(expected, rawCpuid[req]));
+    }
 
     /*
      * Globally disable some
      * *_USABLE flags, so that
      * all ifunc's sees them
      */
-    if (vinfo.m_mfg == EVendor::Amd && vinfo.m_family >= EFamily::Zen) {
+    if (m_vendor_info.m_mfg == EVendor::Amd
+        && m_vendor_info.m_family >= EFamily::Zen) {
         /* todo */
     }
 
@@ -386,94 +262,13 @@ X86Cpu::Impl::update()
 #endif
 
     /* Update cache info */
-    // update_cache_view(m_cache_view);
+    m_cutils->updateCacheView(m_cache_view);
 }
 
 ResponseT
 X86Cpu::Impl::at(RequestT& req) const
 {
-    ResponseT resp;
-
-    __raw_cpuid(req, resp);
-
-    return resp;
-}
-
-bool
-X86Cpu::Impl::isAMD() const
-{
-    return m_vendor_info.m_mfg == EVendor::Amd;
-}
-
-/**
- * @brief Checks if processor is x86_64-v2 compliant
- *
- * @details
- *       Based on GCC following flags account for x86_64-v2
- *          cx16       lahf_lm
- *          popcnt     sse4_1
- *          sse4_2     ssse3
- *
- * @return  true if cpu supports all features above,
- *          false otherwise
- */
-bool
-X86Cpu::Impl::isX86_64v2() const
-{
-    static const std::vector<EFlag> feature_arr{
-        EFlag::cx16, EFlag::lahf_lm, EFlag::popcnt, EFlag::sse4_2, EFlag::ssse3
-    };
-
-    return isUsable(feature_arr);
-}
-
-/**
- * @brief Checks if processor is x86_64-v3 compliant
- *
- * @details
- *      Based on GCC following flags account for x86_64-v3
- *      (in addition to x86_64-v2)
- *        avx    avx2    bmi1
- *        bmi2   f16c    fma
- *        abm    movbe   xsave
- *
- * @return  true if cpu supports all features above,
- *          false otherwise
- */
-bool
-X86Cpu::Impl::isX86_64v3() const
-{
-    static const std::vector<EFlag> feature_arr{
-        EFlag::avx, EFlag::avx2, EFlag::bmi1,  EFlag::bmi2, EFlag::f16c,
-        EFlag::fma, EFlag::abm,  EFlag::movbe, EFlag::xsave
-    };
-
-    return isX86_64v2() && isUsable(feature_arr);
-}
-
-/**
- * @brief Checks if processor is x86_64-v4 compliant
- *
- * @details
- *      Based on GCC following flags account for x86_64-v4
- *      (in addition to x86_64-v2 + x86_64-v3)
- *       avx512f   avx512bw  avx512cd
- *       avx512dq  avx512vl
- *
- * @return  true if cpu supports all features above,
- *          false otherwise
- */
-bool
-X86Cpu::Impl::isX86_64v4() const
-{
-
-    static const std::vector<EFlag> feature_arr{ EFlag::avx512f,
-                                                 EFlag::avx512bw,
-                                                 EFlag::avx512cd,
-                                                 EFlag::avx512dq,
-                                                 EFlag::avx512vl };
-
-    return isX86_64v3() && isUsable(feature_arr);
+    return m_cutils->__raw_cpuid(req);
 }
 
 bool
@@ -483,19 +278,59 @@ X86Cpu::Impl::isIntel() const
 }
 
 bool
-X86Cpu::Impl::hasFlag(EFlag const& ef) const
+X86Cpu::Impl::isAMD() const
 {
-    return m_avail_flags.at(ef) && m_usable_flags.at(ef);
+    return m_vendor_info.m_mfg == EVendor::Amd;
+}
+
+bool
+X86Cpu::Impl::isX86_64v2() const
+{
+    static const std::vector<EFlag> featureArr{
+        EFlag::cx16, EFlag::lahf_lm, EFlag::popcnt, EFlag::sse4_2, EFlag::ssse3
+    };
+
+    return isUsable(featureArr);
+}
+
+bool
+X86Cpu::Impl::isX86_64v3() const
+{
+    static const std::vector<EFlag> featureArr{
+        EFlag::avx, EFlag::avx2, EFlag::bmi1,  EFlag::bmi2, EFlag::f16c,
+        EFlag::fma, EFlag::abm,  EFlag::movbe, EFlag::xsave
+    };
+
+    return isX86_64v2() && isUsable(featureArr);
+}
+
+bool
+X86Cpu::Impl::isX86_64v4() const
+{
+
+    static const std::vector<EFlag> featureArr{ EFlag::avx512f,
+                                                EFlag::avx512bw,
+                                                EFlag::avx512cd,
+                                                EFlag::avx512dq,
+                                                EFlag::avx512vl };
+
+    return isX86_64v3() && isUsable(featureArr);
+}
+
+bool
+X86Cpu::Impl::hasFlag(EFlag const& eflag) const
+{
+    return m_avail_flags.at(eflag) && m_usable_flags.at(eflag);
 }
 
 void
-X86Cpu::Impl::setUsableFlag(EFlag const& ef, bool res)
+X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
 {
-    m_usable_flags[ef] = res;
+    m_usable_flags[eflag] = res;
 }
 
 void
-X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
+X86Cpu::Impl::apply(RequestT& regs)
 {
     switch (regs.eax) {
         case 0x0000'0001:
@@ -515,21 +350,20 @@ X86Cpu::Impl::apply(RequestT& regs, const ResponseT& resp)
             return;
     }
 
-    const auto found = std::ranges::find_if(
-        begin(cpuidMap), end(cpuidMap), [&](const auto& input) {
-            auto& [req, expected, flg] = input;
+    const auto* const found = std::ranges::find_if(
+        begin(CPUID_MAP), end(CPUID_MAP), [&](const auto& input) {
+            const auto& [req, expected, flg] = input;
             return req == regs;
         });
 
-    if (found != end(cpuidMap)) {
-        auto& [_, __, flg] = *found;
+    if (found != end(CPUID_MAP)) {
+        const auto& [_, __, flg] = *found; // NOLINT
         updateflag(flg, true);
     }
 
     /* FIXME: we silently fail here, we could also raise exceptions or
      * return Status().
      */
-    return;
 }
 
 } // namespace Au

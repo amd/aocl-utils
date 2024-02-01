@@ -28,8 +28,10 @@
 
 #pragma once
 
-#include "Au/Types.hh"
+#include "Au/Assert.hh"
+#include "Au/Au.hh"
 
+#include <iostream>
 #include <type_traits>
 
 namespace Au {
@@ -46,8 +48,14 @@ namespace Au {
  *
  * @return      integer Extracted value.
  */
-Uint32
-extract32(Uint32 value, int start, int length);
+inline Uint32
+extract32(Uint32 value, int start, int length)
+{
+    AUD_ASSERT(start >= 0 && length > 0 && length <= 32 - start,
+               "Invalid start/size");
+
+    return (value >> start) & (~0U >> (32 - length));
+}
 
 /**
  * @brief        Helper function to convert Enum->Int
@@ -60,6 +68,31 @@ operator*(T const e) noexcept
     -> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
 {
     return static_cast<std::underlying_type_t<T>>(e);
+}
+
+template<typename EnumType, typename UnderlyingType>
+UnderlyingType
+enumToValue(EnumType enumValue)
+{
+    if (static_cast<UnderlyingType>(enumValue)
+            < std::numeric_limits<UnderlyingType>::min()
+        || static_cast<UnderlyingType>(enumValue)
+               > std::numeric_limits<UnderlyingType>::max()) {
+        AUD_ASSERT(0,
+                   "Enum value out of range for conversion to underlying type");
+    }
+
+    return static_cast<UnderlyingType>(enumValue);
+}
+
+template<typename EnumType, typename UnderlyingType>
+EnumType
+valueToEnum(UnderlyingType value)
+{
+    /*if (value < EnumMin<EnumType> || value > EnumMax<EnumType>)
+        return static_cast<EnumType>();*/
+
+    return static_cast<EnumType>(value);
 }
 
 } // namespace Au

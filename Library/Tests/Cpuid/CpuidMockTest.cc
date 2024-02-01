@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,49 +26,38 @@
  *
  */
 
-#include "Au/Au.hh"
+#include "Au/Cpuid/X86Cpu.hh"
+#include "CpuidTest.hh"
 
-#include "Au/Assert.hh"
-#include "Au/Cpuid/CacheInfo.hh"
+namespace {
 
-#include <cstdint>
-#include <ostream>
-#include <sstream>
+using namespace Au;
+using namespace std;
+class MockCpuidUtil
+    : public MockCpuidBase
+    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
+{};
 
-namespace Au {
+INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
+                         MockCpuidUtil,
+                         ::testing::ValuesIn(testParametersCpuidUtils));
 
-using CacheLevel = cache_attr::ELevel;
-using CacheType  = cache_attr::EType;
-
-std::ostream&
-operator<<(std::ostream& os, CacheLevel const& level) // NOLINT
+TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
-    using Cl = CacheLevel;
-    // clang-format off
-    switch (level) {
-        case Cl::L1: os << "L1"; break;
-        case Cl::L2: os << "L2"; break;
-        case Cl::L3: os << "L3"; break;
-        case Cl::L4: os << "L4"; break;
-        default: os << "Unknown"; break;
-    }
-    // clang-format on
-    return os;
+    const auto       params          = GetParam();
+    const string     cpuType         = get<0>(params);
+    const VendorInfo expectedResults = get<1>(params);
+    filename                         = cpuType;
+    auto reqRespData                 = Configure();
+
+    cout << "Mocking " << cpuType << endl;
+    EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
+              (expectedResults.m_mfg));
+    EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              (expectedResults.m_family));
+    // EXPECT_EQ(mockCpuidUtils.getModel(testing::_), expectedResults.mModel);
+    // EXPECT_EQ(mockCpuidUtils.getStepping(testing::_),
+    // expectedResults.mStepping);
 }
 
-std::ostream&
-operator<<(std::ostream& os, CacheType const& type) // NOLINT
-{
-    using Ct = CacheType;
-    // clang-format off
-    switch (type) {
-        case Ct::ICache: os << "I$"; break;
-        case Ct::DCache: os << "D$"; break;
-        case Ct::Unified: os << "Unified Cache"; break;
-        default: os << "Unkown"; break;
-    }
-    // clang-format on
-    return os;
-}
-
-} // namespace Au
+} // namespace

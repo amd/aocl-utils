@@ -42,6 +42,8 @@ set(MEMORY_TEST_FILES
 
 set(CPUID_TEST_FILES
     Cpuid/CpuidTest.cc
+    Cpuid/CpuidMockTest.cc
+    Cpuid/MockX86CpuTest.cc
     Cpuid/CpuidQemuTest.cc
 )
 
@@ -139,6 +141,7 @@ endif()
 au_cc_test(CpuidTest
   SOURCES
   ${CPUID_TEST_FILES}
+  HEADERS CpuidTest.hh
   DEPENDS
   au::cpuid
   EXTLIBRARY

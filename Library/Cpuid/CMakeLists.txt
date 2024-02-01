@@ -31,6 +31,7 @@ set(CPUID_SRC_FILES
   CacheInfo.cc
   Cache.cc
   Cpuid.cc
+  CpuidUtils.cc
   X86RawData.cc
   X86Cpu.cc
 )
