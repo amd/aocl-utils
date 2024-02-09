@@ -64,4 +64,27 @@ TEST(X86Cpuid, DISABLED_isIntel)
     EXPECT_TRUE(cpu.isIntel() == true);
 }
 TEST(X86Cpuid, DISABLED_hasFlag) {}
+TEST(X86Cpuid, CheckCupNumber)
+{
+    // 0 - 2 Verify that the core is set to the correct CPU
+    X86Cpu cpu{ 0 };
+    cpu_set_t cpuSet;
+    auto pid = getpid();
+    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
+    EXPECT_TRUE(cpuSet.__bits[0] == 1);
+
+    X86Cpu cpu1{ 1 };
+    pid = getpid();
+    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
+    EXPECT_TRUE(cpuSet.__bits[0] == 2);
+
+    X86Cpu cpu2{ 2 };
+    pid = getpid();
+    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
+    EXPECT_TRUE(cpuSet.__bits[0] == 4);
+    // Verify that an exception is thrown when the core number is greater
+    // than the number of phycal cores.
+    auto nthreads = std::thread::hardware_concurrency();
+    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1});
+}
 } // namespace
