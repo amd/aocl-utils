@@ -63,8 +63,16 @@ class QemuTest
 
             if (pFunc != NULL && PyCallable_Check(pFunc) != 0) {
                 /* Call the run_qemu function with arguments */
-                std::string binary_path = PROJECT_BUILD_DIR;
-                binary_path += "/Release/core_CpuidTest";
+                std::string binaryPath = PROJECT_BUILD_DIR;
+                std::string releaseType;
+                if (AU_BUILD_TYPE_RELEASE)
+                    releaseType = "Release";
+                if (AU_BUILD_TYPE_DEBUG)
+                    releaseType = "Developer";
+                if (AU_BUILD_TYPE_DEVELOPER)
+                    releaseType = "Library/Tests";
+
+                binaryPath += "/" + releaseType + "/core_CpuidTest";
 
                 PyObject* pArgs =
                     PyTuple_Pack(4,
