@@ -29,7 +29,6 @@
 #pragma once
 
 #include "Au/Au.hh"
-#include "Au/Error.hh"
 #include "Au/Interface/IError.hh"
 
 namespace Au {

@@ -34,10 +34,11 @@ namespace Au {
 
 enum class EGoverner
 {
-    Performance,
-    Powersave,
-    Userspace,
-    Ondemand,
+    ePerformance,
+    ePowersave,
+    eUserspace,
+    eOndemand,
+    eUnknown
 };
 std::ostream&
 operator<<(std::ostream& os, const EGoverner& gov);
