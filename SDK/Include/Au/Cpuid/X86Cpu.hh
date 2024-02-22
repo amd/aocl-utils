@@ -30,6 +30,7 @@
 
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/CpuidUtils.hh"
+#include "Au/Interface/Cpuid/ICpu.hh"
 
 #include <memory>
 
@@ -294,7 +295,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      */
     void update();
 
-    virtual EGoverner getGoverner() const override {}
+    virtual EGoverner getGoverner() const override { return EGoverner::eUnknown; }
 
     CacheView getCacheView() const;
 
