@@ -32,7 +32,7 @@ set(BASE_TEST_FILES
     StatusTest.cc
     StatusOrTest.cc
     #BitOpsTest.cc
-    #BitMapTest.cc
+    BitMapTest.cc
 )
 
 set(MEMORY_TEST_FILES

@@ -78,6 +78,7 @@ set(CORE_SRC_FILES
   Core/SourceLocation.cc
   Core/StatusOr.cc
   Core/Environ.cc
+  Core/BitMap.cc
   #Core/DynamicLoader.cc
   #${BASE64_SRC_FILES}
   #  ${LOGGER_SRC_FILES}
