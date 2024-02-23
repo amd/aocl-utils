@@ -34,6 +34,7 @@
 #include "Au/SourceLocation.hh"
 
 #include <string_view>
+#include <sys/errno.h>
 
 namespace Au {
 
@@ -47,6 +48,16 @@ static constexpr bool AssertionsBuild = true;
 #else
 static constexpr bool AssertionsBuild = false;
 #endif
+
+template<typename E>
+inline void
+AssertOther(StringView s, SourceLocation const& loc)
+{
+    if constexpr (AssertionsBuild) {
+        E myexcept{ loc, String{ s }, ENOSYS };
+        throw myexcept;
+    }
+}
 
 /**
  * @brief Assert using exceptions
@@ -62,7 +73,7 @@ Assert(T&& assrt, StringView s, const SourceLocation& loc)
 {
     if constexpr (AssertionsBuild) {
         if (!assrt) {
-            E throwing{ loc, String{ s } };
+            E throwing{ loc, String{ s }, EINVAL };
             throw throwing;
         }
     }
@@ -73,9 +84,17 @@ Assert(T&& assrt, StringView s, const SourceLocation& loc)
 #define AUD_ASSERT(cond, msg)                                                  \
     Au::Assert(cond, std::string_view(msg), AUD_SOURCE_LOCATION())
 
+#define AUD_ASSERT_NOT_IMPLEMENTED()                                           \
+    Au::AssertOther<NotImplementedException>("Not Implmented",                 \
+                                             AUD_SOURCE_LOCATION())
+
 #else
 
 #define AUD_ASSERT(cond, msg)                                                  \
+    {                                                                          \
+    }
+
+#define AUD_ASSERT_NOT_IMPLEMENTED()                                           \
     {                                                                          \
     }
 

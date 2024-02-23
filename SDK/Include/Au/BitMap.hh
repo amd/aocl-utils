@@ -67,45 +67,63 @@ class BitMap
      * @return none
      */
     void set();
+
     /**
-     * @brief           Set a specific bit in the bitmap
+     * @brief     Set a specific bit in the bitmap
      *
-     * @details         Provided bit position should be less than size()
+     * @details   Provided bit position should be less than size()
      *
      * @param[in] bitpos  Bit position that needs to be set
      *                    if the bit is already set, no action will be taken
      *                    if the bit is clear, it will be set
-     * @return none
+     *
+     * @return            none
      */
     void set(Uint32 bitpos);
 
     /**
-     * @brief       Set all the bits in the provided bitmap
+     * @brief     Set all the bits in the provided bitmap
      *
-     * @detail      Can copy from another only if the size of source is less
-     *              than or equal to that of current bitmap
+     * @detail    Can copy from another only if the size of source is less
+     *            than or equal to that of current bitmap
      *
-     * @param[in]       other   Bitmap which works as bits to set, no
-     *                          restriction on the size of bits if the bitmap is
-     *                          equal or less in size, the rest of of the bits
-     *                          in 'this' are untouched, if the bitmap is larger
-     *                          in size the rest of bits in 'other' are ignored
+     * @param[in] other   Bitmap which works as bits to set, cleared bits
+     *                    not cleared in 'this', irrespective of size of
+     *                    'other', extra bits are ignored if larger.
      *
      * @return      none
      */
     void set(BitMap const& other);
 
     /**
-     * @brief  Clear all bits of a bitmask
+     * @brief     Check if a given bitpos is set
      *
-     * @param
+     * @param[in] bitpos  Bit position that needs to be checked for set
      *
-     * @return none
+     * @return      none
+     */
+    bool isSet(Uint32 bitpos) const;
+
+    /**
+     * @brief     Check if a given bitpos is clear
+     *
+     * @param[in] bitpos  Bit position that needs to be checked for clear
+     *
+     * @return      none
+     */
+    bool isClear(Uint32 bitpos) const;
+
+    /**
+     * @brief   Clear all bits of a bitmask
+     *
+     * @param   None
+     *
+     * @return  None
      */
     void clear();
 
     /**
-     * @brief           Clear a specific bit in the bitmap
+     * @brief   Clear a specific bit in the bitmap
      *
      * @param[in] bitpos        Bit position of the bit that
      *                          will be cleared, if the bit is
@@ -121,11 +139,9 @@ class BitMap
      * @detail          The other.size() should be less or equal
      *                  to that of this->size()
      *
-     * @param[in]       other   Bitmap which works as bits to clear, no
-     *                          restriction on the size of bits if the bitmap is
-     *                          equal or less in size, the rest of of the bits
-     *                          in 'this' are untouched, if the bitmap is larger
-     *                          in size the rest of bits in 'other' are ignored
+     * @param[in] other   Bitmap which works as bits to clear, cleared bits are
+     *                    ignored, irrespective of size of 'other', extra bits
+     *                    are ignored if larger.
      * @return none
      */
     void clear(BitMap const& other);
@@ -142,9 +158,8 @@ class BitMap
     /**
      * @brief           Clear a specific bit in the bitmap
      *
-     * @param[in] bitpos        Bit position of the bit that
-     *                          will be cleared, if the bit is
-     *                          already 0, no action is done
+     * @param[in] bitpos   Bit position of the bit that will be cleared, if the
+     *                     bit is already 0, no action is done
      *
      * @return none
      */
@@ -184,9 +199,7 @@ class BitMap
     BitMap& operator|(BitMap const& other);
     BitMap& operator&(BitMap const& other);
     BitMap& operator^(BitMap const& other);
-    BitMap& operator<<(BitMap const& other);
-    BitMap& operator>>(BitMap const& other);
-    BitMap& operator==(BitMap const& other);
+    bool    operator==(BitMap const& other) const;
     BitMap& operator!();
 
   public: /* Iterator trait */
@@ -200,23 +213,50 @@ class BitMap
   private:
     using BitMapWordT = Uint64;
 
+    /* Returns bits in a BitMapWordT */
     template<typename T = BitMapWordT, class = enableIf<std::is_integral<T>>>
-    constexpr int bits_per_word()
+    constexpr unsigned bitsPerWord() const
     {
         return std::numeric_limits<T>::digits;
     }
 
+    /* All bits set to 1 in a given integer type, default BitMapWordT */
     template<typename T = BitMapWordT, class = enableIf<std::is_integral<T>>>
-    constexpr bool all_set_mask(T a)
+    constexpr T getAllSetMask() const
     {
-        return a == std::numeric_limits<T>::max();
+        return std::numeric_limits<T>::max();
     }
 
-    mutable std::mutex m_lock;
-    Uint32             m_size;
-    Uint32             m_nwords;
+    /* returns [0..n] bits set in a word, i.e BitMapWordT */
+    BitMapWordT getNBitMask(Uint32 n) const
+    {
+        return ((BitMapWordT)1 << n) - 1;
+    }
+
+    /* Perform operation Set or Clear */
+    void doSetOrClear(bool doclear);
+
+    /* Perfor operation Set or Clear w.r.t a given BitMap */
+    void doSetOrClear(BitMap const& other, bool doclear = false);
+
+    /* Calculate word position and bit position in a word */
+    std::pair<Uint32, Uint32> getWordIdxPair(Uint32 bitpos) const
+    {
+        auto word_idx    = bitpos / bitsPerWord();
+        auto pos_in_word = bitpos % bitsPerWord();
+
+        return std::pair(word_idx, pos_in_word);
+    }
+
+    inline bool isValidPos(Uint32 bitpos) const { return bitpos < m_size; }
+
+  private:
+    Uint32 m_size;
+    Uint32 m_nwords;
     /* TODO: replace eventually by Array */
     std::vector<BitMapWordT> m_bit_words;
+
+    mutable std::mutex m_lock;
 };
 
 } // namespace Au

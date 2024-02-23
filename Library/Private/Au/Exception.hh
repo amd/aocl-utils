@@ -31,7 +31,13 @@
 #include "Au/Au.hh"
 #include "Au/SourceLocation.hh"
 
-#include "cstring" // for memcpy()
+#include <cstring> // for memcpy()
+                   //
+#if defined(TARGET_OS_IS_WINDOWS)
+#error "FIXME: include header error equivalant not found"
+#else
+#include <sys/errno.h>
+#endif
 
 namespace Au {
 
@@ -60,7 +66,6 @@ struct Exception : public std::exception
     Exception(const SourceLocation& where, int errNo)
         : Exception(where, "", errNo)
     {
-        m_message = strerror(errNo);
     }
 
     Exception(const Exception& other)
@@ -95,7 +100,7 @@ struct FatalErrorException : public Exception
     {
     }
     FatalErrorException(const SourceLocation& where, String msg)
-        : Exception(where, msg)
+        : Exception(where, msg, EINVAL)
     {
     }
     FatalErrorException(const SourceLocation& where, int errNo)
@@ -111,11 +116,11 @@ struct FatalErrorException : public Exception
 struct DataFormatException : public Exception
 {
     explicit DataFormatException(const SourceLocation& where)
-        : DataFormatException(where, "", -1)
+        : DataFormatException(where, "", EINVAL)
     {
     }
     DataFormatException(const SourceLocation& where, String msg)
-        : DataFormatException(where, msg, -1)
+        : DataFormatException(where, msg, EINVAL)
     {
     }
     DataFormatException(const SourceLocation& where, int errNo)

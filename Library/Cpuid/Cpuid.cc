@@ -46,13 +46,14 @@ operator<<(std::ostream& os, EGoverner const& gov) // NOLINT
     using G = EGoverner;
 
     switch (gov) {
-    // clang-format off
-        case G::Performance:os << "Performance";break;
-        case G::Powersave:os << "Power Save";break;
-        case G::Userspace:os << "User Defined";break;
-        case G::Ondemand:os << "On Demand";break;
+        // clang-format off
+        case G::ePerformance:os << "Performance";break;
+        case G::ePowersave:os << "Power Save";break;
+        case G::eUserspace:os << "User Defined";break;
+        case G::eOndemand:os << "On Demand";break;
+        case G::eUnknown:
         default:os << "Unknown";break;
-    // clang-format on
+            // clang-format on
     }
 
     return os;
