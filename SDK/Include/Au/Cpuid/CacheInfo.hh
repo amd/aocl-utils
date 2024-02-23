@@ -173,38 +173,53 @@ class CacheInfo
     }
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief  Set Cache level based on the information from cpuid instruction.
+     * @param[in] lvl Cache level.
+     *
+     * @return void
      */
     void setLevel(CacheLevel lvl);
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief Set Cache type based on the information from cpuid instruction.
+     * @param[in] ct Cache type.
+     *
+     * return void
      */
     void setType(CacheType ct);
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief Set Cache size based on the number of ways partitions lanes and
+     * sets.
+     * @param[in] size Cache size.
+     *
+     * return void
      */
     void setSize(Uint64 size);
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief Set Cache way based on the information from the cpuid instruction.
+     * @param[in] way_size Cache way size.
+     *
+     * return void
      */
     void setWay(Uint64 way_size);
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief Set Cache lane based on the information from the cpuid
+     * instruction.
+     * @param[in] lane_size Cache lane size.
+     *
+     * return void
      */
     void setLane(Uint64 lane_size);
 
     /**
-     * @brief
-     * FIXME: Documentation
+     * @brief Set Cache sets based on the information from the cpuid
+     * instruction.
+     * @param[in] sets Cache sets.
+     *
+     * return void
      */
     void setSets(Uint64 sets);
 
