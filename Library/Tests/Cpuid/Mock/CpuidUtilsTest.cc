@@ -41,6 +41,13 @@ class MockCpuidUtil
 INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
                          MockCpuidUtil,
                          ::testing::ValuesIn(testParametersCpuidUtils));
+/**
+ * Testcase for CpuidUtils
+ * Tests all the CpuidUtils Functions
+ * from the mocked data in the simnowdata folder.
+ * Takes testParametersCpuidUtils as input
+ * Containing the CPU type and the expected results in VendorInfo structure.
+ */
 
 TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
@@ -55,9 +62,11 @@ TEST_P(MockCpuidUtil, CpuidUtilsTest)
               (expectedResults.m_mfg));
     EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
               (expectedResults.m_family));
-    // EXPECT_EQ(mockCpuidUtils.getModel(testing::_), expectedResults.mModel);
-    // EXPECT_EQ(mockCpuidUtils.getStepping(testing::_),
-    // expectedResults.mStepping);
+    EXPECT_EQ(mockCpuidUtils.getModel(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              expectedResults.m_model);
+    EXPECT_EQ(
+        mockCpuidUtils.getStepping(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+        expectedResults.m_stepping);
 }
 
 } // namespace

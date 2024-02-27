@@ -41,6 +41,13 @@
 namespace {
 using namespace Au;
 
+/**
+ * Test parameters for X86Cpu Mock Test
+ * Vector contains the following parameters:
+ * 1. Name of the CPU model to be mocked using simnowdata
+ * 2. Vector of boolean values that marks the expected results of
+ *   {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4} APIs
+ */
 const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
     { "EPYC-Genoa-v1", { true, false, true, true, false } },
     { "EPYC-Milan-v1", { true, false, true, true, false } },
@@ -64,6 +71,13 @@ const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
     { "Conroe-v1", { false, true, false, false, false } },
     { "Skylake-Server-v1", { false, true, true, true, true } }
 };
+
+/**
+ * Test parameters for CpuidUtils Mock Test
+ * Vector contains the following parameters:
+ * 1. Name of the CPU model to be mocked using simnowdata
+ * 2. VendorInfo structure containing the expected results.
+ */
 // clang-format off
 const vector<tuple<string, VendorInfo>> testParametersCpuidUtils = {
     { "EPYC-Genoa-v1", { VendorInfo{ EVendor::Amd, EFamily::Zen4, 0x11, 0 } } },
@@ -91,6 +105,9 @@ const vector<tuple<string, VendorInfo>> testParametersCpuidUtils = {
     // clang-format on
 };
 
+/**
+ *  The MockCpuidUtils class is used to mock the CpuidUtils class
+ */
 class MockCpuidUtils : public CpuidUtils
 {
   public:
@@ -101,9 +118,25 @@ class MockCpuidUtils : public CpuidUtils
     MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)){};
 };
 
+/**
+ * The Base class for both X86Cpu and CpuidUtils Mock tests
+ * It contains the common functions and data for both the tests
+ */
 class MockCpuidBase : public testing::Test
 {
   private:
+    /**
+     * @brief parseCSV function is used to parse the CSV file and populate the
+     * map with the request and response data
+     * The format of the file is assumed to be:
+     * {1,0,0,0}:{329300,2048,4294586883,126614525}
+     * where the first{} represents the request and the second{} represents the
+     * response
+     * @param filename is the name of the file to be parsed
+     *
+     * @return map<RequestT, ResponseT> is the map containing the request and
+     * response data
+     */
     map<RequestT, ResponseT> parseCSV(const string& filename)
     {
         map<RequestT, ResponseT> data;
@@ -150,6 +183,12 @@ class MockCpuidBase : public testing::Test
     }
 
   protected:
+    /**
+     * @brief Configure  Mocks the __raw_cpuid function by specifying the
+     * expected request and response data by parsing the CSV file corresponding
+     * to the CPU.
+     *
+     */
     map<RequestT, ResponseT> Configure()
     {
         string projectDir   = PROJECT_SOURCE_DIR;
@@ -171,6 +210,6 @@ class MockCpuidBase : public testing::Test
     {
     }
     MockCpuidUtils mockCpuidUtils;
-    String         filename;
+    string         filename;
 };
 } // namespace

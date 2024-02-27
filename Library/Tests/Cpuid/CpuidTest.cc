@@ -31,6 +31,14 @@
 
 namespace {
 using namespace Au;
+
+/**
+ * Tests that can run on host, DISABLED by default since tests doesn't add any
+ * value as the result is unknown on a physical machine
+ * The disabled tests are used by the QemuTest to verify the results of the
+ * Cpuid emulation in Qemu.
+ */
+
 TEST(X86Cpuid, DISABLED_isAMD)
 {
     X86Cpu cpu{ 0 };

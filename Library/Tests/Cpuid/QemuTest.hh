@@ -32,7 +32,13 @@
 
 namespace {
 using namespace Au;
-
+/**
+ * Test parameters for X86Cpu Qemu test
+ * Vector contains the following parameters:
+ * 1. Name of the CPU model to be emulated by Qemu
+ * 2. Vector of boolean values that marks the expected results of
+ *   {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4} APIs
+ */
 const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
     { "EPYC-Genoa-v1", { true, false, true, true, false } },
     { "EPYC-Milan-v1", { true, false, true, true, false } },

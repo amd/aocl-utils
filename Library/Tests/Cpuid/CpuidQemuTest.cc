@@ -39,6 +39,14 @@ class QemuTest
           std::tuple<std::string, std::vector<bool>>>
 {
   private:
+    /**
+     * @brief Call the Qemu emulator to run the tests
+     * Implemented in a python module named CpuidTest.
+     * @param[in] cpu The type of the cpu to emulate
+     * @param[in] testName The name of the test to runi
+     *
+     * @return bool The result of the test run on the emulated cpu
+     */
     static bool callQemuEmulator(const char* cpu, const char* testname)
     {
         auto ret = false;
@@ -48,12 +56,12 @@ class QemuTest
             std::cerr << "Failed to initialize the Python interpreter";
         }
         /* Update PYTHONPATH with the path of the python module to be loaded*/
-        std::string src_path = PROJECT_SOURCE_DIR;
-        src_path += "/Library/Tests/Cpuid/";
-        PyObject* sys         = PyImport_ImportModule("sys");
-        PyObject* sys_path    = PyObject_GetAttrString(sys, "path");
-        PyObject* folder_path = PyUnicode_FromString(src_path.c_str());
-        PyList_Append(sys_path, folder_path);
+        std::string srcPath = PROJECT_SOURCE_DIR;
+        srcPath += "/Library/Tests/Cpuid/";
+        PyObject* sys        = PyImport_ImportModule("sys");
+        PyObject* sysPath    = PyObject_GetAttrString(sys, "path");
+        PyObject* folderPath = PyUnicode_FromString(srcPath.c_str());
+        PyList_Append(sysPath, folderPath);
 
         /*Load The test module */
         PyObject* pModule = PyImport_ImportModule("CpuidTest");
@@ -94,6 +102,12 @@ class QemuTest
     }
 
   protected:
+    /**
+     * @brief Test all the tests for a given cpu type
+     * @param[in] cpuType The type of the cpu to emulate
+     * @param[in] testNames The names of the tests to run
+     * @return std::vector<bool> The results of the tests
+     */
     static std::vector<bool> testAll(const std::string&              cpuType,
                                      const std::vector<std::string>& testNames)
     {
@@ -104,6 +118,7 @@ class QemuTest
         }
         return results;
     }
+
     void TearDown() override
     {
         std::string clean_path = PROJECT_SOURCE_DIR;

@@ -33,6 +33,14 @@ namespace {
 
 using namespace Au;
 using namespace std;
+
+/**
+ * Testcase for X86Cpu
+ * Tests all the X86Cpu Functions
+ * from the mocked data in the simnowdata folder.
+ * Takes testParametersX86Cpu as input containing the CPU type and the expected
+ * results vector.
+ */
 class MockX86Cpu
     : public MockCpuidBase
     , public ::testing::WithParamInterface<tuple<string, vector<bool>>>
