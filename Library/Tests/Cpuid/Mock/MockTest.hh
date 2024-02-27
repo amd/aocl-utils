@@ -26,10 +26,6 @@
  *
  */
 
-#include "Au/Cpuid/X86Cpu.hh"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
-
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -37,6 +33,11 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "Au/Cpuid/X86Cpu.hh"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
 namespace {
 using namespace Au;
 
@@ -63,7 +64,6 @@ const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
     { "Conroe-v1", { false, true, false, false, false } },
     { "Skylake-Server-v1", { false, true, true, true, true } }
 };
-
 // clang-format off
 const vector<tuple<string, VendorInfo>> testParametersCpuidUtils = {
     { "EPYC-Genoa-v1", { VendorInfo{ EVendor::Amd, EFamily::Zen4, 0x11, 0 } } },
@@ -153,7 +153,7 @@ class MockCpuidBase : public testing::Test
     map<RequestT, ResponseT> Configure()
     {
         string projectDir   = PROJECT_SOURCE_DIR;
-        string testDir      = "/Library/Tests/Cpuid/simnowdata/";
+        string testDir      = "/Library/Tests/Cpuid/Mock/simnowdata/";
         string dataFilename = projectDir + testDir + filename;
 
         map<RequestT, ResponseT> csvData = parseCSV(dataFilename);
@@ -171,6 +171,6 @@ class MockCpuidBase : public testing::Test
     {
     }
     MockCpuidUtils mockCpuidUtils;
-    string         filename;
+    String         filename;
 };
 } // namespace

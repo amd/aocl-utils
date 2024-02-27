@@ -26,7 +26,7 @@
  *
  */
 
-#include "CpuidTest.hh"
+#include "QemuTest.hh"
 #include <Python.h>
 #include <filesystem>
 #include <gtest/gtest.h>
@@ -78,7 +78,7 @@ class QemuTest
                     PyTuple_Pack(4,
                                  PyUnicode_DecodeFSDefault("x86_64"),
                                  PyUnicode_DecodeFSDefault(cpu),
-                                 PyUnicode_DecodeFSDefault(binary_path.c_str()),
+                                 PyUnicode_DecodeFSDefault(binaryPath.c_str()),
                                  PyUnicode_DecodeFSDefault(testname));
                 PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
 

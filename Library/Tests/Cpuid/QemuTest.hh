@@ -27,37 +27,33 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "CpuidTest.hh"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace {
-
 using namespace Au;
-using namespace std;
-class MockCpuidUtil
-    : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
-{};
 
-INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
-                         MockCpuidUtil,
-                         ::testing::ValuesIn(testParametersCpuidUtils));
-
-TEST_P(MockCpuidUtil, CpuidUtilsTest)
-{
-    const auto       params          = GetParam();
-    const string     cpuType         = get<0>(params);
-    const VendorInfo expectedResults = get<1>(params);
-    filename                         = cpuType;
-    auto reqRespData                 = Configure();
-
-    cout << "Mocking " << cpuType << endl;
-    EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
-              (expectedResults.m_mfg));
-    EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
-              (expectedResults.m_family));
-    // EXPECT_EQ(mockCpuidUtils.getModel(testing::_), expectedResults.mModel);
-    // EXPECT_EQ(mockCpuidUtils.getStepping(testing::_),
-    // expectedResults.mStepping);
-}
-
+const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
+    { "EPYC-Genoa-v1", { true, false, true, true, false } },
+    { "EPYC-Milan-v1", { true, false, true, true, false } },
+    { "EPYC-Milan-v2", { true, false, true, true, false } },
+    { "EPYC-Rome-v1", { true, false, true, true, false } },
+    { "EPYC-Rome-v2", { true, false, true, true, false } },
+    { "EPYC-Rome-v3", { true, false, true, true, false } },
+    { "EPYC-Rome-v4", { true, false, true, true, false } },
+    { "EPYC-v1", { true, false, true, true, false } },
+    { "EPYC-v2", { true, false, true, true, false } },
+    { "EPYC-v3", { true, false, true, true, false } },
+    { "EPYC-v4", { true, false, true, true, false } },
+    { "Opteron_G1-v1", { true, false, false, false, false } },
+    { "Opteron_G2-v1", { true, false, false, false, false } },
+    { "Opteron_G3-v1", { true, false, false, false, false } },
+    { "Opteron_G4-v1", { true, false, true, false, false } },
+    { "Opteron_G5-v1", { true, false, true, false, false } },
+    { "phenom-v1", { true, false, false, false, false } },
+    { "Broadwell-v1", { false, true, true, true, false } },
+    { "Denverton-v1", { false, true, true, false, false } },
+    { "Conroe-v1", { false, true, false, false, false } },
+    { "Skylake-Server-v1", { false, true, true, true, true } }
+};
 } // namespace

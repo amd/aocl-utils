@@ -27,39 +27,37 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "CpuidTest.hh"
+#include "MockTest.hh"
 
 namespace {
 
 using namespace Au;
 using namespace std;
-class MockX86Cpu
+class MockCpuidUtil
     : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, vector<bool>>>
+    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
 {};
 
-INSTANTIATE_TEST_SUITE_P(MockX86CpuTestSuite,
-                         MockX86Cpu,
-                         ::testing::ValuesIn(testParametersX86Cpu));
-TEST_P(MockX86Cpu, MockX86CpuTest)
+INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
+                         MockCpuidUtil,
+                         ::testing::ValuesIn(testParametersCpuidUtils));
+
+TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
-
-    const auto         params          = GetParam();
-    const string       cpuType         = get<0>(params);
-    const vector<bool> expectedResults = get<1>(params);
-    vector<bool>       results;
-
-    filename         = cpuType;
-    auto reqRespData = Configure();
-    EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(11);
-    X86Cpu cpu{ &mockCpuidUtils, 0 };
+    const auto       params          = GetParam();
+    const string     cpuType         = get<0>(params);
+    const VendorInfo expectedResults = get<1>(params);
+    filename                         = cpuType;
+    auto reqRespData                 = Configure();
 
     cout << "Mocking " << cpuType << endl;
-    results.push_back(cpu.isAMD());
-    results.push_back(cpu.isIntel());
-    results.push_back(cpu.isX86_64v2());
-    results.push_back(cpu.isX86_64v3());
-    results.push_back(cpu.isX86_64v4());
-    EXPECT_EQ(results, expectedResults);
+    EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
+              (expectedResults.m_mfg));
+    EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              (expectedResults.m_family));
+    // EXPECT_EQ(mockCpuidUtils.getModel(testing::_), expectedResults.mModel);
+    // EXPECT_EQ(mockCpuidUtils.getStepping(testing::_),
+    // expectedResults.mStepping);
 }
+
 } // namespace
