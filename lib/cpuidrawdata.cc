@@ -126,19 +126,16 @@ cpuid_2(uint32_t eax, uint32_t ecx, CpuIdRawData::regs& out)
 static void
 get_mfg_info(CpuIdRawData::regs cpuid_regs, struct VendorInfo* mfg_info)
 {
-    uint16_t model;
     uint16_t family;
 
     if (mfg_info) {
         family = alc_cpuid_get_family(cpuid_regs[0]);
-        model  = alc_cpuid_get_model(cpuid_regs[0]);
 
         if (family >= ALC_CPU_FAMILY_ZEN) {
             mfg_info->m_family = family;
-            mfg_info->m_model  = model;
+            mfg_info->m_model  = alc_cpuid_get_model(cpuid_regs[0]);
+            mfg_info->m_stepping = alc_cpuid_get_stepping(cpuid_regs[0]);
         }
-
-        mfg_info->m_stepping = alc_cpuid_get_stepping(cpuid_regs[0]);
     }
 }
 
@@ -167,10 +164,16 @@ CpuIdRawData::update()
     VendorInfo*         mfg_info = &m_vendor_info;
     CpuIdRawData::regs  regs     = at(0x0);
 
+    // Initialize all data members to 0.
+    memset(m_cpuid, 0, sizeof(m_cpuid));
+    memset(&m_vendor_info, 0, sizeof(m_vendor_info));
+    
     /* "AuthenticAMD" */
     if (regs[1] == 0x68747541 && regs[2] == 0x444d4163
         && regs[3] == 0x69746e65) {
         m_vendor_info.m_mfg = Vendor::eAmd;
+    } else {
+        m_vendor_info.m_mfg = Vendor::eOther;
     }
 
     for (int i = 0; i < arr_size; i++) {

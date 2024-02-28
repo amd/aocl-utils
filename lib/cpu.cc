@@ -117,7 +117,7 @@ Cpu::getUarch() const
                 (0x60 <= model && model <= 0x6F) || // Raphael(RPL)
                 (0x70 <= model && model <= 0x74) || // Phoenix(PHX)
                 (0x78 <= model && model <= 0x7B) || // Phoenix 2(PHX2)
-                (model == 0x80) ||                  // MI300C
+                (model == 0x80) ||
                 (0xA0 <= model && model <= 0xAF)    // Stones-Dense(RSDN)
             ) {
                 ret = Uarch::eZen4;

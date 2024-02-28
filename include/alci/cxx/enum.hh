@@ -87,7 +87,7 @@ enum class Uarch : uint32_t
     eOther    /**< Others. */
 };
 
-/** \enum Type
+/** \enum CacheType
  *  \brief Cache type.
  */
 enum class CacheType : uint32_t
@@ -98,7 +98,7 @@ enum class CacheType : uint32_t
     eUnknown          /**< Unknown type. */
 };
 
-/** \enum Level
+/** \enum CacheLevel
  *  \brief Cache level.
  */
 enum class CacheLevel : uint32_t
@@ -109,6 +109,23 @@ enum class CacheLevel : uint32_t
     e_Level_4,      /**< L4 Cache. */
     e_Level_5,      /**< L5 Cache. */
     e_Level_Unknown /**< Unknown Cache level. */
+};
+
+/** \enum CacheParam
+ *  \brief Cache Info Parameters.
+ */
+enum class CacheParam : uint32_t
+{
+    eSize = 1,        /**< Cache Size. */
+    eNumSets,         /**< Number of sets. */
+    eNumWays,         /**< Number of ways. */
+    eLineSize,        /**< Line size. */
+    ePhysPartitions,  /**< Physical partitions. */
+    eNumSharingCache, /**< Num of logical processors sharing cache. */
+    eFullyAssoc,      /**< Fully associative cache. */
+    eSelfInit,        /**< Self initializing Cache. */
+    eInclusive,       /**< Cache Inclusive. */
+    eUnknown          /**< Unknown Cache Param. */
 };
 
 /**

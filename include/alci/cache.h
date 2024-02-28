@@ -32,55 +32,29 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 EXTERN_C_BEGIN
 
-// clang-format off
 /**
- * \struct alc_cache_info
- * \brief Members to hold cache info.
- */
-struct alc_cache_info
-{
-    uint64_t          cachesize;     /**< Cache size in bytes.*/
-    uint64_t          cachenumsets;  /**< cache number of sets.*/
-    uint64_t          cachenumways;  /**< Cache number of ways.*/
-    uint64_t          cachelinesize; /**< cache line size in bytes.*/
-    alc_cache_level_t cachelevel;    /**< identifies the cache level.*/
-    alc_cache_type_t  cachetype;     /**< Identifies the type of cache:
-                                  00h Null; no more caches.
-                                  01h Data cache.
-                                  02h Instruction cache.
-                                  03h Unified cache.
-                                  1Fh-04h Reserved.*/
-
-    // uint8_t        fullyassociative;    /**< 1 = Fully associative cache.*/
-    // uint8_t        selfinitialization;  /**< 1 = Cache is self initializing;
-    //                                         cache does not need software
-    //                                         initialization.*/
-    // uint16_t       cachephyspartitions; /**< Cache physical line partitions.*/
-    // uint16_t       numsharingcache;     /**< Number of logical processors sharing
-    // cache.*/
-};
-
-/** Pointer to hold cache info.*/
-typedef struct alc_cache_info* alc_cache_infop;
-
-/**
- * \brief       Provides pointer to cache info of the given cache level & type.
+ * \brief       Provides cache value of the given cache level, type
+ *              and paramter.
  *
- * \param[out]  cacheinfo Pointer to the cache information in alc_cache_info
- *                        struct
+ * \param[in]   core_num  Core number of Cpu.
  * \param[in]   level     Cache level.
  * \param[in]   type      Cache type.
+ * \param[in]   param     Cache parameter to get value.
+ * \param[out]  value     Pointer to the cache param value.
  *
- * \retval      ALC_E_SUCCESS      If valid cache information is found.
- * \retval      ALC_E_FAILURE      If valid cache information is not found.
+ * \retval      ALC_E_SUCCESS   If valid cache value is found.
+ * \retval      ALC_E_FAILURE   If valid cache value is not found.
  */
 alc_cpuid_error_t
-alcpu_cache_get_info(alc_cache_infop   cacheinfo,
-                     alc_cache_level_t level,
-                     alc_cache_type_t  type);
+alci_cache_get_info(alc_core_num_t      core_num,
+                    alc_cache_level_t   level,
+                    alc_cache_type_t    type,
+                    alc_cache_param_t   param,
+                    uint64_t*           value);
 
 /**
  * \brief       Get cache size of the given cache level and type.
@@ -93,7 +67,6 @@ alcpu_cache_get_info(alc_cache_infop   cacheinfo,
  * \return      If size > 0, returns valid cache size found (in KB). Otherwise,
  *              returns 0.
  */
-// clang-format on
 uint64_t
 alcpu_cache_get_size(alc_cache_level_t level, alc_cache_type_t type);
 
@@ -102,7 +75,7 @@ alcpu_cache_get_size(alc_cache_level_t level, alc_cache_type_t type);
  *
  * Provides cache size in KB.
  *
- * \param[in]   core  Core number for which cache size to be fetched
+ * \param[in]   core  Core number of Cpu.
  * \param[in]   level Cache level.
  * \param[in]   type  Cache type.
  * \param[out]  size  Cache size returned (in KB).
@@ -113,12 +86,28 @@ alc_cpuid_error_t
 alci_cache_get_size(alc_core_num_t    core,
                     alc_cache_level_t level,
                     alc_cache_type_t  type,
-                    size_t*           size);
+                    uint64_t*         size);
 
 /**
  * \brief Get cache ways of the given cache level and type for specific core.
  *
- * \param[in]   core  Core number for which cache size to be fetched
+ * \param[in]   core_num  Core number of Cpu.
+ * \param[in]   level     Cache level.
+ * \param[in]   type      Cache type.
+ * \param[out]  numsets   Cache number of sets returned (in bytes).
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_get_num_sets(alc_core_num_t    core_num,
+                        alc_cache_level_t level,
+                        alc_cache_type_t  type,
+                        uint64_t*         numsets);
+
+/**
+ * \brief Get cache ways of the given cache level and type for specific core.
+ *
+ * \param[in]   core  Core number of Cpu.
  * \param[in]   level Cache level.
  * \param[in]   type  Cache type.
  * \param[out]  way   Cache way returned (in bytes).
@@ -136,7 +125,7 @@ alci_cache_get_way(alc_core_num_t    core,
  *
  * Provides cache size in KB.
  *
- * \param[in]   core  Core number for which cache size to be fetched
+ * \param[in]   core  Core number of Cpu.
  * \param[in]   level Cache level.
  * \param[in]   type  Cache type.
  * \param[out]  lane  Cache lane returned (in bytes).
@@ -148,6 +137,101 @@ alci_cache_get_lane(alc_core_num_t    core,
                     alc_cache_level_t level,
                     alc_cache_type_t  type,
                     size_t*           lane);
+
+/**
+ * \brief Get Cache physical line partitions of the given cache level and type
+ *        for specific core.
+ *
+ * \param[in]   core_num    Core number of Cpu.
+ * \param[in]   level       Cache level.
+ * \param[in]   type        Cache type.
+ * \param[out]  partitions  Cache physical line partitions.
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_get_partitions(alc_core_num_t    core_num,
+                    alc_cache_level_t level,
+                    alc_cache_type_t  type,
+                    uint32_t*         partitions);
+
+/**
+ * \brief Get Number of logical processors sharing cache for given
+ *        cache level and type for specific core.
+ *
+ * \param[in]   core_num  Core number of Cpu.
+ * \param[in]   level     Cache level.
+ * \param[in]   type      Cache type.
+ * \param[out]  numlp     Number of logical processors sharing cache.
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_get_num_sharing_cache(alc_core_num_t    core_num,
+                    alc_cache_level_t level,
+                    alc_cache_type_t  type,
+                    uint32_t*         numlp);
+
+/**
+ * \brief Get fully associative cache details for given cache level and type
+ *        for specific core.
+ *
+ * fullassoc flag:  If cache is full associative, then sets 1.
+ *                  Else 0 will be set.
+ *
+ * \param[in]   core_num  Core number of Cpu.
+ * \param[in]   level     Cache level.
+ * \param[in]   type      Cache type.
+ * \param[out]  fullassoc Fully associative flag.
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_is_fully_assoc(alc_core_num_t    core_num,
+                    alc_cache_level_t level,
+                    alc_cache_type_t  type,
+                    bool*             fullassoc);
+
+/**
+ * \brief Get self initializing cache details for given cache level and type
+ *        for specific core.
+ *
+ * selfinit flag: Sets 1 if Cache is self initializing; and cache does not need
+ *                software initialization. Sets 0 otherwise.
+ *
+ * \param[in]   core_num  Core number of Cpu.
+ * \param[in]   level     Cache level.
+ * \param[in]   type      Cache type.
+ * \param[out]  selfinit  Self Initialization flag.
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_is_self_init(alc_core_num_t    core_num,
+                    alc_cache_level_t level,
+                    alc_cache_type_t  type,
+                    bool*             selfinit);
+
+/**
+ * \brief Get cache inclusive or exclusive for given cache level and type
+ *        for specific core.
+ *
+ * inclusive flag: Sets 1 if cache is inclusive of lower cache levels;
+ *                 Sets 0 if cache is not inclusive (exclusive) of 
+ *                 lower cache levels.
+ *
+ * \param[in]   core_num    Core number of Cpu.
+ * \param[in]   level       Cache level.
+ * \param[in]   type        Cache type.
+ * \param[out]  inclusive   Cache Inclusive flag.
+ *
+ * \return      Returns success or failure via alc_cpuid_error_t
+ */
+alc_cpuid_error_t
+alci_cache_is_inclusive(alc_core_num_t    core_num,
+                    alc_cache_level_t level,
+                    alc_cache_type_t  type,
+                    bool*             inclusive);
 
 /**
  * \brief   Get last level cache.

@@ -20,11 +20,19 @@ Please refer to BUILD.md file for build instructions
 Currently supported:
 
 * ISA available/usable     
-* APIs for SHA,AES and VAES availability
-* APIs for RDSEED and RDRND availability
-* APIs for AVX2 availability
-* APIs for AVX512 foundation and sub-feature flags
-* API for cache topology
+* API to check following features:
+  - SHA, AES, and VAES availability
+  - RDSEED and RDRAND availability
+  - AVX2 availability
+  - AVX512 foundation and sub-feature flags
+* APIs for cache topology:
+  - Cache size and line size
+  - Number of ways and sets
+  - Number of logical processors sharing cache
+  - Number of physical partitions
+  - Fully associative
+  - Self Initializing
+  - Cache Inclusive/Exclusive
 
 ## Dependency
 
@@ -33,3 +41,6 @@ Needs GCC/Clang compiler versions which supports C11 and C++17 standards.
 
 ## Important notes
 Functions/members names may change in upcoming release of AOCL-Utils library.
+
+## Contacts
+AOCL-UTILS is developed and maintained by AMD. For any issues/suggestions you can contact us on the email-id toolchainsupport@amd.com. 

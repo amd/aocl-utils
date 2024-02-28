@@ -79,3 +79,8 @@ NOTES:
    Change the command as follows:
    cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T LLVM
 3. Few warnings are expected in Windows build with Clang.
+4. If BUILD_SHARED_LIBS is OFF, then only static library binary is generated.
+   By default, BUILD_SHARED_LIBS is ON and both static, shared library binaries are generated.
+   Example: cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -B build -T ClangCl
+5. Use -j option along with make/cmake build command to use multiple processes parallely to build the library.
+   Example:In linux, use "make -j" and in Windows, use "cmake --build ./build --config Release -j"

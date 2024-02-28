@@ -44,23 +44,6 @@ $ export CXX=clang++
 
 And follow the same above steps as per GCC build.
 
-Enable testing:
----------------
-This enables test suites present in library.
-$ cmake .. -DALCI_TESTS=ON
-$ make or make install
-$ ./test_cAoclUtils ; which uses C wrappers of library.
-  or
-$ ./test_cppAoclUtils ; which uses C++ implementation of library.
-
-Enable examples:
-----------------
-This enables examples present in library.
-$ cmake .. -DALCI_EXAMPLES=ON
-$ make or make install
-
-Note: examples section will be deleted once all test cases are implemented under tests (C/C++).
-
 --------------
 Windows build:
 --------------
@@ -74,6 +57,20 @@ With Clang:
 Static library binary: libaoclutils_static.lib
 Shared/Dynamic library binary: libaoclutils.lib, libaoclutils.dll
 
+----------------------------
+Doxygen document generation:
+----------------------------
+Tools needed: Doxygen 1.9.6 or above
+Include "-DALCI_DOXYGEN_DOC=ON" along with above commands during compilation.
+
+Example:
+cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl -DALCI_DOXYGEN_DOC=ON
+
+After successful command execution, document will be generated in HTML format.
+Open docs/doxygen/html/index.html in any browser to view documentation.
+
+CMake will use the existing Doxygen if already installed. Else user need to install Doxygen and try again.
+
 NOTES:
 1. cmake flag "CMAKE_INSTALL_PREFIX" can be used to avoid lib installation into default path and to install in a user specified path.
    cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -DCMAKE_INSTALL_PREFIX="custom_path" -T ClangCl
@@ -82,7 +79,8 @@ NOTES:
    Change the command as follows:
    cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T LLVM
 3. Few warnings are expected in Windows build with Clang.
-4. In order to enable testing, need to add -DALCI_TESTS=ON along with cmake cmd above.
-   Example: cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -DALCI_TESTS=ON -B build -T ClangCl
-5. In order to enable examples, need to add -DALCI_EXAMPLES=ON along with cmake cmd above.
-   Example: cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -DALCI_EXAMPLES=ON -B build -T ClangCl
+4. If BUILD_SHARED_LIBS is OFF, then only static library binary is generated.
+   By default, BUILD_SHARED_LIBS is ON and both static, shared library binaries are generated.
+   Example: cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -B build -T ClangCl
+5. Use -j option along with make/cmake build command to use multiple processes parallely to build the library.
+   Example:In linux, use "make -j" and in Windows, use "cmake --build ./build --config Release -j"

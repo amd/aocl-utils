@@ -42,16 +42,13 @@ namespace alci {
  */
 class Cpu
 {
-  public:
-    typedef std::map<alc_flag_t, bool> flagmap;
-
   private:
-    // Cache hierarchy as seen by each cpu
-    CacheInfo m_cache_info[5];
-
+    CacheInfo m_cache_info[5]; /**< Cache hierarchy as seen by each cpu. */
+    
     /**< Flagmap is boolean type to contain flags of CPUID
      * features.
      */
+    typedef std::map<alc_flag_t, bool> flagmap;
     flagmap m_flags; /**< Stores CPUID feature flags. */
     
     CpuIdRawData m_raw_data; /**< To hold cpuid raw data.*/

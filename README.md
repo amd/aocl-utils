@@ -24,7 +24,14 @@ Currently supported:
   – RDSEED and RDRAND availability
   – AVX2 availability
   – AVX512 foundation and sub-feature flags
-* APIs for cache topology
+* APIs for cache topology:
+  - Cache size and line size
+  - Number of ways and sets
+  - Number of logical processors sharing cache
+  - Number of physical partitions
+  - Fully associative
+  - Self Initializing
+  - Cache Inclusive/Exclusive
 
 ## Dependency
 

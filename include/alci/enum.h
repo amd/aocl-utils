@@ -156,6 +156,13 @@ typedef enum
 
     /*
      * ALC_CPUID
+     * EAX = 0x80000001, ECX = 0x0
+     */
+    /* ECX Values*/
+    ALC_CPUID_BIT_TOPOLOGY_EXTENSIONS = (1u << 22),
+    
+    /*
+     * ALC_CPUID
      * EAX = 0x1D
      */
 
@@ -324,6 +331,24 @@ typedef enum
     ALC_E_TYPE_UNIFIED,    /**< Unified Cache. */
     ALC_E_TYPE_UNKNOWN     /**< Unable to determine. */
 } alc_cache_type_t;
+
+/**
+ * \enum alc_cache_param_t
+ * \brief Cache Info Parameters.
+ */
+typedef enum
+{
+    ALC_E_PARAM_SIZE = 1,         /**< Cache Size. */
+    ALC_E_PARAM_NUMSETS,          /**< Number of sets. */
+    ALC_E_PARAM_NUMWAYS,          /**< Number of ways. */
+    ALC_E_PARAM_LINESIZE,         /**< Line size. */
+    ALC_E_PARAM_PHYSPARTITIONS,   /**< Physical partitions. */
+    ALC_E_PARAM_NUMSHARINGCACHE,  /**< Num of logical processors sharing cache. */
+    ALC_E_PARAM_FULLYASSOC,       /**< Fully associative cache. */
+    ALC_E_PARAM_SELFINIT,         /**< Self initializing Cache. */
+    ALC_E_PARAM_INCLUSIVE,        /**< Cache inclusive. */
+    ALC_E_PARAM_UNKNOWN           /**< Unknown cache param. */
+} alc_cache_param_t;
 
 /**
  * \enum alc_cpuid_error_t

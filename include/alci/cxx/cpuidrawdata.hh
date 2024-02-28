@@ -33,6 +33,7 @@
 #include <array>
 #include <cstdint>
 #include <map>
+#include <cstring>
 
 namespace alci {
 

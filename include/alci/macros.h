@@ -43,6 +43,8 @@
 #define EXTERN_C_END
 #define EXTERN_C
 
+#include <stdbool.h>
+
 #ifndef bool
 /**
  * \enum bool
@@ -53,7 +55,6 @@ typedef enum
     false, /**< false - 0. */
     true   /**< true - 1. */
 } bool;
-
 #endif /* ifndef bool */
 #endif /* ifdef __cplusplus */
 
