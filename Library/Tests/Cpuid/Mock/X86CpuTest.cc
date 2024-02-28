@@ -27,13 +27,28 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
+#include "../CpuidTest.hh"
 #include "MockTest.hh"
 
 namespace {
 
 using namespace Au;
 using namespace std;
+class MockX86Cpu
+    : public MockCpuidBase
+    , public ::testing::WithParamInterface<tuple<string, vector<bool>>>
+{
+  protected:
+    void SetUp() override
+    {
+        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_))
+            .Times(testing::AtLeast(11));
+    }
+};
 
+INSTANTIATE_TEST_SUITE_P(MockX86CpuTestSuite,
+                         MockX86Cpu,
+                         ::testing::ValuesIn(testParametersX86Cpu));
 /**
  * Testcase for X86Cpu
  * Tests all the X86Cpu Functions
@@ -41,25 +56,18 @@ using namespace std;
  * Takes testParametersX86Cpu as input containing the CPU type and the expected
  * results vector.
  */
-class MockX86Cpu
-    : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, vector<bool>>>
-{};
-
-INSTANTIATE_TEST_SUITE_P(MockX86CpuTestSuite,
-                         MockX86Cpu,
-                         ::testing::ValuesIn(testParametersX86Cpu));
 TEST_P(MockX86Cpu, MockX86CpuTest)
 {
 
-    const auto         params          = GetParam();
-    const string       cpuType         = get<0>(params);
-    const vector<bool> expectedResults = get<1>(params);
-    vector<bool>       results;
+    const auto   params          = GetParam();
+    const auto   cpuType         = get<0>(params);
+    const auto   expectedResults = get<1>(params);
+    auto         resultT         = true;
+    auto         resultF         = false;
+    vector<bool> results;
 
-    filename         = cpuType;
-    auto reqRespData = Configure();
-    EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(11);
+    filename           = cpuType;
+    auto   reqRespData = Configure();
     X86Cpu cpu{ &mockCpuidUtils, 0 };
 
     cout << "Mocking " << cpuType << endl;
@@ -68,6 +76,26 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     results.push_back(cpu.isX86_64v2());
     results.push_back(cpu.isX86_64v3());
     results.push_back(cpu.isX86_64v4());
+
+    // Has flag tests
+    String srcDir     = PROJECT_SOURCE_DIR;
+    String simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
+    String absPath    = srcDir + simnowData + cpuType + "/FlagsT.txt";
+    auto   flags      = readFromFile<ECpuidFlag>(absPath);
+
+    for (auto flag : flags) {
+        resultT = resultT & cpu.hasFlag(flag);
+    }
+    results.push_back(resultT);
+
+    absPath = srcDir + simnowData + cpuType + "/FlagsF.txt";
+    flags   = readFromFile<ECpuidFlag>(absPath);
+
+    for (auto flag : flags) {
+        resultF = resultF | cpu.hasFlag(flag);
+    }
+    results.push_back(!resultF);
+
     EXPECT_EQ(results, expectedResults);
 }
 } // namespace

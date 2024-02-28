@@ -48,28 +48,29 @@ using namespace Au;
  * 2. Vector of boolean values that marks the expected results of
  *   {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4} APIs
  */
-const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
-    { "EPYC-Genoa-v1", { true, false, true, true, false } },
-    { "EPYC-Milan-v1", { true, false, true, true, false } },
-    { "EPYC-Milan-v2", { true, false, true, true, false } },
-    { "EPYC-Rome-v1", { true, false, true, true, false } },
-    { "EPYC-Rome-v2", { true, false, true, true, false } },
-    { "EPYC-Rome-v3", { true, false, true, true, false } },
-    { "EPYC-Rome-v4", { true, false, true, true, false } },
-    { "EPYC-v1", { true, false, true, true, false } },
-    { "EPYC-v2", { true, false, true, true, false } },
-    { "EPYC-v3", { true, false, true, true, false } },
-    { "EPYC-v4", { true, false, true, true, false } },
-    { "Opteron_G1-v1", { true, false, false, false, false } },
-    { "Opteron_G2-v1", { true, false, false, false, false } },
-    { "Opteron_G3-v1", { true, false, false, false, false } },
-    { "Opteron_G4-v1", { true, false, true, false, false } },
-    { "Opteron_G5-v1", { true, false, true, false, false } },
-    { "phenom-v1", { true, false, false, false, false } },
-    { "Broadwell-v1", { false, true, true, true, false } },
-    { "Denverton-v1", { false, true, true, false, false } },
-    { "Conroe-v1", { false, true, false, false, false } },
-    { "Skylake-Server-v1", { false, true, true, true, true } }
+const vector<tuple<String, vector<bool>>> testParametersX86Cpu = {
+
+    { "EPYC-Genoa-v1", { true, false, true, true, false, true, true } },
+    { "EPYC-Milan-v1", { true, false, true, true, false, true, true } },
+    { "EPYC-Milan-v2", { true, false, true, true, false, true, true } },
+    { "EPYC-Rome-v1", { true, false, true, true, false, true, true } },
+    { "EPYC-Rome-v2", { true, false, true, true, false, true, true } },
+    { "EPYC-Rome-v3", { true, false, true, true, false, true, true } },
+    { "EPYC-Rome-v4", { true, false, true, true, false, true, true } },
+    { "EPYC-v1", { true, false, true, true, false, true, true } },
+    { "EPYC-v2", { true, false, true, true, false, true, true } },
+    { "EPYC-v3", { true, false, true, true, false, true, true } },
+    { "EPYC-v4", { true, false, true, true, false, true, true } },
+    { "Opteron_G1-v1", { true, false, false, false, false, true, true } },
+    { "Opteron_G2-v1", { true, false, false, false, false, true, true } },
+    { "Opteron_G3-v1", { true, false, false, false, false, true, true } },
+    { "Opteron_G4-v1", { true, false, true, false, false, true, true } },
+    { "Opteron_G5-v1", { true, false, true, false, false, true, true } },
+    { "phenom-v1", { true, false, false, false, false, true, true } },
+    { "Broadwell-v1", { false, true, true, true, false, true, true } },
+    { "Denverton-v1", { false, true, true, false, false, true, true } },
+    { "Conroe-v1", { false, true, false, false, false, true, true } },
+    { "Skylake-Server-v1", { false, true, true, true, true, true, true } }
 };
 
 /**
@@ -79,7 +80,7 @@ const vector<tuple<string, vector<bool>>> testParametersX86Cpu = {
  * 2. VendorInfo structure containing the expected results.
  */
 // clang-format off
-const vector<tuple<string, VendorInfo>> testParametersCpuidUtils = {
+const vector<tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "EPYC-Genoa-v1", { VendorInfo{ EVendor::Amd, EFamily::Zen4, 0x11, 0 } } },
     { "EPYC-Milan-v1", { VendorInfo{ EVendor::Amd, EFamily::Zen4, 0x1, 1 } } },
     { "EPYC-Milan-v2", { VendorInfo{ EVendor::Amd, EFamily::Zen4, 0x1, 0x1 } } },
@@ -137,7 +138,7 @@ class MockCpuidBase : public testing::Test
      * @return map<RequestT, ResponseT> is the map containing the request and
      * response data
      */
-    map<RequestT, ResponseT> parseCSV(const string& filename)
+    map<RequestT, ResponseT> parseCSV(const String& filename)
     {
         map<RequestT, ResponseT> data;
 
@@ -148,10 +149,10 @@ class MockCpuidBase : public testing::Test
             return data; // Return an empty vector if the file cannot be opened
         }
 
-        string line;
+        String line;
         while (getline(file, line)) {
             istringstream lineStream(line);
-            string        requestStr, respStr;
+            String        requestStr, respStr;
 
             // Assuming the CSV structure is
             // {1,0,0,0}:{329300,2048,4294586883,126614525}
@@ -191,9 +192,9 @@ class MockCpuidBase : public testing::Test
      */
     map<RequestT, ResponseT> Configure()
     {
-        string projectDir   = PROJECT_SOURCE_DIR;
-        string testDir      = "/Library/Tests/Cpuid/Mock/simnowdata/";
-        string dataFilename = projectDir + testDir + filename;
+        String projectDir   = PROJECT_SOURCE_DIR;
+        String testDir      = "/Library/Tests/Cpuid/Mock/simnowdata/";
+        String dataFilename = projectDir + testDir + filename + "/" + filename;
 
         map<RequestT, ResponseT> csvData = parseCSV(dataFilename);
         for (const auto& entry : csvData) {
@@ -210,6 +211,6 @@ class MockCpuidBase : public testing::Test
     {
     }
     MockCpuidUtils mockCpuidUtils;
-    string         filename;
+    String         filename;
 };
 } // namespace
