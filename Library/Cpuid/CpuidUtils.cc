@@ -137,11 +137,9 @@ CpuidUtils::updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp)
 void
 CpuidUtils::updateCacheView(CacheView& cView)
 {
-    bool lastLevel = false;
-    int  curLevel  = 1;
+    int curLevel = 1;
 
-    while (!lastLevel
-           || valueToEnum<CacheLevel, int>(curLevel) > CacheLevel::L5) {
+    while (valueToEnum<CacheLevel, int>(curLevel) > CacheLevel::L5) {
         CacheInfo cInfo{ CacheLevel::L1,
                          CacheType::DCache }; /* dummy, will be overriden */
         RequestT  req{ 0x8000'001D, 0, (Uint32)curLevel, 0 };

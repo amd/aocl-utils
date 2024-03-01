@@ -60,7 +60,7 @@ class X86Cpu::Impl
 {
 
   public:
-    Impl(CpuidUtils* cUtils)
+    explicit Impl(CpuidUtils* cUtils)
         : m_avail_flags{}
         , m_usable_flags{}
         , m_cutils{ cUtils }
@@ -115,36 +115,54 @@ class X86Cpu::Impl
     /**
      * @brief Setter for usable flag to override, by default usable = available
      *
-     * @param[in]       flg     EFlag that needs to be updated
+     * @param[in]       flag     EFlag that needs to be updated
      * @param[in]       res     Result (true/false) to be updated with
      *
      * @return     void
      */
-    void setUsableFlag(EFlag const& flg, bool res = true);
+    void setUsableFlag(EFlag const& flag, bool res = true);
 
   private:
-    bool isUsable(EFlag const& flg) const
+    /**
+     *  @brief Check if a cpuid flag is usable
+     *
+     * @param[in] flag  EFlag to be checked
+     *
+     * @return bool
+     */
+    bool isUsable(EFlag const& flag) const
     {
-        auto usable = m_usable_flags.find(flg);
+        auto usable = m_usable_flags.find(flag);
         if (usable != m_usable_flags.end())
             return usable->second;
 
         return false;
     }
-
-    /* All or None flags check */
-    bool isUsable(std::vector<EFlag> const& arr) const
+    /**
+     * @brief Check if all of the cpuid flag is available
+     *
+     * @param[in] featureArr  Vector of EFlag to be checked
+     *
+     * @return bool
+     */
+    bool isUsable(std::vector<EFlag> const& featureArr) const
     {
-        for (auto& i : arr) {
-            if (!isUsable(i))
+        for (const auto& flag : featureArr) {
+            if (!isUsable(flag))
                 return false;
         }
         return true;
     }
-
-    void updateflag(EFlag const& flg, bool res = true)
+    /**
+     * @brief Enable/Disable a cpuid flag
+     * @param[in] flag  EFlag to be updated
+     * @param[in] res   Result (true/false) to be updated with
+     *
+     * @return void
+     */
+    void updateflag(EFlag const& flag, bool res = true)
     {
-        m_avail_flags[flg] = m_usable_flags[flg] = res;
+        m_avail_flags[flag] = m_usable_flags[flag] = res;
     }
 
     /*

@@ -143,7 +143,9 @@ enum class ECpuidFlag : Uint64
     rdpid,
     avx512_4vnniw,
     avx512_4fmaps,
-
+    /* EAX = 0x0000_0007,ECX = 0x00000001 result in EAX */
+    avx512_bf16,
+    avxvnni,
     /* EAX = 0x0000_000D , result in EAX */
     xsaveopt,
     xsavec,

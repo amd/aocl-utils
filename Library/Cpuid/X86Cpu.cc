@@ -27,6 +27,7 @@
  */
 
 #include "X86RawData.hh"
+#include <thread>
 
 namespace Au {
 
@@ -86,6 +87,16 @@ X86Cpu::X86Cpu(CpuNumT num)
     : CpuInfo{ num }
     , m_pimpl{ new X86Cpu::Impl{} }
 {
+    /* switch to the correct cpunum,
+     * using sched_setaffinity() */
+
+    auto nthreads = std::thread::hardware_concurrency();
+    AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
+    cpu_set_t cpuSet;
+    CPU_ZERO(&cpuSet);
+    CPU_SET(num, &cpuSet);
+    auto pid = getpid();
+    sched_setaffinity(pid, sizeof(cpu_set_t), &cpuSet);
     pImpl()->update();
 }
 
