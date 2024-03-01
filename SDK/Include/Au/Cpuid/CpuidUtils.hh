@@ -90,21 +90,8 @@ enum class EFamily : Uint16
     Zen2     = 0x17,
     Zen3     = 0x19,
     Zen4     = 0x19,
-    Max      = 0x19, /* Always set to latest family ID */
-};
-
-/**
- * @struct  VendorInfo
- * @brief   CPU core info.
- */
-class VendorInfo
-{
-    /* TODO: Make this private and provide accessors */
-  public:
-    EVendor m_mfg;      /**< CPU manufacturing vendor. */
-    EFamily m_family;   /**< CPU family ID. */
-    Uint16  m_model;    /**< CPU model number. */
-    Uint16  m_stepping; /**< CPU stepping. */
+    Zen5     = 0xA0,
+    Max      = 0xA0, /* Always set to latest family ID */
 };
 
 class CpuidUtils
@@ -142,6 +129,9 @@ class CpuidUtils
      * \param[in]   var  32-bit value.
      *
      * \return      Returns Family ID value.
+     * Note: Returns the minimum value of the family ID.
+     * Eg: Zen, ZenPlus and zen2 has same family ID. even if the CPU belongs to
+     * the Zen2 family, it returns Zen2 the function return Zen
      */
     EFamily getFamily(Uint32 var);
     /**

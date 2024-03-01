@@ -34,15 +34,55 @@
 
 namespace Au {
 
-/** \enum  ECpuidReg
- *  \brief CPUID registers.
- */
-enum class ECpuidReg
+/* Precise identification */
+#define MAKE_MODEL(base, ext) (((ext) << 4) | (base))
+
+enum class EUModel : Uint8 // NOLINT
 {
-    Eax = 0, /**< EAX register. */
-    Ebx,     /**< EBX register. */
-    Ecx,     /**< ECX register. */
-    Edx      /**< EDX register. */
+    /* Zen 17H */
+    Zen_Min = MAKE_MODEL(0x0, 0x0), /* 0 */
+    /* Zen, Naples, Whitehaven, Summit Ridge, Snowy Owl */
+    Naples = MAKE_MODEL(0x1, 0x0), /* 1 */
+    /* Ravenridge Great Horned Owl */
+    Ravenridge    = MAKE_MODEL(0x1, 0x1), /* 17 */
+    Bandedkestrel = MAKE_MODEL(0x8, 0x1), /* 24 */
+
+    /* Zen+ 17H*/
+    /* Pinnacleridge Colfax*/
+    Pinnacleridge = MAKE_MODEL(0x8, 0x0), /* 8 */
+    Picasso       = MAKE_MODEL(0x8, 0x1), /* 24 */
+
+    /* Zen2 17H*/
+    /* Rome Castle peak*/
+    Rome          = MAKE_MODEL(0x1, 0x3), /* 49 */
+    Castlepeakpro = MAKE_MODEL(0x7, 0x4), /* 71 */
+    /* Renoir Grey Hawk */
+    Renoir    = MAKE_MODEL(0x0, 0x6), /* 96 */
+    Matisse   = MAKE_MODEL(0x1, 0x7), /* 113 */
+    Vangogh   = MAKE_MODEL(0x0, 0x9), /* 144 */
+    Mendocino = MAKE_MODEL(0x0, 0xA), /* 160 */
+
+    /* Zen3 19H*/
+    Milan     = MAKE_MODEL(0x1, 0x0), /* 1 */
+    Chagall   = MAKE_MODEL(0x8, 0x0), /* 08 */
+    Vermeer   = MAKE_MODEL(0x1, 0x2), /* 33 */
+    Rembrandt = MAKE_MODEL(0x0, 0x4), /* 64 */
+    Cezanne   = MAKE_MODEL(0x0, 0x5), /* 80 */
+
+    /* Zen4 19H*/
+    Genoa       = MAKE_MODEL(0x1, 0x1), /* 17 */
+    Stormpeak   = MAKE_MODEL(0x8, 0x1), /* 24 */
+    Warhol      = MAKE_MODEL(0x1, 0x2), /* 33 */
+    Raphael     = MAKE_MODEL(0x1, 0x6), /* 97 */
+    Pheonix     = MAKE_MODEL(0x5, 0x7), /* 117 */
+    Phenixpoint = MAKE_MODEL(0x8, 0x7), /* 120 */
+
+    /* Zen5 - Wikipedia */
+
+    Turin        = MAKE_MODEL(0x0, 0x2), /* 1 */
+    TurinD       = MAKE_MODEL(0x1, 0x0), /* 16 */
+    GraniteRidge = 0x0,                  /* desktop */
+    StrixPoint   = 0x0,                  /* mobile processors  */
 };
 
 using EFlag = ECpuidFlag;
@@ -90,6 +130,9 @@ class X86Cpu::Impl
     bool isX86_64v4() const;
 
     bool hasFlag(EFlag const& ef) const;
+
+    EUarch getUarch() const;
+    bool   isUarch(EUarch uarch, bool strict = false) const;
 
     /**
      * @brief       Get CPUID output based on eax, ecx register values as
@@ -164,7 +207,78 @@ class X86Cpu::Impl
     {
         m_avail_flags[flag] = m_usable_flags[flag] = res;
     }
+    /**
+     * @brief Update the microarchitecture of CPU in the m_vendor_info structure
+     * based on the Family model and stepping values
+     */
+    void setUarch()
+    {
+        /**
+         * As m_vendor_info.m_family will only hold the minimum
+         * value of the family @see getFamily() ID. Eg: Zen, ZenPlus and zen2
+         * has same family ID. Even if the CPU belongs to the Zen2 family, it
+         * holds EFamily::Zen hence if checks can look only for the smallest
+         * family ID in the group and rest can be skipped.
+         */
+        if (m_vendor_info.m_family == EFamily::Zen) {
+            switch (m_vendor_info.m_model) {
+                case *EUModel::Naples:
+                case *EUModel::Ravenridge:
+                    m_vendor_info.m_uarch = EUarch::Zen;
+                    break;
+                    // case *EUModel::Bandedkestrel:
+                case *EUModel::Picasso:
+                    if (m_vendor_info.m_stepping == 1)
+                        m_vendor_info.m_uarch = EUarch::ZenPlus;
+                    else
+                        m_vendor_info.m_uarch = EUarch::Zen;
+                    break;
+                case *EUModel::Pinnacleridge:
+                    m_vendor_info.m_uarch = EUarch::ZenPlus;
+                    break;
+                case *EUModel::Rome:
+                case *EUModel::Castlepeakpro:
+                case *EUModel::Renoir:
+                case *EUModel::Matisse:
+                case *EUModel::Vangogh:
+                case *EUModel::Mendocino:
+                    m_vendor_info.m_uarch = EUarch::Zen2;
+                    break;
+            }
 
+        } else if (m_vendor_info.m_family == EFamily::Zen3) {
+
+            switch (m_vendor_info.m_model) {
+                case *EUModel::Milan:
+                case *EUModel::Chagall:
+                    m_vendor_info.m_uarch = EUarch::Zen3;
+                    break;
+                // case *EUModel::Vermeer:
+                case *EUModel::Warhol:
+                    if (m_vendor_info.m_stepping == 2)
+                        m_vendor_info.m_uarch = EUarch::Zen4;
+                    else
+                        m_vendor_info.m_uarch = EUarch::Zen3;
+                    break;
+                case *EUModel::Rembrandt:
+                case *EUModel::Cezanne:
+                    m_vendor_info.m_uarch = EUarch::Zen3;
+                    break;
+                case *EUModel::Genoa:
+                case *EUModel::Stormpeak:
+                case *EUModel::Raphael:
+                case *EUModel::Pheonix:
+                case *EUModel::Phenixpoint:
+                    m_vendor_info.m_uarch = EUarch::Zen4;
+                    break;
+            }
+        } else if (m_vendor_info.m_family == EFamily::Zen5) {
+            m_vendor_info.m_uarch = EUarch::Zen5;
+        } else {
+
+            m_vendor_info.m_uarch = EUarch::Unknown;
+        }
+    }
     /*
      * FIXME : Eventually change to a bitmap
      */
