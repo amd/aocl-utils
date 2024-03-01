@@ -33,17 +33,12 @@ CheckOptions:
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.ConstexprMethodCase: CamelCase
   readability-identifier-naming.EnumCase: UPPER_CASE
-  readability-identifier-naming.ConstexprEnumCase: UPPER_CASE
-  readability-identifier-naming.EnumMemberCase: CamelCase
   readability-identifier-naming.StructCase: CamelCase
-  readability-identifier-naming.MacroCase: UPPER_CASE
   readability-identifier-naming.GlobalConstantCase: UPPER_CASE
   readability-identifier-naming.GlobalConstantPointerCase: UPPER_CASE
   readability-identifier-naming.GlobalFunctionCase: camelBack
-  readability-identifier-naming.GlobalVariableCase: camelBack
-  readability-identifier-naming.MemberCase: camelBack
-  readability-identifier-naming.MemberConstantCase: camelBack
-  readability-identifier-naming.MemberFunctionCase: camelBack
-  readability-identifier-naming.MemberVariableCase: snake_case
+  readability-identifier-naming.MemberCase: lower_case
+  readability-identifier-naming.MemberPrefix: 'm_'
+  readability-identifier-naming.MemberSuffix: ''
 ...
 
