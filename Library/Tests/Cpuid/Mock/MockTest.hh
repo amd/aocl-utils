@@ -43,36 +43,46 @@ using namespace Au;
 
 /**
  * Test parameters for X86Cpu Mock Test
- * Vector contains the following parameters:
+<<<<<<< Updated upstream
  * 1. Name of the CPU model to be mocked using simnowdata
- * 2. Vector of boolean values that marks the expected results of
- *   {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4} APIs
+ * 2. Vector contains the following parameters:
+=======
+ * Vector containing the following parameters:
+ * 1. Name of the CPU model to be mocked using simnowdata
+ * 2. Vector containing the following parameters:
+>>>>>>> Stashed changes
+ *    1. Name of the CPU model to be mocked using simnowdata
+ *    2. Vector of boolean values that marks the expected results of
+ *       {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4}  APIs
+ *     and true for hasFlags(T/F) and isUarch api tests
+ * 3. Expected architecture of the CPU
  */
-const vector<tuple<String, vector<bool>>> testParametersX86Cpu = {
-
-    { "EPYC-Genoa-v1", { true, false, true, true, false, true, true } },
-    { "EPYC-Milan-v1", { true, false, true, true, false, true, true } },
-    { "EPYC-Milan-v2", { true, false, true, true, false, true, true } },
-    { "EPYC-Rome-v1", { true, false, true, true, false, true, true } },
-    { "EPYC-Rome-v2", { true, false, true, true, false, true, true } },
-    { "EPYC-Rome-v3", { true, false, true, true, false, true, true } },
-    { "EPYC-Rome-v4", { true, false, true, true, false, true, true } },
-    { "EPYC-v1", { true, false, true, true, false, true, true } },
-    { "EPYC-v2", { true, false, true, true, false, true, true } },
-    { "EPYC-v3", { true, false, true, true, false, true, true } },
-    { "EPYC-v4", { true, false, true, true, false, true, true } },
-    { "Opteron_G1-v1", { true, false, false, false, false, true, true } },
-    { "Opteron_G2-v1", { true, false, false, false, false, true, true } },
-    { "Opteron_G3-v1", { true, false, false, false, false, true, true } },
-    { "Opteron_G4-v1", { true, false, true, false, false, true, true } },
-    { "Opteron_G5-v1", { true, false, true, false, false, true, true } },
-    { "phenom-v1", { true, false, false, false, false, true, true } },
-    { "Broadwell-v1", { false, true, true, true, false, true, true } },
-    { "Denverton-v1", { false, true, true, false, false, true, true } },
-    { "Conroe-v1", { false, true, false, false, false, true, true } },
-    { "Skylake-Server-v1", { false, true, true, true, true, true, true } }
+// clang-format off
+auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, hasFlagsT=true,hasFlagsF=true, isUarch=true;
+const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
+    { "EPYC-Genoa-v1", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen4 },
+    { "EPYC-Milan-v1", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen3 },
+    { "EPYC-Milan-v2", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen3 },
+    { "EPYC-Rome-v1", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v2", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v3", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v4", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
+    { "EPYC-v1", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
+    { "EPYC-v2", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
+    { "EPYC-v3", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
+    { "EPYC-v4", { isAmd, !isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
+    { "Opteron_G1-v1", { isAmd, !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Opteron_G2-v1", { isAmd, !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Opteron_G3-v1", { isAmd, !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Opteron_G4-v1", { isAmd, !isIntel, isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Opteron_G5-v1", { isAmd, !isIntel, isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "phenom-v1", { isAmd, !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Broadwell-v1", { !isAmd, isIntel, isX86_64v2, isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Denverton-v1", { !isAmd, isIntel, isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT , hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Conroe-v1", { !isAmd, isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
+    { "Skylake-Server-v1", { !isAmd, isIntel, isX86_64v2, isX86_64v3, isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown }
 };
-
+// clang-format on
 /**
  * Test parameters for CpuidUtils Mock Test
  * Vector contains the following parameters:

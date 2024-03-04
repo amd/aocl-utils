@@ -36,7 +36,7 @@ using namespace Au;
 using namespace std;
 class MockX86Cpu
     : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, vector<bool>>>
+    , public ::testing::WithParamInterface<tuple<string, vector<bool>, EUarch>>
 {
   protected:
     void SetUp() override
@@ -62,6 +62,7 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     const auto   params          = GetParam();
     const auto   cpuType         = get<0>(params);
     const auto   expectedResults = get<1>(params);
+    const auto   uarch           = get<2>(params);
     auto         resultT         = true;
     auto         resultF         = false;
     vector<bool> results;
@@ -96,6 +97,9 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     }
     results.push_back(!resultF);
 
+    cout << "Checking Uarch" << endl;
+    results.push_back(cpu.isUarch(uarch));
     EXPECT_EQ(results, expectedResults);
+    EXPECT_EQ(cpu.getUarch(), uarch);
 }
 } // namespace
