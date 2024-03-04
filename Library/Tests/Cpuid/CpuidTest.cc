@@ -101,6 +101,33 @@ TEST(X86Cpuid, DISABLED_hasFlagF)
     for (auto flag : flags)
         EXPECT_FALSE(cpu.hasFlag(flag));
 }
+TEST(X86Cpuid, DISABLED_isUarch)
+{
+    std::string absPath = PROJECT_BUILD_DIR;
+    EUarch      uarch;
+    X86Cpu      cpu{ 0 };
+    string      data;
+
+    // verify the uarch passed from the qemu testcase.
+    absPath += "/Uarch.txt";
+    uarch = readFromFile<EUarch>(absPath).front();
+    EXPECT_TRUE(cpu.isUarch(uarch));
+
+    // Verify isUarch returns False for any microarchitecure higher than the
+    // current one
+    uarch = static_cast<EUarch>(static_cast<int>(uarch) + 1);
+    EXPECT_FALSE(cpu.isUarch(uarch));
+
+    // Verify isUarch returns True for any microarchitecure lower than the
+    // current one.
+    uarch = static_cast<EUarch>(static_cast<int>(uarch) - 2);
+    EXPECT_TRUE(cpu.isUarch(uarch));
+
+    // Verify isUarch returns false for any microarchitecure lower than the
+    // current one in strict mode
+    EXPECT_FALSE(cpu.isUarch(uarch, true));
+    writeToFile<EUarch>("UarchResult.txt", { cpu.getUarch() });
+}
 
 TEST(X86Cpuid, CheckCupNumber)
 {
