@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 
+#include "CpuidTest.hh"
 #include "QemuTest.hh"
 
 namespace {
@@ -41,30 +42,9 @@ using namespace Au;
 
 class QemuTest
     : public ::testing::TestWithParam<
-          std::tuple<std::string, std::vector<bool>>>
+          std::tuple<std::string, std::vector<bool>, EUarch>>
 {
   private:
-    /**
-     * @brief Write the flags to a file
-     *
-     * @param[in] filename The name of the file to write to
-     * @param[in] flags The flags to write to the file
-     *
-     * @return void
-     */
-    static void writeToFile(const std::string&             filename,
-                            const std::vector<ECpuidFlag>& flags)
-    {
-        std::ofstream file(filename);
-        if (!file.is_open()) {
-            std::cout << "Error opening file" << std::endl;
-        } else {
-            for (auto flag : flags) {
-                file << *flag << std::endl;
-            }
-        }
-    }
-
     /**
      * @brief Call the Qemu emulator to run the tests
      * Implemented in a python module named CpuidTest.
@@ -179,6 +159,18 @@ class QemuTest
     }
 
     /**
+     * @brief Verifies the Uarch APIs for the emulated CPU
+     * @param cpuType The type of the cpu to emulate
+     * @param Uarch The type of the cpu to emulate
+     *
+     * @return bool The result of the test
+     */
+    static bool TestUarch(const String& cpuType, const EUarch Uarch)
+    {
+        writeToFile<EUarch>("Uarch.txt", { Uarch });
+        return callQemuEmulator(cpuType.c_str(), "Uarch");
+    }
+    /**
      * @brief Clean up the test environment
      *
      * @return void
@@ -190,6 +182,8 @@ class QemuTest
         std::filesystem::remove_all(cleanPath);
         std::remove("FlagsT.txt");
         std::remove("FlagsF.txt");
+        std::remove("Uarch.txt");
+        std::remove("UarchResult.txt");
     }
 };
 
@@ -199,8 +193,11 @@ INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
 
 TEST_P(QemuTest, CpuTypeTest)
 {
-    const auto        params  = GetParam();
-    const std::string cpuType = std::get<0>(params);
+    const auto params          = GetParam();
+    const auto cpuType         = std::get<0>(params);
+    const auto expectedResults = std::get<1>(params);
+    const auto uarch           = std::get<2>(params);
+
     std::cout << "Emulating " << cpuType << std::endl;
     const std::vector<std::string> testNames = {
         "X86Cpuid.DISABLED_isAMD",
@@ -209,11 +206,15 @@ TEST_P(QemuTest, CpuTypeTest)
         "X86Cpuid.DISABLED_isX86_64v3",
         "X86Cpuid.DISABLED_isX86_64v4"
     };
-    const std::vector<bool> expectedResults = std::get<1>(params);
 
     auto results = testAll(cpuType, testNames);
     results.push_back(hasFlagT(cpuType));
     results.push_back(hasFlagF(cpuType));
+    results.push_back(TestUarch(cpuType, uarch));
     EXPECT_EQ(results, expectedResults);
+    // Read the Uarch test result from the file
+    // and compare it with the Uarch value of the emulated CPU.
+    auto uarchResult = readFromFile<EUarch>("UarchResult.txt");
+    EXPECT_EQ(uarchResult[0], uarch);
 }
 } // namespace

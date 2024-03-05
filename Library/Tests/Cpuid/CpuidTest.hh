@@ -38,20 +38,41 @@ namespace {
 using namespace Au;
 
 /**
- * @brief Utility function to data from a file
+ * @brief Utility function to write the data to a file
+ *
+ * @param[in] filename The name of the file to write to
+ * @param[in] items The data to write to the file
+ *
+ * @return void
+ */
+template<typename T>
+static void
+writeToFile(const std::string& filename, const std::vector<T>& items)
+{
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "Error opening file" << std::endl;
+    } else {
+        for (auto item : items) {
+            file << *item << std::endl;
+        }
+    }
+}
+/**
+ * @brief Utility function to read data from a file
  * @param fileName The absolute path of the file
- * @return vector<ECpuidFlag> The flags read from the file
+ * @return vector<T> The flags read from the file
  */
 template<typename T>
 vector<T>
-readFromFile(const String& absPath)
+readFromFile(const String& fileName)
 {
-    ifstream  file(absPath);
+    ifstream  file(fileName);
     String    data;
     vector<T> items;
 
     if (!file.is_open()) {
-        cout << "Error opening file" << absPath << endl;
+        cout << "Error opening file" << fileName << endl;
     }
 
     while (getline(file, data)) {

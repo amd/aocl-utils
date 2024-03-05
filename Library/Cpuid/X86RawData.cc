@@ -225,6 +225,7 @@ X86Cpu::Impl::update()
     m_vendor_info.m_family   = m_cutils->getFamily(resp.eax);
     m_vendor_info.m_model    = m_cutils->getModel(resp.eax);
     m_vendor_info.m_stepping = m_cutils->getStepping(resp.eax);
+    setUarch();
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
@@ -307,6 +308,22 @@ bool
 X86Cpu::Impl::hasFlag(EFlag const& eflag) const
 {
     return m_avail_flags.at(eflag) && m_usable_flags.at(eflag);
+}
+
+EUarch
+X86Cpu::Impl::getUarch() const
+{
+    return m_vendor_info.m_uarch;
+}
+
+bool
+X86Cpu::Impl::isUarch(EUarch uarch, bool strict) const
+{
+    if (uarch < EUarch::Unknown || uarch > EUarch::Max)
+        return false;
+    if (strict)
+        return uarch == m_vendor_info.m_uarch;
+    return uarch <= m_vendor_info.m_uarch;
 }
 
 void

@@ -36,6 +36,34 @@
 
 namespace Au {
 
+/* Processor Micro architecure info */
+enum class EUarch : Uint16
+{
+    Unknown = 0,
+    Zen,
+    ZenPlus,
+    Zen2,
+    Zen3,
+    Zen4,
+    Zen5,
+    Max = Zen5,
+};
+
+/**
+ * @struct  VendorInfo
+ * @brief   CPU core info.
+ */
+class VendorInfo
+{
+    /* TODO: Make this private and provide accessors */
+  public:
+    EVendor m_mfg;      /**< CPU manufacturing vendor. */
+    EFamily m_family;   /**< CPU family ID. */
+    Uint16  m_model;    /**< CPU model number. */
+    Uint16  m_stepping; /**< CPU stepping. */
+    EUarch  m_uarch;    /**< CPU microarchitecture. */
+};
+
 /**
  * @enum ECpuidFlag
  * @brief Flags supported by CPU as features.
@@ -287,6 +315,24 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * false otherwise
      */
     bool hasFlag(ECpuidFlag const& eflag) const;
+
+    /**
+     * @brief  Get microarchitecture of CPU from CPUID instruction.
+     * @return  Returns microarchitecture of CPU.
+     */
+    EUarch getUarch() const;
+
+    /**
+     * @brief   Checks microarchitecture from CPUID instruction and compare with
+     * input.
+     *
+     * Like Zen, Zen2, Zen3 etc to be compared with specific input.
+     *
+     * @param[in] arch Microarchitecture input to check for.
+     * @param[in] strict If true, then exact match is checked.
+     * @return  Returns true if CPU microarchitecture is matched with input.
+     */
+    bool isUarch(EUarch uarch, bool strict = false) const;
 
     /**
      * @brief Re-read all the cpuid functions and upate internal structures
