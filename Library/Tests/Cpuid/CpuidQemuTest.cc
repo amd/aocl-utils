@@ -26,20 +26,54 @@
  *
  */
 
-#include "CpuidTest.hh"
 #include <Python.h>
 #include <filesystem>
+#include <fstream>
 #include <gtest/gtest.h>
 #include <map>
 #include <string>
 #include <vector>
+
+#include "QemuTest.hh"
+
 namespace {
+using namespace Au;
+
 class QemuTest
     : public ::testing::TestWithParam<
           std::tuple<std::string, std::vector<bool>>>
 {
   private:
-    static bool callQemuEmulator(const char* cpu, const char* testname)
+    /**
+     * @brief Write the flags to a file
+     *
+     * @param[in] filename The name of the file to write to
+     * @param[in] flags The flags to write to the file
+     *
+     * @return void
+     */
+    static void writeToFile(const std::string&             filename,
+                            const std::vector<ECpuidFlag>& flags)
+    {
+        std::ofstream file(filename);
+        if (!file.is_open()) {
+            std::cout << "Error opening file" << std::endl;
+        } else {
+            for (auto flag : flags) {
+                file << *flag << std::endl;
+            }
+        }
+    }
+
+    /**
+     * @brief Call the Qemu emulator to run the tests
+     * Implemented in a python module named CpuidTest.
+     * @param[in] cpu The type of the cpu to emulate
+     * @param[in] testName The name of the test to runi
+     *
+     * @return bool The result of the test run on the emulated cpu
+     */
+    static bool callQemuEmulator(const char* cpu, const char* testName)
     {
         auto ret = false;
 
@@ -48,12 +82,12 @@ class QemuTest
             std::cerr << "Failed to initialize the Python interpreter";
         }
         /* Update PYTHONPATH with the path of the python module to be loaded*/
-        std::string src_path = PROJECT_SOURCE_DIR;
-        src_path += "/Library/Tests/Cpuid/";
-        PyObject* sys         = PyImport_ImportModule("sys");
-        PyObject* sys_path    = PyObject_GetAttrString(sys, "path");
-        PyObject* folder_path = PyUnicode_FromString(src_path.c_str());
-        PyList_Append(sys_path, folder_path);
+        std::string srcPath = PROJECT_SOURCE_DIR;
+        srcPath += "/Library/Tests/Cpuid/";
+        PyObject* sys        = PyImport_ImportModule("sys");
+        PyObject* sysPath    = PyObject_GetAttrString(sys, "path");
+        PyObject* folderPath = PyUnicode_FromString(srcPath.c_str());
+        PyList_Append(sysPath, folderPath);
 
         /*Load The test module */
         PyObject* pModule = PyImport_ImportModule("CpuidTest");
@@ -63,15 +97,23 @@ class QemuTest
 
             if (pFunc != NULL && PyCallable_Check(pFunc) != 0) {
                 /* Call the run_qemu function with arguments */
-                std::string binary_path = PROJECT_BUILD_DIR;
-                binary_path += "/Release/core_CpuidTest";
+                std::string binaryPath = PROJECT_BUILD_DIR;
+                std::string releaseType;
+                if (AU_BUILD_TYPE_RELEASE)
+                    releaseType = "Release";
+                if (AU_BUILD_TYPE_DEBUG)
+                    releaseType = "Developer";
+                if (AU_BUILD_TYPE_DEVELOPER)
+                    releaseType = "Library/Tests";
+
+                binaryPath += "/" + releaseType + "/core_CpuidTest";
 
                 PyObject* pArgs =
                     PyTuple_Pack(4,
                                  PyUnicode_DecodeFSDefault("x86_64"),
                                  PyUnicode_DecodeFSDefault(cpu),
-                                 PyUnicode_DecodeFSDefault(binary_path.c_str()),
-                                 PyUnicode_DecodeFSDefault(testname));
+                                 PyUnicode_DecodeFSDefault(binaryPath.c_str()),
+                                 PyUnicode_DecodeFSDefault(testName));
                 PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
 
                 if (pValue != NULL) {
@@ -86,6 +128,13 @@ class QemuTest
     }
 
   protected:
+    /**
+     * @brief Run all the tests in testNames on the emulated cpu.
+     * @param cpuType The type of the cpu to emulate
+     * @param testNames The names of the tests to run
+     *
+     * @return std::vector<bool> The results of the tests
+     */
     static std::vector<bool> testAll(const std::string&              cpuType,
                                      const std::vector<std::string>& testNames)
     {
@@ -96,11 +145,51 @@ class QemuTest
         }
         return results;
     }
+
+    /**
+     * @brief Check if the emulated cpu has all the flags in the flags vector
+     * @param cpuType The type of the cpu to emulate
+     *
+     * @return bool The result of the test
+     */
+    static bool hasFlagT(const std::string& cpuType)
+    {
+        String simnowdataPath = PROJECT_SOURCE_DIR;
+        simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
+        std::filesystem::copy(simnowdataPath + cpuType + "/FlagsT.txt",
+                              "FlagsT.txt");
+        return callQemuEmulator(cpuType.c_str(), "hasFlagT");
+    }
+
+    /**
+     * @brief Check if the emulated cpu does not have any of the flags in the
+     * flags vector
+     * @param cpuType The type of the cpu to emulate
+     *
+     * @return bool The result of the test
+     */
+    static bool hasFlagF(const std::string& cpuType)
+    {
+        String simnowdataPath = PROJECT_SOURCE_DIR;
+        simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
+        std::filesystem::copy(simnowdataPath + cpuType + "/FlagsF.txt",
+                              "FlagsF.txt");
+
+        return callQemuEmulator(cpuType.c_str(), "hasFlagF");
+    }
+
+    /**
+     * @brief Clean up the test environment
+     *
+     * @return void
+     */
     void TearDown() override
     {
-        std::string clean_path = PROJECT_SOURCE_DIR;
-        clean_path += "/Library/Tests/Cpuid/__pycache__/";
-        std::filesystem::remove_all(clean_path);
+        std::string cleanPath = PROJECT_SOURCE_DIR;
+        cleanPath += "/Library/Tests/Cpuid/__pycache__/";
+        std::filesystem::remove_all(cleanPath);
+        std::remove("FlagsT.txt");
+        std::remove("FlagsF.txt");
     }
 };
 
@@ -123,6 +212,8 @@ TEST_P(QemuTest, CpuTypeTest)
     const std::vector<bool> expectedResults = std::get<1>(params);
 
     auto results = testAll(cpuType, testNames);
+    results.push_back(hasFlagT(cpuType));
+    results.push_back(hasFlagF(cpuType));
     EXPECT_EQ(results, expectedResults);
 }
 } // namespace

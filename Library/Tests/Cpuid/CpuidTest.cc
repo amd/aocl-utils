@@ -26,11 +26,20 @@
  *
  */
 
-#include "Au/Cpuid/X86Cpu.hh"
+#include "CpuidTest.hh"
 #include "gtest/gtest.h"
+#include <cstdlib>
+#include <fstream>
 
 namespace {
 using namespace Au;
+
+/**
+ * Tests that can run on host, DISABLED by default since tests doesn't add any
+ * value as the result is unknown on a physical machine
+ * The disabled tests are used by the QemuTest to verify the results of the
+ * Cpuid emulation in Qemu.
+ */
 TEST(X86Cpuid, DISABLED_isAMD)
 {
     X86Cpu cpu{ 0 };
@@ -57,34 +66,68 @@ TEST(X86Cpuid, DISABLED_isX86_64v4)
     X86Cpu cpu{ 0 };
     EXPECT_TRUE(cpu.isX86_64v4() == true);
 }
+
 TEST(X86Cpuid, DISABLED_isIntel)
 {
 
     X86Cpu cpu{ 0 };
     EXPECT_TRUE(cpu.isIntel() == true);
 }
-TEST(X86Cpuid, DISABLED_hasFlag) {}
+
+TEST(X86Cpuid, DISABLED_hasFlagT)
+{
+    std::string        absPath = PROJECT_BUILD_DIR;
+    vector<ECpuidFlag> flags;
+    X86Cpu             cpu{ 0 };
+    string             data;
+
+    absPath += "/FlagsT.txt";
+    flags = readFromFile<ECpuidFlag>(absPath);
+
+    for (auto flag : flags)
+        EXPECT_TRUE(cpu.hasFlag(flag));
+}
+
+TEST(X86Cpuid, DISABLED_hasFlagF)
+{
+    std::string        absPath = PROJECT_BUILD_DIR;
+    vector<ECpuidFlag> flags;
+    X86Cpu             cpu{ 0 };
+    string             data;
+
+    absPath += "/FlagsF.txt";
+    flags = readFromFile<ECpuidFlag>(absPath);
+
+    for (auto flag : flags)
+        EXPECT_FALSE(cpu.hasFlag(flag));
+}
+
 TEST(X86Cpuid, CheckCupNumber)
 {
     // 0 - 2 Verify that the core is set to the correct CPU
-    X86Cpu cpu{ 0 };
     cpu_set_t cpuSet;
-    auto pid = getpid();
+
+    X86Cpu cpu{ 0 };
+    auto   pid = getpid();
+
     sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
     EXPECT_TRUE(cpuSet.__bits[0] == 1);
 
     X86Cpu cpu1{ 1 };
     pid = getpid();
+
     sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
     EXPECT_TRUE(cpuSet.__bits[0] == 2);
 
     X86Cpu cpu2{ 2 };
     pid = getpid();
+
     sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
     EXPECT_TRUE(cpuSet.__bits[0] == 4);
+
     // Verify that an exception is thrown when the core number is greater
     // than the number of phycal cores.
     auto nthreads = std::thread::hardware_concurrency();
-    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1});
+    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
 }
 } // namespace

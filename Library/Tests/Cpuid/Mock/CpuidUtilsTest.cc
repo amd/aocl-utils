@@ -26,41 +26,47 @@
  *
  */
 
-/**
- * @file  CpuidTest.hh
- * @brief Utility functions common to Cpuid tests
- */
-
 #include "Au/Cpuid/X86Cpu.hh"
-#include <fstream>
+#include "MockTest.hh"
 
 namespace {
+
 using namespace Au;
+using namespace std;
+class MockCpuidUtil
+    : public MockCpuidBase
+    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
+{};
 
+INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
+                         MockCpuidUtil,
+                         ::testing::ValuesIn(testParametersCpuidUtils));
 /**
- * @brief Utility function to data from a file
- * @param fileName The absolute path of the file
- * @return vector<ECpuidFlag> The flags read from the file
+ * Testcase for CpuidUtils
+ * Tests all the CpuidUtils Functions
+ * from the mocked data in the simnowdata folder.
+ * Takes testParametersCpuidUtils as input
+ * Containing the CPU type and the expected results in VendorInfo structure.
  */
-template<typename T>
-vector<T>
-readFromFile(const String& absPath)
+
+TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
-    ifstream  file(absPath);
-    String    data;
-    vector<T> items;
+    const auto       params          = GetParam();
+    const string     cpuType         = get<0>(params);
+    const VendorInfo expectedResults = get<1>(params);
+    filename                         = cpuType;
+    auto reqRespData                 = Configure();
 
-    if (!file.is_open()) {
-        cout << "Error opening file" << absPath << endl;
-    }
-
-    while (getline(file, data)) {
-        auto value = data.substr(0, data.find(' '));
-        auto item  = static_cast<T>(atoi(value.c_str()));
-        items.push_back(item);
-    }
-
-    file.close();
-    return items;
+    cout << "Mocking " << cpuType << endl;
+    EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
+              (expectedResults.m_mfg));
+    EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              (expectedResults.m_family));
+    EXPECT_EQ(mockCpuidUtils.getModel(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              expectedResults.m_model);
+    EXPECT_EQ(
+        mockCpuidUtils.getStepping(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+        expectedResults.m_stepping);
 }
+
 } // namespace
