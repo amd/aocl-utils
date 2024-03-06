@@ -74,6 +74,16 @@ bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
+ * @brief   Allows caller to check if the processor arch is ZENPLUS.
+ *
+ * @param[in]       cpu_num   CPU number.
+ *
+ * @return  1/true if processor architecture is AMD ZENPLUS.
+ */
+bool
+au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
+
+/**
  * @brief   Allows caller to check if the processor arch is ZEN2.
  *
  * @param[in]       cpu_num   CPU number.
@@ -102,6 +112,16 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
  */
 bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
+
+/**
+ * @brief   Allows caller to check if the processor arch is ZEN5.
+ *
+ * @param[in]       cpu_num   CPU number.
+ *
+ * @return  1/true if processor architecture is AMD ZEN5.
+ */
+bool
+au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
  * @brief   Allows caller to check if the flag is available.

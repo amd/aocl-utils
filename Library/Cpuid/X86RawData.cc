@@ -326,6 +326,12 @@ X86Cpu::Impl::isUarch(EUarch uarch, bool strict) const
     return uarch <= m_vendor_info.m_uarch;
 }
 
+VendorInfo
+X86Cpu::Impl::getVendorInfo() const
+{
+    return m_vendor_info;
+}
+
 void
 X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
 {

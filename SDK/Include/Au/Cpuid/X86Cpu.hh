@@ -335,6 +335,11 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     bool isUarch(EUarch uarch, bool strict = false) const;
 
     /**
+     * @brief Get the VendorInfo object
+     * @return VendorInfo
+     */
+    VendorInfo getVendorInfo() const;
+    /**
      * @brief Re-read all the cpuid functions and upate internal structures
      *
      * @parame none
