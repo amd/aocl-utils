@@ -170,6 +170,7 @@ class QemuTest
         writeToFile<EUarch>("Uarch.txt", { Uarch });
         return callQemuEmulator(cpuType.c_str(), "Uarch");
     }
+
     /**
      * @brief Clean up the test environment
      *

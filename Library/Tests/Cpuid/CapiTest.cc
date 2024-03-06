@@ -1,5 +1,6 @@
+
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,6 +27,7 @@
  *
  */
 
+#include "Capi/au/cpuid/cpuid.h"
 #include "CpuidTest.hh"
 #include "gtest/gtest.h"
 #include <cstdlib>
@@ -40,119 +42,85 @@ using namespace Au;
  * The disabled tests are used by the QemuTest to verify the results of the
  * Cpuid emulation in Qemu.
  */
-TEST(X86Cpuid, DISABLED_isAMD)
+TEST(CapiX86Cpuid, DISABLED_isAMD)
 {
-    X86Cpu cpu{ 0 };
-    EXPECT_TRUE(cpu.isAMD() == true);
+    EXPECT_TRUE(au_cpuid_is_amd(0));
 }
 
-TEST(X86Cpuid, DISABLED_isX86_64v2)
-{
-
-    X86Cpu cpu{ 0 };
-    EXPECT_TRUE(cpu.isX86_64v2() == true);
-}
-
-TEST(X86Cpuid, DISABLED_isX86_64v3)
-{
-
-    X86Cpu cpu{ 0 };
-    EXPECT_TRUE(cpu.isX86_64v3() == true);
-}
-
-TEST(X86Cpuid, DISABLED_isX86_64v4)
-{
-
-    X86Cpu cpu{ 0 };
-    EXPECT_TRUE(cpu.isX86_64v4() == true);
-}
-
-TEST(X86Cpuid, DISABLED_isIntel)
-{
-
-    X86Cpu cpu{ 0 };
-    EXPECT_TRUE(cpu.isIntel() == true);
-}
-
-TEST(X86Cpuid, DISABLED_hasFlagT)
+TEST(CapiX86Cpuid, DISABLED_hasFlagT)
 {
     std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
 
     absPath += "/FlagsT.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
     for (auto flag : flags)
-        EXPECT_TRUE(cpu.hasFlag(flag));
+        EXPECT_TRUE(au_cpuid_has_flag(0, *flag));
 }
 
-TEST(X86Cpuid, DISABLED_hasFlagF)
+TEST(CapiX86Cpuid, DISABLED_hasFlagF)
 {
     std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
 
     absPath += "/FlagsF.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
     for (auto flag : flags)
-        EXPECT_FALSE(cpu.hasFlag(flag));
+        EXPECT_FALSE(au_cpuid_has_flag(0, *flag));
 }
 
-TEST(X86Cpuid, DISABLED_isUarch)
+TEST(CapiX86Cpuid, DISABLED_isUarch)
 {
     std::string absPath = PROJECT_BUILD_DIR;
     EUarch      uarch;
-    X86Cpu      cpu{ 0 };
 
     // verify the uarch passed from the qemu testcase.
     absPath += "/Uarch.txt";
     uarch = readFromFile<EUarch>(absPath).front();
-    EXPECT_TRUE(cpu.isUarch(uarch));
-
-    // Verify isUarch returns False for any microarchitecure higher than the
-    // current one
-    uarch = static_cast<EUarch>(static_cast<int>(uarch) + 1);
-    EXPECT_FALSE(cpu.isUarch(uarch));
-
-    // Verify isUarch returns True for any microarchitecure lower than the
-    // current one.
-    uarch = static_cast<EUarch>(static_cast<int>(uarch) - 2);
-    EXPECT_TRUE(cpu.isUarch(uarch));
-
-    // Verify isUarch returns false for any microarchitecure lower than the
-    // current one in strict mode
-    EXPECT_FALSE(cpu.isUarch(uarch, true));
-    writeToFile<EUarch>("UarchResult.txt", { cpu.getUarch() });
-}
-
-TEST(X86Cpuid, CheckCupNumber)
-{
-    // 0 - 2 Verify that the core is set to the correct CPU
-    cpu_set_t cpuSet;
-
-    X86Cpu cpu{ 0 };
-    auto   pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 1);
-
-    X86Cpu cpu1{ 1 };
-    pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 2);
-
-    X86Cpu cpu2{ 2 };
-    pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 4);
-
-    // Verify that an exception is thrown when the core number is greater
-    // than the number of phycal cores.
-    auto nthreads = std::thread::hardware_concurrency();
-    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
+    if (uarch == EUarch::Zen) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen2(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+    } else if (uarch == EUarch::ZenPlus) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen2(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+    } else if (uarch == EUarch::Zen2) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen2(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+    } else if (uarch == EUarch::Zen3) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen2(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen3(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+    } else if (uarch == EUarch::Zen4) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen2(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen3(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen4(0));
+        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+    } else if (uarch == EUarch::Zen5) {
+        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen2(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen3(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen4(0));
+        EXPECT_TRUE(au_cpuid_arch_is_zen5(0));
+    }
 }
 } // namespace
