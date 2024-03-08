@@ -49,11 +49,7 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagT)
 {
-    std::string        absPath = PROJECT_BUILD_DIR;
-    vector<ECpuidFlag> flags;
-
-    absPath += "/FlagsT.txt";
-    flags = readFromFile<ECpuidFlag>(absPath);
+    auto flags = readFromFile<ECpuidFlag>("FlagsT.txt");
 
     for (auto flag : flags)
         EXPECT_TRUE(au_cpuid_has_flag(0, *flag));
@@ -61,11 +57,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagT)
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagF)
 {
-    std::string        absPath = PROJECT_BUILD_DIR;
-    vector<ECpuidFlag> flags;
-
-    absPath += "/FlagsF.txt";
-    flags = readFromFile<ECpuidFlag>(absPath);
+    auto flags = readFromFile<ECpuidFlag>("FlagsF.txt");
 
     for (auto flag : flags)
         EXPECT_FALSE(au_cpuid_has_flag(0, *flag));
@@ -73,12 +65,9 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagF)
 
 TEST(CapiX86Cpuid, DISABLED_isUarch)
 {
-    std::string absPath = PROJECT_BUILD_DIR;
-    EUarch      uarch;
+    EUarch uarch = readFromFile<EUarch>("Uarch.txt").front();
 
     // verify the uarch passed from the qemu testcase.
-    absPath += "/Uarch.txt";
-    uarch = readFromFile<EUarch>(absPath).front();
     if (uarch == EUarch::Zen) {
         EXPECT_TRUE(au_cpuid_arch_is_zen(0));
         EXPECT_FALSE(au_cpuid_arch_is_zenplus(0));
@@ -122,5 +111,23 @@ TEST(CapiX86Cpuid, DISABLED_isUarch)
         EXPECT_TRUE(au_cpuid_arch_is_zen4(0));
         EXPECT_TRUE(au_cpuid_arch_is_zen5(0));
     }
+}
+
+TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
+{
+    char           buf[sizeof(VendorInfo) + 1];
+    auto           result = au_cpuid_get_vendor(0, buf, sizeof(buf));
+    String         vInfo(buf);
+    String         token;
+    stringstream   ss(vInfo);
+    vector<Uint32> vendorInfo = {};
+    while (getline(ss, token, '\n')) {
+        vendorInfo.push_back(stoi(token));
+    }
+    auto iter = vendorInfo.begin();
+
+    writeToFile<vector<Uint32>::iterator>(
+        "VendorInfo.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
+    EXPECT_EQ(result, 1);
 }
 } // namespace

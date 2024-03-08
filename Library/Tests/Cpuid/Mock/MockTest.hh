@@ -43,14 +43,9 @@ using namespace Au;
 
 /**
  * Test parameters for X86Cpu Mock Test
-<<<<<<< Updated upstream
- * 1. Name of the CPU model to be mocked using simnowdata
- * 2. Vector contains the following parameters:
-=======
  * Vector containing the following parameters:
  * 1. Name of the CPU model to be mocked using simnowdata
  * 2. Vector containing the following parameters:
->>>>>>> Stashed changes
  *    1. Name of the CPU model to be mocked using simnowdata
  *    2. Vector of boolean values that marks the expected results of
  *       {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4}  APIs
