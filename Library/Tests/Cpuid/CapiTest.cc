@@ -127,7 +127,7 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
     auto iter = vendorInfo.begin();
 
     writeToFile<vector<Uint32>::iterator>(
-        "VendorInfo.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
+        "VendorInfoC.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
     EXPECT_EQ(result, 1);
 }
 } // namespace

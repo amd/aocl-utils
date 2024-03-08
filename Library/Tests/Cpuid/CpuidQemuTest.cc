@@ -174,7 +174,10 @@ TEST_P(QemuTestVendorInfo, CpuTypeTest)
         enumToValue<EUarch, Uint32>(expectedResults.m_uarch)
     };
     EXPECT_TRUE(TestVendorInfo(cpuType));
-    vector<Uint32> vendorInfoResult = readFromFile<Uint32>("VendorInfo.txt");
-    EXPECT_EQ(vendorInfo, vendorInfoResult);
+    vector<Uint32> vendorInfoResultC = readFromFile<Uint32>("VendorInfoC.txt");
+    vector<Uint32> vendorInfoResultCpp =
+        readFromFile<Uint32>("VendorInfoCpp.txt");
+    EXPECT_EQ(vendorInfo, vendorInfoResultC);
+    EXPECT_EQ(vendorInfo, vendorInfoResultCpp);
 }
 } // namespace

@@ -178,7 +178,8 @@ class QemuTestBase :public testing::Test
         std::remove("FlagsF.txt");
         std::remove("Uarch.txt");
         std::remove("UarchResult.txt");
-        std::remove("VendorInfo.txt");
+        std::remove("VendorInfoC.txt");
+        std::remove("VendorInfoCpp.txt");
     }
 };
 } // namespace
