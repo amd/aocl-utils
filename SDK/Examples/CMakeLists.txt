@@ -26,51 +26,8 @@
 
 cmake_minimum_required(VERSION 3.20...3.27)
 
-set(AUROOT /opt/aocl CACHE PATH "AOCL Utils root")
+project(cpuid_example_cpp)
+au_add_application(cpuid_example_cpp SOURCES cpuid_example.cc LIBS au::cpuid)
+target_include_directories(cpuid_example_cpp PRIVATE "${AU_INCLUDE_DIRS}")
 
-if(NOT "${AUROOT}/CMake/au_examples.cmake")
-  message("AUROOT is \" ${AUROOT} \" ")
-  message("Please set AUROOT correctly to compile examples")
-endif()
-
-list(PREPEND CMAKE_MODULE_PATH 
-  "${AUROOT}/lib/cmake" 
-)
-list(PREPEND CMAKE_PREFIX_PATH
-  "${AUROOT}" 
-)
-#set(CMAKE_MODULE_PATH
-#  "${AUROOT}/lib/cmake" 
-#   ${CMAKE_MODULE_PATH}
-#)
-
-set(aocl-utils_DIR ${AUROOT}/lib/cmake)
-find_package(aocl-utils)
-get_property(importTargetsAfter DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTY IMPORTED_TARGETS)
-list(REMOVE_ITEM importTargetsAfter ${importTargets})
-
-message("${importTargetsAfter}")
-
-include(au_examples CONFIG)
-
-project(aocl_utils_examples LANGUAGES CXX)
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${AUROOT}/Include
-    ${AUROOT}/include
-    )
-
-link_directories(
-    ${AUROOT}/3rdparty
-    ${AUROOT}/lib
-    )
-
-au_add_application(
-	cpuid_example
-	SOURCES cpuid_example.cc
-    LIBS au::au_cpuid
-)
-
-
+add_subdirectory(capi)
