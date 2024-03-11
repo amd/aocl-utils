@@ -52,7 +52,6 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
     X86Cpu             cpu{ cpu_num };
     VendorInfo         v_info = cpu.getVendorInfo();
     std::ostringstream ss;
-
     ss << *(v_info.m_mfg) << "\n"
        << *(v_info.m_family) << "\n"
        << v_info.m_model << "\n"

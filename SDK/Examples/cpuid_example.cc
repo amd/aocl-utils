@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,43 +37,56 @@ using namespace std;
 static void
 display_core_info()
 {
-    X86Cpu c{ 0 };
+    X86Cpu cpu{ 0 };
 
-    cout << "Vendor: " << c.getName();
-
-    cout << "Cpu is " << (c.isAMD() ? "AMD" : "Other");
-    cout << "Freq: " << c.getFreq();
-}
-
-static void
-display_cache_info()
-{
-    /* demonstration purpose, get info of 10th core */
-    constexpr auto corenum = 10;
-    X86Cpu         c{ corenum };
-    auto           cv = c.getCacheView();
-
-    cout << "Core: " << corenum;
-    cout << "Cache Levels: " << cv.getNumLevels();
-    for (auto& a : cv) {
-        cout << "Level: " << a.getLevel() << "\t Type: " << a.getType();
-        cout << "Size : " << a.getSize();
-        cout << "Sets : " << a.getSets() << "\t Way: " << a.getWay()
-             << "\t Lane: " << a.getLane();
+    if (cpu.isAMD()) {
+        cout << "AMD CPU detected..." << endl;
+    } else if (cpu.isIntel()) {
+        cout << "Intel CPU detected..." << endl;
+    } else {
+        cout << "Unknown CPU detected..." << endl;
     }
+
+    cout << "\nGetting CPU information for core 0" << endl;
+    auto vInfo = cpu.getVendorInfo();
+    cout << "Vendor   : " << *(vInfo.m_mfg) << endl;
+    cout << "Family   : " << *(vInfo.m_family) << endl;
+    cout << "Model    : " << vInfo.m_model << endl;
+    cout << "Stepping : " << vInfo.m_stepping << endl;
+    cout << "Uarch    : " << *(vInfo.m_uarch) << endl;
 }
 
 static void
 display_isa_info()
 {
+    X86Cpu cpu{ 0 };
+
+    cout << "\nGetting ISA information for core 0" << endl;
+    if (cpu.isX86_64v4()) {
+        cout << "CPU supports x86-64v4 ISA" << endl;
+    }
+    if (cpu.isX86_64v3()) {
+        cout << "CPU supports x86-64v3 ISA" << endl;
+    }
+    if (cpu.isX86_64v2()) {
+        cout << "CPU supports x86-64v2 ISA" << endl;
+    } else {
+        cout << "CPU does not support x86-64v2 or higher ISA" << endl;
+    }
+    cout << "\nCpu Feature Identification..." << endl;
+    // clang-format off
+    cout << "TSC_ADJUST : " << (cpu.hasFlag(ECpuidFlag::tsc_adjust) ? "yes" : "no") << endl;
+    cout << "AVX        : " << (cpu.hasFlag(ECpuidFlag::avx) ? "yes" : "no") << endl;
+    cout << "AVXVNNI    : " << (cpu.hasFlag(ECpuidFlag::avxvnni) ? "yes" : "no") << endl;
+    cout << "AVX2       : " << (cpu.hasFlag(ECpuidFlag::avx2) ? "yes" : "no") << endl;
+    cout << "AVX512     : " << (cpu.hasFlag(ECpuidFlag::avx512f) ? "yes" : "no") << endl;
+    // clang-format on
 }
 
 int
 main(void)
 {
     display_core_info();
-
-    display_cache_info();
 
     display_isa_info();
 

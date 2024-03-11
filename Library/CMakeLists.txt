@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -39,13 +39,13 @@ set(LOGGER_SRC_FILES
     LoggerFactory.cc
 )
 
-set(BASE64_SRC_FILES 
+set(BASE64_SRC_FILES
     Base64/Base64.cc
     Base64/Base64Encoder.cc
     Base64/Base64Decoder.cc
 )
 
-set(MEMORY_SRC_FILES 
+set(MEMORY_SRC_FILES
     Memory/BufferView.cc
 )
 
@@ -61,7 +61,7 @@ set(CAPI_SRC_FILES
     Capi/environ.cc
 )
 
-set(AVX2_FILES 
+set(AVX2_FILES
   Base64/transform_avx2.cc
 )
 
@@ -92,7 +92,9 @@ set(CORE_SRC_FILES
 au_cc_library(core
  PUBLIC
  SOURCES ${CORE_SRC_FILES}
- HEADERS 
+ HEADERS
+ DEPENDS
+ au::cpuid
 
  USING
  af::sdk::include
@@ -107,7 +109,7 @@ if(AU_BUILD_TESTS)
     add_subdirectory(Tests)
 endif()
 
-set(AU_SUBMODULE_DIRS 
+set(AU_SUBMODULE_DIRS
   Cpuid
   #Base64
   #Provider
@@ -116,4 +118,3 @@ set(AU_SUBMODULE_DIRS
 foreach(__moddir ${AU_SUBMODULE_DIRS})
   add_subdirectory(${__moddir})
 endforeach()
-
