@@ -26,20 +26,71 @@
  *
  */
 
-#include "config.h"
+#include "Au/Config.h"
+
 #include <string>
 
 // clang-format off
 #if defined(AU_BUILD_TYPE_RELEASE)
 
-static const std::string af_version = "@AU_VERSION_MAJOR@" + "." + \
-                                      "@AU_VERSION_MINOR@" + "." + \
-                                      "@AU_VERSION_PATCH@" ;
+static const std::string au_version_str = "@AU_VERSION_MAJOR@"  + \
+                                      ".@AU_VERSION_MINOR@" + \
+                                      ".@AU_VERSION_PATCH@" ;
 
 #else
 
-static const std:string af_version = "@AU_VERSION_STRING@" + \
+static const std::string au_version_str = "@AU_VERSION_STRING@" + "-git-" + \
                                      "@AU_GIT_HASH@";
 
 #endif
+
+
+static const Uint32 au_version_major = @AU_VERSION_MAJOR@;
+static const Uint32 au_version_minor = @AU_VERSION_MINOR@;
+static const Uint32 au_version_patch = @AU_VERSION_PATCH@;
+
+
+#include "Capi/au/version.h"
+
+AUD_EXTERN_C_BEGIN
+
+/**
+ * @brief Return Version Major number
+ */
+Uint32
+au_get_version_major(void)
+{
+    return au_version_major;
+}
+
+/**
+ * @brief Return Version Minor number
+ */
+Uint32
+au_get_version_minor(void)
+{
+    return au_version_minor;
+}
+
+/**
+ * @brief Return Version Patch level
+ */
+Uint32
+au_get_version_patch(void)
+{
+    return au_version_patch;
+}
+
+/**
+ * @brief returns version of library
+ *
+ */
+const char* const
+au_get_version_str(void)
+{
+    return au_version_str;
+}
+
+AUD_EXTERN_C_END
+
 //clang-format on

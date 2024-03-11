@@ -31,8 +31,8 @@
 
 #include "Au/Config.h"
 #include "Capi/au/au.h"
-#include "Capi/au/macros.h"
-#include "Capi/au/types.h"
+
+#include <map>
 #include <stdbool.h>
 #include <stdint.h>
 
