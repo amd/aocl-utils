@@ -46,7 +46,7 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num)
     return cpu.isAMD();
 }
 
-au_error_t AUD_API_EXPORT
+void AUD_API_EXPORT
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
 {
     X86Cpu             cpu{ cpu_num };
@@ -60,8 +60,7 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
        << *(v_info.m_uarch) << "\n";
 
     AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
-    strcpy(vend_info, (ss.str()).c_str());
-    return 1;
+    strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
 }
 
 bool AUD_API_EXPORT

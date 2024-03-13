@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -58,9 +58,9 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num);
  * @param[in, out]  vend_info Vendor info array.
  * @param[in]       size      Size of Vendor info array.
  *
- * @return  1/true if getting vendor info is successful.
+ * @return  None
  */
-au_error_t
+void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**

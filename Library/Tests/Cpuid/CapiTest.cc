@@ -115,12 +115,14 @@ TEST(CapiX86Cpuid, DISABLED_isUarch)
 
 TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
 {
-    char           buf[sizeof(VendorInfo) + 1];
-    auto           result = au_cpuid_get_vendor(0, buf, sizeof(buf));
+    char buf[sizeof(VendorInfo) + 1];
+    au_cpuid_get_vendor(0, buf, sizeof(buf));
+
     String         vInfo(buf);
     String         token;
     stringstream   ss(vInfo);
     vector<Uint32> vendorInfo = {};
+
     while (getline(ss, token, '\n')) {
         vendorInfo.push_back(stoi(token));
     }
@@ -128,6 +130,5 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
 
     writeToFile<vector<Uint32>::iterator>(
         "VendorInfoC.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
-    EXPECT_EQ(result, 1);
 }
 } // namespace
