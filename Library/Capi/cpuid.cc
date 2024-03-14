@@ -105,12 +105,26 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
     return cpu.isUarch(EUarch::Zen5);
 }
 
-bool AUD_API_EXPORT
-au_cpuid_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
+map<String, bool> AUD_API_EXPORT
+au_cpuid_has_flag(au_cpu_num_t cpu_num, vector<String> flag_names)
 {
-    X86Cpu cpu{ cpu_num };
-    auto   cpuid_flag = valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag);
-    return cpu.hasFlag(cpuid_flag);
+    X86Cpu            cpu{ cpu_num };
+    std::stringstream ss;
+    string            token;
+    map<String, bool> result;
+    int               index = 0;
+
+    ss << flag_names;
+    auto flag_string = ss.str();
+
+    while (std::getline(ss, token, ':')) {
+        au_cpu_flag_t flag = stoi(token);
+        AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
+                   "Flag not supported");
+        auto cpuid_flag = valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag);
+        result[flag_names[index++]] = cpu.hasFlag(cpuid_flag);
+    }
+    return result;
 }
 
 bool AUD_API_EXPORT
@@ -120,5 +134,4 @@ au_cpuid_is_error(au_error_t err)
         return true;
     return false;
 }
-
 AUD_EXTERN_C_END

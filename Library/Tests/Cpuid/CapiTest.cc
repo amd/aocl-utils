@@ -36,6 +36,27 @@
 namespace {
 using namespace Au;
 
+template<>
+vector<String>
+readFromFile<String>(const String& fileName)
+{
+    ifstream       file(fileName);
+    String         data;
+    vector<String> items;
+
+    if (!file.is_open()) {
+        cout << "Error opening file" << fileName << endl;
+    }
+
+    while (getline(file, data)) {
+        auto value = data.substr(0, data.find(' '));
+        items.push_back(value);
+    }
+
+    file.close();
+    return items;
+}
+
 /**
  * Tests that can run on host, DISABLED by default since tests doesn't add any
  * value as the result is unknown on a physical machine
@@ -49,18 +70,25 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagT)
 {
-    auto flags = readFromFile<ECpuidFlag>("FlagsT.txt");
-
-    for (auto flag : flags)
-        EXPECT_TRUE(au_cpuid_has_flag(0, *flag));
+    auto flags  = readFromFile<String>("FlagsT.txt");
+    auto result = au_cpuid_has_flag(0, flags);
+    for (const auto& pair : result)
+        EXPECT_TRUE(pair.second);
 }
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagF)
 {
-    auto flags = readFromFile<ECpuidFlag>("FlagsF.txt");
-
-    for (auto flag : flags)
-        EXPECT_FALSE(au_cpuid_has_flag(0, *flag));
+    auto flags  = readFromFile<String>("FlagsF.txt");
+    auto result = au_cpuid_has_flag(0, flags);
+    for (const auto& pair : result)
+        EXPECT_FALSE(pair.second);
+}
+TEST(CapiX86Cpuid, hasFlags)
+{
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, {}));
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "" }));
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "Test" }));
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "avx512f", "Test" }));
 }
 
 TEST(CapiX86Cpuid, DISABLED_isUarch)
