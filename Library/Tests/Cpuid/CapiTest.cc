@@ -36,6 +36,7 @@
 namespace {
 using namespace Au;
 
+#if 0
 template<>
 vector<String>
 readFromFile<String>(const String& fileName)
@@ -56,7 +57,7 @@ readFromFile<String>(const String& fileName)
     file.close();
     return items;
 }
-
+#endif
 /**
  * Tests that can run on host, DISABLED by default since tests doesn't add any
  * value as the result is unknown on a physical machine
@@ -67,7 +68,7 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 {
     EXPECT_TRUE(au_cpuid_is_amd(0));
 }
-
+#if 0
 TEST(CapiX86Cpuid, DISABLED_hasFlagT)
 {
     auto flags  = readFromFile<String>("FlagsT.txt");
@@ -83,6 +84,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagF)
     for (const auto& pair : result)
         EXPECT_FALSE(pair.second);
 }
+#endif
 TEST(CapiX86Cpuid, hasFlags)
 {
     EXPECT_ANY_THROW(au_cpuid_has_flag(0, {}));

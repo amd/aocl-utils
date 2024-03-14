@@ -41,8 +41,7 @@ class MockX86Cpu
   protected:
     void SetUp() override
     {
-        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_))
-            .Times(testing::AtLeast(11));
+        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(12);
     }
 };
 
@@ -85,7 +84,8 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     auto   flags      = readFromFile<ECpuidFlag>(absPath);
 
     for (auto flag : flags) {
-        resultT = resultT & cpu.hasFlag(flag);
+        resultT =
+            resultT & cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1));
     }
     results.push_back(resultT);
 
@@ -93,7 +93,8 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     flags   = readFromFile<ECpuidFlag>(absPath);
 
     for (auto flag : flags) {
-        resultF = resultF | cpu.hasFlag(flag);
+        resultF =
+            resultF | cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1));
     }
     results.push_back(!resultF);
 

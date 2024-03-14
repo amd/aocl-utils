@@ -83,8 +83,9 @@ TEST(X86Cpuid, DISABLED_hasFlagT)
     absPath += "/FlagsT.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
-    for (auto flag : flags)
-        EXPECT_TRUE(cpu.hasFlag(flag));
+    for (auto flag : flags) {
+        EXPECT_TRUE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    }
 }
 
 TEST(X86Cpuid, DISABLED_hasFlagF)
@@ -96,8 +97,9 @@ TEST(X86Cpuid, DISABLED_hasFlagF)
     absPath += "/FlagsF.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
-    for (auto flag : flags)
-        EXPECT_FALSE(cpu.hasFlag(flag));
+    for (auto flag : flags) {
+        EXPECT_FALSE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    }
 }
 
 TEST(X86Cpuid, DISABLED_isUarch)
