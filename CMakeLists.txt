@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -118,7 +118,7 @@ option(INSTALL_GTEST OFF)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
 include_directories("${AU_CONFIG_DIR}")
 
-set(AU_INCLUDE_DIRS 
+set(AU_INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}/SDK/Include
   ${CMAKE_SOURCE_DIR}/Library/Private
   ${AU_CONFIG_DIR}
@@ -144,6 +144,9 @@ add_subdirectory(Library)
 if (AU_BUILD_TESTS)
   add_subdirectory(Tests)
 endif()
+if (AU_BUILD_DOCS)
+  add_subdirectory(Docs)
+endif()
 
 #
 # Print a banner if verbosity is enabled
@@ -165,6 +168,12 @@ if(AU_CMAKE_VERBOSE AND TRUE)
   message(STATUS "  Tests                : " "Off")
   endif()
 
+  if (AU_BUILD_DOCS)
+  message(STATUS "  Docs                 : " "Enabled")
+  else()
+  message(STATUS "  Docs                 : " "Off")
+  endif()
+
   message(STATUS "  CMAKE_INSTALL_PREFIX : " ${CMAKE_INSTALL_PREFIX})
   message(STATUS "  CMAKE_GENERATOR      : " ${CMAKE_GENERATOR})
   message(STATUS "  CMAKE_C_COMPILER_ID  : " ${CMAKE_C_COMPILER_ID})
@@ -172,4 +181,3 @@ if(AU_CMAKE_VERBOSE AND TRUE)
 endif()
 
 include(au_install)
-
