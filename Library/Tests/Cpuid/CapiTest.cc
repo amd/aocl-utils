@@ -87,10 +87,13 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagF)
 #endif
 TEST(CapiX86Cpuid, hasFlags)
 {
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, {}));
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "" }));
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "Test" }));
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, { "avx512f", "Test" }));
+    vector<char*> testFlags = { "" };
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
+    testFlags = { "Test" };
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 0));
+    testFlags = { "avx512f", "Test" };
+    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 2));
 }
 
 TEST(CapiX86Cpuid, DISABLED_isUarch)

@@ -105,24 +105,28 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
     return cpu.isUarch(EUarch::Zen5);
 }
 
-map<String, bool> AUD_API_EXPORT
-au_cpuid_has_flag(au_cpu_num_t cpu_num, vector<String> flag_names)
+bool*
+au_cpuid_has_flag(au_cpu_num_t      cpu_num,
+                  const char* const flag_array[],
+                  int               count)
 {
     X86Cpu            cpu{ cpu_num };
     std::stringstream ss;
     string            token;
-    map<String, bool> result;
-    int               index = 0;
+    int               index  = 0;
+    bool*             result = (bool*)malloc(count * sizeof(bool));
+
+    AUD_ASSERT(result, "Memory allocation failed");
+    AUD_ASSERT(count > 0, "No flags to check");
+    std::vector<std::string> flag_names(flag_array, flag_array + count);
 
     ss << flag_names;
-    auto flag_string = ss.str();
-
     while (std::getline(ss, token, ':')) {
         au_cpu_flag_t flag = stoi(token);
         AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
                    "Flag not supported");
         auto cpuid_flag = valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag);
-        result[flag_names[index++]] = cpu.hasFlag(cpuid_flag);
+        result[index++] = cpu.hasFlag(cpuid_flag);
     }
     return result;
 }

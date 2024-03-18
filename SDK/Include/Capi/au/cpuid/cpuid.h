@@ -43,8 +43,6 @@ AUD_EXTERN_C_BEGIN
 typedef Uint32 au_cpu_num_t;
 typedef Uint32 au_cpu_flag_t;
 #endif
-void
-au_cpuid_define_has_flags_api();
 
 /**
  * @brief       Check if the processor vendor is AMD.
@@ -132,12 +130,15 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  * @brief   Allows caller to check if the flag is available.
  *
  * @param[in]   cpu_num   CPU number.
- * @param[in]   flag_names  CPU feature flag names.
+ * @param[in]   flag_array  CPU feature flag names.
+ * @param[in]   count   Number of flags in the list.
  *
- * @return  a map of  feature availability
+ * @return  a array indicating  feature availability
  */
-std::map<std::string, bool>
-au_cpuid_has_flag(au_cpu_num_t cpu_num, std::vector<std::string> flag_names);
+bool*
+au_cpuid_has_flag(au_cpu_num_t      cpu_num,
+                  const char* const flag_array[],
+                  int               count);
 
 /**
  * @brief   Portable API to check if an error has occured
