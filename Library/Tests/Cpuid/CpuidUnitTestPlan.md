@@ -1,123 +1,210 @@
-# The Cpuid Module unit testplan
+# The cpuid module unit testplan
+---------------------------------
 
-## The Cpuid Module
+## The cpuid module
 
-The Cpuid module provides details of underlying cpu architecture by reading and interpreting the cpuid register of the system
-The objective of the testplan is to have a comprehensive test coverage for all components in the module
-The result of reading different cpu’s cpuids yield different results based on the cpu, So testing the cpuid module requires an emulator of some kind so that
-different usecases can be emulated and tested,
-We chose to go with the qemu emulator as it provides most of the facilities that we needed for testing.
+The cpuid module provides details of underlying cpu architecture by reading and interpreting the cpuid register of the system.
 
-## The Scope of the tests
+## The objective
 
-Qemu emulator is used to test the different interfaces provided by the cpuid module
-such as
+The testplan is to have a comprehensive test coverage for all components in the module.
 
-* isAMD
-* isIntel
-* isX86v2
-* isX86v3
-* isX86V4
+## Classes of testcases
+
+* **qemu tests**
+    Qemu cpu emulator is used to emulate cpus to test both capis and cpp apis.
+    Native tests corresponing to this is disabled by default as it doesn't make sense to run natively.
+* **mock tests**
+    Mock tests are used to test cpp apis and utility functions by mocking the cpuid register call.
+    Mocked data is stored in simnow folder.
+    The content of the folder is organised as follows.
+
+```
+simnowdata 
+└───<folderperemulated cpuid>
+    │   <cpuid>
+    │   FlagsT.txt
+    │   FlagsF.txt
+ * The \<cpuid> file consists of cpuid register read corresponding to the particular cpuid for a set of inputs,
+   in the form {request} : {response}
+ * These files are shared by both qemu tests and mocktests.
+ * FlagsT.txt and FlagsF.txt files are shared by all the hasflags tests.
+ * Flags in FlagsT.txt marks the set of flags that should be present in the cpu
+ * Flags in FlagsF.txt marks the set of flags that should not be present in the cpu.
+```
+
+* **native tests**
+    Few native testcases are written to check edge cases and negative cases. More test are to be added for full coverage.
+  
+### List of cpp apis
+
+* isamd
+* isintel
+* isx86v2
+* isx86v3
+* isx86v4
 * hasflag
+* isuarch
+* getuarch
+* getvendorinfo
 
-for All the AMD Cpu modules provided by qemu
-and below intel CPUs,
+### List of capis
 
-* Broadwell-v1
-* Denverton-v1
-* Conroe-v1
-* Skylake-Server-v1
+* au_cpuid_is_amd
+* au_cupid_has_flag
+* au_cpuid_get_vendor
+* au_cpuid_arch_is_zen
+* au_cpuid_arch_is_zenplus
+* au_cpuid_arch_is_zen2
+* au_cpuid_arch_is_zen3
+* au_cpuid_arch_is_zen4
+* au_cpuid_arch_is_zen5
+
+for all the amd cpu modules provided by qemu
+and below intel cpus,
+
+* broadwell-v1
+* denverton-v1
+* conroe-v1
+* skylake-server-v1
+
+The above c and cpp apis are tested using qemu testcases and mock tests.
 
 Apart from that,
-The utility functions that directly use the cpuid register read results to fill data in different datastructures used by above functions are
-tested with mocked up (cpuid register read) data
-Those functions are
+the utility functions that directly use the cpuid register read results to fill data \
+in different datastructures used by above functions are tested with mocked up (cpuid register read) data.
+Those functions are,
 
-* __update_vendor_info
-* __update_mfg_info
-* __has_flag
-* update_cache_info
-* update_cache_view
+### List of utility functions
 
-So the test matrix as of now is going to be.
+* getmfginfo
+* getfamily
+* getmodel
+* getstepping
+* hasflag
+* updatecacheview
+* updatecacheinfo
 
-AMD Cpus
-| CPU TYPE/function name | EPYC-Genoa-v1 | EPYC-Milan-v1 | EPYC-Milan-v2 | EPYC-Rome-v1 | EPYC-Rome-v2 | EPYC-Rome-v3 | EPYC-Rome-v4 | EPYC-v1 | EPYC-v2 | EPYC-v3 | EPYC-v4 |
-| ----------------------- | ------------- | ------------- | ------------- | ------------ | ------------ | ------------ | ------------ | ------- | ------- | ------- | ------- |
-| isAMD                   | True          | True          | True          | True         | True         | True         | True         | True    | True    | True    | True    |
-| IsIntel                 | False         | False         | False         | False        | False        | False        | False        | False   | False   | False   | False   |
-| isX86_64V2              | True          | True          | True          | True         | True         | True         | True         | True    | True    | True    | True    |
-| isX86_64V3              | True          | True          | True          | True         | True         | True         | True         | True    | True    | True    | True    |
-| isX86_64V4              | True          | False         | False         | False        | False        | False        | False        | False   | False   | False   | False   |
 
-AMD Cpus(Continued)
-| CPU TYPE/function name | Opteron_G1-v1 | Opteron_G2-v1 | Opteron_G3-v1 | Opteron_G4-v1 | Opteron_G5-v1 | phenom-v1 |
-| ----------------------- | ------------- | ------------- | ------------- | ------------- | ------------- | --------- |
-| isAMD                   | True          | True          | True          | True          | True          | True      |
-| IsIntel                 | False         | False         | False         | False         | False         | False     |
-| isX86_64V2              | False         | False         | False         | True          | True          | False     |
-| isX86_64V3              | False         | False         | False         | False         | False         | False     |
-| isX86_64V4              | False         | False         | False         | False         | False         | False     |
+## The test matrix for c/cpp apis
 
-Intel Cpus
-| CPU TYPE/function name | Broadwell-v1 | Denverton-v1 | Conroe-v1 | Skylake-Server-v1 |
+### cpu features
+#### amd cpus
+| cpu type/function name  | epyc-genoa-v1 | epyc-milan-v1 | epyc-milan-v2 | epyc-rome-v1 |epyc-rome-v2 |
+| ----------------------- | ------------- | ------------- | ------------- | ------------ |------------ |
+| isamd                   | true          | true          | true          | true         |true         |
+| isintel                 | false         | false         | false         | false        |false        |
+| isx86_64v2              | true          | true          | true          | true         |true         |
+| isx86_64v3              | true          | true          | true          | true         |true         |
+| isx86_64v4              | true          | false         | false         | false        |false        |
+| getuarch                | zen4          | zen3          | zen3          | zen2         |zen2         |
+
+amd cpus(continued)
+
+ | cpu type/function name  | epyc-rome-v3 | epyc-rome-v4 | epyc-v1 | epyc-v2 | epyc-v3 | epyc-v4 |opteron_g1-v1  |
+ | ----------------------- | ------------ | ------------ | ------- | ------- | ------- | ------- |---------------|
+ | isamd                   | true         | true         | true    | true    | true    | true    | true          |
+ | isintel                 | false        | false        | false   | false   | false   | false   | false         |
+ | isx86_64v2              | true         | true         | true    | true    | true    | true    | false         |
+ | isx86_64v3              | true         | true         | true    | true    | true    | true    | false         |
+ | isx86_64v4              | false        | false        | false   | false   | false   | false   | false         |
+ | getUarch                | zen2         | zen2         | zen     | zen     | zen     | zen     | unknown       |
+
+amd cpus(continued)
+
+| cpu type/function name  |  opteron_g2-v1 | opteron_g3-v1 | opteron_g4-v1 | opteron_g5-v1 | phenom-v1 |
+| ----------------------- |  ------------- | ------------- | ------------- | ------------- | --------- |
+| isamd                   |  true          | true          | true          | true          | true      |
+| isintel                 |  false         | false         | false         | false         | false     |
+| isx86_64v2              |  false         | false         | true          | true          | false     |
+| isx86_64v3              |  false         | false         | false         | false         | false     |
+| isx86_64v4              |  false         | false         | false         | false         | false     |
+| getUarch                |  unknown       | unknown       | unknown       | unknown       | unknown   |
+
+#### intel cpus
+| cpu type/function name  | broadwell-v1 | denverton-v1 | conroe-v1 | skylake-server-v1 |
 | ----------------------- | ------------ | ------------ | --------- | ----------------- |
-| isAMD                   | False        | False        | False     | False             |
-| IsIntel                 | True         | True         | True      | True              |
-| isX86_64V2              | True         | True         | False     | True              |
-| isX86_64V3              | True         | False        | False     | True              |
-| isX86_64V4              | False        | False        | False     | True              |
+| isamd                   | false        | false        | false     | false             |
+| isintel                 | true         | true         | true      | true              |
+| isx86_64v2              | true         | true         | false     | true              |
+| isx86_64v3              | true         | false        | false     | true              |
+| isx86_64v4              | false        | false        | false     | true              |
+| getUarch                |  unknown     | unknown      | unknown   | unknown           | 
 
-X86_64v2
-| CPU TYPE/FLAG | EPYC-Genoa-v1 | EPYC-Rome-v1 | Opteron_G4-v1 | phenom-v1 | Skylake-Server-v1 | Broadwell-v1 | Denverton-v1 | Conroe-v1 |
+### isa features
+#### x86_64v2
+| cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
 | ------------- | ------------- | ------------ | ------------- | --------- | ----------------- | ------------ | ------------ | --------- |
-| cx16          | True          | True         | True          | False     | True              | True         | True         | False     |
-| lahf_lm       | True          | True         | True          | False     | True              | True         | True         | False     |
-| popcnt        | True          | True         | True          | False     | True              | True         | True         | False     |
-| sse4_1        | True          | True         | True          | False     | True              | True         | True         | False     |
-| sse4_2        | True          | True         | True          | False     | True              | True         | True         | False     |
-| ssse3         | True          | True         | True          | False     | True              | True         | True         | False     |
+| cx16          | true          | true         | true          | false     | true              | true         | true         | false     |
+| lahf_lm       | true          | true         | true          | false     | true              | true         | true         | false     |
+| popcnt        | true          | true         | true          | false     | true              | true         | true         | false     |
+| sse4_1        | true          | true         | true          | false     | true              | true         | true         | false     |
+| sse4_2        | true          | true         | true          | false     | true              | true         | true         | false     |
+| ssse3         | true          | true         | true          | false     | true              | true         | true         | false     |
 
-X86_64v3
+#### x86_64v3
 
-| CPU TYPE/FLAG | EPYC-Genoa-v1 | EPYC-Rome-v1 | Opteron_G4-v1 | phenom-v1 | Skylake-Server-v1 | Broadwell-v1 | Denverton-v1 | Conroe-v1 |
+| cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
 | ------------- | ------------- | ------------ | ------------- | --------- | ----------------- | ------------ | ------------ | --------- |
-| avx           | True          | True         | False         | False     | True              | True         | False        | False     |
-| avx2          | True          | True         | False         | False     | True              | True         | False        | False     |
-| bmi1          | True          | True         | False         | False     | True              | True         | False        | False     |
-| bmi2          | True          | True         | False         | False     | True              | True         | False        | False     |
-| f16c          | True          | True         | False         | False     | True              | True         | False        | False     |
-| fma           | True          | True         | False         | False     | True              | True         | False        | False     |
-| abm           | True          | True         | False         | False     | True              | True         | False        | False     |
-| movbe         | True          | True         | False         | False     | True              | True         | False        | False     |
-| xsave         | True          | True         | False         | False     | True              | True         | False        | False     |
+| avx           | true          | true         | false         | false     | true              | true         | false        | false     |
+| avx2          | true          | true         | false         | false     | true              | true         | false        | false     |
+| bmi1          | true          | true         | false         | false     | true              | true         | false        | false     |
+| bmi2          | true          | true         | false         | false     | true              | true         | false        | false     |
+| f16c          | true          | true         | false         | false     | true              | true         | false        | false     |
+| fma           | true          | true         | false         | false     | true              | true         | false        | false     |
+| abm           | true          | true         | false         | false     | true              | true         | false        | false     |
+| movbe         | true          | true         | false         | false     | true              | true         | false        | false     |
+| xsave         | true          | true         | false         | false     | true              | true         | false        | false     |
 
-X86_64v4
-| CPU TYPE/FLAG | EPYC-Genoa-v1 | EPYC-Rome-v1 | Opteron_G4-v1 | phenom-v1 | Skylake-Server-v1 | Broadwell-v1 | Denverton-v1 | Conroe-v1 |
+#### x86_64v4
+| cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
 | ------------- | ------------- | ------------ | ------------- | --------- | ----------------- | ------------ | ------------ | --------- |
-| avx512f       | True          | False        | False         | False     | True              | False        | False        | False     |
-| avx512bw      | True          | False        | False         | False     | True              | False        | False        | False     |
-| avx512cd      | True          | False        | False         | False     | True              | False        | False        | False     |
-| avx512dq      | True          | False        | False         | False     | True              | False        | False        | False     |
-| avx512vl      | True          | False        | False         | False     | True              | False
+| avx512f       | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512bw      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512cd      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512dq      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512vl      | true          | false        | false         | false     | true              | false        |              |           |
 
-### Utility Function Test Matrix TBD
-EPYC-Genoa-v1
+## Utility function test matrix
+  | CpuType/VendorInfo| Vendor| Family | Model | Stepping   | Uarch   |   
+  | ----------------- | ----- | -------| ----  | ---------- |-------- |
+  | EPYC-Genoa-v1     |  Amd  | Zen4   | 0x11  |0x0         | zen4    |
+  | EPYC-Milan-v1     |  Amd  | Zen4   | 0x01  |0x1         | zen3    |
+  | EPYC-Milan-v2     |  Amd  | Zen4   | 0x01  |0x1         | zen3    |
+  | EPYC-Rome-v1      |  Amd  | Zen2   | 0x31  |0x0         | zen2    |
+  | EPYC-Rome-v2      |  Amd  | Zen2   | 0x31  |0x0         | zen2    |
+  | EPYC-Rome-v3      |  Amd  | Zen2   | 0x31  |0x0         | zen2    |
+  | EPYC-Rome-v4      |  Amd  | Zen2   | 0x31  |0x0         | zen2    |
+  | EPYC-v1           |  Amd  | Zen2   | 0x01  |0x2         | zen     |
+  | EPYC-v2           |  Amd  | Zen2   | 0x01  |0x2         | zen     |
+  | EPYC-v3           |  Amd  | Zen2   | 0x01  |0x2         | zen     |
+  | EPYC-v4           |  Amd  | Zen2   | 0x01  |0x2         | zen     |
+  | Opteron_G1-v1     |  Amd  | Unknown| 0x06  |0x1         | Unknown |
+  | Opteron_G2-v1     |  Amd  | Unknown| 0x06  |0x1         | Unknown |
+  | Opteron_G3-v1     |  Amd  | Unknown| 0x02  |0x3         | Unknown |
+  | Opteron_G4-v1     |  Amd  | Unknown| 0x01  |0x2         | Unknown |
+  | Opteron_G5-v1     |  Amd  | Unknown| 0x02  |0x0         | Unknown |
+  | phenom-v1         |  Amd  | Unknown| 0x02  |0x3         | Unknown |
+  | Broadwell-v1      |  Intel| Unknown| 0X3D  |0x2         | Unknown |
+  | Denverton-v1      |  Intel| Unknown| 0x5F  |0x1         | Unknown |
+  | Conroe-v1         |  Intel| Unknown| 0x0F  |0x3         | Unknown |
+  | Skylake-Server-v1 |  Intel| Unknown| 0x55  |0x4         | Unknown |
 
-### The C Interfaces TBD
+## Integration tests <TBD>
 
-## How to Run the Tests
 
-`ctest` runs all the tests by default along with other tests. If running independently, call `core_CpuidTests`. It has to be done from the build folder as `./Release/core_CpuidTest`.
+## How to run the tests
 
-**Note to Developer:**
-The test creates the X86Cpu test suites with all the unit test cases for functions listed in the scope of the test. These tests are disabled by default because it doesn't make sense to run them on the host whose architecture might be unknown. Use the `--gtest_also_run_disabled_tests` flag if these need to be enabled on the host.
+`ctest` runs all the tests by default along with other tests. if running independently, call `core_cpuidtests`. it has to be done from the build folder as `./release/core_cpuidtest`.
 
-A Python script is written to invoke tests from the X86Cpu test suite to run on different QEMU emulated CPUs. The script is placed in the same folder as the test sources. The script can be run as follows:
+**Note to developer:**
+the test creates the x86cpu test suites with all the unit test cases for functions listed in the scope of the test. these tests are disabled by default because it doesn't make sense to run them on the host whose architecture might be unknown. use the `--gtest_also_run_disabled_tests` flag if these need to be enabled on the host.
+
+a python script is written to invoke tests in the x86cpu test suite to run on different qemu emulated cpus. the script is placed in the same folder as the test sources. the script can be run as follows:
 
 ```bash
-python ../Library/Tests/Cpuid/CpuidTest.py EPYC X86Cpuid.DISABLED_isAMD
+python ../library/tests/cpuid/cpuidtest.py epyc x86cpuid.disabled_isamd
 
 ```
 
-Then there is QemuTest suite, that uses the python script, run_cmd function results, to write tests for different emulated cpus listed above.
+the qemutest suites run by invoking the above python script to run on different emulated cpus.
