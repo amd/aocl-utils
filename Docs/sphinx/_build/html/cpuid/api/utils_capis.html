@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capis &mdash; AOCL-UTILS 5.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ee801c84"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Cppapis" href="utils_cppapis.html" />
+    <link rel="prev" title="Cpuid API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AOCL-UTILS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Capis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv413au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_flag_t</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415au_cpuid_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_amd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv419au_cpuid_get_vendor12au_cpu_num_tPc6size_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_get_vendor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv420au_cpuid_arch_is_zen12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421au_cpuid_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421au_cpuid_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417au_cpuid_has_flag12au_cpu_num_t13au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_has_flag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417au_cpuid_is_error10au_error_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html">Cppapis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Cpuid TestPlan</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AOCL-UTILS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cpuid API Reference</a></li>
+      <li class="breadcrumb-item active">Capis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/cpuid/api/utils_capis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="capis">
+<span id="api-c"></span><h1>Capis<a class="headerlink" href="#capis" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv413au_cpu_flag_t">
+<span id="_CPPv313au_cpu_flag_t"></span><span id="_CPPv213au_cpu_flag_t"></span><span id="au_cpu_flag_t"></span><span class="target" id="cpuid_8h_1ad55a74c656ad4df997c1837ce77c602e"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">Uint32</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpu_flag_t</span></span></span><a class="headerlink" href="#_CPPv413au_cpu_flag_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415au_cpuid_is_amd12au_cpu_num_t">
+<span id="_CPPv315au_cpuid_is_amd12au_cpu_num_t"></span><span id="_CPPv215au_cpuid_is_amd12au_cpu_num_t"></span><span id="au_cpuid_is_amd__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1a9e2bd40adfa811e359b88a85f4b0110d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_is_amd</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415au_cpuid_is_amd12au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Check if the processor vendor is AMD. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor vendor is AMD. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419au_cpuid_get_vendor12au_cpu_num_tPc6size_t">
+<span id="_CPPv319au_cpuid_get_vendor12au_cpu_num_tPc6size_t"></span><span id="_CPPv219au_cpuid_get_vendor12au_cpu_num_tPc6size_t"></span><span id="au_cpuid_get_vendor__au_cpu_num_t.cP.s"></span><span class="target" id="cpuid_8h_1a6145133838e9c8de58cc94083bc82817"></span><span class="n"><span class="pre">au_error_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_get_vendor</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">vend_info</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419au_cpuid_get_vendor12au_cpu_num_tPc6size_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Get Cpu vendor info. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number. </p></li>
+<li><p><strong>vend_info</strong> – <strong>[inout]</strong> Vendor info array. </p></li>
+<li><p><strong>size</strong> – <strong>[in]</strong> Size of Vendor info array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if getting vendor info is successful. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420au_cpuid_arch_is_zen12au_cpu_num_t">
+<span id="_CPPv320au_cpuid_arch_is_zen12au_cpu_num_t"></span><span id="_CPPv220au_cpuid_arch_is_zen12au_cpu_num_t"></span><span id="au_cpuid_arch_is_zen__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1a92926f55bdb556f2f5b752ddf2fdad17"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_arch_is_zen</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420au_cpuid_arch_is_zen12au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the processor arch is ZEN. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor architecture is AMD ZEN. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421au_cpuid_arch_is_zen212au_cpu_num_t">
+<span id="_CPPv321au_cpuid_arch_is_zen212au_cpu_num_t"></span><span id="_CPPv221au_cpuid_arch_is_zen212au_cpu_num_t"></span><span id="au_cpuid_arch_is_zen2__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1a04793aa69cc771bc39c6b1379fd2b2eb"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_arch_is_zen2</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421au_cpuid_arch_is_zen212au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the processor arch is ZEN2. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor architecture is AMD ZEN2. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421au_cpuid_arch_is_zen312au_cpu_num_t">
+<span id="_CPPv321au_cpuid_arch_is_zen312au_cpu_num_t"></span><span id="_CPPv221au_cpuid_arch_is_zen312au_cpu_num_t"></span><span id="au_cpuid_arch_is_zen3__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1a7b683e7981a5ff991ad63b0ff0349572"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_arch_is_zen3</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421au_cpuid_arch_is_zen312au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the processor arch is ZEN3. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor architecture is AMD ZEN3. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t">
+<span id="_CPPv321au_cpuid_arch_is_zen412au_cpu_num_t"></span><span id="_CPPv221au_cpuid_arch_is_zen412au_cpu_num_t"></span><span id="au_cpuid_arch_is_zen4__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1abd4d4e6ac52a6a59dca42deee73c6f5b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_arch_is_zen4</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the processor arch is ZEN4. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor architecture is AMD ZEN4. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417au_cpuid_has_flag12au_cpu_num_t13au_cpu_flag_t">
+<span id="_CPPv317au_cpuid_has_flag12au_cpu_num_t13au_cpu_flag_t"></span><span id="_CPPv217au_cpuid_has_flag12au_cpu_num_t13au_cpu_flag_t"></span><span id="au_cpuid_has_flag__au_cpu_num_t.au_cpu_flag_t"></span><span class="target" id="cpuid_8h_1a2d1fc6d2a665a793ba7604359f2d9da4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_has_flag</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_cpu_num_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span>, <a class="reference internal" href="#_CPPv413au_cpu_flag_t" title="au_cpu_flag_t"><span class="n"><span class="pre">au_cpu_flag_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">flag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417au_cpuid_has_flag12au_cpu_num_t13au_cpu_flag_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the flag is available. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number. </p></li>
+<li><p><strong>flag</strong> – <strong>[in]</strong> CPU feature flag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if feature is available. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417au_cpuid_is_error10au_error_t">
+<span id="_CPPv317au_cpuid_is_error10au_error_t"></span><span id="_CPPv217au_cpuid_is_error10au_error_t"></span><span id="au_cpuid_is_error__au_error_t"></span><span class="target" id="cpuid_8h_1aef225070bd514f12c7ce01c10e9518d5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_is_error</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">au_error_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">err</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417au_cpuid_is_error10au_error_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Portable API to check if an error has occured. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>err</strong> – Actual error number</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if error occorured, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="cpuid_8h_1a16971c88683cc39c1c19bbc9d3f36712"></span><span class="sig-name descname"><span class="pre">AUD_EXTERN_C_BEGIN</span> <span class="pre">typedef</span> <span class="pre">Uint32</span> <span class="pre">au_cpu_num_t</span></span></dt>
+<dd></dd></dl>
+
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cpuid API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils_cppapis.html" class="btn btn-neutral float-right" title="Cppapis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, AMD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
