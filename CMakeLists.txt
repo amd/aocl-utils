@@ -114,6 +114,10 @@ endif()
 
 option(INSTALL_GTEST OFF)
 
+if (AU_BUILD_EXAMPLES)
+  include(au_examples)
+endif()
+
 # Config.h generation
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
 include_directories("${AU_CONFIG_DIR}")
@@ -135,10 +139,6 @@ set_target_properties(sdk__include
 )
 
 
-
-#
-# Add the one directory
-#
 add_subdirectory(Library)
 
 if (AU_BUILD_TESTS)
@@ -146,6 +146,10 @@ if (AU_BUILD_TESTS)
 endif()
 if (AU_BUILD_DOCS)
   add_subdirectory(Docs)
+endif()
+
+if (AU_BUILD_EXAMPLES)
+    add_subdirectory(SDK)
 endif()
 
 #

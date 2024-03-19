@@ -31,7 +31,6 @@
 #include "Au/Assert.hh"
 #include "Au/Au.hh"
 
-#include <cstring>
 #include <iostream>
 #include <limits>
 #include <map>
