@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TestPlan &mdash; AOCL-UTILS 5.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ee801c84"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Cpuid TestPlan" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AOCL-UTILS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Cpuid API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid TestPlan</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">TestPlan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-cpuid-module-unit-testplan">The cpuid module unit testplan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-cpuid-module">The cpuid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-objective">The objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#classes-of-testcases">Classes of testcases</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-test-matrix-for-c-cpp-apis">The test matrix for c/cpp apis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utility-function-test-matrix">Utility function test matrix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integration-tests-tbd">Integration tests <TBD></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-run-the-tests">How to run the tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AOCL-UTILS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cpuid TestPlan</a></li>
+      <li class="breadcrumb-item active">TestPlan</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/cpuid/testing/utils_testplan.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testplan">
+<span id="api-testplan"></span><h1>TestPlan<a class="headerlink" href="#testplan" title="Link to this heading"></a></h1>
+<section id="the-cpuid-module-unit-testplan">
+<h2>The cpuid module unit testplan<a class="headerlink" href="#the-cpuid-module-unit-testplan" title="Link to this heading"></a></h2>
+<hr class="docutils" />
+<section id="the-cpuid-module">
+<h3>The cpuid module<a class="headerlink" href="#the-cpuid-module" title="Link to this heading"></a></h3>
+<p>The cpuid module provides details of underlying cpu architecture by reading and interpreting the cpuid register of the system.</p>
+</section>
+<section id="the-objective">
+<h3>The objective<a class="headerlink" href="#the-objective" title="Link to this heading"></a></h3>
+<p>The testplan is to have a comprehensive test coverage for all components in the module.</p>
+</section>
+<section id="classes-of-testcases">
+<h3>Classes of testcases<a class="headerlink" href="#classes-of-testcases" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>qemu tests</strong>
+Qemu cpu emulator is used to emulate cpus to test both capis and cpp apis.
+Native tests corresponing to this is disabled by default as it doesn’t make sense to run natively.</p></li>
+<li><p><strong>mock tests</strong>
+Mock tests are used to test cpp apis and utility functions by mocking the cpuid register call.
+Mocked data is stored in simnow folder.
+The content of the folder is organised as follows.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>simnowdata
+└───&lt;folderperemulated cpuid&gt;
+    │   &lt;cpuid&gt;
+    │   FlagsT.txt
+    │   FlagsF.txt
+ * The \&lt;cpuid&gt; file consists of cpuid register read corresponding to the particular cpuid for a set of inputs,
+   in the form {request} : {response}
+ * These files are shared by both qemu tests and mocktests.
+ * FlagsT.txt and FlagsF.txt files are shared by all the hasflags tests.
+ * Flags in FlagsT.txt marks the set of flags that should be present in the cpu
+ * Flags in FlagsF.txt marks the set of flags that should not be present in the cpu.
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>native tests</strong>
+Few native testcases are written to check edge cases and negative cases. More test are to be added for full coverage.</p></li>
+</ul>
+<section id="list-of-cpp-apis">
+<h4>List of cpp apis<a class="headerlink" href="#list-of-cpp-apis" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>isamd</p></li>
+<li><p>isintel</p></li>
+<li><p>isx86v2</p></li>
+<li><p>isx86v3</p></li>
+<li><p>isx86v4</p></li>
+<li><p>hasflag</p></li>
+<li><p>isuarch</p></li>
+<li><p>getuarch</p></li>
+<li><p>getvendorinfo</p></li>
+</ul>
+</section>
+<section id="list-of-capis">
+<h4>List of capis<a class="headerlink" href="#list-of-capis" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>au_cpuid_is_amd</p></li>
+<li><p>au_cupid_has_flag</p></li>
+<li><p>au_cpuid_get_vendor</p></li>
+<li><p>au_cpuid_arch_is_zen</p></li>
+<li><p>au_cpuid_arch_is_zenplus</p></li>
+<li><p>au_cpuid_arch_is_zen2</p></li>
+<li><p>au_cpuid_arch_is_zen3</p></li>
+<li><p>au_cpuid_arch_is_zen4</p></li>
+<li><p>au_cpuid_arch_is_zen5</p></li>
+</ul>
+<p>for all the amd cpu modules provided by qemu
+and below intel cpus,</p>
+<ul class="simple">
+<li><p>broadwell-v1</p></li>
+<li><p>denverton-v1</p></li>
+<li><p>conroe-v1</p></li>
+<li><p>skylake-server-v1</p></li>
+</ul>
+<p>The above c and cpp apis are tested using qemu testcases and mock tests.</p>
+<p>Apart from that,
+the utility functions that directly use the cpuid register read results to fill data <br />
+in different datastructures used by above functions are tested with mocked up (cpuid register read) data.
+Those functions are,</p>
+</section>
+<section id="list-of-utility-functions">
+<h4>List of utility functions<a class="headerlink" href="#list-of-utility-functions" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>getmfginfo</p></li>
+<li><p>getfamily</p></li>
+<li><p>getmodel</p></li>
+<li><p>getstepping</p></li>
+<li><p>hasflag</p></li>
+<li><p>updatecacheview</p></li>
+<li><p>updatecacheinfo</p></li>
+</ul>
+</section>
+</section>
+<section id="the-test-matrix-for-c-cpp-apis">
+<h3>The test matrix for c/cpp apis<a class="headerlink" href="#the-test-matrix-for-c-cpp-apis" title="Link to this heading"></a></h3>
+<section id="cpu-features">
+<h4>cpu features<a class="headerlink" href="#cpu-features" title="Link to this heading"></a></h4>
+<section id="amd-cpus">
+<h5>amd cpus<a class="headerlink" href="#amd-cpus" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
+<th class="head"><p>epyc-genoa-v1</p></th>
+<th class="head"><p>epyc-milan-v1</p></th>
+<th class="head"><p>epyc-milan-v2</p></th>
+<th class="head"><p>epyc-rome-v1</p></th>
+<th class="head"><p>epyc-rome-v2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>isamd</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>isintel</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>isx86_64v3</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v4</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>getuarch</p></td>
+<td><p>zen4</p></td>
+<td><p>zen3</p></td>
+<td><p>zen3</p></td>
+<td><p>zen2</p></td>
+<td><p>zen2</p></td>
+</tr>
+</tbody>
+</table>
+<p>amd cpus(continued)</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
+<th class="head"><p>epyc-rome-v3</p></th>
+<th class="head"><p>epyc-rome-v4</p></th>
+<th class="head"><p>epyc-v1</p></th>
+<th class="head"><p>epyc-v2</p></th>
+<th class="head"><p>epyc-v3</p></th>
+<th class="head"><p>epyc-v4</p></th>
+<th class="head"><p>opteron_g1-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>isamd</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>isintel</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>isx86_64v3</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v4</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>getUarch</p></td>
+<td><p>zen2</p></td>
+<td><p>zen2</p></td>
+<td><p>zen</p></td>
+<td><p>zen</p></td>
+<td><p>zen</p></td>
+<td><p>zen</p></td>
+<td><p>unknown</p></td>
+</tr>
+</tbody>
+</table>
+<p>amd cpus(continued)</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
+<th class="head"><p>opteron_g2-v1</p></th>
+<th class="head"><p>opteron_g3-v1</p></th>
+<th class="head"><p>opteron_g4-v1</p></th>
+<th class="head"><p>opteron_g5-v1</p></th>
+<th class="head"><p>phenom-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>isamd</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>isintel</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v2</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>isx86_64v3</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v4</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>getUarch</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="intel-cpus">
+<h5>intel cpus<a class="headerlink" href="#intel-cpus" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
+<th class="head"><p>broadwell-v1</p></th>
+<th class="head"><p>denverton-v1</p></th>
+<th class="head"><p>conroe-v1</p></th>
+<th class="head"><p>skylake-server-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>isamd</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>isintel</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>isx86_64v3</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>isx86_64v4</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>getUarch</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+<td><p>unknown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="isa-features">
+<h4>isa features<a class="headerlink" href="#isa-features" title="Link to this heading"></a></h4>
+<section id="x86-64v2">
+<h5>x86_64v2<a class="headerlink" href="#x86-64v2" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
+<th class="head"><p>epyc-genoa-v1</p></th>
+<th class="head"><p>epyc-rome-v1</p></th>
+<th class="head"><p>opteron_g4-v1</p></th>
+<th class="head"><p>phenom-v1</p></th>
+<th class="head"><p>skylake-server-v1</p></th>
+<th class="head"><p>broadwell-v1</p></th>
+<th class="head"><p>denverton-v1</p></th>
+<th class="head"><p>conroe-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cx16</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>lahf_lm</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>popcnt</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>sse4_1</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>sse4_2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>ssse3</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="x86-64v3">
+<h5>x86_64v3<a class="headerlink" href="#x86-64v3" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
+<th class="head"><p>epyc-genoa-v1</p></th>
+<th class="head"><p>epyc-rome-v1</p></th>
+<th class="head"><p>opteron_g4-v1</p></th>
+<th class="head"><p>phenom-v1</p></th>
+<th class="head"><p>skylake-server-v1</p></th>
+<th class="head"><p>broadwell-v1</p></th>
+<th class="head"><p>denverton-v1</p></th>
+<th class="head"><p>conroe-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>avx</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>avx2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>bmi1</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>bmi2</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>f16c</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>fma</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>abm</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>movbe</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>xsave</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="x86-64v4">
+<h5>x86_64v4<a class="headerlink" href="#x86-64v4" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
+<th class="head"><p>epyc-genoa-v1</p></th>
+<th class="head"><p>epyc-rome-v1</p></th>
+<th class="head"><p>opteron_g4-v1</p></th>
+<th class="head"><p>phenom-v1</p></th>
+<th class="head"><p>skylake-server-v1</p></th>
+<th class="head"><p>broadwell-v1</p></th>
+<th class="head"><p>denverton-v1</p></th>
+<th class="head"><p>conroe-v1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>avx512f</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>avx512bw</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>avx512cd</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>avx512dq</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>avx512vl</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="utility-function-test-matrix">
+<h3>Utility function test matrix<a class="headerlink" href="#utility-function-test-matrix" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CpuType/VendorInfo</p></th>
+<th class="head"><p>Vendor</p></th>
+<th class="head"><p>Family</p></th>
+<th class="head"><p>Model</p></th>
+<th class="head"><p>Stepping</p></th>
+<th class="head"><p>Uarch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>EPYC-Genoa-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen4</p></td>
+<td><p>0x11</p></td>
+<td><p>0x0</p></td>
+<td><p>zen4</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPYC-Milan-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen4</p></td>
+<td><p>0x01</p></td>
+<td><p>0x1</p></td>
+<td><p>zen3</p></td>
+</tr>
+<tr class="row-even"><td><p>EPYC-Milan-v2</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen4</p></td>
+<td><p>0x01</p></td>
+<td><p>0x1</p></td>
+<td><p>zen3</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPYC-Rome-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x31</p></td>
+<td><p>0x0</p></td>
+<td><p>zen2</p></td>
+</tr>
+<tr class="row-even"><td><p>EPYC-Rome-v2</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x31</p></td>
+<td><p>0x0</p></td>
+<td><p>zen2</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPYC-Rome-v3</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x31</p></td>
+<td><p>0x0</p></td>
+<td><p>zen2</p></td>
+</tr>
+<tr class="row-even"><td><p>EPYC-Rome-v4</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x31</p></td>
+<td><p>0x0</p></td>
+<td><p>zen2</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPYC-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x01</p></td>
+<td><p>0x2</p></td>
+<td><p>zen</p></td>
+</tr>
+<tr class="row-even"><td><p>EPYC-v2</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x01</p></td>
+<td><p>0x2</p></td>
+<td><p>zen</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPYC-v3</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x01</p></td>
+<td><p>0x2</p></td>
+<td><p>zen</p></td>
+</tr>
+<tr class="row-even"><td><p>EPYC-v4</p></td>
+<td><p>Amd</p></td>
+<td><p>Zen2</p></td>
+<td><p>0x01</p></td>
+<td><p>0x2</p></td>
+<td><p>zen</p></td>
+</tr>
+<tr class="row-odd"><td><p>Opteron_G1-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x06</p></td>
+<td><p>0x1</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>Opteron_G2-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x06</p></td>
+<td><p>0x1</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>Opteron_G3-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x02</p></td>
+<td><p>0x3</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>Opteron_G4-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x01</p></td>
+<td><p>0x2</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>Opteron_G5-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x02</p></td>
+<td><p>0x0</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>phenom-v1</p></td>
+<td><p>Amd</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x02</p></td>
+<td><p>0x3</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>Broadwell-v1</p></td>
+<td><p>Intel</p></td>
+<td><p>Unknown</p></td>
+<td><p>0X3D</p></td>
+<td><p>0x2</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>Denverton-v1</p></td>
+<td><p>Intel</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x5F</p></td>
+<td><p>0x1</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>Conroe-v1</p></td>
+<td><p>Intel</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x0F</p></td>
+<td><p>0x3</p></td>
+<td><p>Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>Skylake-Server-v1</p></td>
+<td><p>Intel</p></td>
+<td><p>Unknown</p></td>
+<td><p>0x55</p></td>
+<td><p>0x4</p></td>
+<td><p>Unknown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="integration-tests-tbd">
+<h3>Integration tests <TBD><a class="headerlink" href="#integration-tests-tbd" title="Link to this heading"></a></h3>
+</section>
+<section id="how-to-run-the-tests">
+<h3>How to run the tests<a class="headerlink" href="#how-to-run-the-tests" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ctest</span></code> runs all the tests by default along with other tests. if running independently, call <code class="docutils literal notranslate"><span class="pre">core_cpuidtests</span></code>. it has to be done from the build folder as <code class="docutils literal notranslate"><span class="pre">./release/core_cpuidtest</span></code>.</p>
+<p><strong>Note to developer:</strong>
+the test creates the x86cpu test suites with all the unit test cases for functions listed in the scope of the test. these tests are disabled by default because it doesn’t make sense to run them on the host whose architecture might be unknown. use the <code class="docutils literal notranslate"><span class="pre">--gtest_also_run_disabled_tests</span></code> flag if these need to be enabled on the host.</p>
+<p>a python script is written to invoke tests in the x86cpu test suite to run on different qemu emulated cpus. the script is placed in the same folder as the test sources. the script can be run as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>../library/tests/cpuid/cpuidtest.py<span class="w"> </span>epyc<span class="w"> </span>x86cpuid.disabled_isamd
+</pre></div>
+</div>
+<p>the qemutest suites run by invoking the above python script to run on different emulated cpus.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cpuid TestPlan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, AMD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
