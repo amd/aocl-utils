@@ -134,6 +134,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
 bool AUD_API_EXPORT
 au_cpuid_is_error(au_error_t err)
 {
+    AUD_ASSERT(err >= 0, "Invalid error code");
     if (static_cast<int32_t>(err))
         return true;
     return false;
