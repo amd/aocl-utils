@@ -139,10 +139,6 @@ set_target_properties(sdk__include
 )
 
 
-
-#
-# Add the sub directory
-#
 add_subdirectory(Library)
 
 if (AU_BUILD_TESTS)
