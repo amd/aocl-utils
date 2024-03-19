@@ -36,28 +36,6 @@
 namespace {
 using namespace Au;
 
-#if 0
-template<>
-vector<String>
-readFromFile<String>(const String& fileName)
-{
-    ifstream       file(fileName);
-    String         data;
-    vector<String> items;
-
-    if (!file.is_open()) {
-        cout << "Error opening file" << fileName << endl;
-    }
-
-    while (getline(file, data)) {
-        auto value = data.substr(0, data.find(' '));
-        items.push_back(value);
-    }
-
-    file.close();
-    return items;
-}
-#endif
 /**
  * Tests that can run on host, DISABLED by default since tests doesn't add any
  * value as the result is unknown on a physical machine
@@ -68,23 +46,7 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 {
     EXPECT_TRUE(au_cpuid_is_amd(0));
 }
-#if 0
-TEST(CapiX86Cpuid, DISABLED_hasFlagT)
-{
-    auto flags  = readFromFile<String>("FlagsT.txt");
-    auto result = au_cpuid_has_flag(0, flags);
-    for (const auto& pair : result)
-        EXPECT_TRUE(pair.second);
-}
 
-TEST(CapiX86Cpuid, DISABLED_hasFlagF)
-{
-    auto flags  = readFromFile<String>("FlagsF.txt");
-    auto result = au_cpuid_has_flag(0, flags);
-    for (const auto& pair : result)
-        EXPECT_FALSE(pair.second);
-}
-#endif
 TEST(CapiX86Cpuid, hasFlags)
 {
     vector<char*> testFlags = { "" };
