@@ -42,6 +42,7 @@ set(MEMORY_TEST_FILES
 
 set(CPUID_TEST_FILES
     Cpuid/CpuidTest.cc
+    Cpuid/CapiTest.cc
     Cpuid/Mock/CpuidUtilsTest.cc
     Cpuid/Mock/X86CpuTest.cc
     Cpuid/CpuidQemuTest.cc
@@ -152,10 +153,9 @@ au_cc_test(CpuidTest
 ##########
 
 # au_cc_test(DynLoadTest
-#         #WINDOWS_DISABLED 
+#         #WINDOWS_DISABLED
 #         DIRECTORY   tests/
-#         SOURCES     tests/DynamicLoaderTest.cc 
+#         SOURCES     tests/DynamicLoaderTest.cc
 #         #HEADERS DynamicLoader.hh
 #         DEPENDS     _module_lib
 # )
-

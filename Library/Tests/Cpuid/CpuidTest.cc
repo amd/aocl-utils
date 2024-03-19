@@ -79,13 +79,13 @@ TEST(X86Cpuid, DISABLED_hasFlagT)
     std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
     X86Cpu             cpu{ 0 };
-    string             data;
 
     absPath += "/FlagsT.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
-    for (auto flag : flags)
-        EXPECT_TRUE(cpu.hasFlag(flag));
+    for (auto flag : flags) {
+        EXPECT_TRUE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    }
 }
 
 TEST(X86Cpuid, DISABLED_hasFlagF)
@@ -93,20 +93,20 @@ TEST(X86Cpuid, DISABLED_hasFlagF)
     std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
     X86Cpu             cpu{ 0 };
-    string             data;
 
     absPath += "/FlagsF.txt";
     flags = readFromFile<ECpuidFlag>(absPath);
 
-    for (auto flag : flags)
-        EXPECT_FALSE(cpu.hasFlag(flag));
+    for (auto flag : flags) {
+        EXPECT_FALSE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    }
 }
+
 TEST(X86Cpuid, DISABLED_isUarch)
 {
     std::string absPath = PROJECT_BUILD_DIR;
     EUarch      uarch;
     X86Cpu      cpu{ 0 };
-    string      data;
 
     // verify the uarch passed from the qemu testcase.
     absPath += "/Uarch.txt";
@@ -129,6 +129,21 @@ TEST(X86Cpuid, DISABLED_isUarch)
     writeToFile<EUarch>("UarchResult.txt", { cpu.getUarch() });
 }
 
+TEST(X86Cpuid, DISABLED_getVendorInfo)
+{
+    X86Cpu cpu{ 0 };
+    auto   result = cpu.getVendorInfo();
+
+    vector<Uint32> vendorInfo = { enumToValue<EVendor, Uint32>(result.m_mfg),
+                                  enumToValue<EFamily, Uint32>(result.m_family),
+                                  result.m_model,
+                                  result.m_stepping,
+                                  enumToValue<EUarch, Uint32>(result.m_uarch) };
+
+    auto iter = vendorInfo.begin();
+    writeToFile<vector<Uint32>::iterator>(
+        "VendorInfoCpp.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
+}
 TEST(X86Cpuid, CheckCupNumber)
 {
     // 0 - 2 Verify that the core is set to the correct CPU

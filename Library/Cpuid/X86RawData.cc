@@ -35,7 +35,7 @@ namespace Au {
 
 // clang-format off
 using QueryT = std::tuple<RequestT, ResponseT, EFlag>;
-static const std::array<QueryT, *EFlag::MAX> CPUID_MAP = {{
+static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
     /* feature identifiers */
     {{.eax = 0x00000001}, {.eax = 0, .ebx = 0, .ecx = 0x00000001}, EFlag::sse3},
     {{.eax = 0x00000001}, {.eax = 0, .ebx = 0, .ecx = 0x00000002}, EFlag::pclmulqdq},
@@ -324,6 +324,12 @@ X86Cpu::Impl::isUarch(EUarch uarch, bool strict) const
     if (strict)
         return uarch == m_vendor_info.m_uarch;
     return uarch <= m_vendor_info.m_uarch;
+}
+
+VendorInfo
+X86Cpu::Impl::getVendorInfo() const
+{
+    return m_vendor_info;
 }
 
 void

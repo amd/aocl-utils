@@ -110,4 +110,9 @@ X86Cpu::isUarch(EUarch uarch, bool strict) const
 {
     return pImpl()->isUarch(uarch, strict);
 }
+VendorInfo
+X86Cpu::getVendorInfo() const
+{
+    return pImpl()->getVendorInfo();
+}
 } // namespace Au

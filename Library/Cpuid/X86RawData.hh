@@ -131,9 +131,9 @@ class X86Cpu::Impl
 
     bool hasFlag(EFlag const& ef) const;
 
-    EUarch getUarch() const;
-    bool   isUarch(EUarch uarch, bool strict = false) const;
-
+    EUarch     getUarch() const;
+    bool       isUarch(EUarch uarch, bool strict = false) const;
+    VendorInfo getVendorInfo() const;
     /**
      * @brief       Get CPUID output based on eax, ecx register values as
      * input.

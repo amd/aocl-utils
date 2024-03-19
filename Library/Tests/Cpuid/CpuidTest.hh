@@ -40,21 +40,21 @@ using namespace Au;
 /**
  * @brief Utility function to write the data to a file
  *
- * @param[in] filename The name of the file to write to
+ * @param[in] fileName The name of the file to write to
  * @param[in] items The data to write to the file
  *
  * @return void
  */
 template<typename T>
 static void
-writeToFile(const std::string& filename, const std::vector<T>& items)
+writeToFile(const String& fileName, const vector<T>& items)
 {
-    std::ofstream file(filename);
+    ofstream file(fileName);
     if (!file.is_open()) {
-        std::cout << "Error opening file" << std::endl;
+        cout << "Error opening file" << fileName << endl;
     } else {
         for (auto item : items) {
-            file << *item << std::endl;
+            file << *item << endl;
         }
     }
 }

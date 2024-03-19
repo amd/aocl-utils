@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,10 @@
 #include "Capi/au/au.h"
 #include "Capi/au/macros.h"
 #include "Capi/au/types.h"
+#include <map>
 #include <stdint.h>
+#include <string>
+#include <vector>
 
 AUD_EXTERN_C_BEGIN
 
@@ -58,9 +61,9 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num);
  * @param[in, out]  vend_info Vendor info array.
  * @param[in]       size      Size of Vendor info array.
  *
- * @return  1/true if getting vendor info is successful.
+ * @return  None
  */
-au_error_t
+void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**
@@ -72,6 +75,16 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  */
 bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
+
+/**
+ * @brief   Allows caller to check if the processor arch is ZENPLUS.
+ *
+ * @param[in]       cpu_num   CPU number.
+ *
+ * @return  1/true if processor architecture is AMD ZENPLUS.
+ */
+bool
+au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
 
 /**
  * @brief   Allows caller to check if the processor arch is ZEN2.
@@ -104,15 +117,28 @@ bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
+ * @brief   Allows caller to check if the processor arch is ZEN5.
+ *
+ * @param[in]       cpu_num   CPU number.
+ *
+ * @return  1/true if processor architecture is AMD ZEN5.
+ */
+bool
+au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
+
+/**
  * @brief   Allows caller to check if the flag is available.
  *
  * @param[in]   cpu_num   CPU number.
- * @param[in]   flag  CPU feature flag.
+ * @param[in]   flag_array  CPU feature flag names.
+ * @param[in]   count   Number of flags in the list.
  *
- * @return  1/true if feature is available.
+ * @return  a array indicating  feature availability
  */
-bool
-au_cpuid_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
+bool*
+au_cpuid_has_flag(au_cpu_num_t      cpu_num,
+                  const char* const flag_array[],
+                  int               count);
 
 /**
  * @brief   Portable API to check if an error has occured

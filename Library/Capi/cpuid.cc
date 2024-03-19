@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,60 +46,97 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num)
     return cpu.isAMD();
 }
 
-au_error_t AUD_API_EXPORT
+void AUD_API_EXPORT
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
 {
-    /* FIXME:  */
-    AUD_ASSERT(false, "FIXME:");
-    return 0;
+    X86Cpu             cpu{ cpu_num };
+    VendorInfo         v_info = cpu.getVendorInfo();
+    std::ostringstream ss;
+
+    ss << *(v_info.m_mfg) << "\n"
+       << *(v_info.m_family) << "\n"
+       << v_info.m_model << "\n"
+       << v_info.m_stepping << "\n"
+       << *(v_info.m_uarch) << "\n";
+
+    AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
+    strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
 }
 
 bool AUD_API_EXPORT
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num)
 {
-    /* FIXME */
-    AUD_ASSERT(false, "FIXME:");
-    return false;
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen);
+}
+
+bool AUD_API_EXPORT
+au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::ZenPlus);
 }
 
 bool AUD_API_EXPORT
 au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num)
 {
-    /* FIXME: */
-    AUD_ASSERT(false, "FIXME:");
-    return false;
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen2);
 }
 
 bool AUD_API_EXPORT
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num)
 {
-    /* FIXME: */
-    AUD_ASSERT(false, "FIXME:");
-    return false;
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen3);
 }
 
 bool AUD_API_EXPORT
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num)
 {
-    /* FIXME: */
-    AUD_ASSERT(false, "FIXME:");
-    return false;
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen4);
 }
 
 bool AUD_API_EXPORT
-au_cpuid_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
+au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
 {
-    /* FIXME: */
-    AUD_ASSERT(false, "FIXME:");
-    return false;
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen5);
+}
+
+bool*
+au_cpuid_has_flag(au_cpu_num_t      cpu_num,
+                  const char* const flag_array[],
+                  int               count)
+{
+    X86Cpu            cpu{ cpu_num };
+    std::stringstream ss;
+    string            token;
+    int               index  = 0;
+    bool*             result = (bool*)malloc(count * sizeof(bool));
+
+    AUD_ASSERT(result, "Memory allocation failed");
+    AUD_ASSERT(count > 0, "No flags to check");
+    std::vector<std::string> flag_names(flag_array, flag_array + count);
+
+    ss << flag_names;
+    while (std::getline(ss, token, ':')) {
+        au_cpu_flag_t flag = stoi(token);
+        AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
+                   "Flag not supported");
+        auto cpuid_flag = valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag);
+        result[index++] = cpu.hasFlag(cpuid_flag);
+    }
+    return result;
 }
 
 bool AUD_API_EXPORT
 au_cpuid_is_error(au_error_t err)
 {
-    /* FIXME: */
-    AUD_ASSERT(false, "FIXME:");
+    AUD_ASSERT(err >= 0, "Invalid error code");
+    if (static_cast<int32_t>(err))
+        return true;
     return false;
 }
-
 AUD_EXTERN_C_END

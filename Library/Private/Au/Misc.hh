@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,12 @@
 #include "Au/Assert.hh"
 #include "Au/Au.hh"
 
+#include <cstring>
 #include <iostream>
+#include <limits>
+#include <map>
+#include <sstream>
 #include <type_traits>
-
 namespace Au {
 
 /**
@@ -95,4 +98,29 @@ valueToEnum(UnderlyingType value)
     return static_cast<EnumType>(value);
 }
 
+#define AUD_DEFINE_ENUM(name, type, ...)                                       \
+    enum class name : type                                                     \
+    {                                                                          \
+        Min,                                                                   \
+        __VA_ARGS__,                                                           \
+        Max,                                                                   \
+    };                                                                         \
+    inline std::stringstream& operator<<(std::stringstream&  os,               \
+                                         std::vector<String> values)           \
+    {                                                                          \
+        AUD_ASSERT(values.size() > 0, "Invalid value");                        \
+        String                   str = #__VA_ARGS__;                           \
+        std::map<String, Uint64> flags;                                        \
+        Uint64                   flagsCounter = 1;                             \
+        std::stringstream        ss(str);                                      \
+        String                   token;                                        \
+        while (std::getline(ss, token, ',')) {                                 \
+            token        = token.substr(1, token.length() - 1);                \
+            flags[token] = flagsCounter++;                                     \
+        }                                                                      \
+        for (auto value : values) {                                            \
+            os << flags[value] << ":";                                         \
+        }                                                                      \
+        return os;                                                             \
+    }
 } // namespace Au
