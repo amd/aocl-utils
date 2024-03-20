@@ -28,6 +28,7 @@
 
 #ifndef __AU_TYPES_H__
 #define __AU_TYPES_H__
+#include "Au/Config.h"
 
 #if defined(AU_TARGET_OS_IS_LINUX)
 #include <stddef.h>
