@@ -299,6 +299,16 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     bool hasFlag(ECpuidFlag const& eflag) const;
 
     /**
+     * @brief   Check if a given x86 cpu has a needed flag
+     *  Note: The api is deprecated. Use hasFlag instead.
+     * @param[in] eflag    ECpuidFlag that needs to be checked
+     *
+     * @return true if eflag is present in the availableflags and usable flags,
+     * false otherwise
+     */
+    bool isAvailable(ECpuidFlag const& eflag) const;
+
+    /**
      * @brief  Get microarchitecture of CPU from CPUID instruction.
      * @return  Returns microarchitecture of CPU.
      */

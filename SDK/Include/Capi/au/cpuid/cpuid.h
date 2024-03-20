@@ -32,10 +32,8 @@
 #include "Capi/au/au.h"
 #include "Capi/au/macros.h"
 #include "Capi/au/types.h"
-#include <map>
+#include <stdbool.h>
 #include <stdint.h>
-#include <string>
-#include <vector>
 
 AUD_EXTERN_C_BEGIN
 
@@ -150,6 +148,86 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
 bool
 au_cpuid_is_error(au_error_t err);
 
+/******* OLD APIs ********/
+
+/**
+ * \brief    Allows caller to check if the processor vendor is AMD.
+ *           Note: The api is deprecated. Use au_cpuid_is_amd instead.
+ *
+ * \return   1/true if processor vendor is AMD.
+ */
+bool
+alci_is_amd(au_cpu_num_t cpu_num);
+
+/**
+ * \brief   Get Cpu vendor info.
+ *          Note: The api is deprecated. Use au_cpuid_get_vendor instead.
+ *
+ * \param[in]       cpu_num   CPU number.
+ * \param[in, out]  arr       Vendor info array.
+ * \param[in]       size      Size of Vendor info array.
+ *
+ * \return  1/true if getting vendor info is successful.
+ */
+au_error_t
+alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
+
+/**
+ * \brief   Allows caller to check if the processor arch is ZEN.
+ *          Note: The api is deprecated. Use au_cpuid_arch_is_zen instead.
+ *
+ * \return  1/true if processor architecture is AMD ZEN.
+ */
+bool
+alci_arch_is_zen(au_cpu_num_t cpu_num);
+
+/**
+ * \brief   Allows caller to check if the processor arch is ZEN2.
+ *          Note: The api is deprecated. Use au_cpuid_arch_is_zen2 instead.
+ * \return  1/true if processor architecture is AMD ZEN2.
+ */
+bool
+alci_arch_is_zen2(au_cpu_num_t cpu_num);
+
+/**
+ * \brief   Allows caller to check if the processor arch is ZEN3.
+ *          Note: The api is deprecated. Use au_cpuid_arch_is_zen3 instead.
+ *
+ * \return  1/true if processor architecture is AMD ZEN3.
+ */
+bool
+alci_arch_is_zen3(au_cpu_num_t cpu_num);
+
+/**
+ * \brief   Allows caller to check if the processor arch is ZEN4.
+ *          Note: The api is deprecated. Use au_cpuid_arch_is_zen4 instead.
+ *
+ * \return  1/true if processor architecture is AMD ZEN4.
+ */
+
+bool
+alci_arch_is_zen4(au_cpu_num_t cpu_num);
+
+/**
+ * \brief   Allows caller to check if the flag is available.
+ *          Note: The api is deprecated. Use au_cpuid_has_flag instead.
+ *
+ * \param   flag   CPU feature flag.
+ *
+ * \return  1/true if feature is available.
+ */
+bool
+alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
+
+/**
+ * \brief   Get last level cache.
+ *
+ * \param[in] core  CPU core number.
+ *
+ * \return  Returns last level cache.
+ */
+uint32_t
+alci_cpu_get_last_cache_level(au_cpu_num_t core);
 AUD_EXTERN_C_END
 
 #endif
