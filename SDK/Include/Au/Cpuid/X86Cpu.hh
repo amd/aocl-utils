@@ -306,8 +306,12 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @return true if eflag is present in the availableflags and usable flags,
      * false otherwise
      */
-    bool isAvailable(ECpuidFlag const& eflag) const;
-
+#ifdef AU_WARN_DEPRECATION
+    __attribute__((deprecated("Use hasFlag instead."))) bool
+#else
+    bool
+#endif
+    isAvailable(ECpuidFlag const& eflag) const;
     /**
      * @brief  Get microarchitecture of CPU from CPUID instruction.
      * @return  Returns microarchitecture of CPU.
