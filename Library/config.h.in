@@ -53,5 +53,7 @@
 #cmakedefine AU_TARGET_ENDIAN_BIG
 #cmakedefine AU_TARGET_ENDIAN_LITTLE
 
+#cmakedefine01 AU_WARN_DEPRECATED_API
+
 // clang-format on
 #endif // _AU_CONFIG_H_INCLUDED

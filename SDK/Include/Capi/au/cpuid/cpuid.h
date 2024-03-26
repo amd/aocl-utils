@@ -32,7 +32,6 @@
 #include "Au/Config.h"
 #include "Capi/au/au.h"
 
-#include <map>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -157,28 +156,21 @@ au_cpuid_is_error(au_error_t err);
  *
  * \return   1/true if processor vendor is AMD.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_is_amd instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_is_amd instead.")
 bool
-#endif
 alci_is_amd(au_cpu_num_t cpu_num);
 
 /**
  * \brief   Get Cpu vendor info.
- *          Note: The api is deprecated. Use au_cpuid_get_vendor instead
- * .
+ *
  * \param[in]       cpu_num   CPU number.
- * \param[in, out]  arr       Vendor info array.
+ * \param[out]      arr       Vendor info array.
  * \param[in]       size      Size of Vendor info array.
  *
  * \return  1/true if getting vendor info is successful.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use alci_cpu_get_vendor instead."))) au_error_t
-#else
+AU_DEPRECATED_API_X("Use alci_cpu_get_vendor instead.")
 au_error_t
-#endif
 alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
 
 /**
@@ -187,11 +179,8 @@ alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
  *
  * \return  1/true if processor architecture is AMD ZEN.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_arch_is_zen instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen instead.")
 bool
-#endif
 alci_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
@@ -199,11 +188,8 @@ alci_arch_is_zen(au_cpu_num_t cpu_num);
  *          Note: The api is deprecated. Use au_cpuid_arch_is_zen2 instead.
  * \return  1/true if processor architecture is AMD ZEN2.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_arch_is_zen2 instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen2 instead.")
 bool
-#endif
 alci_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
@@ -212,11 +198,8 @@ alci_arch_is_zen2(au_cpu_num_t cpu_num);
  *
  * \return  1/true if processor architecture is AMD ZEN3.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_arch_is_zen3 instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen3 instead.")
 bool
-#endif
 alci_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
@@ -225,11 +208,8 @@ alci_arch_is_zen3(au_cpu_num_t cpu_num);
  *
  * \return  1/true if processor architecture is AMD ZEN4.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_arch_is_zen4 instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen4 instead.")
 bool
-#endif
 alci_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
@@ -240,11 +220,8 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num);
  *
  * \return  1/true if feature is available.
  */
-#ifdef AU_WARN_DEPRECATION
-__attribute__((deprecated("Use au_cpuid_has_flag instead."))) bool
-#else
+AU_DEPRECATED_API_X("Use au_cpuid_has_flag instead.")
 bool
-#endif
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
 
 /**
@@ -256,6 +233,7 @@ alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
  */
 uint32_t
 alci_cpu_get_last_cache_level(au_cpu_num_t core);
+
 AUD_EXTERN_C_END
 
 #endif

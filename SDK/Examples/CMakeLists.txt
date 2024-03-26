@@ -27,9 +27,16 @@
 cmake_minimum_required(VERSION 3.20...3.27)
 
 project(cpuid_example_cpp)
-au_add_application(cpuid_example_cpp SOURCES cpuid_example.cc LIBS au::cpuid)
-au_add_application(cpuid_deprecated_api_example_cpp SOURCES
-    cpuid_deprecated_api_example.cc LIBS au::cpuid)
+
+au_add_application(cpuid_example_cpp 
+				SOURCES cpuid_example.cc 
+				LIBS au::cpuid)
+
+au_add_application(cpuid_deprecated_api_example_cpp 
+				SOURCES cpuid_deprecated_api_example.cc 
+				LIBS au::cpuid)
+
 include_directories(cpuid_example_cpp PRIVATE "${AU_INCLUDE_DIRS}")
 
 add_subdirectory(capi)
+
