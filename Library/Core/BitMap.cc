@@ -64,6 +64,7 @@ OpEq(T const& x, T const& y)
 {
     AUD_ASSERT_NOT_IMPLEMENTED();
     // x &= ~y;
+	return false;
 }
 
 template<typename T>

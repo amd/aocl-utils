@@ -54,6 +54,8 @@ set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATC
 if(AU_VERSION_SUFFIX)
    set(AU_VERSION_STRING "${AU_VERSION_STRING}.${AU_VERSION_SUFFIX}${AU_VERSION_SUFFIX_EXTRA}")
 endif()
+include(au_git_hash)
+
 
 set(PACKAGE           "libau")
 set(PACKAGE_NAME      "au")
@@ -65,6 +67,7 @@ set(PACKAGE_VERSION   "${AU_VERSION_STRING}")
 
 set(PROJECT_FULL_NAME "AOCL Utilities Library")
 set(PROJECT_NAME "AOCL Library")
+message("version " ${AU_VERSION_STRING})
 project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
 
 #
@@ -120,9 +123,11 @@ endif()
 
 # Config.h generation
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
-include_directories("${AU_CONFIG_DIR}")
 
-set(AU_INCLUDE_DIRS
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION_OUTPUT_FILE}" @ONLY)
+
+#include_directories("${AU_CONFIG_DIR}")
+set(AU_INCLUDE_DIRS 
   ${CMAKE_SOURCE_DIR}/SDK/Include
   ${CMAKE_SOURCE_DIR}/Library/Private
   ${AU_CONFIG_DIR}
@@ -148,8 +153,12 @@ if (AU_BUILD_DOCS)
   add_subdirectory(Docs)
 endif()
 
+#if (AU_BUILD_EXAMPLES)
+#    add_subdirectory(SDK)
+#endif()
+
 if (AU_BUILD_EXAMPLES)
-    add_subdirectory(SDK)
+  add_subdirectory(SDK/Examples)
 endif()
 
 #

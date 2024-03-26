@@ -35,11 +35,29 @@
 AUD_EXTERN_C_BEGIN
 
 /**
- * @brief returns version of librar
+ * @brief Return Version Major number
+ */
+Uint32 AUD_API_EXPORT
+au_get_version_major(void);
+
+/**
+ * @brief Return Version Minor number
+ */
+Uint32 AUD_API_EXPORT
+au_get_version_minor(void);
+
+/**
+ * @brief Return Version Patch level
+ */
+Uint32 AUD_API_EXPORT
+au_get_version_patch(void);
+
+/**
+ * @brief returns version of library
  *
  */
-const char* const
-au_get_version(void);
+const char* const AUD_API_EXPORT
+au_get_version_str(void);
 
 AUD_EXTERN_C_END
 

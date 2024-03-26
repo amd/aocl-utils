@@ -31,7 +31,7 @@
 #
 function(au_extract_version_details var_prefix version_string)
 
-set(AU_VERSION_STRING_REGEX "^([0-9]+)\\.([0-9]+)\\.([0-9]+)([-]rc|\\.)?([0-9]*)$")
+set(AU_VERSION_STRING_REGEX "^([0-9]+)\\.([0-9]+)\\.([0-9]+)([-])(rc|dev|\\.)?([0-9]*)$")
 string(REGEX MATCH ${AU_VERSION_STRING_REGEX} version_matches "${version_string}")
 
 # don't use CMAKE_MATCH_0 for `full` since it may not have the `v` prefix.
@@ -39,8 +39,8 @@ if(CMAKE_MATCH_0)
     set(major ${CMAKE_MATCH_1})
     set(minor ${CMAKE_MATCH_2})
     set(patch ${CMAKE_MATCH_3})
-    set(suffix ${CMAKE_MATCH_4})
-    set(suffix_extra ${CMAKE_MATCH_5})
+    set(suffix ${CMAKE_MATCH_5})
+    set(suffix_extra ${CMAKE_MATCH_6})
     set(full "${major}.${minor}.${patch}${suffix}${suffix_extra}")
 
     set(${var_prefix} "${major}.${minor}.${patch}" PARENT_SCOPE)
@@ -51,12 +51,12 @@ if(CMAKE_MATCH_0)
     set(${var_prefix}_SUFFIX_EXTRA ${suffix_extra} PARENT_SCOPE)
 
 if(AU_CMAKE_VERBOSE)
-	#message("version string: " ${full})
-	#message("version major: " ${major})
-	#message("version minor: " ${minor})
-	#message("version patch: " ${patch})
-	#message("version suffix: " ${suffix})
-	#message("version suffix-extra: " ${suffix_extra})
+	message("version string: " ${full})
+	message("version major: " ${major})
+	message("version minor: " ${minor})
+	message("version patch: " ${patch})
+	message("version suffix: " ${suffix})
+	message("version suffix-extra: " ${suffix_extra})
 endif()
 
 endif()

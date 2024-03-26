@@ -52,4 +52,12 @@
 #define AUD_EXTERN_C
 #endif
 
+#if defined(AU_WARN_DEPRECATION)
+#define AU_DEPRECATED_API __attribute__((deprecated("Depricated, consult userguide.")))
+#define AU_DEPRECATED_API_X(msg) __attribute__((deprecated(msg)))
+#else
+#define AU_DEPRECATED_API
+#define AU_DEPRECATED_API_X(msg)
+#endif
+
 #endif /* __AU_MACROS_H__ */
