@@ -26,76 +26,74 @@
  *
  */
 
-#include "Au/Cpuid/X86Cpu.hh"
 #include "Capi/au/cpuid/cpuid.h"
 
-#include <iostream>
-#include <sstream>
+#include <stdio.h>
+#include <string.h>
 
-using namespace std;
-using namespace Au;
 static void
 display_core_info()
 {
-    int  core_num = 0;
-    int  size     = sizeof(VendorInfo) * 2;
-    char buf[size];
+    int         core_num       = 0;
+    int         size           = 16;
+    char        buf[size]      = {};
+    char*       token          = NULL;
+    int         index          = 0;
+    const char* vendorInfo[13] = { "Vendor   : ",
+                                   "Family   : ",
+                                   "Model    : ",
+                                   "Stepping : ",
+                                   "Uarch    : " };
 
     if (au_cpuid_is_amd(core_num)) {
-        cout << "AMD CPU detected..." << endl;
+        printf("AMD CPU detected...\n");
     } else {
         // Intel Apis are not exposed.
-        cout << "Unknown CPU detected..." << endl;
+        printf("Unknown CPU detected...\n");
     }
 
-    cout << "\nGetting CPU information for core 0" << endl;
+    printf("\nGetting CPU information for core 0\n");
     au_cpuid_get_vendor(core_num, buf, size);
-    String         vInfo(buf);
-    String         token;
-    stringstream   ss(vInfo);
-    vector<String> vendorInfo = {};
-    while (getline(ss, token, '\n')) {
-        vendorInfo.push_back(token);
+
+    token = strtok(buf, "\r\n");
+    while (token != NULL) {
+        printf("%s", vendorInfo[index++]);
+        printf("%s\n", token);
+        token = strtok(NULL, "\r\n");
     }
-    cout << "Vendor   : " << vendorInfo.at(0) << endl;
-    cout << "Family   : " << vendorInfo.at(1) << endl;
-    cout << "Model    : " << vendorInfo.at(2) << endl;
-    cout << "Stepping : " << vendorInfo.at(3) << endl;
-    cout << "Uarch    : " << vendorInfo.at(4) << endl;
 }
 
 static void
 display_isa_info()
 {
     int core_num = 0;
-    cout << "\nGetting ISA information for core 0" << endl;
+    printf("\nGetting ISA information for core 0\n");
     if (au_cpuid_arch_is_zen5(core_num)) {
-        cout << "CPU supports zen5 ISA" << endl;
+        printf("CPU supports zen5 ISA\n");
     } else if (au_cpuid_arch_is_zen4(core_num)) {
-        cout << "CPU supports zen4 ISA" << endl;
+        printf("CPU supports zen4 ISA\n");
     } else if (au_cpuid_arch_is_zen3(core_num)) {
-        cout << "CPU supports zen3 ISA" << endl;
+        printf("CPU supports zen3 ISA\n");
     } else if (au_cpuid_arch_is_zen2(core_num)) {
-        cout << "CPU supports zen2 ISA" << endl;
+        printf("CPU supports zen2 ISA\n");
     } else if (au_cpuid_arch_is_zenplus(core_num)) {
-        cout << "CPU supports zenplus ISA" << endl;
+        printf("CPU supports zenplus ISA\n");
     } else if (au_cpuid_arch_is_zen(core_num)) {
-        cout << "CPU supports zen ISA" << endl;
+        printf("CPU supports zen ISA\n");
     } else {
-        cout << "CPU does not support zen or higher ISA or this Cpu is not "
-                "supported"
-             << endl;
+        printf("CPU does not support zen or higher ISA or this Cpu is not "
+               "supported\n");
     }
-
-    cout << "\nCpu Feature Identification..." << endl;
+    printf("\nCpu Feature Identification...\n");
     // clang-format off
-    char* flags_array[] = {"tsc_adjust", "avx", "avxvnni", "avx2", "avx512f"};
-    auto result = au_cpuid_has_flag(core_num, flags_array, 5);
-    cout << "TSC_ADJUST : " << (result[0] ? "yes" : "no") << endl;
-    cout << "AVX        : " << (result[1] ? "yes" : "no") << endl;
-    cout << "AVXVNNI    : " << (result[2] ? "yes" : "no") << endl;
-    cout << "AVX2       : " << (result[3] ? "yes" : "no") << endl;
-    cout << "AVX512     : " << (result[4] ? "yes" : "no") << endl;
+        const char* const flags_array[] = {"tsc_adjust", "avx", "avxvnni", "avx2",
+       "avx512f"};
+        bool *result = au_cpuid_has_flag(core_num, flags_array, 5);
+        printf("TSC_ADJUST : %s\n", (result[0] ? "yes" : "no"));
+        printf("AVX        : %s\n", (result[1] ? "yes" : "no"));
+        printf("AVXVNNI    : %s\n", (result[2] ? "yes" : "no"));
+        printf("AVX2       : %s\n", (result[3] ? "yes" : "no"));
+        printf("AVX512     : %s\n", (result[4] ? "yes" : "no"));
     // clang-format on
 }
 

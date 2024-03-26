@@ -45,6 +45,11 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num)
 
     return cpu.isAMD();
 }
+bool AUD_API_EXPORT
+alci_is_amd(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_is_amd(cpu_num);
+}
 
 void AUD_API_EXPORT
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
@@ -62,11 +67,24 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
     strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
 }
 
+au_error_t AUD_API_EXPORT
+alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size)
+{
+    au_cpuid_get_vendor(cpu_num, arr, size);
+    return 1;
+}
+
 bool AUD_API_EXPORT
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen);
+}
+
+bool AUD_API_EXPORT
+alci_arch_is_zen(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_arch_is_zen(cpu_num);
 }
 
 bool AUD_API_EXPORT
@@ -84,6 +102,12 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num)
 }
 
 bool AUD_API_EXPORT
+alci_arch_is_zen2(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_arch_is_zen2(cpu_num);
+}
+
+bool AUD_API_EXPORT
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
@@ -91,10 +115,22 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num)
 }
 
 bool AUD_API_EXPORT
+alci_arch_is_zen3(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_arch_is_zen3(cpu_num);
+}
+
+bool AUD_API_EXPORT
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen4);
+}
+
+bool AUD_API_EXPORT
+alci_arch_is_zen4(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_arch_is_zen4(cpu_num);
 }
 
 bool AUD_API_EXPORT
@@ -128,6 +164,12 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
         result[index++] = cpu.hasFlag(cpuid_flag);
     }
     return result;
+}
+bool AUD_API_EXPORT
+alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.hasFlag(valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag));
 }
 
 bool AUD_API_EXPORT

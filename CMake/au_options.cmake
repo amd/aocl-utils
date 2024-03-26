@@ -43,7 +43,17 @@ if (CMAKE_BUILD_TYPE AND
     NOT upper_CMAKE_BUILD_TYPE MATCHES "^(DEBUG|RELEASE|DEVELOPER)$")
   message(FATAL_ERROR "Invalid value for CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 endif()
+if(AU_WARN_DEPRECATED_APIS)
+    string(TOUPPER ${AU_WARN_DEPRECATED_APIS} AU_WARN_DEPRECATED_APIS)
+else()
+    set(AU_WARN_DEPRECATED_APIS TRUE)
+endif()
 
+if (${AU_WARN_DEPRECATED_APIS} MATCHES "FALSE")
+    remove_definitions("-DAU_WARN_DEPRECATION")
+ else()
+    add_definitions("-DAU_WARN_DEPRECATION")
+endif()
 cmake_dependent_option(AU_BUILD_TYPE_RELEASE "" ON "upper_CMAKE_BUILD_TYPE STREQUAL RELEASE" OFF)
 cmake_dependent_option(AU_BUILD_TYPE_DEBUG "" ON "upper_CMAKE_BUILD_TYPE STREQUAL DEBUG" OFF)
 cmake_dependent_option(AU_BUILD_TYPE_DEVELOPER "" ON "upper_CMAKE_BUILD_TYPE STREQUAL DEVELOPER" OFF)
@@ -75,4 +85,3 @@ endif()
 
 
 option(AU_BUILD_SHARED_LIBS "Build shared libraries" OFF)
-
