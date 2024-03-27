@@ -32,7 +32,7 @@ au_module("core")
 #add_library(af::include ALIAS au_include)
 #target_include_directories(au_include INTERFACE ${CMAKE_SOURCE_DIR}/Library/Include)
 
-add_compile_options(-Wall -Weffc++ -pedantic)
+add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 
 set(LOGGER_SRC_FILES
     Logger.cc
