@@ -38,16 +38,12 @@
 
 using namespace Au;
 
-template<typename S>
-static inline S
-str_tolower(S s)
+static inline void
+str_tolower(String& s)
 {
-    S t;
-    std::transform(s.begin(), s.end(), t.begin(), [](unsigned char c) {
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
         return std::tolower(c);
     });
-
-    return t;
 }
 
 AUD_EXTERN_C_BEGIN;
@@ -96,9 +92,11 @@ au_env_is_enabled(const char* cc)
     String sv{
         Env::get(cc).data()
     }; /* returned string from Env::get() is a const */
-    auto val = str_tolower(sv);
 
-    if (val == String("yes") || val == String("1") || val == String("true"))
+    str_tolower(sv);
+
+    if (sv == String("yes") || sv == String("on") || sv == String("1")
+        || sv == String("true"))
         return true;
 
     return false;

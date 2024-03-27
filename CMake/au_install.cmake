@@ -3,7 +3,7 @@ include(GNUInstallDirs)
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/SDK/Include/
   DESTINATION include
-  FILES_MATCHING PATTERN "*.h?")
+  FILES_MATCHING REGEX ".*\\.(h|hh)")
 
 #install(TARGETS ${AU_INSTALL_TARGETS}
 #  EXPORT ${AU_INSTALL_EXPORT_NAME}

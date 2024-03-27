@@ -1,13 +1,10 @@
 
 #include "Capi/af/version.h"
 
-
-int main(void)
+int
+main(void)
 {
-	printf("Version String: %s\n", au_version_get_str());
+    printf("Version String: %s\n", au_version_get_str());
 
-
-	return 0;
-
+    return 0;
 }
-
