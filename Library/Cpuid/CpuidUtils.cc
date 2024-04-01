@@ -109,7 +109,7 @@ CpuidUtils::getStepping(Uint32 var)
 bool
 CpuidUtils::hasFlag(ResponseT const& expected, ResponseT const& actual)
 {
-    return expected & actual;
+    return (expected & actual) == expected;
 }
 
 void
