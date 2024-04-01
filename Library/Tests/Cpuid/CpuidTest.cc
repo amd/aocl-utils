@@ -76,25 +76,25 @@ TEST(X86Cpuid, DISABLED_isIntel)
 
 TEST(X86Cpuid, DISABLED_hasFlagT)
 {
-    vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
+    X86Cpu cpu{ 0 };
 
-    flags = readFromFile<ECpuidFlag>("FlagsT.txt");
+    auto flags = readFromFile<String>("FlagsT.txt");
 
     for (auto flag : flags) {
-        EXPECT_TRUE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+        EXPECT_TRUE(cpu.hasFlag(
+            valueToEnum<ECpuidFlag, Uint64>(atoi(flag.c_str()) + 1)));
     }
 }
 
 TEST(X86Cpuid, DISABLED_hasFlagF)
 {
-    vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
+    X86Cpu cpu{ 0 };
 
-    flags = readFromFile<ECpuidFlag>("FlagsF.txt");
+    auto flags = readFromFile<String>("FlagsF.txt");
 
     for (auto flag : flags) {
-        EXPECT_FALSE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+        EXPECT_FALSE(cpu.hasFlag(
+            valueToEnum<ECpuidFlag, Uint64>(atoi(flag.c_str()) + 1)));
     }
 }
 
