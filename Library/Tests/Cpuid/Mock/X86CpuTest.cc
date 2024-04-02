@@ -78,23 +78,29 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     results.push_back(cpu.isX86_64v4());
 
     // Has flag tests
-    String srcDir     = PROJECT_SOURCE_DIR;
-    String simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
-    String absPath    = srcDir + simnowData + cpuType + "/FlagsT.txt";
-    auto   flags      = readFromFile<ECpuidFlag>(absPath);
-
-    for (auto flag : flags) {
-        resultT =
-            resultT & cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1));
+    String       srcDir     = PROJECT_SOURCE_DIR;
+    String       simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
+    String       absPath    = srcDir + simnowData + cpuType + "/FlagsT.txt";
+    auto         flags      = readFromFile<String>(absPath);
+    string       token;
+    stringstream ss;
+    ss << flags;
+    while (std::getline(ss, token, ':')) {
+        auto flag       = stoi(token);
+        auto cpuid_flag = valueToEnum<ECpuidFlag, Uint64>(flag);
+        resultT         = resultT & (cpu.hasFlag(cpuid_flag));
     }
     results.push_back(resultT);
 
     absPath = srcDir + simnowData + cpuType + "/FlagsF.txt";
-    flags   = readFromFile<ECpuidFlag>(absPath);
+    flags   = readFromFile<String>(absPath);
+    ss.clear();
+    ss << flags;
 
-    for (auto flag : flags) {
-        resultF =
-            resultF | cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1));
+    while (std::getline(ss, token, ':')) {
+        auto flag       = stoi(token);
+        auto cpuid_flag = valueToEnum<ECpuidFlag, Uint64>(flag);
+        resultF         = resultF | (cpu.hasFlag(cpuid_flag));
     }
     results.push_back(!resultF);
 

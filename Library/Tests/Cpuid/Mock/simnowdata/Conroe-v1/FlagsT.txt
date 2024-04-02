@@ -1,29 +1,29 @@
-0 pmm_en
-9 tm2
-29 rdrand
-30 hypervisor
-32 vme
-33 de
-34 pse
-35 tsc
-36 msr
-37 pae
-38 mce
-39 cx8
-40 apic
-41 sep
-42 mtrr
-43 pge
-44 mca
-45 cmov
-46 pat
-48 pn
-51 acpi
-52 mmx
-53 fxsr
-54 sse
-96 avx512_4fmaps
-102 xsaves
-124 perfctr_nb
-125 syscall
-130 rdtscp
+sse3
+ssse3
+hypervisor
+fpu
+de
+pse
+tsc
+msr
+pae
+mce
+cx8
+apic
+sep
+mtrr
+pge
+mca
+cmov
+pat
+pse36
+clflush
+mmx
+fxsr
+sse
+sse2
+avx512_bf16
+lahf_lm
+syscall
+nxxd
+lmi64
