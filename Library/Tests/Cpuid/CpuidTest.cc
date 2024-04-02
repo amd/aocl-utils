@@ -76,12 +76,10 @@ TEST(X86Cpuid, DISABLED_isIntel)
 
 TEST(X86Cpuid, DISABLED_hasFlagT)
 {
-    std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
     X86Cpu             cpu{ 0 };
 
-    absPath += "/FlagsT.txt";
-    flags = readFromFile<ECpuidFlag>(absPath);
+    flags = readFromFile<ECpuidFlag>("FlagsT.txt");
 
     for (auto flag : flags) {
         EXPECT_TRUE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
@@ -90,12 +88,10 @@ TEST(X86Cpuid, DISABLED_hasFlagT)
 
 TEST(X86Cpuid, DISABLED_hasFlagF)
 {
-    std::string        absPath = PROJECT_BUILD_DIR;
     vector<ECpuidFlag> flags;
     X86Cpu             cpu{ 0 };
 
-    absPath += "/FlagsF.txt";
-    flags = readFromFile<ECpuidFlag>(absPath);
+    flags = readFromFile<ECpuidFlag>("FlagsF.txt");
 
     for (auto flag : flags) {
         EXPECT_FALSE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
@@ -104,13 +100,11 @@ TEST(X86Cpuid, DISABLED_hasFlagF)
 
 TEST(X86Cpuid, DISABLED_isUarch)
 {
-    std::string absPath = PROJECT_BUILD_DIR;
-    EUarch      uarch;
-    X86Cpu      cpu{ 0 };
+    EUarch uarch;
+    X86Cpu cpu{ 0 };
 
     // verify the uarch passed from the qemu testcase.
-    absPath += "/Uarch.txt";
-    uarch = readFromFile<EUarch>(absPath).front();
+    uarch = readFromFile<EUarch>("Uarch.txt").front();
     EXPECT_TRUE(cpu.isUarch(uarch));
 
     // Verify isUarch returns False for any microarchitecure higher than the
