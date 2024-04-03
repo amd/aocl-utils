@@ -139,7 +139,7 @@ class QemuTestBase :public testing::Test
                 if (AU_BUILD_TYPE_RELEASE)
                     releaseType = "Release";
                 if (AU_BUILD_TYPE_DEBUG)
-                    releaseType = "Developer";
+                    releaseType = "Debug";
                 if (AU_BUILD_TYPE_DEVELOPER)
                     releaseType = "Library/Tests";
 
