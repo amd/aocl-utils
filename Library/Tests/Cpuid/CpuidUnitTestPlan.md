@@ -1,5 +1,4 @@
 # The cpuid module unit testplan
----------------------------------
 
 ## The cpuid module
 
@@ -20,7 +19,7 @@ The testplan is to have a comprehensive test coverage for all components in the 
     The content of the folder is organised as follows.
 
 ```
-simnowdata 
+simnowdata
 └───<folderperemulated cpuid>
     │   <cpuid>
     │   FlagsT.txt
@@ -35,7 +34,7 @@ simnowdata
 
 * **native tests**
     Few native testcases are written to check edge cases and negative cases. More test are to be added for full coverage.
-  
+
 ### List of cpp apis
 
 * isamd
@@ -129,7 +128,7 @@ amd cpus(continued)
 | isx86_64v2              | true         | true         | false     | true              |
 | isx86_64v3              | true         | false        | false     | true              |
 | isx86_64v4              | false        | false        | false     | true              |
-| getUarch                |  unknown     | unknown      | unknown   | unknown           | 
+| getUarch                |  unknown     | unknown      | unknown   | unknown           |
 
 ### isa features
 #### x86_64v2
@@ -166,7 +165,7 @@ amd cpus(continued)
 | avx512vl      | true          | false        | false         | false     | true              | false        |              |           |
 
 ## Utility function test matrix
-  | CpuType/VendorInfo| Vendor| Family | Model | Stepping   | Uarch   |   
+  | CpuType/VendorInfo| Vendor| Family | Model | Stepping   | Uarch   |
   | ----------------- | ----- | -------| ----  | ---------- |-------- |
   | EPYC-Genoa-v1     |  Amd  | Zen4   | 0x11  |0x0         | zen4    |
   | EPYC-Milan-v1     |  Amd  | Zen4   | 0x01  |0x1         | zen3    |
