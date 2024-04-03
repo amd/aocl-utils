@@ -127,7 +127,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OU
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION_OUTPUT_FILE}" @ONLY)
 
 #include_directories("${AU_CONFIG_DIR}")
-set(AU_INCLUDE_DIRS 
+set(AU_INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}/SDK/Include
   ${CMAKE_SOURCE_DIR}/Library/Private
   ${AU_CONFIG_DIR}
@@ -152,10 +152,6 @@ endif()
 if (AU_BUILD_DOCS)
   add_subdirectory(Docs)
 endif()
-
-#if (AU_BUILD_EXAMPLES)
-#    add_subdirectory(SDK)
-#endif()
 
 if (AU_BUILD_EXAMPLES)
   add_subdirectory(SDK/Examples)
