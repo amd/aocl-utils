@@ -52,6 +52,7 @@ enum class EUarch : Uint16
 
 /**
  * @struct  VendorInfo
+ *
  * @brief   CPU core info.
  */
 class VendorInfo
@@ -67,6 +68,7 @@ class VendorInfo
 
 /**
  * @enum ECpuidFlag
+ *
  * @brief Flags supported by CPU as features.
  */
 AUD_DEFINE_ENUM(ECpuidFlag,
@@ -235,77 +237,88 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     ~X86Cpu();
 
     /**
-     * @brief Check if vendor is AMD
+     * @brief     Check if vendor is AMD
      *
-     * @return true if 'num' was an AMD x86-64, false otherwise
+     * @return    true if 'num' was an AMD x86-64, false otherwise
      */
     bool isAMD() const;
 
     /**
-     * @brief Checks if processor is x86_64-v2 compliant
+     * @brief     Checks if processor is x86_64-v2 compliant
      *
-     * @details
-     *       Based on GCC following flags account for x86_64-v2
-     *          cx16       lahf_lm
-     *          popcnt     sse4_1
-     *          sse4_2     ssse3
+     * @details   Based on GCC following flags account for x86_64-v2
      *
-     * @return  true if cpu supports all features above,
-     *          false otherwise
+     *            cx16       lahf_lm
+     *            popcnt     sse4_1
+     *            sse4_2     ssse3
+     *
+     * @param     none
+     *
+     * @return    true if cpu supports all features above,
+     *            false otherwise
      */
     bool isX86_64v2() const;
     /**
-     * @brief Checks if processor is x86_64-v3 compliant
+     * @brief     Checks if processor is x86_64-v3 compliant
      *
-     * @details
-     *      Based on GCC following flags account for x86_64-v3
-     *      (in addition to x86_64-v2)
-     *        avx    avx2    bmi1
-     *        bmi2   f16c    fma
-     *        abm    movbe   xsave
+     * @details   Based on GCC following flags account for x86_64-v3
+     *
+     *            (in addition to x86_64-v2)
+     *
+     *            avx    avx2    bmi1
+     *            bmi2   f16c    fma
+     *            abm    movbe   xsave
+     *
+     * @param   none
      *
      * @return  true if cpu supports all features above,
      *          false otherwise
      */
     bool isX86_64v3() const;
     /**
-     * @brief Checks if processor is x86_64-v4 compliant
+     * @brief     Checks if processor is x86_64-v4 compliant
      *
-     * @details
-     *      Based on GCC following flags account for x86_64-v4
-     *      (in addition to x86_64-v2 + x86_64-v3)
-     *       avx512f   avx512bw  avx512cd
-     *       avx512dq  avx512vl
+     * @details   Based on GCC following flags account for x86_64-v4
      *
-     * @return  true if cpu supports all features above,
-     *          false otherwise
+     *            (in addition to x86_64-v2 + x86_64-v3)
+     *            avx512f   avx512bw  avx512cd
+     *            avx512dq  avx512vl
+     *
+     * @param     none
+     *
+     * @return    true if cpu supports all features above,
+     *            false otherwise
      */
     bool isX86_64v4() const;
 
     /**
-     * @brief Check if vendor is Intel
+     * @brief     Check if vendor is Intel
      *
-     * @return true if 'num' was an Intel x86-64, false otherwise
+     * @param     none
+     *
+     * @return    true if 'num' was an Intel x86-64, false otherwise
      */
     bool isIntel() const;
 
     /**
-     * @brief   Check if a given x86 cpu has a needed flag
+     * @brief     Check if a given x86 cpu has a needed flag
      *
      * @param[in] eflag    ECpuidFlag that needs to be checked
      *
-     * @return true if eflag is present in the availableflags and usable flags,
-     * false otherwise
+     * @return    true if eflag is present in the availableflags and usable
+     *            flags, false otherwise
      */
     bool hasFlag(ECpuidFlag const& eflag) const;
 
     /**
-     * @brief   Check if a given x86 cpu has a needed flag
-     *  Note: The api is deprecated. Use hasFlag instead.
+     * @brief     Check if a given x86 cpu has a needed flag
+     *
+     *            Note: The api is deprecated. Use hasFlag instead.
+     *
      * @param[in] eflag    ECpuidFlag that needs to be checked
      *
-     * @return true if eflag is present in the availableflags and usable flags,
-     * false otherwise
+     * @return    true if eflag is present in the availableflags and usable
+     *            flags, false otherwise
      */
 #ifdef AU_WARN_DEPRECATION
     __attribute__((deprecated("Use hasFlag instead."))) bool
@@ -313,35 +326,42 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     bool
 #endif
     isAvailable(ECpuidFlag const& eflag) const;
+
     /**
-     * @brief  Get microarchitecture of CPU from CPUID instruction.
-     * @return  Returns microarchitecture of CPU.
+     * @brief     Get microarchitecture of CPU from CPUID instruction.
+     *
+     * @param     none
+     *
+     * @return    Returns microarchitecture of CPU.
      */
     EUarch getUarch() const;
 
     /**
-     * @brief   Checks microarchitecture from CPUID instruction and compare with
-     * input.
+     * @brief     Checks microarchitecture from CPUID instruction and compare
+     * with input Like Zen, Zen2, Zen3 etc.
      *
-     * Like Zen, Zen2, Zen3 etc to be compared with specific input.
-     *
-     * @param[in] arch Microarchitecture input to check for.
+     * @param[in] arch   Microarchitecture input to check for.
      * @param[in] strict If true, then exact match is checked.
-     * @return  Returns true if CPU microarchitecture is matched with input.
+     *
+     * @return    Returns true if CPU microarchitecture is matched with input.
      */
     bool isUarch(EUarch uarch, bool strict = false) const;
 
     /**
-     * @brief Get the VendorInfo object
-     * @return VendorInfo
+     * @brief     Get the VendorInfo object
+     *
+     * @param     none
+     *
+     * @return    VendorInfo
      */
     VendorInfo getVendorInfo() const;
+
     /**
-     * @brief Re-read all the cpuid functions and upate internal structures
+     * @brief     Re-read all the cpuid functions and upate internal structures
      *
-     * @parame none
+     * @param     none
      *
-     * @return none
+     * @return    none
      */
     void update();
 

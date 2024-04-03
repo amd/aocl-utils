@@ -43,95 +43,95 @@ typedef Uint32 au_cpu_flag_t;
 #endif
 
 /**
- * @brief       Check if the processor vendor is AMD.
+ * @brief          Check if the processor vendor is AMD.
  *
- * @param[in]   cpu_num  CPU number.
+ * @param[in]      cpu_num  CPU number.
  *
- * @return      1/true if processor vendor is AMD.
+ * @return         1/true if processor vendor is AMD.
  */
 bool
 au_cpuid_is_amd(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Get Cpu vendor info.
+ * @brief          Get Cpu vendor info.
  *
- * @param[in]       cpu_num   CPU number.
- * @param[in, out]  vend_info Vendor info array.
- * @param[in]       size      Size of Vendor info array.
+ * @param[in]      cpu_num   CPU number.
+ * @param[in, out] vend_info Vendor info array.
+ * @param[in]      size      Size of Vendor info array.
  *
- * @return  None
+ * @return         None
  */
 void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZEN.
+ * @brief          Allows caller to check if the processor arch is ZEN.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZEN.
+ * @return         1/true if processor architecture is AMD ZEN.
  */
 bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZENPLUS.
+ * @brief          Allows caller to check if the processor arch is ZENPLUS.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZENPLUS.
+ * @return         1/true if processor architecture is AMD ZENPLUS.
  */
 bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZEN2.
+ * @brief          Allows caller to check if the processor arch is ZEN2.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZEN2.
+ * @return         1/true if processor architecture is AMD ZEN2.
  */
 bool
 au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZEN3.
+ * @brief          Allows caller to check if the processor arch is ZEN3.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZEN3.
+ * @return         1/true if processor architecture is AMD ZEN3.
  */
 bool
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZEN4.
+ * @brief          Allows caller to check if the processor arch is ZEN4.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZEN4.
+ * @return         1/true if processor architecture is AMD ZEN4.
  */
 bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the processor arch is ZEN5.
+ * @brief          Allows caller to check if the processor arch is ZEN5.
  *
- * @param[in]       cpu_num   CPU number.
+ * @param[in]      cpu_num   CPU number.
  *
- * @return  1/true if processor architecture is AMD ZEN5.
+ * @return         1/true if processor architecture is AMD ZEN5.
  */
 bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
- * @brief   Allows caller to check if the flag is available.
+ * @brief          Allows caller to check if the flag is available.
  *
- * @param[in]   cpu_num   CPU number.
- * @param[in]   flag_array  CPU feature flag names.
- * @param[in]   count   Number of flags in the list.
+ * @param[in]      cpu_num   CPU number.
+ * @param[in]      flag_array  CPU feature flag names.
+ * @param[in]      count   Number of flags in the list.
  *
- * @return  a array indicating  feature availability
+ * @return         an array indicating  feature availability
  */
 bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
@@ -139,11 +139,11 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   int               count);
 
 /**
- * @brief   Portable API to check if an error has occured
+ * @brief          Portable API to check if an error has occured
  *
- * @param   err  Actual error number
+ * @param          err  Actual error number
  *
- * @return  1/true if error occorured, false otherwise.
+ * @return         1/true if error occorured, false otherwise.
  */
 bool
 au_cpuid_is_error(au_error_t err);
@@ -151,85 +151,108 @@ au_cpuid_is_error(au_error_t err);
 /******* OLD APIs ********/
 
 /**
- * \brief    Allows caller to check if the processor vendor is AMD.
- *           Note: The api is deprecated. Use au_cpuid_is_amd instead.
+ * @brief          Allows caller to check if the processor vendor is AMD.
  *
- * \return   1/true if processor vendor is AMD.
+ *                 Note: The api is deprecated. Use au_cpuid_is_amd
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor vendor is AMD.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_is_amd instead.")
 bool
 alci_is_amd(au_cpu_num_t cpu_num);
 
 /**
- * \brief   Get Cpu vendor info.
+ * @brief          Get Cpu vendor info.
  *
- * \param[in]       cpu_num   CPU number.
- * \param[out]      arr       Vendor info array.
- * \param[in]       size      Size of Vendor info array.
+ * @param[in]      cpu_num   CPU number.
+ * @param[out]     arr       Vendor info array.
+ * @param[in]      size      Size of Vendor info array.
  *
- * \return  1/true if getting vendor info is successful.
+ * @return         1/true if getting vendor info is successful.
  */
 AU_DEPRECATED_API_X("Use alci_cpu_get_vendor instead.")
 au_error_t
 alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
 
 /**
- * \brief   Allows caller to check if the processor arch is ZEN.
- *          Note: The api is deprecated. Use au_cpuid_arch_is_zen instead
+ * @brief          Allows caller to check if the processor arch is ZEN.
  *
- * \return  1/true if processor architecture is AMD ZEN.
+ *                 Note: The api is deprecated. Use au_cpuid_arch_is_zen
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor architecture is AMD ZEN.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen instead.")
 bool
 alci_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
- * \brief   Allows caller to check if the processor arch is ZEN2.
- *          Note: The api is deprecated. Use au_cpuid_arch_is_zen2 instead.
- * \return  1/true if processor architecture is AMD ZEN2.
+ * @brief          Allows caller to check if the processor arch is ZEN2.
+ *
+ *                 Note: The api is deprecated. Use au_cpuid_arch_is_zen2
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor architecture is AMD ZEN2.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen2 instead.")
 bool
 alci_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
- * \brief   Allows caller to check if the processor arch is ZEN3.
- *          Note: The api is deprecated. Use au_cpuid_arch_is_zen3 instead.
+ * @brief          Allows caller to check if the processor arch is ZEN3.
  *
- * \return  1/true if processor architecture is AMD ZEN3.
+ *                 Note: The api is deprecated. Use au_cpuid_arch_is_zen3
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor architecture is AMD ZEN3.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen3 instead.")
 bool
 alci_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
- * \brief   Allows caller to check if the processor arch is ZEN4.
- *          Note: The api is deprecated. Use au_cpuid_arch_is_zen4 instead.
+ * @brief          Allows caller to check if the processor arch is ZEN4.
  *
- * \return  1/true if processor architecture is AMD ZEN4.
+ *                 Note: The api is deprecated. Use au_cpuid_arch_is_zen4
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor architecture is AMD ZEN4.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen4 instead.")
 bool
 alci_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
- * \brief   Allows caller to check if the flag is available.
- *          Note: The api is deprecated. Use au_cpuid_has_flag instead.
+ * @brief          Allows caller to check if the flag is available.
  *
- * \param   flag   CPU feature flag.
+ *                 Note: The api is deprecated. Use au_cpuid_has_flag
+ *                 instead.
  *
- * \return  1/true if feature is available.
+ * @param          flag   CPU feature flag.
+ *
+ * @return         1/true if feature is available.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_has_flag instead.")
 bool
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
 
 /**
- * \brief   Get last level cache.
+ * @brief          Get last level cache.
  *
- * \param[in] core  CPU core number.
+ * @param[in]      core  CPU core number.
  *
- * \return  Returns last level cache.
+ * @return         Returns last level cache.
  */
 uint32_t
 alci_cpu_get_last_cache_level(au_cpu_num_t core);
