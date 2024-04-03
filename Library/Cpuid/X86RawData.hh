@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@
 #include "Au/Cpuid/X86Cpu.hh"
 
 #include <map>
+#include <algorithm>
 
 namespace Au {
 
@@ -173,14 +174,7 @@ class X86Cpu::Impl
      *
      * @return bool
      */
-    bool isUsable(EFlag const& flag) const
-    {
-        auto usable = m_usable_flags.find(flag);
-        if (usable != m_usable_flags.end())
-            return usable->second;
-
-        return false;
-    }
+    bool isUsable(EFlag const& flag) const { return m_usable_flags.at(flag); }
     /**
      * @brief Check if all of the cpuid flag is available
      *
@@ -190,11 +184,10 @@ class X86Cpu::Impl
      */
     bool isUsable(std::vector<EFlag> const& featureArr) const
     {
-        for (const auto& flag : featureArr) {
-            if (!isUsable(flag))
-                return false;
-        }
-        return true;
+        return std::all_of(
+            featureArr.begin(), featureArr.end(), [this](EFlag const& flag) {
+                return isUsable(flag);
+            });
     }
     /**
      * @brief Enable/Disable a cpuid flag
