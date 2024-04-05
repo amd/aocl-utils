@@ -32,6 +32,7 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
+#include "Au/Misc.hh"
 #include <fstream>
 
 namespace {

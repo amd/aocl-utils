@@ -57,11 +57,11 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
     X86Cpu             cpu{ cpu_num };
     VendorInfo         v_info = cpu.getVendorInfo();
     std::ostringstream ss;
-    ss << *(v_info.m_mfg) << "\n"
-       << *(v_info.m_family) << "\n"
+    ss << static_cast<Uint32>(v_info.m_mfg) << "\n"
+       << static_cast<Uint32>(v_info.m_family) << "\n"
        << v_info.m_model << "\n"
        << v_info.m_stepping << "\n"
-       << *(v_info.m_uarch) << "\n";
+       << static_cast<Uint32>(v_info.m_uarch) << "\n";
 
     AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
     strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
@@ -160,7 +160,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
         au_cpu_flag_t flag = stoi(token);
         AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
                    "Flag not supported");
-        auto cpuid_flag = valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag);
+        auto cpuid_flag = static_cast<ECpuidFlag>(flag);
         result[index++] = cpu.hasFlag(cpuid_flag);
     }
     return result;
@@ -169,7 +169,7 @@ bool AUD_API_EXPORT
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
 {
     X86Cpu cpu{ cpu_num };
-    return cpu.hasFlag(valueToEnum<ECpuidFlag, au_cpu_flag_t>(flag));
+    return cpu.hasFlag(static_cast<ECpuidFlag>(flag));
 }
 
 bool AUD_API_EXPORT
