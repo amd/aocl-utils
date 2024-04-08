@@ -70,6 +70,48 @@ install(
 )
 
 #To ensure backward compatibility with older versions of AOCL UTILS
+if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h)
+    install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci)
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/arch.h \
+    )")
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/alci_c.h \
+    )")
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/au.h \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/alci.h \
+    )")
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/enum.h \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/enum.h \
+    )")
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/macros.h \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/macros.h \
+    )")
+endif()
+if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/X86Cpu.hh)
+    install(DIRECTORY DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx)
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/Enum.hh \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/enum.h \
+    )")
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/Enum.hh \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/cpu.hh \
+    )")
+endif()
 if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.a)
     install(CODE "execute_process( \
     COMMAND ${CMAKE_COMMAND} -E create_symlink \
