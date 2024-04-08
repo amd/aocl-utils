@@ -250,7 +250,16 @@ AUD_DEFINE_ENUM(ECpuidFlag,
                 phe,
                 phe_en,
                 pmm,
-                pmm_en);
+                pmm_en,
+                vaes,
+                vpclmulqdq,
+                avx512_vnni,
+                avx512_bitalg,
+                avx512vbmi2,
+                movdiri,
+                movdir64b,
+                avx512_vpintersect,
+                x2avic);
 
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
