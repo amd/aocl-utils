@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -33,6 +33,7 @@ set(CPUID_SRC_FILES
   Cpuid.cc
   CpuidUtils.cc
   X86RawData.cc
+  ../Capi/cpuid.cc
   X86Cpu.cc
 )
 
@@ -42,7 +43,7 @@ au_cc_library(cpuid
   SOURCES
     ${CPUID_SRC_FILES}
 
-  HEADERS 
+  HEADERS
   X86RawData.hh
   #af::sdk::include:/X86Rawdata.hh
 
@@ -50,4 +51,3 @@ au_cc_library(cpuid
  )
 
 #target_link_libraries(au_all PUBLIC af::cpuid)
-

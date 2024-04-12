@@ -48,11 +48,11 @@ display_core_info()
 
     cout << "\nGetting CPU information for core 0" << endl;
     auto vInfo = cpu.getVendorInfo();
-    cout << "Vendor   : " << *(vInfo.m_mfg) << endl;
-    cout << "Family   : " << *(vInfo.m_family) << endl;
+    cout << "Vendor   : " << static_cast<Uint32>(vInfo.m_mfg) << endl;
+    cout << "Family   : " << static_cast<Uint32>(vInfo.m_family) << endl;
     cout << "Model    : " << vInfo.m_model << endl;
     cout << "Stepping : " << vInfo.m_stepping << endl;
-    cout << "Uarch    : " << *(vInfo.m_uarch) << endl;
+    cout << "Uarch    : " << static_cast<Uint32>(vInfo.m_uarch) << endl;
 }
 
 static void

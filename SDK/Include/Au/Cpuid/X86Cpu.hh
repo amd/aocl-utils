@@ -31,6 +31,33 @@
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Interface/Cpuid/ICpu.hh"
+#include <map>
+#include <sstream>
+
+#define AUD_DEFINE_ENUM(name, type, ...)                                       \
+    enum class name : type                                                     \
+    {                                                                          \
+        Min,                                                                   \
+        __VA_ARGS__,                                                           \
+        Max,                                                                   \
+    };                                                                         \
+    inline std::stringstream& operator<<(std::stringstream&  os,               \
+                                         std::vector<String> values)           \
+    {                                                                          \
+        String                   str = #__VA_ARGS__;                           \
+        std::map<String, Uint64> flags;                                        \
+        Uint64                   flagsCounter = 1;                             \
+        std::stringstream        ss(str);                                      \
+        String                   token;                                        \
+        while (std::getline(ss, token, ',')) {                                 \
+            token        = token.substr(1, token.length() - 1);                \
+            flags[token] = flagsCounter++;                                     \
+        }                                                                      \
+        for (auto value : values) {                                            \
+            os << flags[value] << ":";                                         \
+        }                                                                      \
+        return os;                                                             \
+    }
 
 #include <memory>
 
@@ -223,7 +250,16 @@ AUD_DEFINE_ENUM(ECpuidFlag,
                 phe,
                 phe_en,
                 pmm,
-                pmm_en);
+                pmm_en,
+                vaes,
+                vpclmulqdq,
+                avx512_vnni,
+                avx512_bitalg,
+                avx512vbmi2,
+                movdiri,
+                movdir64b,
+                avx512_vpintersect,
+                x2avic);
 
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
