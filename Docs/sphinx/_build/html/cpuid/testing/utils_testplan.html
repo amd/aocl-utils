@@ -4,14 +4,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TestPlan &mdash; AOCL-UTILS 5.0 documentation</title>
+  <title>The cpuid module unit testplan &mdash; AOCL-UTILS 5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
+
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
@@ -20,17 +20,17 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="Cpuid TestPlan" href="index.html" /> 
+    <link rel="prev" title="Cpuid TestPlan" href="index.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-          
-          
+
+
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -46,17 +46,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">Cpuid HOWTO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Cpuid API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid TestPlan</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">TestPlan</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-cpuid-module-unit-testplan">The cpuid module unit testplan</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#the-cpuid-module">The cpuid module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#the-objective">The objective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#classes-of-testcases">Classes of testcases</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#the-test-matrix-for-c-cpp-apis">The test matrix for c/cpp apis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#utility-function-test-matrix">Utility function test matrix</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#integration-tests-tbd">Integration tests <TBD></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#how-to-run-the-tests">How to run the tests</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The cpuid module unit testplan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-cpuid-module">The cpuid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-objective">The objective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes-of-testcases">Classes of testcases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-cpp-apis">List of cpp apis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-capis">List of capis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-utility-functions">List of utility functions</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#the-test-matrix-for-c-cpp-apis">The test matrix for c/cpp apis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpu-features">cpu features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#isa-features">isa features</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#utility-function-test-matrix">Utility function test matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integration-tests-tbd">Integration tests <TBD></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-run-the-tests">How to run the tests</a></li>
 </ul>
 </li>
 </ul>
@@ -78,7 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Cpuid TestPlan</a></li>
-      <li class="breadcrumb-item active">TestPlan</li>
+      <li class="breadcrumb-item active">The cpuid module unit testplan</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/cpuid/testing/utils_testplan.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,22 +93,19 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="testplan">
-<span id="api-testplan"></span><h1>TestPlan<a class="headerlink" href="#testplan" title="Link to this heading"></a></h1>
-<section id="the-cpuid-module-unit-testplan">
-<h2>The cpuid module unit testplan<a class="headerlink" href="#the-cpuid-module-unit-testplan" title="Link to this heading"></a></h2>
-<hr class="docutils" />
+
+  <section id="the-cpuid-module-unit-testplan">
+<span id="api-testplan"></span><h1>The cpuid module unit testplan<a class="headerlink" href="#the-cpuid-module-unit-testplan" title="Link to this heading"></a></h1>
 <section id="the-cpuid-module">
-<h3>The cpuid module<a class="headerlink" href="#the-cpuid-module" title="Link to this heading"></a></h3>
+<h2>The cpuid module<a class="headerlink" href="#the-cpuid-module" title="Link to this heading"></a></h2>
 <p>The cpuid module provides details of underlying cpu architecture by reading and interpreting the cpuid register of the system.</p>
 </section>
 <section id="the-objective">
-<h3>The objective<a class="headerlink" href="#the-objective" title="Link to this heading"></a></h3>
+<h2>The objective<a class="headerlink" href="#the-objective" title="Link to this heading"></a></h2>
 <p>The testplan is to have a comprehensive test coverage for all components in the module.</p>
 </section>
 <section id="classes-of-testcases">
-<h3>Classes of testcases<a class="headerlink" href="#classes-of-testcases" title="Link to this heading"></a></h3>
+<h2>Classes of testcases<a class="headerlink" href="#classes-of-testcases" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>qemu tests</strong>
 Qemu cpu emulator is used to emulate cpus to test both capis and cpp apis.
@@ -130,7 +133,7 @@ The content of the folder is organised as follows.</p></li>
 Few native testcases are written to check edge cases and negative cases. More test are to be added for full coverage.</p></li>
 </ul>
 <section id="list-of-cpp-apis">
-<h4>List of cpp apis<a class="headerlink" href="#list-of-cpp-apis" title="Link to this heading"></a></h4>
+<h3>List of cpp apis<a class="headerlink" href="#list-of-cpp-apis" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>isamd</p></li>
 <li><p>isintel</p></li>
@@ -144,7 +147,7 @@ Few native testcases are written to check edge cases and negative cases. More te
 </ul>
 </section>
 <section id="list-of-capis">
-<h4>List of capis<a class="headerlink" href="#list-of-capis" title="Link to this heading"></a></h4>
+<h3>List of capis<a class="headerlink" href="#list-of-capis" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>au_cpuid_is_amd</p></li>
 <li><p>au_cupid_has_flag</p></li>
@@ -171,7 +174,7 @@ in different datastructures used by above functions are tested with mocked up (c
 Those functions are,</p>
 </section>
 <section id="list-of-utility-functions">
-<h4>List of utility functions<a class="headerlink" href="#list-of-utility-functions" title="Link to this heading"></a></h4>
+<h3>List of utility functions<a class="headerlink" href="#list-of-utility-functions" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>getmfginfo</p></li>
 <li><p>getfamily</p></li>
@@ -184,11 +187,11 @@ Those functions are,</p>
 </section>
 </section>
 <section id="the-test-matrix-for-c-cpp-apis">
-<h3>The test matrix for c/cpp apis<a class="headerlink" href="#the-test-matrix-for-c-cpp-apis" title="Link to this heading"></a></h3>
+<h2>The test matrix for c/cpp apis<a class="headerlink" href="#the-test-matrix-for-c-cpp-apis" title="Link to this heading"></a></h2>
 <section id="cpu-features">
-<h4>cpu features<a class="headerlink" href="#cpu-features" title="Link to this heading"></a></h4>
+<h3>cpu features<a class="headerlink" href="#cpu-features" title="Link to this heading"></a></h3>
 <section id="amd-cpus">
-<h5>amd cpus<a class="headerlink" href="#amd-cpus" title="Link to this heading"></a></h5>
+<h4>amd cpus<a class="headerlink" href="#amd-cpus" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
@@ -372,7 +375,7 @@ Those functions are,</p>
 </table>
 </section>
 <section id="intel-cpus">
-<h5>intel cpus<a class="headerlink" href="#intel-cpus" title="Link to this heading"></a></h5>
+<h4>intel cpus<a class="headerlink" href="#intel-cpus" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cpu type/function name</p></th>
@@ -424,9 +427,9 @@ Those functions are,</p>
 </section>
 </section>
 <section id="isa-features">
-<h4>isa features<a class="headerlink" href="#isa-features" title="Link to this heading"></a></h4>
+<h3>isa features<a class="headerlink" href="#isa-features" title="Link to this heading"></a></h3>
 <section id="x86-64v2">
-<h5>x86_64v2<a class="headerlink" href="#x86-64v2" title="Link to this heading"></a></h5>
+<h4>x86_64v2<a class="headerlink" href="#x86-64v2" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
@@ -505,7 +508,7 @@ Those functions are,</p>
 </table>
 </section>
 <section id="x86-64v3">
-<h5>x86_64v3<a class="headerlink" href="#x86-64v3" title="Link to this heading"></a></h5>
+<h4>x86_64v3<a class="headerlink" href="#x86-64v3" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
@@ -614,7 +617,7 @@ Those functions are,</p>
 </table>
 </section>
 <section id="x86-64v4">
-<h5>x86_64v4<a class="headerlink" href="#x86-64v4" title="Link to this heading"></a></h5>
+<h4>x86_64v4<a class="headerlink" href="#x86-64v4" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cpu type/flag</p></th>
@@ -685,7 +688,7 @@ Those functions are,</p>
 </section>
 </section>
 <section id="utility-function-test-matrix">
-<h3>Utility function test matrix<a class="headerlink" href="#utility-function-test-matrix" title="Link to this heading"></a></h3>
+<h2>Utility function test matrix<a class="headerlink" href="#utility-function-test-matrix" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>CpuType/VendorInfo</p></th>
@@ -848,10 +851,10 @@ Those functions are,</p>
 </table>
 </section>
 <section id="integration-tests-tbd">
-<h3>Integration tests <TBD><a class="headerlink" href="#integration-tests-tbd" title="Link to this heading"></a></h3>
+<h2>Integration tests <TBD><a class="headerlink" href="#integration-tests-tbd" title="Link to this heading"></a></h2>
 </section>
 <section id="how-to-run-the-tests">
-<h3>How to run the tests<a class="headerlink" href="#how-to-run-the-tests" title="Link to this heading"></a></h3>
+<h2>How to run the tests<a class="headerlink" href="#how-to-run-the-tests" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ctest</span></code> runs all the tests by default along with other tests. if running independently, call <code class="docutils literal notranslate"><span class="pre">core_cpuidtests</span></code>. it has to be done from the build folder as <code class="docutils literal notranslate"><span class="pre">./release/core_cpuidtest</span></code>.</p>
 <p><strong>Note to developer:</strong>
 the test creates the x86cpu test suites with all the unit test cases for functions listed in the scope of the test. these tests are disabled by default because it doesn’t make sense to run them on the host whose architecture might be unknown. use the <code class="docutils literal notranslate"><span class="pre">--gtest_also_run_disabled_tests</span></code> flag if these need to be enabled on the host.</p>
@@ -860,7 +863,6 @@ the test creates the x86cpu test suites with all the unit test cases for functio
 </pre></div>
 </div>
 <p>the qemutest suites run by invoking the above python script to run on different emulated cpus.</p>
-</section>
 </section>
 </section>
 
@@ -880,7 +882,7 @@ the test creates the x86cpu test suites with all the unit test cases for functio
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -891,7 +893,7 @@ the test creates the x86cpu test suites with all the unit test cases for functio
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>

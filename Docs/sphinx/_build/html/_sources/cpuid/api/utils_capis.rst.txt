@@ -1,6 +1,6 @@
 .. _api_c:
 
-Capis
-=====
+C-APIs
+======
 .. doxygenfile:: cpuid.h
    :project: aoclutils

@@ -1,6 +1,6 @@
 .. _readme:
 
-Getting started
-===============
+Details
+=======
 .. include:: ../../../Readme.md
    :parser: myst_parser.sphinx_
