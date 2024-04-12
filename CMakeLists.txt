@@ -35,10 +35,6 @@ set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
   )
 
-include(au_variables)
-include(au_functions)
-include(au_helpers)
-
 # Export to CMakePresets.json, which is used by various IDE,
 # easy integration on any IDE using LSP (Language Server Protocol)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -121,13 +117,17 @@ if (AU_BUILD_EXAMPLES)
   include(au_examples)
 endif()
 
+include(au_variables)
+include(au_functions)
+include(au_helpers)
+
 # Config.h generation
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION_OUTPUT_FILE}" @ONLY)
 
 #include_directories("${AU_CONFIG_DIR}")
-set(AU_INCLUDE_DIRS 
+set(AU_INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}/SDK/Include
   ${CMAKE_SOURCE_DIR}/Library/Private
   ${AU_CONFIG_DIR}

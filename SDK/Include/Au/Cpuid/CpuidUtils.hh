@@ -28,10 +28,8 @@
 
 #pragma once
 
-#include "Au/Assert.hh"
 #include "Au/Au.hh"
 #include "Au/Cpuid/CacheInfo.hh"
-#include "Au/Misc.hh"
 #include "Au/Types.hh"
 
 #include <iostream>

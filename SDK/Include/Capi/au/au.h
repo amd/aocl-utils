@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,6 +29,7 @@
 #ifndef __AU_H__
 #define __AU_H__
 
+#include "Capi/au/enum.h"
 #include "Capi/au/macros.h"
 #include "Capi/au/types.h"
 // #include "Capi/au/"

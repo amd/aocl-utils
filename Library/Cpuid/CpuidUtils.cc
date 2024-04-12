@@ -27,6 +27,7 @@
  */
 
 #include "Au/Cpuid/CpuidUtils.hh"
+#include "Au/Misc.hh"
 #include <iostream>
 namespace Au {
 
