@@ -28,6 +28,8 @@
 include(CMakeDependentOption)
 
 option(AU_BUILD_TESTS "Enable the tests." OFF)
+option(AU_BUILD_DOCS "Generate Docs during build" OFF)
+option(AU_BUILD_EXAMPLES "Enable examples" OFF)
 option(AU_ENABLE_SLOW_TESTS "Option to Enable SLOW tests" OFF)
 option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
 option(AU_ENABLE_ASSERTIONS "Enable asserts in the code, Default enabled in Debug mode" OFF)

@@ -153,10 +153,6 @@ if (AU_BUILD_DOCS)
   add_subdirectory(Docs)
 endif()
 
-#if (AU_BUILD_EXAMPLES)
-#    add_subdirectory(SDK)
-#endif()
-
 if (AU_BUILD_EXAMPLES)
   add_subdirectory(SDK/Examples)
 endif()
