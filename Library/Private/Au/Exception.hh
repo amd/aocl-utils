@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,8 +33,8 @@
 
 #include <cstring> // for memcpy()
                    //
-#if defined(TARGET_OS_IS_WINDOWS)
-#error "FIXME: include header error equivalant not found"
+#if defined(AU_TARGET_OS_IS_WINDOWS)
+#include <errno.h>
 #else
 #include <sys/errno.h>
 #endif

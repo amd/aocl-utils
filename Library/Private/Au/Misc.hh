@@ -79,9 +79,9 @@ UnderlyingType
 enumToValue(EnumType enumValue)
 {
     if (static_cast<UnderlyingType>(enumValue)
-            < std::numeric_limits<UnderlyingType>::min()
+            < (std::numeric_limits<UnderlyingType>::min)()
         || static_cast<UnderlyingType>(enumValue)
-               > std::numeric_limits<UnderlyingType>::max()) {
+               > (std::numeric_limits<UnderlyingType>::max)()) {
         AUD_ASSERT(0,
                    "Enum value out of range for conversion to underlying type");
     }

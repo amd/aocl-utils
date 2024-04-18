@@ -367,7 +367,7 @@ X86Cpu::Impl::apply(RequestT& regs)
             return;
     }
 
-    const auto* const found = std::ranges::find_if(
+    auto found = std::ranges::find_if(
         begin(CPUID_MAP), end(CPUID_MAP), [&](const auto& input) {
             const auto& [req, expected, flg] = input;
             return req == regs;

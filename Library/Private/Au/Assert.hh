@@ -34,7 +34,11 @@
 #include "Au/SourceLocation.hh"
 
 #include <string_view>
+#if defined(AU_TARGET_OS_IS_WINDOWS)
+#include <errno.h>
+#else
 #include <sys/errno.h>
+#endif
 
 namespace Au {
 

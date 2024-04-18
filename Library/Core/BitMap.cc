@@ -31,8 +31,7 @@
 #include "Au/Au.hh"
 #include "Au/Exception.hh"
 
-#include <bits/stdc++.h>
-
+#include <functional>
 #include <immintrin.h>
 
 namespace Au {

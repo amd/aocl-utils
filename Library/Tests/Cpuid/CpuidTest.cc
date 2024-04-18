@@ -27,7 +27,7 @@
  */
 
 #include "CpuidTest.hh"
-#include "gtest/gtest.h"
+
 #include <cstdlib>
 #include <fstream>
 
@@ -144,28 +144,18 @@ TEST(X86Cpuid, DISABLED_getVendorInfo)
     writeToFile<vector<Uint32>::iterator>(
         "VendorInfoCpp.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
 }
-TEST(X86Cpuid, CheckCupNumber)
+TEST(X86Cpuid, CheckCpuNumber)
 {
     // 0 - 2 Verify that the core is set to the correct CPU
-    cpu_set_t cpuSet;
 
     X86Cpu cpu{ 0 };
-    auto   pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 1);
+    checkAffinity(0);
 
     X86Cpu cpu1{ 1 };
-    pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 2);
+    checkAffinity(1);
 
     X86Cpu cpu2{ 2 };
-    pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == 4);
+    checkAffinity(2);
 
     // Verify that an exception is thrown when the core number is greater
     // than the number of phycal cores.
