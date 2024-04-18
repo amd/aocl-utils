@@ -29,7 +29,6 @@
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Assert.hh"
 #include "Au/Cpuid/X86Cpu.hh"
-#include "Au/Defs.hh"
 
 #include "Capi/au/cpuid/cpuid.h"
 #include "Capi/au/macros.h"
@@ -38,20 +37,23 @@ AUD_EXTERN_C_BEGIN
 
 using namespace Au;
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_is_amd(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
 
     return cpu.isAMD();
 }
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_is_amd(au_cpu_num_t cpu_num)
 {
     return au_cpuid_is_amd(cpu_num);
 }
 
-void AUD_API_EXPORT
+AUD_API_EXPORT
+void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
 {
     X86Cpu             cpu{ cpu_num };
@@ -64,82 +66,94 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
        << static_cast<Uint32>(v_info.m_uarch) << "\n";
 
     AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
-    strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
+    strncpy(vend_info, (ss.str()).c_str(), min(ss.str().size(), size));
 }
 
-au_error_t AUD_API_EXPORT
+AUD_API_EXPORT
+au_error_t
 alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size)
 {
     au_cpuid_get_vendor(cpu_num, arr, size);
     return 1;
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_arch_is_zen(au_cpu_num_t cpu_num)
 {
     return au_cpuid_arch_is_zen(cpu_num);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::ZenPlus);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen2);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_arch_is_zen2(au_cpu_num_t cpu_num)
 {
     return au_cpuid_arch_is_zen2(cpu_num);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen3);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_arch_is_zen3(au_cpu_num_t cpu_num)
 {
     return au_cpuid_arch_is_zen3(cpu_num);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen4);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_arch_is_zen4(au_cpu_num_t cpu_num)
 {
     return au_cpuid_arch_is_zen4(cpu_num);
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen5);
 }
 
+AUD_API_EXPORT
 bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
@@ -175,14 +189,16 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
     }
     return result;
 }
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.hasFlag(static_cast<ECpuidFlag>(flag));
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT
+bool
 au_cpuid_is_error(au_error_t err)
 {
     AUD_ASSERT(err >= 0, "Invalid error code"); // Never be negative.
