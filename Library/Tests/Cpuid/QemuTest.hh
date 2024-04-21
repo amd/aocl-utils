@@ -114,6 +114,7 @@ class QemuTestBase :public testing::Test
     {
         auto ret = false;
 
+#if defined(AU_TARGET_OS_IS_LINUX)
         Py_Initialize();
         if (Py_IsInitialized() == 0) {
             std::cerr << "Failed to initialize the Python interpreter";
@@ -160,7 +161,7 @@ class QemuTestBase :public testing::Test
         }
         /* Finalize the Python interpreter */
         Py_Finalize();
-
+#endif
         return ret;
     }
     /**

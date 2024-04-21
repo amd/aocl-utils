@@ -29,9 +29,13 @@
 import subprocess
 import json
 import sys
-
+import shutil
 
 def run_qemu(architecture="x86_64", cpu_model="EPYC", binary_path="", test_name=""):
+    path = shutil.which("qemu-" + architecture)
+    if path is None:
+        print("Qemu is not installed")
+        return False
     qemu_cmd = [
         f"qemu-" + architecture,
         "-cpu", cpu_model,
