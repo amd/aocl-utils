@@ -36,18 +36,27 @@ set(CPUID_SRC_FILES
   ../Capi/cpuid.cc
   X86Cpu.cc
 )
+if(${AU_BUILD_TYPE_DEBUG})
+    au_cc_library(cpuid
+    PUBLIC
+    SOURCES
+        ${CPUID_SRC_FILES}
 
+    HEADERS
+    X86RawData.hh
 
-au_cc_library(cpuid
-  PUBLIC
-  SOURCES
-    ${CPUID_SRC_FILES}
+    DEPENDS
+    au::core
+    )
+else()
+    au_cc_library(cpuid
+    PUBLIC
+    SOURCES
+        ${CPUID_SRC_FILES}
 
-  HEADERS
-  X86RawData.hh
-  #af::sdk::include:/X86Rawdata.hh
-
-  USING
- )
+    HEADERS
+    X86RawData.hh
+    )
+endif()
 
 #target_link_libraries(au_all PUBLIC af::cpuid)
