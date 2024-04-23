@@ -114,7 +114,7 @@ function(au_cc_library NAME)
     if (DEFINED tmp_src_list)
       add_library(${__target_name} STATIC "")
       target_sources(${__target_name}
-	      PRIVATE 
+	      PRIVATE
 	      ${${fPrefix}_SOURCES}
       	      ${${fPrefix}_HEADERS})
       #target_include_directories(${__target_name}
@@ -129,7 +129,23 @@ function(au_cc_library NAME)
 	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
       )
       #target_link_libraries(af::all PUBLIC ${__target_name})
-
+      add_library(${__target_name}_shared SHARED "")
+      target_sources(${__target_name}_shared
+	      PRIVATE
+	      ${${fPrefix}_SOURCES}
+      	      ${${fPrefix}_HEADERS})
+      #target_include_directories(${__target_name}
+      #	      PUBLIC ${AU_INCLUDE_DIRS})
+      target_link_libraries(${__target_name}_shared
+	      PUBLIC ${cclib_DEPENDS}
+      )
+      set_target_properties(${__target_name}_shared
+	      PROPERTIES
+	      CXX_STANDARD ${AU_CXX_STANDARD}
+	      CXX_STANDARD_REQUIRED true
+	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+          OUTPUT_NAME ${__target_name}
+      )
     else()
       add_library(${__target_name} INTERFACE)
       target_include_directories(${__target_name} INTERFACE ${AU_INCLUDE_DIRS})
@@ -137,7 +153,7 @@ function(au_cc_library NAME)
     endif()
 
 
-    install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+    install(TARGETS ${__target_name} ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
             RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
             LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
             ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
@@ -146,4 +162,3 @@ function(au_cc_library NAME)
     add_library(au::${AU_MODULE} ALIAS ${__target_name})
 
 endfunction(au_cc_library)
-
