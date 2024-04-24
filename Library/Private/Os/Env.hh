@@ -47,7 +47,7 @@ namespace Au { namespace Os::Env {
 
     using env_map = std::map<String, String, std::less<>>;
 
-    constexpr String      spaces = "\t\n\r ";
+    const String      spaces = "\t\n\r ";
     static inline String& trim_left(String& sv)
     {
         sv.erase(0, sv.find_first_not_of(spaces));
