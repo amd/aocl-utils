@@ -205,6 +205,7 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
     {{.eax = 0x8000000A}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00000080}, EFlag::decodeassists},
     {{.eax = 0x8000000A}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00000400}, EFlag::pause_filter},
     {{.eax = 0x8000000A}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00001000}, EFlag::pfthreshold},
+    {{.eax = 0x8000000A}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00080000}, EFlag::x2avic},
 
     {{.eax = 0xC0000001}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00000004}, EFlag::xstore},
     {{.eax = 0xC0000001}, {.eax = 0, .ebx = 0, .ecx = 0, .edx = 0x00000008}, EFlag::xstore_en},
