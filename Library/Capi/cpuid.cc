@@ -164,9 +164,11 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
         return nullptr;
     while (std::getline(ss, token, ':')) {
         au_cpu_flag_t flag = stoi(token);
-        AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
+        AUD_ASSERT(flag > static_cast<Uint32>(ECpuidFlag::Min)
+                       && flag < static_cast<Uint32>(ECpuidFlag::Max),
                    "Flag not supported");
-        if (flag < *(ECpuidFlag::Min) || flag > *(ECpuidFlag::Max))
+        if (flag < static_cast<Uint32>(ECpuidFlag::Min)
+            || flag > static_cast<Uint32>(ECpuidFlag::Max))
             continue;
         auto cpuid_flag = static_cast<ECpuidFlag>(flag);
         result[index++] = cpu.hasFlag(cpuid_flag);
