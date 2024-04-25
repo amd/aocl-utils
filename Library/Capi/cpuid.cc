@@ -150,16 +150,24 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
     string            token;
     int               index  = 0;
     bool*             result = (bool*)malloc(count * sizeof(bool));
-
     AUD_ASSERT(result, "Memory allocation failed");
+    if (!result)
+        return nullptr;
     AUD_ASSERT(count > 0, "No flags to check");
+    if (count == 0)
+        return nullptr;
+
     std::vector<std::string> flag_names(flag_array, flag_array + count);
 
     ss << flag_names;
+    if (flag_names.size() == 1)
+        return nullptr;
     while (std::getline(ss, token, ':')) {
         au_cpu_flag_t flag = stoi(token);
         AUD_ASSERT(flag > *(ECpuidFlag::Min) && flag < *(ECpuidFlag::Max),
                    "Flag not supported");
+        if (flag < *(ECpuidFlag::Min) || flag > *(ECpuidFlag::Max))
+            continue;
         auto cpuid_flag = static_cast<ECpuidFlag>(flag);
         result[index++] = cpu.hasFlag(cpuid_flag);
     }
@@ -175,7 +183,7 @@ alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)
 bool AUD_API_EXPORT
 au_cpuid_is_error(au_error_t err)
 {
-    AUD_ASSERT(err >= 0, "Invalid error code");
+    AUD_ASSERT(err >= 0, "Invalid error code"); // Never be negative.
     if (static_cast<int32_t>(err))
         return true;
     return false;
