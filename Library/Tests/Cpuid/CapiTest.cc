@@ -46,7 +46,7 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 {
     EXPECT_TRUE(au_cpuid_is_amd(0));
 }
-TEST(CapiX86Cpuid, DISABLED_hasFlagT)
+TEST(CapiX86Cpuid, DISABLED_hasFlagPositive)
 {
     vector<String>           flags = readFromFile<String>("FlagsT.txt");
     std::vector<const char*> flagsArray;
@@ -60,7 +60,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagT)
         EXPECT_TRUE(result[i]);
 }
 
-TEST(CapiX86Cpuid, DISABLED_hasFlagF)
+TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 {
     vector<String>           flags = readFromFile<String>("FlagsF.txt");
     std::vector<const char*> flagsArray;

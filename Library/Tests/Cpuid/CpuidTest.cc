@@ -74,7 +74,7 @@ TEST(X86Cpuid, DISABLED_isIntel)
     EXPECT_TRUE(cpu.isIntel() == true);
 }
 
-TEST(X86Cpuid, DISABLED_hasFlagT)
+TEST(X86Cpuid, DISABLED_hasFlagPositive)
 {
     X86Cpu       cpu{ 0 };
     auto         flags = readFromFile<String>("FlagsT.txt");
@@ -89,7 +89,7 @@ TEST(X86Cpuid, DISABLED_hasFlagT)
     }
 }
 
-TEST(X86Cpuid, DISABLED_hasFlagF)
+TEST(X86Cpuid, DISABLED_hasFlagNegative)
 {
     X86Cpu       cpu{ 0 };
     auto         flags = readFromFile<String>("FlagsF.txt");
