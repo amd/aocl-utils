@@ -31,9 +31,10 @@
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 
-namespace alci = Au;
-using Cpu      = Au::X86Cpu;
 namespace Au {
+
+#define alci Au
+using Cpu    = X86Cpu;
 using Vendor = EVendor;
 #define eIntel Intel
 #define eAmd   Amd
