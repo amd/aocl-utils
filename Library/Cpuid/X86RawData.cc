@@ -28,7 +28,9 @@
 #include "X86RawData.hh"
 
 #include <array>
+#include <chrono>
 #include <list>
+#include <thread>
 #include <tuple>
 
 namespace Au {
@@ -226,7 +228,6 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
 void
 X86Cpu::Impl::update()
 {
-    std::map<RequestT, ResponseT> rawCpuid;
 
     /* manufacturer details */
     auto resp                = at(RequestT{ 0x0000'0001, 0, 0, 0 });
@@ -237,10 +238,8 @@ X86Cpu::Impl::update()
     setUarch();
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
-        if (rawCpuid.find(req) == rawCpuid.end()) {
-            rawCpuid.insert(std::make_pair(req, at(req)));
-        }
-        updateflag(flg, m_cutils->hasFlag(expected, rawCpuid[req]));
+        updateflag(flg, m_cutils->hasFlag(expected, at(req)));
+        std::this_thread::sleep_for(std::chrono::nanoseconds(.1));
     }
 
     /*

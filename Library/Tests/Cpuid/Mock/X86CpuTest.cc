@@ -41,7 +41,7 @@ class MockX86Cpu
   protected:
     void SetUp() override
     {
-        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(12);
+        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(166);
     }
 };
 
