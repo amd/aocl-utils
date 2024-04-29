@@ -113,7 +113,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/SDK/Include/Au/Cpuid/X86Cpu.hh)
     )")
 endif()
 message("Installing binaries... ")
-if (${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
+if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
     set(DEBUG_POSTFIX "-dbg")
 endif()
 
@@ -131,14 +131,12 @@ if (UNIX)
         )")
     endif()
 else()
-    if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR})
+    if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
         install(CODE "execute_process( \
-         COMMAND ${CMAKE_COMMAND} -E create_symlink \
-         ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
+          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils_static.lib \
         )")
-    endif()
-    if(EXISTS ${CMAKE_INSTALL_PREFIX}/bin)
         install(CODE "execute_process( \
           COMMAND ${CMAKE_COMMAND} -E create_symlink \
           ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
