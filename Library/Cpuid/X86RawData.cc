@@ -239,7 +239,7 @@ X86Cpu::Impl::update()
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         updateflag(flg, m_cutils->hasFlag(expected, at(req)));
-        std::this_thread::sleep_for(std::chrono::nanoseconds(.1));
+        std::this_thread::sleep_for(std::chrono::nanoseconds(1));
     }
 
     /*
