@@ -1,119 +1,119 @@
-1 sse3
-2 pclmulqdq
-4 monitor
-5 dscpl
-6 vmx
-7 smx
-8 est
-9 tm2
-10 ssse3
-11 cid
-13 cx16
-14 xtpr
-15 pdcm
-16 pcid
-17 dca
-18 sse4_1
-19 sse4_2
-20 x2apic
-22 popcnt
-23 tsc_deadline
-24 aes
-25 xsave
-26 osxsave
-27 avx
-28 f16c
-31 fpu
-47 pse36
-49 clflush
-50 ds
-55 sse2
-56 ss
-57 ht
-58 tm
-59 ia64
-60 pbe
-61 arat
-62 fsgsbase
-63 tsc_adjust
-64 bmi1
-65 hle
-66 avx2
-67 smep
-68 bmi2
-69 erms
-70 invpcid
-71 rtm
-72 mpx
-73 avx512f
-74 avx512dq
-75 rdseed
-76 adx
-77 smap
-78 avx512ifma
-79 pcommit
-80 clflushopt
-81 clwb
-82 avx512pf
-83 avx512er
-84 avx512cd
-85 sha_ni
-86 avx512bw
-88 avx512vbmi
-89 umip
-90 pku
-91 ospke
-92 avx512_vpopcntdq
-93 la57
-94 rdpid
-95 avx512_4vnniw
-96 avx512_4fmaps
-97 avx512_bf16
-98 avxvnni
-99 xsaveopt
-100 xsavec
-101 xgetbv1
-103 lahf_lm
-105 svm
-106 extapic
-109 sse4a
-110 misalignsse
-111 _3dnowprefetch
-112 osvw
-113 ibs
-114 xop
-115 skinit
-116 wdt
-117 lwp
-118 fma4
-119 tce
-120 nodeid_msr
-121 tbm
-122 topoext
-123 perfctr_core
-126 nxxd
-127 mmxext
-128 fxsr_opt
-131 lmi64
-132 _3dnowext
-133 _3dnow
-134 invtsc
-135 npt
-136 lbrv
-137 svm_lock
-138 nrip_save
-139 tsc_scale
-140 vmcb_clean
-141 flushbyasid
-142 decodeassists
-143 pause_filter
-144 pfthreshold
-145 xstore
-146 xstore_en
-147 xcrypt
-148 xcrypt_en
-149 ace2
-150 ace2_en
-151 phe
-152 phe_en
-153 pmm
+pclmulqdq
+dtes64
+dscpl
+vmx
+smx
+est
+tm2
+ssse3
+cid
+fma
+xtpr
+pdcm
+pcid
+dca
+sse4_1
+sse4_2
+x2apic
+movbe
+tsc_deadline
+aes
+xsave
+osxsave
+avx
+f16c
+rdrand
+vme
+pn
+ds
+acpi
+ss
+ht
+tm
+ia64
+pbe
+arat
+fsgsbase
+tsc_adjust
+bmi1
+hle
+avx2
+smep
+bmi2
+erms
+invpcid
+rtm
+mpx
+avx512f
+avx512dq
+rdseed
+adx
+smap
+avx512ifma
+pcommit
+clflushopt
+clwb
+avx512pf
+avx512er
+avx512cd
+sha_ni
+avx512bw
+avx512vl
+umip
+pku
+ospke
+avx512_vpopcntdq
+la57
+rdpid
+avx512_4vnniw
+avx512_4fmaps
+avx512_bf16
+avxvnni
+xsaveopt
+xsavec
+xgetbv1
+xsaves
+cmp_legacy
+extapic
+cr8legacy
+misalignsse
+_3dnowprefetch
+osvw
+ibs
+xop
+skinit
+wdt
+lwp
+fma4
+tce
+nodeid_msr
+tbm
+topoext
+perfctr_core
+perfctr_nb
+mmxext
+fxsr_opt
+pdpe1gb
+_3dnowext
+_3dnow
+invtsc
+npt
+lbrv
+svm_lock
+nrip_save
+tsc_scale
+vmcb_clean
+flushbyasid
+decodeassists
+pause_filter
+pfthreshold
+xstore
+xstore_en
+xcrypt
+xcrypt_en
+ace2
+ace2_en
+phe
+phe_en
+pmm
+pmm_en

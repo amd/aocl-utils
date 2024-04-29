@@ -57,10 +57,11 @@ struct CpuidRegs
         return eax < Reg.eax || ebx < Reg.ebx || ecx < Reg.ecx || edx < Reg.edx;
     }
 
-    bool operator&(CpuidRegs const& Reg) const
+    CpuidRegs const operator&(CpuidRegs const& Reg) const
     {
-        return ((eax & Reg.eax) != 0U) || ((ebx & Reg.ebx) != 0U)
-               || ((ecx & Reg.ecx) != 0U) || ((edx & Reg.edx) != 0U);
+        return {
+            (eax & Reg.eax), (ebx & Reg.ebx), (ecx & Reg.ecx), (edx & Reg.edx)
+        };
     }
 };
 using RequestT  = const CpuidRegs;

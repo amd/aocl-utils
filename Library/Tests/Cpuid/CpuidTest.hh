@@ -65,7 +65,7 @@ writeToFile(const String& fileName, const vector<T>& items)
  * @return vector<T> The flags read from the file
  */
 template<typename T>
-vector<T>
+inline vector<T>
 readFromFile(const String& fileName)
 {
     ifstream  file(fileName);
@@ -80,6 +80,26 @@ readFromFile(const String& fileName)
         auto value = data.substr(0, data.find(' '));
         auto item  = static_cast<T>(atoi(value.c_str()));
         items.push_back(item);
+    }
+
+    file.close();
+    return items;
+}
+template<>
+inline vector<String>
+readFromFile<String>(const String& fileName)
+{
+    ifstream       file(fileName);
+    String         data;
+    vector<String> items;
+
+    if (!file.is_open()) {
+        cout << "Error opening file" << fileName << endl;
+    }
+
+    while (getline(file, data)) {
+        auto value = data.substr(0, data.find(' '));
+        items.push_back(value);
     }
 
     file.close();

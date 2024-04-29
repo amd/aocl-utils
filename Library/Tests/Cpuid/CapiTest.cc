@@ -46,6 +46,33 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 {
     EXPECT_TRUE(au_cpuid_is_amd(0));
 }
+TEST(CapiX86Cpuid, DISABLED_hasFlagPositive)
+{
+    vector<String>           flags = readFromFile<String>("FlagsT.txt");
+    std::vector<const char*> flagsArray;
+    flagsArray.reserve(flags.size() + 1);
+
+    for (size_t i = 0; i < flags.size(); ++i)
+        flagsArray.push_back(flags[i].c_str());
+
+    auto result = au_cpuid_has_flag(0, flagsArray.data(), flags.size());
+    for (size_t i = 0; i < flags.size(); ++i)
+        EXPECT_TRUE(result[i]);
+}
+
+TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
+{
+    vector<String>           flags = readFromFile<String>("FlagsF.txt");
+    std::vector<const char*> flagsArray;
+
+    flagsArray.reserve(flags.size() + 1);
+    for (size_t i = 0; i < flags.size(); ++i)
+        flagsArray.push_back(flags[i].c_str());
+
+    auto result = au_cpuid_has_flag(0, flagsArray.data(), flags.size());
+    for (size_t i = 0; i < flags.size(); ++i)
+        EXPECT_FALSE(result[i]);
+}
 
 TEST(CapiX86Cpuid, hasFlags)
 {

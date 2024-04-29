@@ -74,27 +74,33 @@ TEST(X86Cpuid, DISABLED_isIntel)
     EXPECT_TRUE(cpu.isIntel() == true);
 }
 
-TEST(X86Cpuid, DISABLED_hasFlagT)
+TEST(X86Cpuid, DISABLED_hasFlagPositive)
 {
-    vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
+    X86Cpu       cpu{ 0 };
+    auto         flags = readFromFile<String>("FlagsT.txt");
+    string       token;
+    stringstream ss;
 
-    flags = readFromFile<ECpuidFlag>("FlagsT.txt");
-
-    for (auto flag : flags) {
-        EXPECT_TRUE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    ss << flags;
+    while (std::getline(ss, token, ':')) {
+        auto flag       = stoi(token);
+        auto cpuid_flag = valueToEnum<ECpuidFlag, Uint64>(flag);
+        EXPECT_TRUE(cpu.hasFlag(cpuid_flag));
     }
 }
 
-TEST(X86Cpuid, DISABLED_hasFlagF)
+TEST(X86Cpuid, DISABLED_hasFlagNegative)
 {
-    vector<ECpuidFlag> flags;
-    X86Cpu             cpu{ 0 };
+    X86Cpu       cpu{ 0 };
+    auto         flags = readFromFile<String>("FlagsF.txt");
+    string       token;
+    stringstream ss;
 
-    flags = readFromFile<ECpuidFlag>("FlagsF.txt");
-
-    for (auto flag : flags) {
-        EXPECT_FALSE(cpu.hasFlag(valueToEnum<ECpuidFlag, Uint64>(*(flag) + 1)));
+    ss << flags;
+    while (std::getline(ss, token, ':')) {
+        auto flag       = stoi(token);
+        auto cpuid_flag = valueToEnum<ECpuidFlag, Uint64>(flag);
+        EXPECT_FALSE(cpu.hasFlag(cpuid_flag));
     }
 }
 

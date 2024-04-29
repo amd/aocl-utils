@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,13 +70,13 @@ class QemuTest
      *
      * @return bool The result of the test
      */
-    static bool hasFlagT(const std::string& cpuType)
+    static bool hasFlagPositive(const std::string& cpuType)
     {
         String simnowdataPath = PROJECT_SOURCE_DIR;
         simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
         std::filesystem::copy(simnowdataPath + cpuType + "/FlagsT.txt",
                               "FlagsT.txt");
-        return callQemuEmulator(cpuType.c_str(), "hasFlagT");
+        return callQemuEmulator(cpuType.c_str(), "hasFlagPositive");
     }
 
     /**
@@ -86,14 +86,14 @@ class QemuTest
      *
      * @return bool The result of the test
      */
-    static bool hasFlagF(const std::string& cpuType)
+    static bool hasFlagNegative(const std::string& cpuType)
     {
         String simnowdataPath = PROJECT_SOURCE_DIR;
         simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
         std::filesystem::copy(simnowdataPath + cpuType + "/FlagsF.txt",
                               "FlagsF.txt");
 
-        return callQemuEmulator(cpuType.c_str(), "hasFlagF");
+        return callQemuEmulator(cpuType.c_str(), "hasFlagNegative");
     }
 
     /**
@@ -131,8 +131,8 @@ TEST_P(QemuTest, CpuTypeTest)
     };
 
     auto results = testAll(cpuType, testNames);
-    results.push_back(hasFlagT(cpuType));
-    results.push_back(hasFlagF(cpuType));
+    results.push_back(hasFlagPositive(cpuType));
+    results.push_back(hasFlagNegative(cpuType));
     results.push_back(TestUarch(cpuType, uarch));
     EXPECT_EQ(results, expectedResults);
     // Read the Uarch test result from the file

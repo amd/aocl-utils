@@ -49,33 +49,33 @@ using namespace Au;
  *    1. Name of the CPU model to be mocked using simnowdata
  *    2. Vector of boolean values that marks the expected results of
  *       {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4}  APIs
- *     and true for hasFlags(T/F) and isUarch api tests
+ *     and true for hasFlags(Positive/Negative) and isUarch api tests
  * 3. Expected architecture of the CPU
  */
 // clang-format off
-auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, hasFlagsT=true,hasFlagsF=true, isUarch=true;
+auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true;
 const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
-    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen4 },
-    { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen3 },
-    { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen3 },
-    { "EPYC-Rome-v1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
-    { "EPYC-Rome-v2",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
-    { "EPYC-Rome-v3",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
-    { "EPYC-Rome-v4",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen2 },
-    { "EPYC-v1",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
-    { "EPYC-v2",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
-    { "EPYC-v3",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
-    { "EPYC-v4",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Zen },
-    { "Opteron_G1-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Opteron_G2-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Opteron_G3-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Opteron_G4-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Opteron_G5-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "phenom-v1",         { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Broadwell-v1",      { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Denverton-v1",      { !isAmd, isIntel,  isX86_64v2,  !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Conroe-v1",         { !isAmd, isIntel,  !isX86_64v2, !isX86_64v3, !isX86_64v4, hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown },
-    { "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  isX86_64v4,  hasFlagsT, hasFlagsF, isUarch }, EUarch::Unknown }
+    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen4 },
+    { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen3 },
+    { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen3 },
+    { "EPYC-Rome-v1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v2",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v3",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen2 },
+    { "EPYC-Rome-v4",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen2 },
+    { "EPYC-v1",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen },
+    { "EPYC-v2",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen },
+    { "EPYC-v3",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen },
+    { "EPYC-v4",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen },
+    { "Opteron_G1-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Opteron_G2-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Opteron_G3-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Opteron_G4-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Opteron_G5-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "phenom-v1",         { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Broadwell-v1",      { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Denverton-v1",      { !isAmd, isIntel,  isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Conroe-v1",         { !isAmd, isIntel,  !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Unknown },
+    { "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  isX86_64v4,  flagPresent, flagAbsent, isUarch }, EUarch::Unknown }
 };
 // clang-format on
 /**

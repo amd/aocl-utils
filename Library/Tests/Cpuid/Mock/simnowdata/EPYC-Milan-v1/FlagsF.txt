@@ -1,81 +1,81 @@
-2 pclmulqdq
-4 monitor
-5 dscpl
-6 vmx
-7 smx
-8 est
-10 ssse3
-13 cx16
-14 xtpr
-16 pcid
-19 sse4_2
-22 popcnt
-31 fpu
-47 pse36
-49 clflush
-50 ds
-55 sse2
-56 ss
-57 ht
-58 tm
-59 ia64
-62 fsgsbase
-64 bmi1
-70 invpcid
-71 rtm
-72 mpx
-73 avx512f
-77 smap
-78 avx512ifma
-81 clwb
-82 avx512pf
-83 avx512er
-85 sha_ni
-86 avx512bw
-87 avx512vl
-90 pku
-91 ospke
-92 avx512_vpopcntdq
-94 rdpid
-95 avx512_4vnniw
-97 avx512_bf16
-98 avxvnni
-99 xsaveopt
-100 xsavec
-101 xgetbv1
-103 lahf_lm
-105 svm
-109 sse4a
-112 osvw
-113 ibs
-114 xop
-115 skinit
-116 wdt
-117 lwp
-118 fma4
-119 tce
-120 nodeid_msr
-121 tbm
-122 topoext
-123 perfctr_core
-131 lmi64
-132 _3dnowext
-133 _3dnow
-135 npt
-136 lbrv
-138 nrip_save
-139 tsc_scale
-140 vmcb_clean
-141 flushbyasid
-142 decodeassists
-143 pause_filter
-144 pfthreshold
-145 xstore
-146 xstore_en
-147 xcrypt
-148 xcrypt_en
-149 ace2
-150 ace2_en
-151 phe
-152 phe_en
-153 pmm
+dtes64
+dscpl
+vmx
+smx
+est
+tm2
+cid
+xtpr
+pdcm
+dca
+x2apic
+tsc_deadline
+vme
+pn
+ds
+acpi
+ss
+ht
+tm
+ia64
+pbe
+tsc_adjust
+hle
+rtm
+mpx
+avx512f
+avx512dq
+avx512ifma
+pcommit
+avx512pf
+avx512er
+avx512cd
+avx512bw
+avx512vl
+avx512vbmi
+ospke
+avx512_vpopcntdq
+la57
+avx512_4vnniw
+avx512_4fmaps
+avxvnni
+xsaveopt
+xsavec
+xgetbv1
+xsaves
+cmp_legacy
+extapic
+misalignsse
+ibs
+xop
+skinit
+wdt
+lwp
+fma4
+tce
+nodeid_msr
+tbm
+topoext
+perfctr_core
+perfctr_nb
+_3dnowext
+_3dnow
+invtsc
+lbrv
+svm_lock
+tsc_scale
+vmcb_clean
+flushbyasid
+decodeassists
+pause_filter
+pfthreshold
+xstore
+xstore_en
+xcrypt
+xcrypt_en
+ace2
+ace2_en
+phe
+phe_en
+pmm
+pmm_en
