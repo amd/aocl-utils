@@ -28,6 +28,10 @@
 
 #pragma once
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Interface/Cpuid/ICpu.hh"

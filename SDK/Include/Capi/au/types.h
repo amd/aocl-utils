@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,14 +30,14 @@
 #define __AU_TYPES_H__
 #include "Au/Config.h"
 
-#if defined(AU_TARGET_OS_IS_LINUX)
-#include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#else
+#ifdef __cplusplus
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#else
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
 #endif
 
 typedef int8_t  Int8;

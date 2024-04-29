@@ -26,7 +26,9 @@
  *
  */
 
+#if defined(AU_TARGET_OS_IS_LINUX)
 #include <Python.h>
+#endif
 #include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>
@@ -116,6 +118,7 @@ INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
 
 TEST_P(QemuTest, CpuTypeTest)
 {
+#if defined(AU_TARGET_OS_IS_LINUX)
     const auto params          = GetParam();
     const auto cpuType         = std::get<0>(params);
     const auto expectedResults = std::get<1>(params);
@@ -139,6 +142,8 @@ TEST_P(QemuTest, CpuTypeTest)
     // and compare it with the Uarch value of the emulated CPU.
     auto uarchResult = readFromFile<EUarch>("UarchResult.txt");
     EXPECT_EQ(uarchResult[0], uarch);
+#endif
+    return;
 }
 
 class QemuTestVendorInfo
@@ -163,6 +168,7 @@ INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
                          ::testing::ValuesIn(testParametersVendorInfo));
 TEST_P(QemuTestVendorInfo, CpuTypeTest)
 {
+#if defined(AU_TARGET_OS_IS_LINUX)
     const auto     params          = GetParam();
     const auto     cpuType         = std::get<0>(params);
     const auto     expectedResults = std::get<1>(params);
@@ -179,5 +185,7 @@ TEST_P(QemuTestVendorInfo, CpuTypeTest)
         readFromFile<Uint32>("VendorInfoCpp.txt");
     EXPECT_EQ(vendorInfo, vendorInfoResultC);
     EXPECT_EQ(vendorInfo, vendorInfoResultCpp);
+#endif
+    return;
 }
 } // namespace

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,7 +47,7 @@ namespace Au { namespace Os::Env {
 
     using env_map = std::map<String, String, std::less<>>;
 
-    constexpr String      spaces = "\t\n\r ";
+    const String      spaces = "\t\n\r ";
     static inline String& trim_left(String& sv)
     {
         sv.erase(0, sv.find_first_not_of(spaces));
@@ -95,7 +95,7 @@ namespace Au { namespace Os::Env {
     } // namespace Linux
 #else
     namespace Windows {
-        static env_map __getAll()
+        static env_map _getAll()
         {
             /* FIXME: Add windows specific code */
             env_map __env;

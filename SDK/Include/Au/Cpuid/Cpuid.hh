@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@ class CpuInfo : public ICpu
      *
      * @return EGoverner type
      */
-    virtual EGoverner getGoverner() const = 0;
+    virtual EGoverner getGoverner() const override = 0;
 
   public:
     /* FIXME: All the virtual from ICpu */

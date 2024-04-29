@@ -33,6 +33,7 @@
 
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Misc.hh"
+#include "gtest/gtest.h"
 #include <fstream>
 
 namespace {
@@ -85,6 +86,7 @@ readFromFile(const String& fileName)
     file.close();
     return items;
 }
+
 template<>
 inline vector<String>
 readFromFile<String>(const String& fileName)
@@ -104,5 +106,22 @@ readFromFile<String>(const String& fileName)
 
     file.close();
     return items;
+}
+
+static inline void
+checkAffinity(Uint32 cNum)
+{
+#ifdef __linux__
+    cpu_set_t cpuSet;
+    auto      pid = getpid();
+
+    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
+    EXPECT_TRUE(cpuSet.__bits[0] == static_cast<long unsigned int>(1 << cNum));
+#else
+    HANDLE    hProcess = GetCurrentProcess();
+    DWORD_PTR procAffinity, sysAffinity;
+    GetProcessAffinityMask(hProcess, &procAffinity, &sysAffinity);
+    EXPECT_TRUE(procAffinity & (1 << cNum));
+#endif
 }
 } // namespace

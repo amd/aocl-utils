@@ -30,6 +30,7 @@
 #define __AU_CPUID_CPUID_H__
 
 #include "Au/Config.h"
+#include "Au/Defs.hh"
 #include "Capi/au/au.h"
 
 #include <stdbool.h>
@@ -49,7 +50,7 @@ typedef Uint32 au_cpu_flag_t;
  *
  * @return         1/true if processor vendor is AMD.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_is_amd(au_cpu_num_t cpu_num);
 
 /**
@@ -61,7 +62,7 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num);
  *
  * @return         None
  */
-void
+AUD_API_EXPORT void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**
@@ -71,7 +72,7 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  *
  * @return         1/true if processor architecture is AMD ZEN.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
@@ -81,7 +82,7 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  *
  * @return         1/true if processor architecture is AMD ZENPLUS.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
 
 /**
@@ -91,7 +92,7 @@ au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
  *
  * @return         1/true if processor architecture is AMD ZEN2.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
@@ -101,7 +102,7 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
  *
  * @return         1/true if processor architecture is AMD ZEN3.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
@@ -111,7 +112,7 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
  *
  * @return         1/true if processor architecture is AMD ZEN4.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
@@ -121,7 +122,7 @@ au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
  *
  * @return         1/true if processor architecture is AMD ZEN5.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
@@ -133,7 +134,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *
  * @return         an array indicating  feature availability
  */
-bool*
+AUD_API_EXPORT bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
                   int               count);
@@ -145,7 +146,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
  *
  * @return         1/true if error occorured, false otherwise.
  */
-bool
+AUD_API_EXPORT bool
 au_cpuid_is_error(au_error_t err);
 
 /******* OLD APIs ********/
@@ -161,7 +162,7 @@ au_cpuid_is_error(au_error_t err);
  * @return         1/true if processor vendor is AMD.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_is_amd instead.")
-bool
+AUD_API_EXPORT bool
 alci_is_amd(au_cpu_num_t cpu_num);
 
 /**
@@ -174,7 +175,7 @@ alci_is_amd(au_cpu_num_t cpu_num);
  * @return         1/true if getting vendor info is successful.
  */
 AU_DEPRECATED_API_X("Use alci_cpu_get_vendor instead.")
-au_error_t
+AUD_API_EXPORT au_error_t
 alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
 
 /**
@@ -188,7 +189,7 @@ alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
  * @return         1/true if processor architecture is AMD ZEN.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen instead.")
-bool
+AUD_API_EXPORT bool
 alci_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
@@ -202,7 +203,7 @@ alci_arch_is_zen(au_cpu_num_t cpu_num);
  * @return         1/true if processor architecture is AMD ZEN2.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen2 instead.")
-bool
+AUD_API_EXPORT bool
 alci_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
@@ -216,7 +217,7 @@ alci_arch_is_zen2(au_cpu_num_t cpu_num);
  * @return         1/true if processor architecture is AMD ZEN3.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen3 instead.")
-bool
+AUD_API_EXPORT bool
 alci_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
@@ -230,7 +231,7 @@ alci_arch_is_zen3(au_cpu_num_t cpu_num);
  * @return         1/true if processor architecture is AMD ZEN4.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen4 instead.")
-bool
+AUD_API_EXPORT bool
 alci_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
@@ -244,7 +245,7 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num);
  * @return         1/true if feature is available.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_has_flag instead.")
-bool
+AUD_API_EXPORT bool
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
 
 /**
@@ -254,7 +255,7 @@ alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
  *
  * @return         Returns last level cache.
  */
-uint32_t
+AUD_API_EXPORT uint32_t
 alci_cpu_get_last_cache_level(au_cpu_num_t core);
 
 #define alcpu_is_amd()                  alci_is_amd(0)

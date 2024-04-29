@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,26 +37,30 @@ AUD_EXTERN_C_BEGIN
 /**
  * @brief Return Version Major number
  */
-Uint32 AUD_API_EXPORT
+AUD_API_EXPORT
+Uint32
 au_get_version_major(void);
 
 /**
  * @brief Return Version Minor number
  */
-Uint32 AUD_API_EXPORT
+AUD_API_EXPORT
+Uint32
 au_get_version_minor(void);
 
 /**
  * @brief Return Version Patch level
  */
-Uint32 AUD_API_EXPORT
+AUD_API_EXPORT
+Uint32
 au_get_version_patch(void);
 
 /**
  * @brief returns version of library
  *
  */
-const char* const AUD_API_EXPORT
+AUD_API_EXPORT
+const char* const
 au_get_version_str(void);
 
 AUD_EXTERN_C_END

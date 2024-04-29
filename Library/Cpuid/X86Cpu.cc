@@ -49,11 +49,16 @@ X86Cpu::X86Cpu(CpuNumT num)
     AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
     if (num > nthreads)
         num = 0; // fallback to default behaviour
+#ifdef __linux__
     cpu_set_t cpuSet;
     CPU_ZERO(&cpuSet);
     CPU_SET(num, &cpuSet);
     auto pid = getpid();
     sched_setaffinity(pid, sizeof(cpu_set_t), &cpuSet);
+#else
+    HANDLE hProcess = GetCurrentProcess();
+    bool   bSet     = SetProcessAffinityMask(hProcess, 1 << num);
+#endif
     pImpl()->update();
 }
 

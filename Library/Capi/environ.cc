@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,7 +48,7 @@ str_tolower(String& s)
 
 AUD_EXTERN_C_BEGIN;
 
-const char* AUD_API_EXPORT
+AUD_API_EXPORT const char*
 au_env_get(const char* name)
 {
     if (!name)
@@ -61,7 +61,7 @@ au_env_get(const char* name)
     return val.data();
 }
 
-void AUD_API_EXPORT
+AUD_API_EXPORT void
 au_env_unset(const char* name)
 {
     if (!name)
@@ -69,7 +69,7 @@ au_env_unset(const char* name)
     Env::unset(name);
 }
 
-const char* AUD_API_EXPORT
+AUD_API_EXPORT const char*
 au_env_set(const char* name, const char* val)
 {
     if (!name || !val)
@@ -83,7 +83,7 @@ au_env_set(const char* name, const char* val)
     return name;
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT bool
 au_env_is_enabled(const char* cc)
 {
     if (!cc)
@@ -102,7 +102,7 @@ au_env_is_enabled(const char* cc)
     return false;
 }
 
-bool AUD_API_EXPORT
+AUD_API_EXPORT bool
 au_env_is_set(const char* cc)
 {
     if (!cc)

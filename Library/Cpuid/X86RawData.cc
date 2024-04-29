@@ -239,7 +239,6 @@ X86Cpu::Impl::update()
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         updateflag(flg, m_cutils->hasFlag(expected, at(req)));
-        std::this_thread::sleep_for(std::chrono::nanoseconds(.1));
     }
 
     /*
@@ -367,7 +366,7 @@ X86Cpu::Impl::apply(RequestT& regs)
             return;
     }
 
-    const auto* const found = std::ranges::find_if(
+    auto found = std::ranges::find_if(
         begin(CPUID_MAP), end(CPUID_MAP), [&](const auto& input) {
             const auto& [req, expected, flg] = input;
             return req == regs;
