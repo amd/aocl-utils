@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,6 +47,8 @@ X86Cpu::X86Cpu(CpuNumT num)
 
     auto nthreads = std::thread::hardware_concurrency();
     AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
+    if (num > nthreads)
+        num = 0; // fallback to default behaviour
     cpu_set_t cpuSet;
     CPU_ZERO(&cpuSet);
     CPU_SET(num, &cpuSet);

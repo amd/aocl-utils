@@ -31,11 +31,10 @@
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Interface/Cpuid/ICpu.hh"
-#include "Au/Misc.hh"
 
 #include <map>
-#include <sstream>
 #include <memory>
+#include <sstream>
 
 #define AUD_DEFINE_ENUM(name, type, ...)                                       \
     enum class name : type                                                     \
@@ -61,7 +60,6 @@
         }                                                                      \
         return os;                                                             \
     }
-
 
 namespace Au {
 
@@ -402,7 +400,10 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      */
     void update();
 
-    virtual EGoverner getGoverner() const override { return EGoverner::eUnknown; }
+    virtual EGoverner getGoverner() const override
+    {
+        return EGoverner::eUnknown;
+    }
 
     CacheView getCacheView() const;
 

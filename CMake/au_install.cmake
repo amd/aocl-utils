@@ -112,10 +112,17 @@ if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/X86Cpu.hh)
     ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/cpu.hh \
     )")
 endif()
+if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.so)
+    install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${CMAKE_DEBUG_POSTFIX}.so \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.so \
+    )")
+endif()
 if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.a)
     install(CODE "execute_process( \
     COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.a \
+    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${CMAKE_DEBUG_POSTFIX}.a \
     ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.a \
     )")
 endif()

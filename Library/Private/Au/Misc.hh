@@ -34,6 +34,10 @@
 #include <iostream>
 #include <limits>
 #include <type_traits>
+/* Note: This file contains miscellaneous utility functions that are used
+ * across the library. The correctness of the inputs to be verified by the
+ * caller no validation is done in the functions.
+ */
 namespace Au {
 
 /**
