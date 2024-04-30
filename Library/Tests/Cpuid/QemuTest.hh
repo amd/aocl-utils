@@ -26,6 +26,9 @@
  *
  */
 
+#if defined(AU_TARGET_OS_IS_LINUX)
+#include <Python.h>
+#endif
 #include "Au/Cpuid/X86Cpu.hh"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"

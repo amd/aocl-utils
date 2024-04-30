@@ -26,9 +26,6 @@
  *
  */
 
-#if defined(AU_TARGET_OS_IS_LINUX)
-#include <Python.h>
-#endif
 #include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>

@@ -68,9 +68,9 @@ install(
   FILES version.txt
   DESTINATION ${CMAKE_INSTALL_PREFIX}
 )
-
 #To ensure backward compatibility with older versions of AOCL UTILS
-if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h)
+message("Installing headers... ")
+if(EXISTS ${CMAKE_SOURCE_DIR}/SDK/Include/Capi/au/cpuid/cpuid.h)
     install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci)
     install(CODE "execute_process( \
     COMMAND ${CMAKE_COMMAND} -E create_symlink \
@@ -98,7 +98,7 @@ if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.
     ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/macros.h \
     )")
 endif()
-if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/X86Cpu.hh)
+if(EXISTS ${CMAKE_SOURCE_DIR}/SDK/Include/Au/Cpuid/X86Cpu.hh)
     install(DIRECTORY DESTINATION
         ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx)
     install(CODE "execute_process( \
@@ -112,20 +112,38 @@ if(EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/X86Cpu.hh)
     ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/cpu.hh \
     )")
 endif()
-if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.so)
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${CMAKE_DEBUG_POSTFIX}.so \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.so \
-    )")
+message("Installing binaries... ")
+if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
+    set(DEBUG_POSTFIX "-dbg")
 endif()
-if (EXISTS ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid.a)
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${CMAKE_DEBUG_POSTFIX}.a \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.a \
-    )")
-endif()
+
+if (UNIX)
+    if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
+        install(CODE "execute_process( \
+          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${DEBUG_POSTFIX}.so \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.so \
+        )")
+        install(CODE "execute_process( \
+          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${DEBUG_POSTFIX}.a \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.a \
+        )")
+    endif()
+else()
+    if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
+        install(CODE "execute_process( \
+          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils_static.lib \
+        )")
+        install(CODE "execute_process( \
+          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.lib \
+        )")
+    endif()
+endif(UNIX)
 
 #install(TARGETS console
 #  RUNTIME COMPONENT runtime
