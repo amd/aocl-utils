@@ -54,7 +54,7 @@ struct CpuidRegs
 
     bool operator<(CpuidRegs const& Reg) const
     {
-        return eax < Reg.eax || ebx < Reg.ebx || ecx < Reg.ecx || edx < Reg.edx;
+        return eax + ebx + ecx + edx < Reg.eax + Reg.ebx + Reg.ecx + Reg.edx;
     }
 
     CpuidRegs const operator&(CpuidRegs const& Reg) const
