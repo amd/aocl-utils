@@ -55,6 +55,8 @@
         Uint64                   flagsCounter = 1;                             \
         std::stringstream        ss(str);                                      \
         String                   token;                                        \
+        std::getline(ss, token, ',');                                          \
+        flags[token] = flagsCounter++;                                         \
         while (std::getline(ss, token, ',')) {                                 \
             token        = token.substr(1, token.length() - 1);                \
             flags[token] = flagsCounter++;                                     \
