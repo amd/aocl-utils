@@ -66,7 +66,11 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
        << static_cast<Uint32>(v_info.m_uarch) << "\n";
 
     AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
+#if defined(AU_TARGET_OS_IS_WINDOWS)
+    strncpy(vend_info, (ss.str()).c_str(), min(ss.str().size(), size));
+#else
     strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
+#endif
 }
 
 AUD_API_EXPORT
