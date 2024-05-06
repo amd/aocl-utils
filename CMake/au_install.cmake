@@ -137,7 +137,7 @@ else()
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils_static.lib \
         )")
         install(CODE "file( COPY_FILE \
-          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
+          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.lib \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.lib \
         )")
     endif()
