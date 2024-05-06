@@ -39,7 +39,9 @@
 #include "gtest/gtest.h"
 
 namespace {
+
 using namespace Au;
+using namespace std;
 
 /**
  * Test parameters for X86Cpu Mock Test

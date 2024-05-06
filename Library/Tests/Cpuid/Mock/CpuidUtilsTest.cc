@@ -32,7 +32,7 @@
 namespace {
 
 using namespace Au;
-using namespace std;
+
 class MockCpuidUtil
     : public MockCpuidBase
     , public ::testing::WithParamInterface<tuple<string, VendorInfo>>

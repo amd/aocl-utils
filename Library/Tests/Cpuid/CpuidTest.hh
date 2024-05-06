@@ -37,6 +37,7 @@
 #include <fstream>
 
 namespace {
+using namespace std;
 using namespace Au;
 
 /**
@@ -49,7 +50,7 @@ using namespace Au;
  */
 template<typename T>
 static void
-writeToFile(const String& fileName, const vector<T>& items)
+writeToFile(const String& fileName, const std::vector<T>& items)
 {
     ofstream file(fileName);
     if (!file.is_open()) {
@@ -93,7 +94,7 @@ readFromFile<String>(const String& fileName)
 {
     ifstream       file(fileName);
     String         data;
-    vector<String> items;
+    std::vector<String> items;
 
     if (!file.is_open()) {
         cout << "Error opening file" << fileName << endl;
