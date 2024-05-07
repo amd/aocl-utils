@@ -44,15 +44,21 @@ struct CpuidRegs
     Uint32 ecx;
     Uint32 edx;
 
-    /* following are required for making this key in a std::map */
     bool operator==(CpuidRegs const& Reg) const
     {
         return eax == Reg.eax && ebx == Reg.ebx && ecx == Reg.ecx
                && edx == Reg.edx;
     }
 
+    /* following is required for making this key in a std::map */
     bool operator<(CpuidRegs const& Reg) const
     {
+        /* Windows requires all comparators to follow strict weak ordering.
+         * The below definition follows the constraint.
+         * Note: The overflow that might occur doesn't affect the usecase,
+         * as this is used for the ordering of keys in the map and the order
+         * is insignificant.
+         */
         return eax + ebx + ecx + edx < Reg.eax + Reg.ebx + Reg.ecx + Reg.edx;
     }
 
