@@ -35,7 +35,7 @@ using namespace Au;
 
 class MockCpuidUtil
     : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
+    , public ::testing::WithParamInterface<std::tuple<String, VendorInfo>>
 {};
 
 INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
@@ -52,12 +52,12 @@ INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
 TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
     const auto       params          = GetParam();
-    const string     cpuType         = get<0>(params);
+    const String     cpuType         = get<0>(params);
     const VendorInfo expectedResults = get<1>(params);
     filename                         = cpuType;
     auto reqRespData                 = Configure();
 
-    cout << "Mocking " << cpuType << endl;
+    std::cout << "Mocking " << cpuType << std::endl;
     EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
               (expectedResults.m_mfg));
     EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),

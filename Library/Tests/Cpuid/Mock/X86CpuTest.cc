@@ -33,10 +33,10 @@
 namespace {
 
 using namespace Au;
-using namespace std;
 class MockX86Cpu
     : public MockCpuidBase
-    , public ::testing::WithParamInterface<tuple<string, vector<bool>, EUarch>>
+    , public ::testing::WithParamInterface<
+          std::tuple<String, std::vector<bool>, EUarch>>
 {
   protected:
     void SetUp() override
@@ -60,19 +60,19 @@ INSTANTIATE_TEST_SUITE_P(MockX86CpuTestSuite,
 TEST_P(MockX86Cpu, MockX86CpuTest)
 {
 
-    const auto   params          = GetParam();
-    const auto   cpuType         = get<0>(params);
-    const auto   expectedResults = get<1>(params);
-    const auto   uarch           = get<2>(params);
-    auto         resultT         = true;
-    auto         resultF         = false;
-    vector<bool> results;
+    const auto        params          = GetParam();
+    const auto        cpuType         = get<0>(params);
+    const auto        expectedResults = get<1>(params);
+    const auto        uarch           = get<2>(params);
+    auto              resultT         = true;
+    auto              resultF         = false;
+    std::vector<bool> results;
 
     filename           = cpuType;
     auto   reqRespData = Configure();
     X86Cpu cpu{ &mockCpuidUtils, 0 };
 
-    cout << "Mocking " << cpuType << endl;
+    std::cout << "Mocking " << cpuType << std::endl;
     results.push_back(cpu.isAMD());
     results.push_back(cpu.isIntel());
     results.push_back(cpu.isX86_64v2());
@@ -80,12 +80,12 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     results.push_back(cpu.isX86_64v4());
 
     // Has flag tests
-    String       srcDir     = PROJECT_SOURCE_DIR;
-    String       simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
-    String       absPath    = srcDir + simnowData + cpuType + "/FlagsT.txt";
-    auto         flags      = readFromFile<String>(absPath);
-    string       token;
-    stringstream ss;
+    String            srcDir     = PROJECT_SOURCE_DIR;
+    String            simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
+    String            absPath = srcDir + simnowData + cpuType + "/FlagsT.txt";
+    auto              flags   = readFromFile<String>(absPath);
+    String            token;
+    std::stringstream ss;
     ss << flags;
     while (std::getline(ss, token, ':')) {
         auto flag       = stoi(token);
@@ -106,7 +106,7 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
     }
     results.push_back(!resultF);
 
-    cout << "Checking Uarch" << endl;
+    std::cout << "Checking Uarch" << std::endl;
     results.push_back(cpu.isUarch(uarch));
     EXPECT_EQ(results, expectedResults);
     EXPECT_EQ(cpu.getUarch(), uarch);

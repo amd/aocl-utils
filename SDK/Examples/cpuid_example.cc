@@ -32,7 +32,6 @@
 #include <iostream>
 
 using namespace Au;
-using namespace std;
 
 static void
 display_core_info()
@@ -40,20 +39,22 @@ display_core_info()
     X86Cpu cpu{ 0 };
 
     if (cpu.isAMD()) {
-        cout << "AMD CPU detected..." << endl;
+        std::cout << "AMD CPU detected..." << std::endl;
     } else if (cpu.isIntel()) {
-        cout << "Intel CPU detected..." << endl;
+        std::cout << "Intel CPU detected..." << std::endl;
     } else {
-        cout << "Unknown CPU detected..." << endl;
+        std::cout << "Unknown CPU detected..." << std::endl;
     }
 
-    cout << "\nGetting CPU information for core 0" << endl;
+    std::cout << "\nGetting CPU information for core 0" << std::endl;
     auto vInfo = cpu.getVendorInfo();
-    cout << "Vendor   : " << static_cast<Uint32>(vInfo.m_mfg) << endl;
-    cout << "Family   : " << static_cast<Uint32>(vInfo.m_family) << endl;
-    cout << "Model    : " << vInfo.m_model << endl;
-    cout << "Stepping : " << vInfo.m_stepping << endl;
-    cout << "Uarch    : " << static_cast<Uint32>(vInfo.m_uarch) << endl;
+    std::cout << "Vendor   : " << static_cast<Uint32>(vInfo.m_mfg) << std::endl;
+    std::cout << "Family   : " << static_cast<Uint32>(vInfo.m_family)
+              << std::endl;
+    std::cout << "Model    : " << vInfo.m_model << std::endl;
+    std::cout << "Stepping : " << vInfo.m_stepping << std::endl;
+    std::cout << "Uarch    : " << static_cast<Uint32>(vInfo.m_uarch)
+              << std::endl;
 }
 
 static void
@@ -61,25 +62,25 @@ display_isa_info()
 {
     X86Cpu cpu{ 0 };
 
-    cout << "\nGetting ISA information for core 0" << endl;
+    std::cout << "\nGetting ISA information for core 0" << std::endl;
     if (cpu.isX86_64v4()) {
-        cout << "CPU supports x86-64v4 ISA" << endl;
+        std::cout << "CPU supports x86-64v4 ISA" << std::endl;
     }
     if (cpu.isX86_64v3()) {
-        cout << "CPU supports x86-64v3 ISA" << endl;
+        std::cout << "CPU supports x86-64v3 ISA" << std::endl;
     }
     if (cpu.isX86_64v2()) {
-        cout << "CPU supports x86-64v2 ISA" << endl;
+        std::cout << "CPU supports x86-64v2 ISA" << std::endl;
     } else {
-        cout << "CPU does not support x86-64v2 or higher ISA" << endl;
+        std::cout << "CPU does not support x86-64v2 or higher ISA" << std::endl;
     }
-    cout << "\nCpu Feature Identification..." << endl;
+    std::cout << "\nCpu Feature Identification..." << std::endl;
     // clang-format off
-    cout << "TSC_ADJUST : " << (cpu.hasFlag(ECpuidFlag::tsc_adjust) ? "yes" : "no") << endl;
-    cout << "AVX        : " << (cpu.hasFlag(ECpuidFlag::avx) ? "yes" : "no") << endl;
-    cout << "AVXVNNI    : " << (cpu.hasFlag(ECpuidFlag::avxvnni) ? "yes" : "no") << endl;
-    cout << "AVX2       : " << (cpu.hasFlag(ECpuidFlag::avx2) ? "yes" : "no") << endl;
-    cout << "AVX512     : " << (cpu.hasFlag(ECpuidFlag::avx512f) ? "yes" : "no") << endl;
+    std::cout << "TSC_ADJUST : " << (cpu.hasFlag(ECpuidFlag::tsc_adjust) ? "yes" : "no") << std::endl;
+    std::cout << "AVX        : " << (cpu.hasFlag(ECpuidFlag::avx) ? "yes" : "no") << std::endl;
+    std::cout << "AVXVNNI    : " << (cpu.hasFlag(ECpuidFlag::avxvnni) ? "yes" : "no") << std::endl;
+    std::cout << "AVX2       : " << (cpu.hasFlag(ECpuidFlag::avx2) ? "yes" : "no") << std::endl;
+    std::cout << "AVX512     : " << (cpu.hasFlag(ECpuidFlag::avx512f) ? "yes" : "no") << std::endl;
     // clang-format on
 }
 

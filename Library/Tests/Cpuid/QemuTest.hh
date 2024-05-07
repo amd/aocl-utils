@@ -46,7 +46,7 @@ using namespace Au;
  */
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true, flagAbsent=true, isUarch=true;
-const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
+const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
     { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch },  EUarch::Zen4 },
     { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch },  EUarch::Zen3 },
     { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch },  EUarch::Zen3 },
@@ -78,7 +78,7 @@ const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
  * 2. VendorInfo structure containing the expected results.
  */
 // clang-format off
-const vector<tuple<String, VendorInfo>> testParametersVendorInfo = {
+const std::vector<std::tuple<String, VendorInfo>> testParametersVendorInfo = {
     { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x0, EUarch::Zen4 } } },
     { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1, EUarch::Zen3 } } },
     { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1, EUarch::Zen3 } } },
