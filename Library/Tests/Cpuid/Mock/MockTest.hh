@@ -39,6 +39,7 @@
 #include "gtest/gtest.h"
 
 namespace {
+
 using namespace Au;
 
 /**
@@ -54,7 +55,7 @@ using namespace Au;
  */
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true;
-const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
+const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
     { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen4 },
     { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen3 },
     { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch }, EUarch::Zen3 },
@@ -85,7 +86,7 @@ const vector<tuple<String, vector<bool>, EUarch>> testParametersX86Cpu = {
  * 2. VendorInfo structure containing the expected results.
  */
 // clang-format off
-const vector<tuple<String, VendorInfo>> testParametersCpuidUtils = {
+const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x0 } } },
     { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
     { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
@@ -142,21 +143,21 @@ class MockCpuidBase : public testing::Test
      * @return map<RequestT, ResponseT> is the map containing the request and
      * response data
      */
-    map<RequestT, ResponseT> parseCSV(const String& filename)
+    std::map<RequestT, ResponseT> parseCSV(const String& filename)
     {
-        map<RequestT, ResponseT> data;
+        std::map<RequestT, ResponseT> data;
 
-        cout << "Processing" << filename << std::endl;
-        ifstream file(filename);
+        std::cout << "Processing" << filename << std::endl;
+        std::ifstream file(filename);
         if (!file.is_open()) {
-            cerr << "Error opening file: " << filename << endl;
+            std::cerr << "Error opening file: " << filename << std::endl;
             return data; // Return an empty vector if the file cannot be opened
         }
 
         String line;
         while (getline(file, line)) {
-            istringstream lineStream(line);
-            String        requestStr, respStr;
+            std::istringstream lineStream(line);
+            String             requestStr, respStr;
 
             // Assuming the CSV structure is
             // {1,0,0,0}:{329300,2048,4294586883,126614525}
@@ -194,13 +195,13 @@ class MockCpuidBase : public testing::Test
      * to the CPU.
      *
      */
-    map<RequestT, ResponseT> Configure()
+    std::map<RequestT, ResponseT> Configure()
     {
         String projectDir   = PROJECT_SOURCE_DIR;
         String testDir      = "/Library/Tests/Cpuid/Mock/simnowdata/";
         String dataFilename = projectDir + testDir + filename + "/" + filename;
 
-        map<RequestT, ResponseT> csvData = parseCSV(dataFilename);
+        std::map<RequestT, ResponseT> csvData = parseCSV(dataFilename);
         for (const auto& entry : csvData) {
             ON_CALL(mockCpuidUtils, __raw_cpuid(entry.first))
                 .WillByDefault(testing::Return(entry.second));

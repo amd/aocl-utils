@@ -132,14 +132,12 @@ if (UNIX)
     endif()
 else()
     if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
-        install(CODE "execute_process( \
-          COMMAND ${CMAKE_COMMAND} -E create_symlink \
+        install(CODE "file(COPY_FILE \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils_static.lib \
         )")
-        install(CODE "execute_process( \
-          COMMAND ${CMAKE_COMMAND} -E create_symlink \
-          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
+        install(CODE "file( COPY_FILE \
+          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.lib \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.lib \
         )")
     endif()

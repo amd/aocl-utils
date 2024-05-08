@@ -11,7 +11,7 @@
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-
+  
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
@@ -21,17 +21,17 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Cpuid API Reference" href="../api/index.html" />
-    <link rel="prev" title="Cpuid HOWTO" href="index.html" />
+    <link rel="prev" title="Cpuid HOWTO" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -48,8 +48,19 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Details</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#aocl-utils">AOCL-UTILS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#project-structure">Project structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-on-linux">BUILD AND INSTALL ON LINUX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-on-windows">BUILD AND INSTALL ON WINDOWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-setup">Environment Setup:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows-build-with-llvm-clang">Windows Build with LLVM/Clang:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Build</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-build-options">List of build options</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -82,7 +93,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="details">
 <span id="readme"></span><h1>Details<a class="headerlink" href="#details" title="Link to this heading"></a></h1>
 <section id="aocl-utils">
@@ -99,8 +110,10 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">Tools</span></code>: The necessary tools to work with the project.</p></li>
 </ul>
 </section>
+<section id="build-and-install-on-linux">
+<h2>BUILD AND INSTALL ON LINUX<a class="headerlink" href="#build-and-install-on-linux" title="Link to this heading"></a></h2>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
 <p>The project depends on the following libraries:</p>
 <ul class="simple">
 <li><p>CMake 3.25</p></li>
@@ -109,7 +122,9 @@
 </ul>
 </section>
 <section id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<h3>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h3>
+<section id="build">
+<h4>Build<a class="headerlink" href="#build" title="Link to this heading"></a></h4>
 <p>To build the project, run the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">mkdir</span> <span class="n">build</span>
     <span class="n">cd</span> <span class="n">build</span>
@@ -117,6 +132,18 @@
     <span class="n">cmake</span> <span class="n">build</span> <span class="o">.</span>
 </pre></div>
 </div>
+</section>
+<section id="install">
+<h4>Install<a class="headerlink" href="#install" title="Link to this heading"></a></h4>
+<p>To install the library, run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">cmake</span>  <span class="o">-</span><span class="n">DCMAKE_INSTALL_PREFIX</span><span class="o">=&lt;</span><span class="n">Install</span> <span class="n">Path</span><span class="o">&gt;</span> <span class="o">..</span>
+    <span class="n">make</span>
+    <span class="n">make</span> <span class="n">install</span>
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<h4>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h4>
 <p>Note: To build with tests enabled use</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">cmake</span> <span class="o">-</span><span class="n">DAU_BUILD_TESTS</span><span class="o">=</span><span class="n">TRUE</span> <span class="o">-</span><span class="n">DAU_CMAKE_VERBOSE</span><span class="o">=</span><span class="n">TRUE</span> <span class="o">..</span>
 </pre></div>
@@ -125,6 +152,85 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">ctest</span>
 </pre></div>
 </div>
+</section>
+</section>
+</section>
+<section id="build-and-install-on-windows">
+<h2>BUILD AND INSTALL ON WINDOWS<a class="headerlink" href="#build-and-install-on-windows" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Dependencies<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The project depends on the following libraries:</p>
+<ul class="simple">
+<li><p>MS Visual Studio (2019 or greater)</p></li>
+<li><p>Clang 15.0 or above</p></li>
+<li><p>Python 3.7 or greater</p></li>
+<li><p>Cmake 3.21 or greater</p></li>
+<li><p>Git</p></li>
+</ul>
+</section>
+<section id="environment-setup">
+<h3>Environment Setup:<a class="headerlink" href="#environment-setup" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Install visual Studio with workload: <em>Desktop development with c++</em>
+- Enable Clang/cl tools(required) &amp; Address Santizer(if require)</p></li>
+<li><p>If using LLVM/Clang as external toolset:
+- Install LLVM
+- Install plugin: <em>llvm2019.vsix</em> :https://marketplace.visualstudio.com/items?itemName=MarekAniola.mangh-llvm2019
+- Install VS19 version 16.10</p></li>
+</ol>
+</section>
+<section id="windows-build-with-llvm-clang">
+<h3>Windows Build with LLVM/Clang:<a class="headerlink" href="#windows-build-with-llvm-clang" title="Link to this heading"></a></h3>
+<p>Using Powershell:</p>
+<ol class="arabic simple">
+<li><p>Checkout the latest code.</p></li>
+<li><p>Open the powershell.exe (as administrator)</p></li>
+<li><p>Set path to current working directory/cmake_source_directory</p></li>
+</ol>
+</section>
+<section id="id2">
+<h3>Build<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">from</span> <span class="pre">source</span> <span class="pre">directory</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PS</span> <span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">-</span><span class="n">A</span> <span class="p">[</span><span class="n">platform</span><span class="p">:</span> <span class="n">x86</span><span class="o">/</span><span class="n">x64</span><span class="p">]</span> <span class="o">-</span><span class="n">B</span> <span class="p">[</span><span class="n">build_directory</span><span class="p">]</span> <span class="p">[</span><span class="n">Enable</span> <span class="n">features</span><span class="p">]</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="p">[</span><span class="n">RELEASE</span><span class="p">]</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;[generator: Visual Studio 17 2022]&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="p">[</span><span class="n">toolset</span><span class="p">:</span><span class="n">ClangCl</span><span class="o">/</span><span class="n">LLVM</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Powershell</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
+                `-Build binaries will be written to cmake_source_directory/build`
+* 2. cmake --build .\build --config=release
+</pre></div>
+</div>
+</section>
+<section id="list-of-build-options">
+<h3>List of build options<a class="headerlink" href="#list-of-build-options" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="o">//</span> <span class="n">Generate</span> <span class="n">Docs</span> <span class="n">during</span> <span class="n">build</span>
+<span class="n">AU_BUILD_DOCS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Enable</span> <span class="n">examples</span>
+<span class="n">AU_BUILD_EXAMPLES</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">FALSE</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Build</span> <span class="n">shared</span> <span class="n">libraries</span>
+<span class="n">AU_BUILD_SHARED_LIBS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">TRUE</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Enable</span> <span class="n">the</span> <span class="n">tests</span><span class="o">.</span>
+<span class="n">AU_BUILD_TESTS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Set</span> <span class="n">cmake</span> <span class="n">verbosity</span>
+<span class="n">AU_CMAKE_VERBOSE</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">ON</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Option</span> <span class="n">to</span> <span class="n">Enable</span> <span class="n">BROKEN</span> <span class="n">tests</span>
+<span class="n">AU_ENABLE_BROKEN_TESTS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Enable</span> <span class="n">OLD</span> <span class="n">alci_</span><span class="o">*</span> <span class="n">APIs</span>
+<span class="n">AU_ENABLE_OLD_API</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
+<span class="o">--</span>
+<span class="o">//</span> <span class="n">Option</span> <span class="n">to</span> <span class="n">Enable</span> <span class="n">SLOW</span> <span class="n">tests</span>
+<span class="n">AU_ENABLE_SLOW_TESTS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
+<span class="o">--</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
@@ -145,7 +251,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -156,7 +262,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

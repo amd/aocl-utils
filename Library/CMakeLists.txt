@@ -61,7 +61,6 @@ set(EVENT_SRC_FILES
 
 set(CAPI_SRC_FILES
     #Capi/base64.cc
-    Capi/cpuid.cc
     Capi/environ.cc
 )
 
@@ -97,8 +96,7 @@ au_cc_library(core
  PUBLIC
  SOURCES ${CORE_SRC_FILES}
  HEADERS
- DEPENDS
- au::cpuid
+ 
 
  USING
  af::sdk::include

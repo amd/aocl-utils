@@ -48,7 +48,7 @@ TEST(CapiX86Cpuid, DISABLED_isAMD)
 }
 TEST(CapiX86Cpuid, DISABLED_hasFlagPositive)
 {
-    vector<String>           flags = readFromFile<String>("FlagsT.txt");
+    std::vector<String>      flags = readFromFile<String>("FlagsT.txt");
     std::vector<const char*> flagsArray;
     flagsArray.reserve(flags.size() + 1);
 
@@ -62,7 +62,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagPositive)
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 {
-    vector<String>           flags = readFromFile<String>("FlagsF.txt");
+    std::vector<String>      flags = readFromFile<String>("FlagsF.txt");
     std::vector<const char*> flagsArray;
 
     flagsArray.reserve(flags.size() + 1);
@@ -76,7 +76,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 
 TEST(CapiX86Cpuid, hasFlags)
 {
-    vector<char*> testFlags = { "" };
+    std::vector<char*> testFlags = { "" };
     EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
     testFlags = { "Test" };
     EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
@@ -140,17 +140,17 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
     char buf[sizeof(VendorInfo) + 1];
     au_cpuid_get_vendor(0, buf, sizeof(buf));
 
-    String         vInfo(buf);
-    String         token;
-    stringstream   ss(vInfo);
-    vector<Uint32> vendorInfo = {};
+    String              vInfo(buf);
+    String              token;
+    std::stringstream   ss(vInfo);
+    std::vector<Uint32> vendorInfo = {};
 
     while (getline(ss, token, '\n')) {
         vendorInfo.push_back(stoi(token));
     }
     auto iter = vendorInfo.begin();
 
-    writeToFile<vector<Uint32>::iterator>(
+    writeToFile<std::vector<Uint32>::iterator>(
         "VendorInfoC.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
 }
 } // namespace

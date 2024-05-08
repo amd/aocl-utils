@@ -76,10 +76,10 @@ TEST(X86Cpuid, DISABLED_isIntel)
 
 TEST(X86Cpuid, DISABLED_hasFlagPositive)
 {
-    X86Cpu       cpu{ 0 };
-    auto         flags = readFromFile<String>("FlagsT.txt");
-    string       token;
-    stringstream ss;
+    X86Cpu            cpu{ 0 };
+    auto              flags = readFromFile<String>("FlagsT.txt");
+    String            token;
+    std::stringstream ss;
 
     ss << flags;
     while (std::getline(ss, token, ':')) {
@@ -91,10 +91,10 @@ TEST(X86Cpuid, DISABLED_hasFlagPositive)
 
 TEST(X86Cpuid, DISABLED_hasFlagNegative)
 {
-    X86Cpu       cpu{ 0 };
-    auto         flags = readFromFile<String>("FlagsF.txt");
-    string       token;
-    stringstream ss;
+    X86Cpu            cpu{ 0 };
+    auto              flags = readFromFile<String>("FlagsF.txt");
+    String            token;
+    std::stringstream ss;
 
     ss << flags;
     while (std::getline(ss, token, ':')) {
@@ -134,14 +134,16 @@ TEST(X86Cpuid, DISABLED_getVendorInfo)
     X86Cpu cpu{ 0 };
     auto   result = cpu.getVendorInfo();
 
-    vector<Uint32> vendorInfo = { enumToValue<EVendor, Uint32>(result.m_mfg),
-                                  enumToValue<EFamily, Uint32>(result.m_family),
-                                  result.m_model,
-                                  result.m_stepping,
-                                  enumToValue<EUarch, Uint32>(result.m_uarch) };
+    std::vector<Uint32> vendorInfo = {
+        enumToValue<EVendor, Uint32>(result.m_mfg),
+        enumToValue<EFamily, Uint32>(result.m_family),
+        result.m_model,
+        result.m_stepping,
+        enumToValue<EUarch, Uint32>(result.m_uarch)
+    };
 
     auto iter = vendorInfo.begin();
-    writeToFile<vector<Uint32>::iterator>(
+    writeToFile<std::vector<Uint32>::iterator>(
         "VendorInfoCpp.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
 }
 TEST(X86Cpuid, CheckCpuNumber)

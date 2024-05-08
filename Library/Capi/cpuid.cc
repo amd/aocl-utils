@@ -66,7 +66,11 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
        << static_cast<Uint32>(v_info.m_uarch) << "\n";
 
     AUD_ASSERT(size >= ss.str().size(), "Buffer too small");
+#if defined(AU_TARGET_OS_IS_WINDOWS)
     strncpy(vend_info, (ss.str()).c_str(), min(ss.str().size(), size));
+#else
+    strncpy(vend_info, (ss.str()).c_str(), std::min(ss.str().size(), size));
+#endif
 }
 
 AUD_API_EXPORT
@@ -161,7 +165,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
 {
     X86Cpu            cpu{ cpu_num };
     std::stringstream ss;
-    string            token;
+    String            token;
     int               index  = 0;
     bool*             result = (bool*)malloc(count * sizeof(bool));
     AUD_ASSERT(result, "Memory allocation failed");
@@ -174,6 +178,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
     std::vector<std::string> flag_names(flag_array, flag_array + count);
 
     ss << flag_names;
+    AUD_ASSERT(flag_names.size() > 1, "The flags list is empty");
     if (flag_names.size() == 1)
         return nullptr;
     while (std::getline(ss, token, ':')) {

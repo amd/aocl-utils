@@ -10,8 +10,9 @@ The project is structured as follows:
 * `SDK`: The release folder.
 * `Tests`: This directory contains the necessary unit tests for the project.
 * `Tools`: The necessary tools to work with the project.
+# BUILD AND INSTALL ON LINUX
 
-# Dependencies
+## Dependencies
 
 The project depends on the following libraries:
 
@@ -19,9 +20,9 @@ The project depends on the following libraries:
 * Gcc-13 or Clang-15
 * GoogleTest
 
-# Getting started
+## Getting started
 
-## Build
+### Build
 
 To build the project, run the following command:
 
@@ -31,7 +32,7 @@ To build the project, run the following command:
     cmake ..
     cmake build .
 ```
-## Install
+### Install
 
 To install the library, run the following command:
 
@@ -40,7 +41,7 @@ To install the library, run the following command:
     make
     make install
 ```
-## Testing
+### Testing
 Note: To build with tests enabled use
 
 ```
@@ -51,6 +52,48 @@ To run the unit tests, run the following command:
 
 ```
     ctest
+```
+# BUILD AND INSTALL ON WINDOWS
+
+## Dependencies
+
+The project depends on the following libraries:
+
+- MS Visual Studio (2019 or greater)
+- Clang 15.0 or above
+- Python 3.7 or greater
+- Cmake 3.21 or greater
+- Git
+
+## Environment Setup:
+
+1. Install visual Studio with workload: *Desktop development with c++*
+	- Enable Clang/cl tools(required) & Address Santizer(if require)
+2. If using LLVM/Clang as external toolset:
+	- Install LLVM
+	- Install plugin: *llvm2019.vsix* :https://marketplace.visualstudio.com/items?itemName=MarekAniola.mangh-llvm2019
+	- Install VS19 version 16.10
+
+## Windows Build with LLVM/Clang:
+
+Using Powershell:
+
+1. Checkout the latest code.
+2. Open the powershell.exe (as administrator)
+3. Set path to current working directory/cmake_source_directory
+
+## Build
+
+`Run from source directory`
+```
+PS > cmake -A [platform: x86/x64] -B [build_directory] [Enable features] -DCMAKE_BUILD_TYPE=[RELEASE] -G "[generator: Visual Studio 17 2022]" -T [toolset:ClangCl/LLVM]
+```
+
+`Powershell`
+```
+* 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
+		`-Build binaries will be written to cmake_source_directory/build`
+* 2. cmake --build .\build --config=release
 ```
 ## List of build options
 ```

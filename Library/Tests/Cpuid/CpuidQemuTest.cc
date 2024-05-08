@@ -52,8 +52,8 @@ class QemuTest
      *
      * @return std::vector<bool> The results of the tests
      */
-    static std::vector<bool> testAll(const std::string&              cpuType,
-                                     const std::vector<std::string>& testNames)
+    static std::vector<bool> testAll(const String&              cpuType,
+                                     const std::vector<String>& testNames)
     {
         std::vector<bool> results;
         for (const auto& testName : testNames) {
@@ -69,7 +69,7 @@ class QemuTest
      *
      * @return bool The result of the test
      */
-    static bool hasFlagPositive(const std::string& cpuType)
+    static bool hasFlagPositive(const String& cpuType)
     {
         String simnowdataPath = PROJECT_SOURCE_DIR;
         simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
@@ -85,7 +85,7 @@ class QemuTest
      *
      * @return bool The result of the test
      */
-    static bool hasFlagNegative(const std::string& cpuType)
+    static bool hasFlagNegative(const String& cpuType)
     {
         String simnowdataPath = PROJECT_SOURCE_DIR;
         simnowdataPath += "/Library/Tests/Cpuid/Mock/simnowdata/";
@@ -122,13 +122,11 @@ TEST_P(QemuTest, CpuTypeTest)
     const auto uarch           = std::get<2>(params);
 
     std::cout << "Emulating " << cpuType << std::endl;
-    const std::vector<std::string> testNames = {
-        "X86Cpuid.DISABLED_isAMD",
-        "X86Cpuid.DISABLED_isIntel",
-        "X86Cpuid.DISABLED_isX86_64v2",
-        "X86Cpuid.DISABLED_isX86_64v3",
-        "X86Cpuid.DISABLED_isX86_64v4"
-    };
+    const std::vector<String> testNames = { "X86Cpuid.DISABLED_isAMD",
+                                            "X86Cpuid.DISABLED_isIntel",
+                                            "X86Cpuid.DISABLED_isX86_64v2",
+                                            "X86Cpuid.DISABLED_isX86_64v3",
+                                            "X86Cpuid.DISABLED_isX86_64v4" };
 
     auto results = testAll(cpuType, testNames);
     results.push_back(hasFlagPositive(cpuType));
@@ -145,7 +143,7 @@ TEST_P(QemuTest, CpuTypeTest)
 
 class QemuTestVendorInfo
     : public QemuTestBase
-    , public ::testing::WithParamInterface<tuple<string, VendorInfo>>
+    , public ::testing::WithParamInterface<std::tuple<String, VendorInfo>>
 {
   protected:
     /**
@@ -154,7 +152,7 @@ class QemuTestVendorInfo
      *
      * @return bool The result of the test
      */
-    bool TestVendorInfo(const string& cpuType)
+    bool TestVendorInfo(const String& cpuType)
     {
         return callQemuEmulator(cpuType.c_str(), "DISABLED_getVendorInfo");
     }
@@ -166,10 +164,10 @@ INSTANTIATE_TEST_SUITE_P(QemuTestSuite,
 TEST_P(QemuTestVendorInfo, CpuTypeTest)
 {
 #if defined(AU_TARGET_OS_IS_LINUX)
-    const auto     params          = GetParam();
-    const auto     cpuType         = std::get<0>(params);
-    const auto     expectedResults = std::get<1>(params);
-    vector<Uint32> vendorInfo      = {
+    const auto          params          = GetParam();
+    const auto          cpuType         = std::get<0>(params);
+    const auto          expectedResults = std::get<1>(params);
+    std::vector<Uint32> vendorInfo      = {
         enumToValue<EVendor, Uint32>(expectedResults.m_mfg),
         enumToValue<EFamily, Uint32>(expectedResults.m_family),
         expectedResults.m_model,
@@ -177,8 +175,9 @@ TEST_P(QemuTestVendorInfo, CpuTypeTest)
         enumToValue<EUarch, Uint32>(expectedResults.m_uarch)
     };
     EXPECT_TRUE(TestVendorInfo(cpuType));
-    vector<Uint32> vendorInfoResultC = readFromFile<Uint32>("VendorInfoC.txt");
-    vector<Uint32> vendorInfoResultCpp =
+    std::vector<Uint32> vendorInfoResultC =
+        readFromFile<Uint32>("VendorInfoC.txt");
+    std::vector<Uint32> vendorInfoResultCpp =
         readFromFile<Uint32>("VendorInfoCpp.txt");
     EXPECT_EQ(vendorInfo, vendorInfoResultC);
     EXPECT_EQ(vendorInfo, vendorInfoResultCpp);

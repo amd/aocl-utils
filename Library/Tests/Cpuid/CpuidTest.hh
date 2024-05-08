@@ -49,14 +49,14 @@ using namespace Au;
  */
 template<typename T>
 static void
-writeToFile(const String& fileName, const vector<T>& items)
+writeToFile(const String& fileName, const std::vector<T>& items)
 {
-    ofstream file(fileName);
+    std::ofstream file(fileName);
     if (!file.is_open()) {
-        cout << "Error opening file" << fileName << endl;
+        std::cout << "Error opening file" << fileName << std::endl;
     } else {
         for (auto item : items) {
-            file << *item << endl;
+            file << *item << std::endl;
         }
     }
 }
@@ -66,15 +66,15 @@ writeToFile(const String& fileName, const vector<T>& items)
  * @return vector<T> The flags read from the file
  */
 template<typename T>
-inline vector<T>
+inline std::vector<T>
 readFromFile(const String& fileName)
 {
-    ifstream  file(fileName);
-    String    data;
-    vector<T> items;
+    std::ifstream  file(fileName);
+    String         data;
+    std::vector<T> items;
 
     if (!file.is_open()) {
-        cout << "Error opening file" << fileName << endl;
+        std::cout << "Error opening file" << fileName << std::endl;
     }
 
     while (getline(file, data)) {
@@ -88,15 +88,15 @@ readFromFile(const String& fileName)
 }
 
 template<>
-inline vector<String>
+inline std::vector<String>
 readFromFile<String>(const String& fileName)
 {
-    ifstream       file(fileName);
-    String         data;
-    vector<String> items;
+    std::ifstream       file(fileName);
+    String              data;
+    std::vector<String> items;
 
     if (!file.is_open()) {
-        cout << "Error opening file" << fileName << endl;
+        std::cout << "Error opening file" << fileName << std::endl;
     }
 
     while (getline(file, data)) {

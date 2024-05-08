@@ -35,7 +35,8 @@ ResponseT
 CpuidUtils::__raw_cpuid(RequestT& req)
 {
     ResponseT resp;
-    if (req.eax == 0x00000007) {
+    if (req.eax == 0x00000007
+        || (req.eax == 0x00000001 && req.ecx == 0x00000001)) {
         asm volatile(
             "cpuid"
             : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
