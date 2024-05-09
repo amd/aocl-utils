@@ -28,6 +28,7 @@
  */
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/enum.h"
 #include "CpuidTest.hh"
 #include "gtest/gtest.h"
 #include <cstdlib>
@@ -152,5 +153,63 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
 
     writeToFile<std::vector<Uint32>::iterator>(
         "VendorInfoC.txt", { iter, iter + 1, iter + 2, iter + 3, iter + 4 });
+}
+TEST(CapiX86Cpuid, BCTEST)
+{
+    int core_num = 0;
+    if (alci_is_amd(core_num)) {
+        printf("AMD CPU detected...\n");
+    } else {
+        // Intel Apis are not exposed.
+        printf("Unknown CPU detected...\n");
+    }
+    printf("\nGetting ISA information for core 0\n");
+    if (alci_arch_is_zen4(core_num)) {
+        printf("CPU supports zen4 ISA\n");
+    } else if (alci_arch_is_zen3(core_num)) {
+        printf("CPU supports zen3 ISA\n");
+    } else if (alci_arch_is_zen2(core_num)) {
+        printf("CPU supports zen2 ISA\n");
+    } else if (alci_arch_is_zen(core_num)) {
+        printf("CPU supports zen ISA\n");
+    } else {
+        printf("CPU does not support zen or higher ISA or this Cpu is not "
+               "supported\n");
+    }
+    printf("\nCpu Feature Identification...\n");
+    // clang-format off
+        printf("TSC_ADJUST : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_TSC_ADJUST) ? "yes" : "no"));
+        printf("AVX        : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX) ? "yes" : "no"));
+        printf("AVXVNNI    : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVXVNNI) ? "yes" : "no"));
+        printf("AVX2       : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX2) ? "yes" : "no"));
+        printf("AVX512     : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX512F) ? "yes" : "no"));
+    // clang-format on
+    printf("checking alcpu apis\n");
+    if (alcpu_is_amd()) {
+        printf("AMD CPU detected...\n");
+    } else {
+        // Intel Apis are not exposed.
+        printf("Unknown CPU detected...\n");
+    }
+    printf("\nGetting ISA information for core 0\n");
+    if (alcpu_is_amd()) {
+        printf("CPU supports zen4 ISA\n");
+    } else if (alcpu_arch_is_zen()) {
+        printf("CPU supports zen3 ISA\n");
+    } else if (alcpu_arch_is_zen2()) {
+        printf("CPU supports zen2 ISA\n");
+    } else if (alcpu_arch_is_zen()) {
+        printf("CPU supports zen ISA\n");
+    } else {
+        printf("CPU does not support zen or higher ISA or this Cpu is not "
+               "supported\n");
+    }
+    printf("\nCpu Feature Identification...\n");
+    // clang-format off
+        printf("TSC_ADJUST : %s\n", (alcpu_flag_is_available(ALC_E_FLAG_TSC_ADJUST) ? "yes" : "no"));
+        printf("AVX        : %s\n", (alcpu_flag_is_available(ALC_E_FLAG_AVX) ? "yes" : "no"));
+        printf("AVXVNNI    : %s\n", (alcpu_flag_is_available(ALC_E_FLAG_AVXVNNI) ? "yes" : "no"));
+        printf("AVX2       : %s\n", (alcpu_flag_is_available(ALC_E_FLAG_AVX2) ? "yes" : "no"));
+        printf("AVX512     : %s\n", (alcpu_flag_is_available(ALC_E_FLAG_AVX512F) ? "yes" : "no"));
 }
 } // namespace
