@@ -258,13 +258,12 @@ alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag);
 AUD_API_EXPORT uint32_t
 alci_cpu_get_last_cache_level(au_cpu_num_t core);
 
-#define alcpu_is_amd()                  alci_is_amd(0)
-#define alcpu_arch_is_zen()             alci_arch_is_zen(0)
-#define alcpu_arch_is_zen2()            alci_arch_is_zen2(0)
-#define alcpu_arch_is_zen3()            alci_arch_is_zen3(0)
-#define alcpu_arch_is_zen4()            alci_arch_is_zen4(0)
-#define alcpu_arch_is_zen5()            alci_arch_is_zen5(0)
-#define alcpu_flag_is_available(flag)   alci_cpu_has_flag(0, flag)
+#define alcpu_is_amd()                alci_is_amd(0)
+#define alcpu_arch_is_zen()           alci_arch_is_zen(0)
+#define alcpu_arch_is_zen2()          alci_arch_is_zen2(0)
+#define alcpu_arch_is_zen3()          alci_arch_is_zen3(0)
+#define alcpu_arch_is_zen4()          alci_arch_is_zen4(0)
+#define alcpu_flag_is_available(flag) alci_cpu_has_flag(0, flag)
 
 AUD_EXTERN_C_END
 

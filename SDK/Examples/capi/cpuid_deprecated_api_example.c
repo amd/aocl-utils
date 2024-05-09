@@ -27,6 +27,7 @@
  */
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/enum.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -84,11 +85,11 @@ display_isa_info()
     }
     printf("\nCpu Feature Identification...\n");
     // clang-format off
-        printf("TSC_ADJUST : %s\n", (alci_cpu_has_flag(core_num, 63) ? "yes" : "no"));
-        printf("AVX        : %s\n", (alci_cpu_has_flag(core_num, 27) ? "yes" : "no"));
-        printf("AVXVNNI    : %s\n", (alci_cpu_has_flag(core_num, 98) ? "yes" : "no"));
-        printf("AVX2       : %s\n", (alci_cpu_has_flag(core_num, 66) ? "yes" : "no"));
-        printf("AVX512     : %s\n", (alci_cpu_has_flag(core_num, 73) ? "yes" : "no"));
+        printf("TSC_ADJUST : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_TSC_ADJUST) ? "yes" : "no"));
+        printf("AVX        : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX) ? "yes" : "no"));
+        printf("AVXVNNI    : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVXVNNI) ? "yes" : "no"));
+        printf("AVX2       : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX2) ? "yes" : "no"));
+        printf("AVX512     : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX512F) ? "yes" : "no"));
     // clang-format on
 }
 

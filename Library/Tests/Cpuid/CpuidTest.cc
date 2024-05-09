@@ -27,6 +27,7 @@
  */
 
 #include "CpuidTest.hh"
+#include "Au/Cpuid/Enum.hh"
 
 #include <cstdlib>
 #include <fstream>
@@ -163,5 +164,78 @@ TEST(X86Cpuid, CheckCpuNumber)
     // than the number of phycal cores.
     auto nthreads = std::thread::hardware_concurrency();
     EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
+}
+
+TEST(X86Cpu, BCTEST)
+{
+    alci::Cpu core{ 0 };
+
+    std::cout << "----- Platform details -----\n";
+    std::cout << "Core info:\n----------\n";
+    // The function name changed older api is core.isAmd
+    // std::cout << "Is AMD           : " << (core.isAMD() ? "YES" : "NO") <<
+    // "\n";
+    // The function name and signature changed. older api is getVendor
+    // std::cout << "Vendor           : " << core.getVendorInfo() << "\n";
+    // The return value of the function changed.
+    std::cout << "Architecture     : " << static_cast<Uint32>(core.getUarch())
+              << "\n";
+
+    std::cout << "isUarchZen       : "
+              << (core.isUarch(Uarch::eZen) ? "YES" : "NO") << "\n";
+    std::cout << "isUarchZen2      : "
+              << (core.isUarch(Uarch::eZen2) ? "YES" : "NO") << "\n";
+    std::cout << "isUarchZen3      : "
+              << (core.isUarch(Uarch::eZen3) ? "YES" : "NO") << "\n";
+    std::cout << "isUarchZen4      : "
+              << (core.isUarch(Uarch::eZen4) ? "YES" : "NO") << "\n";
+
+    std::cout << "Features supported:\n-------------------\n";
+    std::cout << "AVX support   : "
+              << (core.isAvailable(ALC_E_FLAG_AVX) ? "YES" : "NO") << "\n";
+    std::cout << "AVX2 support  : "
+              << (core.isAvailable(ALC_E_FLAG_AVX2) ? "YES" : "NO") << "\n";
+    std::cout << "AVX512 support: "
+              << (core.isAvailable(ALC_E_FLAG_AVX512F) ? "YES" : "NO") << "\n";
+
+    if (core.isAvailable(ALC_E_FLAG_AVX512F)) {
+        std::cout << "  AVX512DQ         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512DQ) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512PF         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512PF) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512ER         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512ER) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512CD         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512CD) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512BW         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512BW) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512VL         : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512VL) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_IFMA      : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_IFMA) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_VNNI      : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_VNNI) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_BITALG    : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_BITALG) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_VBMI      : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_VBMI) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_VBMI2     : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_VBMI2) ? "YES" : "NO")
+                  << "\n";
+        std::cout << "  AVX512_VPOPCNTDQ : "
+                  << (core.isAvailable(ALC_E_FLAG_AVX512_VPOPCNTDQ) ? "YES"
+                                                                    : "NO")
+                  << "\n";
+    }
 }
 } // namespace

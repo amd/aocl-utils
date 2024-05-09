@@ -144,10 +144,10 @@ using Uarch = EUarch;
 #endif
 #define ALC_E_FLAG_AVX512VL ECpuidFlag::avx512vl
 
-#ifdef ALC_E_FLAG_AVX512VBMI
-#undef ALC_E_FLAG_AVX512VBMI
+#ifdef ALC_E_FLAG_AVX512_VBMI
+#undef ALC_E_FLAG_AVX512_VBMI
 #endif
-#define ALC_E_FLAG_AVX512VBMI ECpuidFlag::avx512vbmi
+#define ALC_E_FLAG_AVX512_VBMI ECpuidFlag::avx512vbmi
 
 #ifdef ALC_E_FLAG_AVX512_VPOPCNTDQ
 #undef ALC_E_FLAG_AVX512_VPOPCNTDQ
@@ -182,7 +182,7 @@ using Uarch = EUarch;
 #ifdef ALC_E_FLAG_AVX512_VBMI2
 #undef ALC_E_FLAG_AVX512_VBMI2
 #endif
-#define ALC_E_FLAG_AVX512_VBMI2 ECpuidFlag::avx512_vbmi2
+#define ALC_E_FLAG_AVX512_VBMI2 ECpuidFlag::avx512vbmi2
 
 #ifdef ALC_E_FLAG_MOVDIRI
 #undef ALC_E_FLAG_MOVDIRI

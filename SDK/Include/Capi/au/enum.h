@@ -48,7 +48,7 @@
 #define ALC_E_FLAG_SHA_NI            85  // ECpuidFlag::sha_ni
 #define ALC_E_FLAG_AVX512BW          86  // ECpuidFlag::avx512bw
 #define ALC_E_FLAG_AVX512VL          87  // ECpuidFlag::avx512vl
-#define ALC_E_FLAG_AVX512VBMI        88  // ECpuidFlag::avx512vbmi
+#define ALC_E_FLAG_AVX512_VBMI       88  // ECpuidFlag::avx512vbmi
 #define ALC_E_FLAG_AVX512_VPOPCNTDQ  92  // ECpuidFlag::avx512_vpopcntdq
 #define ALC_E_FLAG_AVXVNNI           98  // ECpuidFlag::avxvnni
 #define ALC_E_FLAG_VAES              155 // ECpuidFlag::vaes
