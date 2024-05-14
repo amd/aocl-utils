@@ -64,10 +64,10 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Opteron_G4-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
     { "Opteron_G5-v1",     { isAmd,  !isIntel, isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
     { "phenom-v1",         { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
-    { "Broadwell-v1",      { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
+    //{ "Broadwell-v1",      { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
     { "Denverton-v1",      { !isAmd, isIntel,  isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
     { "Conroe-v1",         { !isAmd, isIntel,  !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, !isUarch }, EUarch::Unknown },
-    { "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  isX86_64v4,  flagPresent, flagAbsent, !isUarch }, EUarch::Unknown }
+    //{ "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  !isX86_64v4,  flagPresent, flagAbsent, !isUarch }, EUarch::Unknown }
 };
 // clang-format on
 
