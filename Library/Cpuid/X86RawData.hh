@@ -105,7 +105,7 @@ class X86Cpu::Impl
     explicit Impl(CpuidUtils* cUtils)
         : m_avail_flags{}
         , m_usable_flags{}
-        , m_cutils{ cUtils }
+        , m_cutils{ std::move(cUtils) }
         , m_vendor_info{}
         , m_cache_view{}
     {
@@ -120,7 +120,7 @@ class X86Cpu::Impl
     }
     Impl(const Impl& other)            = default;
     Impl& operator=(const Impl& other) = default;
-    ~Impl()                            = default;
+    ~Impl() { delete m_cutils; } 
 
     void update();
 
