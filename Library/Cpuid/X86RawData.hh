@@ -108,7 +108,7 @@ class X86Cpu::Impl
         , m_cutils{ std::move(cUtils) }
         , m_vendor_info{}
         , m_cache_view{}
-        , m_mock(true)
+        , m_is_mock(true)
     {
     }
     Impl()
@@ -117,14 +117,14 @@ class X86Cpu::Impl
         , m_cutils{ new CpuidUtils{} }
         , m_vendor_info{}
         , m_cache_view{}
-        , m_mock(false)
+        , m_is_mock(false)
     {
     }
     Impl(const Impl& other)            = default;
     Impl& operator=(const Impl& other) = default;
     ~Impl()
     {
-        if (m_mock == false)
+        if (m_is_mock == false)
             delete m_cutils;
     }
 
@@ -287,7 +287,7 @@ class X86Cpu::Impl
     CpuidUtils*           m_cutils;
     VendorInfo            m_vendor_info;
     CacheView             m_cache_view;
-    bool                  m_mock;
+    bool                  m_is_mock; // Flag to recongnize gmock object.
 };
 
 } // namespace Au
