@@ -2,10 +2,6 @@
 
 Date: 2024-05-17
 
-## Status
-
-Accepted
-
 ## Context
 
 We need to record the architectural decisions made on this project.
@@ -17,3 +13,7 @@ We will use Architecture Decision Records, as [described by Michael Nygard](http
 ## Consequences
 
 See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).
+
+## Status
+
+Accepted
