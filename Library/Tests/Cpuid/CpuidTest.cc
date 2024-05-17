@@ -31,6 +31,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <thread>
 
 namespace {
 using namespace Au;
