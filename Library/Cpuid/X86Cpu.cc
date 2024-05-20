@@ -28,6 +28,7 @@
 
 #include "X86RawData.hh"
 #include <thread>
+#include <unistd.h>
 
 namespace Au {
 

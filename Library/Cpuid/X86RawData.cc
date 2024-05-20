@@ -347,6 +347,7 @@ X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
     m_usable_flags[eflag] = res;
 }
 
+#if 0
 void
 X86Cpu::Impl::apply(RequestT& regs)
 {
@@ -383,5 +384,6 @@ X86Cpu::Impl::apply(RequestT& regs)
      * return Status().
      */
 }
+#endif
 
 } // namespace Au
