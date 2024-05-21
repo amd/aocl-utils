@@ -30,6 +30,12 @@ install(
   DESTINATION include
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
+# for backward compatibility.
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/SDK/Bcl/
+  DESTINATION include
+  FILES_MATCHING REGEX ".*\\.(h|hh)")
+
 #install(TARGETS ${AU_INSTALL_TARGETS}
 #  EXPORT ${AU_INSTALL_EXPORT_NAME}
 #  LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
@@ -68,50 +74,6 @@ install(
   FILES version.txt
   DESTINATION ${CMAKE_INSTALL_PREFIX}
 )
-#To ensure backward compatibility with older versions of AOCL UTILS
-message("Installing headers... ")
-if(EXISTS ${CMAKE_SOURCE_DIR}/SDK/Include/Capi/au/cpuid/cpuid.h)
-    install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci)
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/arch.h \
-    )")
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/cpuid/cpuid.h \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/alci_c.h \
-    )")
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/au.h \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/alci.h \
-    )")
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/enum.h \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/enum.h \
-    )")
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Capi/au/macros.h \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/macros.h \
-    )")
-endif()
-if(EXISTS ${CMAKE_SOURCE_DIR}/SDK/Include/Au/Cpuid/X86Cpu.hh)
-    install(DIRECTORY DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx)
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/Enum.hh \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/enum.h \
-    )")
-    install(CODE "execute_process( \
-    COMMAND ${CMAKE_COMMAND} -E create_symlink \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/Au/Cpuid/Enum.hh \
-    ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_INCLUDE_DIR}/alci/cxx/cpu.hh \
-    )")
-endif()
 message("Installing binaries... ")
 if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
     set(DEBUG_POSTFIX "-dbg")
