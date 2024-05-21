@@ -71,6 +71,20 @@ project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
 # Require C++-17
 set(CMAKE_CXX_STANDARD ${AU_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # require at least gcc 9
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+        message(FATAL_ERROR "GCC version must be at least 9!")
+    endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # require at least clang 12
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
+        message(FATAL_ERROR "Clang version must be at least 12.0!")
+    endif()
+else()
+    message(WARNING "Unsupported compiler! Compilation has
+    only been tested with above versions.")
+endif()
 
 if( NOT CMAKE_BUILD_TYPE )
   set(CMAKE_BUILD_TYPE "Release"  CACHE STRING
@@ -186,7 +200,7 @@ if(AU_CMAKE_VERBOSE AND TRUE)
   else()
   message(STATUS " ASAN                  : " "Disabled")
   endif()
-  
+
   if (AU_BUILD_DOCS)
   message(STATUS "  Docs                 : " "Enabled")
   else()

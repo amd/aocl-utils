@@ -16,8 +16,10 @@ The project is structured as follows:
 
 The project depends on the following libraries:
 
-* CMake 3.25
-* Gcc-13 or Clang-15
+* CMake 3.22
+* Gcc-9 and above [Appropriate libstdc++-dev version needs to be installed]
+*  Clang-12 and above
+*  Clang-tidy 12 and above
 * GoogleTest
 
 ## Getting started
@@ -41,6 +43,8 @@ To install the library, run the following command:
     make
     make install
 ```
+Note: This command creates lib/lib64 directory for the binaries.
+To have custom library path, use CMAKE_INSTALL_LIBDIR
 ### Testing
 Note: To build with tests enabled use
 
@@ -62,7 +66,7 @@ The project depends on the following libraries:
 - MS Visual Studio (2019 or greater)
 - Clang 15.0 or above
 - Python 3.7 or greater
-- Cmake 3.21 or greater
+- Cmake 3.22 or greater
 - Git
 
 ## Environment Setup:
