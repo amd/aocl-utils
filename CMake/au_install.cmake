@@ -102,6 +102,14 @@ else()
           ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.lib \
           ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.lib \
         )")
+        install(CODE "file( COPY_FILE \
+          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.dll \
+        )")
+        install(CODE "file( COPY_FILE \
+          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
+          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.dll \
+        )")
     endif()
 endif(UNIX)
 
