@@ -96,6 +96,7 @@ display_isa_info()
         printf("AVXVNNI    : %s\n", (result[2] ? "yes" : "no"));
         printf("AVX2       : %s\n", (result[3] ? "yes" : "no"));
         printf("AVX512     : %s\n", (result[4] ? "yes" : "no"));
+        free(result);
     // clang-format on
 }
 
