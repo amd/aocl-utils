@@ -235,6 +235,20 @@ AUD_API_EXPORT bool
 alci_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
+ * @brief          Allows caller to check if the processor arch is ZEN5.
+ *
+ *                 Note: The api is deprecated. Use au_cpuid_arch_is_zen5
+ *                 instead.
+ *
+ * @param          cpu_num  CPU number.
+ *
+ * @return         1/true if processor architecture is AMD ZEN5.
+ */
+AU_DEPRECATED_API_X("Use au_cpuid_arch_is_zen5 instead.")
+AUD_API_EXPORT bool
+alci_arch_is_zen5(au_cpu_num_t cpu_num);
+
+/**
  * @brief          Allows caller to check if the flag is available.
  *
  *                 Note: The api is deprecated. Use au_cpuid_has_flag
@@ -263,6 +277,7 @@ alci_cpu_get_last_cache_level(au_cpu_num_t core);
 #define alcpu_arch_is_zen2()          alci_arch_is_zen2(0)
 #define alcpu_arch_is_zen3()          alci_arch_is_zen3(0)
 #define alcpu_arch_is_zen4()          alci_arch_is_zen4(0)
+#define alcpu_arch_is_zen5()          alci_arch_is_zen5(0)
 #define alcpu_flag_is_available(flag) alci_cpu_has_flag(0, flag)
 
 AUD_EXTERN_C_END

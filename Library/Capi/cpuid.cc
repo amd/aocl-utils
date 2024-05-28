@@ -151,6 +151,13 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num)
 
 AUD_API_EXPORT
 bool
+alci_arch_is_zen5(au_cpu_num_t cpu_num)
+{
+    return au_cpuid_arch_is_zen5(cpu_num);
+}
+
+AUD_API_EXPORT
+bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
