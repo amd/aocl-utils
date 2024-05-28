@@ -145,9 +145,14 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
     String              token;
     std::stringstream   ss(vInfo);
     std::vector<Uint32> vendorInfo = {};
-
+    int                 element    = 0;
     while (getline(ss, token, '\n')) {
+        std::cout << "token" << token << std::endl;
+        element++;
         vendorInfo.push_back(stoi(token));
+        if (element == 5) {
+            break;
+        }
     }
     auto iter = vendorInfo.begin();
 
