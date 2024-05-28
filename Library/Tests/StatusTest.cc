@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022,2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +34,14 @@
 namespace {
 
 using namespace Au;
-
+bool
+endsWith(String mainString, String subString)
+{
+    return mainString.compare(mainString.size() - subString.size(),
+                              subString.size(),
+                              subString)
+           == 0;
+}
 TEST(Status, check_eok)
 {
     Status sts = StatusOk();
@@ -48,7 +55,7 @@ TEST(Status, check_eexists)
     Status sts = StatusAlreadyExists(s);
 
     EXPECT_EQ(sts.code(), AlreadyExistsError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 TEST(Status, check_einvalid)
@@ -57,7 +64,7 @@ TEST(Status, check_einvalid)
     Status sts = StatusInvalidArgument(s);
 
     EXPECT_EQ(sts.code(), InvalidArgumentError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 TEST(Status, check_enotfound)
@@ -66,7 +73,7 @@ TEST(Status, check_enotfound)
     Status sts = StatusNotFound(s);
 
     EXPECT_EQ(sts.code(), NotFoundError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 TEST(Status, check_enotavail)
@@ -75,7 +82,7 @@ TEST(Status, check_enotavail)
     Status sts = StatusNotAvailable(s);
 
     EXPECT_EQ(sts.code(), NotAvailableError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 TEST(Status, check_enotimpl)
@@ -84,7 +91,7 @@ TEST(Status, check_enotimpl)
     Status sts = StatusNotImplemented(s);
 
     EXPECT_EQ(sts.code(), NotImplementedError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 TEST(Status, check_eunknown)
@@ -93,7 +100,7 @@ TEST(Status, check_eunknown)
     Status sts = StatusUnknown(s);
 
     EXPECT_EQ(sts.code(), UnknownError().code());
-    EXPECT_TRUE(sts.message().ends_with(s));
+    EXPECT_TRUE(endsWith(sts.message(), s));
 }
 
 } // namespace

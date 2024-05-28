@@ -61,9 +61,9 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
 {
 
     const auto        params          = GetParam();
-    const auto        cpuType         = get<0>(params);
-    const auto        expectedResults = get<1>(params);
-    const auto        uarch           = get<2>(params);
+    const auto        cpuType         = std::get<0>(params);
+    const auto        expectedResults = std::get<1>(params);
+    const auto        uarch           = std::get<2>(params);
     auto              resultT         = true;
     auto              resultF         = false;
     std::vector<bool> results;
