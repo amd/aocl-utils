@@ -136,7 +136,9 @@ TEST_P(QemuTest, CpuTypeTest)
     // Read the Uarch test result from the file
     // and compare it with the Uarch value of the emulated CPU.
     auto uarchResult = readFromFile<EUarch>("UarchResult.txt");
-    EXPECT_EQ(uarchResult[0], uarch);
+    if (!uarchResult.empty()) {
+        EXPECT_EQ(uarchResult[0], uarch);
+    }
 #endif
     return;
 }

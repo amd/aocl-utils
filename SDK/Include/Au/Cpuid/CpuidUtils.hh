@@ -94,8 +94,8 @@ enum class EFamily : Uint16
     Zen2     = 0x17,
     Zen3     = 0x19,
     Zen4     = 0x19,
-    Zen5     = 0xA0,
-    Max      = 0xA0, /* Always set to latest family ID */
+    Zen5     = 0x1A,
+    Max      = 0x1A, /* Always set to latest family ID */
 };
 
 class CpuidUtils

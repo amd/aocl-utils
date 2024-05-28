@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -30,8 +30,7 @@
 #   [LIBS component...]
 # )
 #
-
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD ${AU_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -60,6 +59,9 @@ function(au_add_application NAME)
         ${APP_LIBS}
         au::core
     )
+  endif()
+  if(DEFINED APP_INCLUDES)
+      target_include_directories(${NAME} PRIVATE ${APP_INCLUDES})
   endif()
 
 endfunction(au_add_application)

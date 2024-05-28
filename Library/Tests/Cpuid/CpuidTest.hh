@@ -71,16 +71,16 @@ readFromFile(const String& fileName)
 {
     std::ifstream  file(fileName);
     String         data;
-    std::vector<T> items;
+    std::vector<T> items{};
 
     if (!file.is_open()) {
         std::cout << "Error opening file" << fileName << std::endl;
-    }
-
-    while (getline(file, data)) {
-        auto value = data.substr(0, data.find(' '));
-        auto item  = static_cast<T>(atoi(value.c_str()));
-        items.push_back(item);
+    } else {
+        while (getline(file, data)) {
+            auto value = data.substr(0, data.find(' '));
+            auto item  = static_cast<T>(atoi(value.c_str()));
+            items.push_back(item);
+        }
     }
 
     file.close();
@@ -97,13 +97,12 @@ readFromFile<String>(const String& fileName)
 
     if (!file.is_open()) {
         std::cout << "Error opening file" << fileName << std::endl;
+    } else {
+        while (getline(file, data)) {
+            auto value = data.substr(0, data.find(' '));
+            items.push_back(value);
+        }
     }
-
-    while (getline(file, data)) {
-        auto value = data.substr(0, data.find(' '));
-        items.push_back(value);
-    }
-
     file.close();
     return items;
 }
