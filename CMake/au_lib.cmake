@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -144,6 +144,8 @@ function(au_cc_library NAME)
 	      CXX_STANDARD ${AU_CXX_STANDARD}
 	      CXX_STANDARD_REQUIRED true
 	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+          RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"    # For DLLs
+          ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"    #for import lib
           OUTPUT_NAME ${__target_name}
       )
     else()

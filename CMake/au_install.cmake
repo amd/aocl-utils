@@ -81,35 +81,39 @@ endif()
 
 if (UNIX)
     if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
-        install(CODE "execute_process( \
-          COMMAND ${CMAKE_COMMAND} -E create_symlink \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${DEBUG_POSTFIX}.so \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.so \
+        install(CODE "file(COPY_FILE \
+          ${CMAKE_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.so \
+          ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.so \
         )")
-        install(CODE "execute_process( \
-          COMMAND ${CMAKE_COMMAND} -E create_symlink \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libau_cpuid${DEBUG_POSTFIX}.a \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.a \
+        install(CODE "file( COPY_FILE \
+          ${CMAKE_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.a \
+          ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.a \
         )")
+        install( FILES ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.so DESTINATION lib)
+        install( FILES ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.a DESTINATION lib)
     endif()
 else()
     if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
         install(CODE "file(COPY_FILE \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils_static.lib \
+        ${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.lib \
+        ${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}/libaoclutils_static.lib \
         )")
         install(CODE "file( COPY_FILE \
-          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.lib \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.lib \
+        ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.lib \
+        ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libaoclutils.lib \
         )")
         install(CODE "file( COPY_FILE \
-          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/libaoclutils.dll \
+        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll \
+        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll \
         )")
-        install(CODE "file( COPY_FILE \
-          ${CMAKE_INSTALL_PREFIX}/bin/au_cpuid${DEBUG_POSTFIX}.dll \
-          ${CMAKE_INSTALL_PREFIX}/${AU_INSTALL_LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.dll \
-        )")
+        install( FILES
+            ${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}/libaoclutils_static.lib DESTINATION lib)
+        install( FILES
+            ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libaoclutils.lib DESTINATION lib)
+        install( FILES
+            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll DESTINATION lib)
+        install( FILES
+            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll DESTINATION lib)
     endif()
 endif(UNIX)
 
@@ -125,7 +129,7 @@ set(CPACK_PACKAGE_DESCRIPTION           "AOCL Foundations")
 set(CPACK_PACKAGE_VENDOR                "AMD")
 set(CPACK_PACKAGE_DESCRIPTION_FILE      "${CMAKE_CURRENT_SOURCE_DIR}/Readme.md")
 set(CPACK_RESOURCE_FILE_LICENSE         "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY     "/usr/local")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY     "${CMAKE_INSTALL_PREFIX}")
 set(CPACK_PACKAGE_VERSION_MAJOR         ${AU_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR         ${AU_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH         ${AU_VERSION_PATCH})
