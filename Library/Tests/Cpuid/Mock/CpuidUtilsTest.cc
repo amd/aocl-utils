@@ -52,8 +52,8 @@ INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
 TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
     const auto       params          = GetParam();
-    const String     cpuType         = get<0>(params);
-    const VendorInfo expectedResults = get<1>(params);
+    const String     cpuType         = std::get<0>(params);
+    const VendorInfo expectedResults = std::get<1>(params);
     filename                         = cpuType;
     auto reqRespData                 = Configure();
 
