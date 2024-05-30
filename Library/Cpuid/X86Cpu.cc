@@ -31,6 +31,7 @@
 #ifdef __linux__
 #include <unistd.h>
 #else
+#include <Windows.h>
 #include <direct.h>
 #include <io.h>
 #endif
@@ -56,16 +57,29 @@ X86Cpu::X86Cpu(CpuNumT num)
     if (num > nthreads)
         num = 0; // fallback to default behaviour
 #ifdef __linux__
-    cpu_set_t cpuSet;
-    CPU_ZERO(&cpuSet);
-    CPU_SET(num, &cpuSet);
-    auto pid = getpid();
-    sched_setaffinity(pid, sizeof(cpu_set_t), &cpuSet);
+    cpu_set_t newMask, currentMask, testMask;
+    auto      tid    = gettid();
+    int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
+
+    AUD_ASSERT(result = 0, "Failed to get thread affinity.");
+    CPU_ZERO(&newMask);
+    CPU_SET(num, &newMask);
+    result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
+    AUD_ASSERT(result = 0, "Failed to set thread affinity.");
+    sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
+
 #else
-    HANDLE hProcess = GetCurrentProcess();
-    bool   bSet     = SetProcessAffinityMask(hProcess, 1 << num);
+    DWORD threadId    = GetCurrentThreadId();
+    auto  mask        = (static_cast<DWORD_PTR>(1) << num);
+    auto  currentMask = SetThreadAffinityMask(&threadId, mask);
 #endif
     pImpl()->update();
+#ifdef __linux__
+    result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
+    AUD_ASSERT(result = 0, "Failed to set thread affinity.");
+#else
+    auto newMask = SetThreadAffinityMask(&threadId, currentMask);
+#endif
 }
 
 X86Cpu::~X86Cpu() = default;
