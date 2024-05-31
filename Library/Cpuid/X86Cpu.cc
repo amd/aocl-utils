@@ -30,6 +30,10 @@
 #include <thread>
 #ifdef __linux__
 #include <unistd.h>
+#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
+#include <sys/syscall.h>
+#define gettid() syscall(SYS_gettid)
+#endif
 #else
 #include <Windows.h>
 #include <direct.h>

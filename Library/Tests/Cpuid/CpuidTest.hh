@@ -35,7 +35,12 @@
 #include "Au/Misc.hh"
 #include "gtest/gtest.h"
 #include <fstream>
-#ifdef WIN32
+#ifdef __linux__
+#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
+#include <sys/syscall.h>
+#define gettid() syscall(SYS_gettid)
+#endif
+#else
 #include <windows.h>
 #endif
 namespace {
