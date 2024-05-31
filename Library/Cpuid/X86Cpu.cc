@@ -66,9 +66,13 @@ X86Cpu::X86Cpu(CpuNumT num)
     int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
 
     AUD_ASSERT(result = 0, "Failed to get thread affinity.");
+    if (result)
+        std::cout << "Failed to get thread affinity" << std::endl;
     CPU_ZERO(&newMask);
     CPU_SET(num, &newMask);
     result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
+    if (result)
+        std::cout << "Failed to set thread affinity" << std::endl;
     AUD_ASSERT(result = 0, "Failed to set thread affinity.");
     sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
 
