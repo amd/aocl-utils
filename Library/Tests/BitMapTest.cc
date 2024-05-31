@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,12 +40,14 @@ TEST(BitMap, Construct)
     EXPECT_EQ(b.size(), 10);
 
     /* This should fail for 0 size in debug mode */
-    ASSERT_ANY_THROW({
-        BitMap b1(0);
-        EXPECT_EQ(b1.size(), 0);
-        EXPECT_EQ(b1.count(), 0);
-        b1.set(0);
-    });
+    if (AU_BUILD_TYPE_DEBUG) {
+        ASSERT_ANY_THROW({
+            BitMap b1(0);
+            EXPECT_EQ(b1.size(), 0);
+            EXPECT_EQ(b1.count(), 0);
+            b1.set(0);
+        });
+    }
 
     BitMap b2(1);
     EXPECT_EQ(b2.size(), 1);
@@ -116,8 +118,10 @@ TEST(BitMap, SetPosApi)
     b.set(9);
     EXPECT_EQ(b.count(), 3);
     /* out of bound, count should remain as before */
-    ASSERT_ANY_THROW(b.set(13));
-    EXPECT_EQ(b.count(), 3);
+    if (AU_BUILD_TYPE_DEBUG) {
+        ASSERT_ANY_THROW(b.set(13));
+        EXPECT_EQ(b.count(), 3);
+    }
 
     BitMap b1(63);
     /* Around word boundary */
@@ -125,10 +129,12 @@ TEST(BitMap, SetPosApi)
     EXPECT_EQ(b1.count(), 1);
 
     /* out of bound, count() should remain as before */
-    ASSERT_ANY_THROW({
-        b1.set(64);
-        EXPECT_EQ(b1.count(), 1);
-    });
+    if (AU_BUILD_TYPE_DEBUG) {
+        ASSERT_ANY_THROW({
+            b1.set(64);
+            EXPECT_EQ(b1.count(), 1);
+        });
+    }
 }
 
 /* Test setting bits from another bit map, equal in size */

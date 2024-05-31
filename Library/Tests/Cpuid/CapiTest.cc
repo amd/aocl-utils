@@ -77,13 +77,15 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 
 TEST(CapiX86Cpuid, hasFlags)
 {
-    std::vector<char*> testFlags = { "" };
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
-    testFlags = { "Test" };
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 0));
-    testFlags = { "avx512f", "Test" };
-    EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 2));
+    if (AU_BUILD_TYPE_DEBUG) {
+        std::vector<char*> testFlags = { "" };
+        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
+        testFlags = { "Test" };
+        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
+        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 0));
+        testFlags = { "avx512f", "Test" };
+        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 2));
+    }
 }
 
 TEST(CapiX86Cpuid, DISABLED_isUarch)
@@ -147,7 +149,6 @@ TEST(CapiX86Cpuid, DISABLED_getVendorInfo)
     std::vector<Uint32> vendorInfo = {};
     int                 element    = 0;
     while (getline(ss, token, '\n')) {
-        std::cout << "token" << token << std::endl;
         element++;
         vendorInfo.push_back(stoi(token));
         if (element == 5) {
