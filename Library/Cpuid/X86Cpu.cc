@@ -30,6 +30,10 @@
 #include <thread>
 #ifdef __linux__
 #include <unistd.h>
+#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
+#include <sys/syscall.h>
+#define gettid() syscall(SYS_gettid)
+#endif
 #else
 #include <Windows.h>
 #include <direct.h>
@@ -62,9 +66,13 @@ X86Cpu::X86Cpu(CpuNumT num)
     int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
 
     AUD_ASSERT(result = 0, "Failed to get thread affinity.");
+    if (result)
+        std::cout << "Failed to get thread affinity" << std::endl;
     CPU_ZERO(&newMask);
     CPU_SET(num, &newMask);
     result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
+    if (result)
+        std::cout << "Failed to set thread affinity" << std::endl;
     AUD_ASSERT(result = 0, "Failed to set thread affinity.");
     sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
 
