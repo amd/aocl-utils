@@ -35,7 +35,9 @@
 #include "Au/Misc.hh"
 #include "gtest/gtest.h"
 #include <fstream>
-
+#ifdef WIN32
+#include <windows.h>
+#endif
 namespace {
 using namespace Au;
 
@@ -108,19 +110,19 @@ readFromFile<String>(const String& fileName)
 }
 
 static inline void
-checkAffinity(Uint32 cNum)
-{
 #ifdef __linux__
+checkAffinity(cpu_set_t Mask)
+{
     cpu_set_t cpuSet;
-    auto      pid = getpid();
-
-    sched_getaffinity(pid, sizeof(cpuSet), &cpuSet);
-    EXPECT_TRUE(cpuSet.__bits[0] == static_cast<long unsigned int>(1 << cNum));
+    auto      tid = gettid();
+    sched_getaffinity(tid, sizeof(cpuSet), &cpuSet);
+    EXPECT_TRUE(cpuSet.__bits[0] == Mask.__bits[0]);
 #else
-    HANDLE    hProcess = GetCurrentProcess();
-    DWORD_PTR procAffinity, sysAffinity;
-    GetProcessAffinityMask(hProcess, &procAffinity, &sysAffinity);
-    EXPECT_TRUE(procAffinity & (1 << cNum));
+checkAffinity(DWORD_PTR Mask)
+{
+    DWORD threadId    = GetCurrentThreadId();
+    auto  currentMask = SetThreadAffinityMask(&threadId, Mask);
+    EXPECT_TRUE(currentMask == Mask);
 #endif
 }
 } // namespace

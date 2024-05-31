@@ -150,17 +150,31 @@ TEST(X86Cpuid, DISABLED_getVendorInfo)
 }
 TEST(X86Cpuid, CheckCpuNumber)
 {
-    // 0 - 2 Verify that the core is set to the correct CPU
+// Verify that the core is set to the correct CPU
+#ifdef __linux__
+    cpu_set_t currentMask;
+    int       tid    = gettid();
+    int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
+    CpuNumT   m_cpu  = 0;
 
-    X86Cpu cpu{ 0 };
-    checkAffinity(0);
-
-    X86Cpu cpu1{ 1 };
-    checkAffinity(1);
-
-    X86Cpu cpu2{ 2 };
-    checkAffinity(2);
-
+    for (m_cpu = 0; m_cpu < CPU_SETSIZE; ++m_cpu) {
+        if (CPU_ISSET(m_cpu, &currentMask)) {
+            break;
+        }
+    }
+#else
+    DWORD   threadId = GetCurrentThreadId();
+    CpuNumT m_cpu    = 1;
+    // setThreadAffinityMask returns the current mask befor setting mask.
+    auto mask        = (static_cast<DWORD_PTR>(1) << m_cpu);
+    auto currentMask = SetThreadAffinityMask(&threadId, mask);
+#endif
+    if (m_cpu < std::thread::hardware_concurrency()) {
+        X86Cpu cpu2{ m_cpu + 1 };
+    } else {
+        X86Cpu cpu2{ m_cpu - 1 };
+    }
+    checkAffinity(currentMask);
     // Verify that an exception is thrown when the core number is greater
     // than the number of phycal cores.
     auto nthreads = std::thread::hardware_concurrency();
