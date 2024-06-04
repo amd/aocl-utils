@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #endif
 
+#define ALCI_CURRENT_CPU_NUM UINT32_MAX
 typedef int8_t  Int8;
 typedef int16_t Int16;
 typedef int32_t Int32;
