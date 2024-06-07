@@ -39,7 +39,7 @@
 
 namespace Au {
 
-#if defined(__GNUC__) || defined(CLANG) || defined(WIN32)
+#if defined(__GNUC__) || defined(CLANG) || defined(AU_TARGET_OS_IS_WINDOWS)
 
 template<typename... Args>
 String
