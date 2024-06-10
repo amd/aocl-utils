@@ -95,15 +95,15 @@ if (UNIX)
 else()
     if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
         if (${CMAKE_GENERATOR} MATCHES "Ninja")
-            set(INSTALL_DIR "${CMAKE_BINARY_DIR}/Library/Cpuid")
+            set(LIB_DIR     "${CMAKE_BINARY_DIR}/Library/Cpuid")
             set(BIN_DIR     "${CMAKE_BINARY_DIR}/bin")
         else()
-            set(INSTALL_DIR "${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}")
+            set(LIB_DIR     "${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}")
             set(BIN_DIR     "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
         endif()
         install(CODE "file(COPY_FILE \
-        ${INSTALL_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
-        ${INSTALL_DIR}/libaoclutils_static.lib \
+        ${LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
+        ${LIB_DIR}/libaoclutils_static.lib \
         )")
         install(CODE "file( COPY_FILE \
         ${BIN_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
@@ -114,7 +114,7 @@ else()
         ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll \
         )")
         install( FILES
-            ${INSTALL_DIR}/libaoclutils_static.lib DESTINATION lib)
+            ${LIB_DIR}/libaoclutils_static.lib DESTINATION lib)
         install( FILES
             ${BIN_DIR}/libaoclutils.lib DESTINATION lib)
         install( FILES
