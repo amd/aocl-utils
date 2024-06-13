@@ -126,11 +126,10 @@ class LogicalProcessorInformation
 
 class CpuTopology
 {
-  public:
-    uint32_t               active_processors;
-    std::vector<KAFFINITY> processorMap;
-    std::vector<KAFFINITY> cacheMap;
-    std::vector<KAFFINITY> groupMap;
+    public:
+    uint32_t                               active_processors;
+    std::vector<std::pair<KAFFINITY, int>> processorMap;
+    std::vector<std::pair<KAFFINITY, int>> cacheMap;
 
     static const CpuTopology& get()
     {
@@ -142,16 +141,14 @@ class CpuTopology
         : active_processors(0)
         , processorMap{}
         , cacheMap{}
-        , groupMap{}
     {
         active_processors = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
         LogicalProcessorInformation processorInfo(RelationProcessorCore);
         LogicalProcessorInformation cacheInfo(RelationCache);
-        LogicalProcessorInformation groupInfo(RelationGroup);
 
         for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
             // Collect the physical core -> logical core mapping
-            processorMap.push_back(pInfo->Processor.GroupMask->Mask);
+            processorMap.push_back(std::make_pair(pInfo->Processor.GroupMask->Mask, pInfo->Processor.GroupMask->Group));
         }
 
         for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
@@ -159,12 +156,8 @@ class CpuTopology
             if (cInfo->Cache.Level == 3
                 && (cInfo->Cache.Type == CacheData
                     || cInfo->Cache.Type == CacheUnified)) {
-                cacheMap.push_back(cInfo->Cache.GroupMask.Mask);
+                cacheMap.push_back(std::make_pair(cInfo->Cache.GroupMask.Mask, cInfo->Cache.GroupMask.Group));
             }
-        }
-        for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
-            // Collect the Group -> Logical core mapping
-            groupMap.push_back(gInfo->Group.GroupInfo->ActiveProcessorMask);
         }
     }
 };

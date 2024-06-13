@@ -32,8 +32,10 @@
 #endif
 
 #include <Au/ThreadPinning.hh>
-namespace Au {
 
+#define GROUP_SIZE 64
+namespace Au
+{
 class AffinityVector
 {
   protected:
@@ -137,10 +139,10 @@ class AffinityVector
             std::vector<int> coreList;
             auto             pMap = cpuInfo.cacheMap[cache.first];
             // Convert pMap to coreList
-            while (pMap > 0) {
-                coreList.push_back(log2(pMap & -1 * pMap));
-                pMap = pMap & ~(1 << coreList.back());
-            }
+                while (pMap.first > 0) {
+                    coreList.push_back((log2(pMap.first & -1 * pMap.first)) + (pMap.second * GROUP_SIZE));
+                    pMap.first = pMap.first & ~(1ULL << coreList.back());
+                }
             int threadCount = cache.second.size();
             // Create the vector that maps the threads that got mapped to the
             // cache to cores sharing the  cache.
@@ -172,15 +174,14 @@ class AffinityVector
         procVect.clear();
 
         while (threadId < threadCount) {
-            // check if all the elements in pMap are zero
-            if (std::all_of(
-                    pMap.begin(), pMap.end(), [](int i) { return i == 0; }))
+            // check if all the first elements of pMap are 0
+            if (std::all_of(pMap.begin(), pMap.end(), [](auto& p) { return p.first == 0; }))
                 pMap = cpuInfo.processorMap;
             for (size_t i = 0; i < pMap.size(); i++) {
-                if (pMap[i] == 0)
+                if(pMap[i].first == 0)
                     continue;
-                procVect.push_back(log2(pMap[i] & -1 * pMap[i]));
-                pMap[i] = pMap[i] & ~(1 << procVect[threadId++]);
+                procVect.push_back((log2(pMap[i].first & -1 * pMap[i].first)) + (pMap[i].second * GROUP_SIZE));
+                pMap[i].first = pMap[i].first & ~(1ULL << procVect[threadId++]);
                 if (threadId == threadCount)
                     break;
             }
@@ -256,7 +257,14 @@ class AffinityVector
             CPU_SET(processorList[i], &cpuset);
             sched_setaffinity(threadList[i], sizeof(cpu_set_t), &cpuset);
 #else
-            SetThreadAffinityMask((void*)&threadList[i], 1 << processorList[i]);
+		HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadList[i]);
+		if (hThread != NULL) {
+			GROUP_AFFINITY groupAffinity;
+			groupAffinity.Mask = 1ull << processorList[i] % GROUP_SIZE;
+			groupAffinity.Group = processorList[i] / GROUP_SIZE;
+            SetThreadGroupAffinity(hThread, &groupAffinity, nullptr);
+            CloseHandle(hThread);
+		}
 #endif
         }
     }

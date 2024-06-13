@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <tuple>
 #include <vector>
-typedef unsigned int KAFFINITY;
+typedef unsigned long KAFFINITY;
 // Define DWORD
 typedef unsigned long DWORD;
 
@@ -34,10 +34,9 @@ namespace Au {
 
 struct CpuTopology
 {
-    uint32_t               active_processors;
-    std::vector<KAFFINITY> processorMap;
-    std::vector<KAFFINITY> cacheMap;
-    std::vector<KAFFINITY> groupMap;
+    uint32_t                               active_processors;
+    std::vector<std::pair<KAFFINITY, int>> processorMap;
+    std::vector<std::pair<KAFFINITY, int>> cacheMap;
 
     static const CpuTopology& get()
     {
@@ -49,7 +48,6 @@ struct CpuTopology
         : active_processors(0)
         , processorMap{}
         , cacheMap{}
-        , groupMap{}
     {
     }
 };
