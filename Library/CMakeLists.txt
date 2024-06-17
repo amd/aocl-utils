@@ -28,10 +28,6 @@
 #set(AU_MODULE "core")
 au_module("core")
 
-#add_library(au_include INTERFACE)
-#add_library(af::include ALIAS au_include)
-#target_include_directories(au_include INTERFACE ${CMAKE_SOURCE_DIR}/Library/Include)
-
 if (UNIX)
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 else()
@@ -62,7 +58,7 @@ set(EVENT_SRC_FILES
 set(CAPI_SRC_FILES
     #Capi/base64.cc
     Capi/environ.cc
-)
+        )
 
 set(AVX2_FILES
   Base64/transform_avx2.cc
@@ -82,6 +78,8 @@ set(CORE_SRC_FILES
   Core/StatusOr.cc
   Core/Environ.cc
   Core/BitMap.cc
+  Core/ThreadPinningImpl.cc
+  Core/ThreadPinning.cc
   #Core/DynamicLoader.cc
   #${BASE64_SRC_FILES}
   #  ${LOGGER_SRC_FILES}
@@ -94,18 +92,15 @@ set(CORE_SRC_FILES
 
 au_cc_library(core
  PUBLIC
- SOURCES ${CORE_SRC_FILES}
- HEADERS
- 
+ SOURCES
+      ${CORE_SRC_FILES}
 
- USING
+HEADERS
+      Core/ThreadPinningImpl.hh
+USING
  af::sdk::include
- #top::sdk::include
- #af::sdk::include
- #af::generated::include
 )
 
-#add_dependencies(af::toplevel af::core::base)
 
 if(AU_BUILD_TESTS)
     add_subdirectory(Tests)
