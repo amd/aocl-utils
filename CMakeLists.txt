@@ -94,7 +94,7 @@ endif()
 if(NOT CMAKE_CXX_CLANG_TIDY)
   find_program(CLANG_TIDY "clang-tidy")
   if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
-     set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
+     set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY} ;--extra-arg=-EHsc")
   endif()
 endif()
 
