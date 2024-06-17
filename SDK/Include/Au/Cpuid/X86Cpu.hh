@@ -273,8 +273,16 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
   public:
     X86Cpu(CpuidUtils* cUtils, CpuNumT num);
-    X86Cpu(CpuNumT num = 0);
-
+    /**
+     * @brief   Default constructor.
+     *
+     * @return  None
+     *
+     * @note    Default behaviour is invoked by passing AU_CURRENT_CPU_NUM,
+     *          In default behaviour the thread is not pinned to any core,
+     *          cpuid fetches the current thread on which the code is running.
+     */
+    X86Cpu(CpuNumT num = AU_CURRENT_CPU_NUM);
     ~X86Cpu();
 
     /**

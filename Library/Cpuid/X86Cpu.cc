@@ -46,6 +46,7 @@ X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
     : CpuInfo{ num }
     , m_pimpl{ new X86Cpu::Impl{ cUtils } }
 {
+    // TODO: Thread pinning.
     pImpl()->update();
 }
 
@@ -57,39 +58,45 @@ X86Cpu::X86Cpu(CpuNumT num)
      * using sched_setaffinity() */
 
     auto nthreads = std::thread::hardware_concurrency();
-    AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
+    if (num != AU_CURRENT_CPU_NUM)
+        AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
     if (num > nthreads)
-        num = 0; // fallback to default behaviour
+        num = AU_CURRENT_CPU_NUM;    // fallback to default behaviour
+    if (num != AU_CURRENT_CPU_NUM) { // In the default behaviour, the cpuid is
+                                     // quried on the current cpu.
 #ifdef __linux__
-    cpu_set_t newMask, currentMask, testMask;
-    auto      tid    = gettid();
-    int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
+        cpu_set_t newMask, currentMask, testMask;
+        auto      tid = gettid();
+        int result    = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
 
-    AUD_ASSERT(result == 0, "Failed to get thread affinity.");
-    if (result)
-        std::cout << "Failed to get thread affinity" << std::endl;
-    CPU_ZERO(&newMask);
-    CPU_SET(num, &newMask);
-    result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
-    if (result)
-        std::cout << "Failed to set thread affinity" << std::endl;
-    AUD_ASSERT(result == 0, "Failed to set thread affinity.");
-    sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
+        AUD_ASSERT(result == 0, "Failed to get thread affinity.");
+        if (result)
+            std::cout << "Failed to get thread affinity" << std::endl;
+        CPU_ZERO(&newMask);
+        CPU_SET(num, &newMask);
+        result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
+        if (result)
+            std::cout << "Failed to set thread affinity" << std::endl;
+        AUD_ASSERT(result == 0, "Failed to set thread affinity.");
+        sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
 
 #else
-    DWORD threadId    = GetCurrentThreadId();
-    auto  mask        = (static_cast<DWORD_PTR>(1) << num);
-    auto  currentMask = SetThreadAffinityMask(&threadId, mask);
+        DWORD threadId    = GetCurrentThreadId();
+        auto  mask        = (static_cast<DWORD_PTR>(1) << num);
+        auto  currentMask = SetThreadAffinityMask(&threadId, mask);
 #endif
-    pImpl()->update();
+        pImpl()->update();
 #ifdef __linux__
-    result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
-    AUD_ASSERT(result == 0, "Failed to set thread affinity.");
-    if (result)
-        std::cout << "Failed to set thread affinity" << std::endl;
+        result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
+        AUD_ASSERT(result == 0, "Failed to set thread affinity.");
+        if (result)
+            std::cout << "Failed to set thread affinity" << std::endl;
 #else
-    auto newMask = SetThreadAffinityMask(&threadId, currentMask);
+        auto newMask = SetThreadAffinityMask(&threadId, currentMask);
 #endif
+    } else {
+        pImpl()->update();
+    }
 }
 
 X86Cpu::~X86Cpu() = default;
