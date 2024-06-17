@@ -52,6 +52,7 @@ set(OTHER_TEST_FILES
 )
 
 set(THREAD_PINNING_TEST_FILES
+    ThreadPinning/ThreadPinningTest.cc
     ThreadPinning/MockTest.cc
 )
 set(ALL_TEST_FILES

@@ -14,10 +14,10 @@ To have a compreshensive test coverage for the threadpinning API
 ```
 * ThreadPinning::pinThreads()       -- Cpp API   -- External API
 * Affinity::getAffinityVector()     -- Cpp API   -- Internal Using mock tests
-* au_core_pin_threads()             -- C API     -- External API
-* au_logical_pin_threads()          -- C API     -- External API
-* au_spread_pin_threads()           -- C API     -- External API
-* au_custom_pin_threads()           -- C API     -- External API
+* au_pin_threads_core()             -- C API     -- External API
+* au_pin_threads_logical()          -- C API     -- External API
+* au_pin_threads_spread()           -- C API     -- External API
+* au_pin_threads_custom()           -- C API     -- External API
 ```
 
 ## The test matrix for the threadpinning module mock tests

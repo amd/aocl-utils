@@ -26,61 +26,110 @@
  *
  */
 
-#include "Au/ThreadPinning.hh"
-#include <thread>
-
-#include "gtest/gtest.h"
+#include "ThreadPinningTest.hh"
 
 namespace {
 
-using namespace Au;
-// Verify more number of processors than threads
-TEST(ThreadPinning, check_thread_pinning)
+TEST_F(PinThreadsTest, verifySpread)
 {
-    ThreadPinning tp;
-    std::cout << "Thread Pinning\n" << std::endl;
-    std::cout << "Core" << std::endl;
-    tp.PinThreads({ 0, 1 }, 1); // spread
-    std::cout << "Logical" << std::endl;
-    tp.PinThreads({ 0, 1 }, 2); // spread
-    std::cout << "Spread" << std::endl;
-    tp.PinThreads({ 0, 1 }, 0); // spread
-}
-// Verify more number of threads than processors
-TEST(ThreadPinning, threadsMoreThanProcessors)
-{
-    ThreadPinning tp;
-    std::cout << "Thread Pinning\n" << std::endl;
-    // Get the number of processors
-    int              numProcs = std::thread::hardware_concurrency();
-    std::vector<int> threadList(numProcs + 1);
-    // initialize the thread list
-    for (int i = 0; i < numProcs + 1; i++)
-        threadList[i] = i;
-    std::cout << "Core" << std::endl;
-    tp.PinThreads(threadList, 1); // spread
-    std::cout << "Logical" << std::endl;
-    tp.PinThreads(threadList, 2); // spread
-    std::cout << "Spread" << std::endl;
-    tp.PinThreads(threadList, 0); // spread
-}
-// Verify hyperthreading enabled and more number of threads than processors
-TEST(ThreadPinning, threadsEqualsProcessors)
-{
-    ThreadPinning tp;
-    std::cout << "Thread Pinning\n" << std::endl;
-    // Get the number of processors
-    int              numProcs = std::thread::hardware_concurrency();
-    std::vector<int> threadList(numProcs + 1);
-    // initialize the thread list
-    for (int i = 0; i < numProcs + 1; i++)
-        threadList[i] = i;
-    std::cout << "Core" << std::endl;
-    tp.PinThreads(threadList, 1); // spread
-    std::cout << "Logical" << std::endl;
-    tp.PinThreads(threadList, 2); // spread
-    std::cout << "Spread" << std::endl;
-    tp.PinThreads(threadList, 0); // spread
+    // Test spread strategy
+    strategy = pinStrategy::SPREAD;
+    
+    tp.pinThreads(thread_ids, strategy);
+    // with number of threads more than hardware concurrency
+    EXPECT_TRUE(VerifyAffinity());
+    // with number of threads equal to hardware concurrency
+    num_threads = std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds1(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds1, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+    
+    // with number of threads less than hardware concurrency
+    num_threads = std::thread::hardware_concurrency()
+                  - rand() % std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds2(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds2, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+    
 }
 
+TEST_F(PinThreadsTest, verifyCore)
+{
+    // Test core strategy
+    strategy = pinStrategy::CORE;
+    // with number of threads more than hardware concurrency
+    tp.pinThreads(thread_ids, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+    
+    // with number of threads equal to hardware concurrency
+    num_threads = std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds1(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds1, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+
+    // with number of threads less than hardware concurrency
+    num_threads = std::thread::hardware_concurrency()
+                  - rand() % std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds2(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds2, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+}
+
+TEST_F(PinThreadsTest, verifyLogical)
+{
+    // Test logical strategy
+    strategy = pinStrategy::LOGICAL;
+    // with number of threads more than hardware concurrency    
+    tp.pinThreads(thread_ids, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+
+    // with number of threads equal to hardware concurrency
+    num_threads = std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds1(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds1, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+    
+    // with number of threads less than hardware concurrency
+    num_threads = std::thread::hardware_concurrency()
+                  - rand() % std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds2(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds2, strategy);
+    EXPECT_TRUE(VerifyAffinity());
+}
+
+TEST_F(PinThreadsTest, verifyCustom)
+{
+    // Test custom strategy
+    std::vector<int> AffinityVector(num_threads);
+    // initilize the affinity vector with random numbers less than hardware concurrency
+    for (int i = 0; i < num_threads; i++)
+    {
+        AffinityVector.push_back(rand() % std::thread::hardware_concurrency());
+    }
+    tp.pinThreads(thread_ids, AffinityVector);
+    EXPECT_TRUE(VerifyAffinity());
+
+    // with number of threads equal to hardware concurrency
+    num_threads = std::thread::hardware_concurrency();
+    std::vector<pthread_t> threadIds1(thread_ids.begin(), thread_ids.begin() + num_threads);
+    AffinityVector.resize(num_threads);
+    for (int i = 0; i < num_threads; i++)
+    {
+        AffinityVector.push_back(rand() % std::thread::hardware_concurrency());
+    }
+    tp.pinThreads(threadIds1, AffinityVector);
+    EXPECT_TRUE(VerifyAffinity());
+    
+    // with number of threads less than hardware concurrency
+    num_threads = std::thread::hardware_concurrency()
+                  - rand() % std::thread::hardware_concurrency();
+    AffinityVector.resize(num_threads);
+    for (int i = 0; i < num_threads; i++)
+    {
+        AffinityVector.push_back(rand() % std::thread::hardware_concurrency());
+    }
+    std::vector<pthread_t> threadIds2(thread_ids.begin(), thread_ids.begin() + num_threads);
+    tp.pinThreads(threadIds2, AffinityVector);
+    EXPECT_TRUE(VerifyAffinity());
+}
 } // namespace
