@@ -23,10 +23,14 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include "Au/Config.h"
 
 // Define DWORD
 typedef unsigned long DWORD;
-
+#ifdef AU_TARGET_OS_IS_WINDOWS
+#include <windows.h>
+typedef HANDLE pthread_t;
+#endif
 namespace Au {
 enum pinStrategy
 {
@@ -52,7 +56,8 @@ class ThreadPinning
      *
      * @return         None
      */
-    void pinThreads(std::vector<DWORD> const& threadList, int pinStrategyIndex);
+    void pinThreads(std::vector<pthread_t> const& threadList,
+                    int                           pinStrategyIndex);
 
     /**
      * @brief          pinThreads
@@ -64,8 +69,8 @@ class ThreadPinning
      * @param[in]      processPinGroup   Processor Group to pin the threads
      *
      */
-    void pinThreads(std::vector<DWORD> const& threadList,
-                    std::vector<int> const&   processPinGroup);
+    void pinThreads(std::vector<pthread_t> const& threadList,
+                    std::vector<int> const&       processPinGroup);
 
   private:
     class Impl;

@@ -23,22 +23,31 @@
 namespace Au {
 
 void
-ThreadPinning::Impl::pinThreads(std::vector<DWORD> const& threadList,
-                                int                       pinStrategyIndex)
+ThreadPinning::Impl::pinThreads(std::vector<pthread_t> threadList,
+                                int                    pinStrategyIndex)
 {
+    AU_ASSERT(threadList.size() > 0, "Thread list is empty");
+    if (threadList.size() == 0) {
+        return;
+    }
+    AU_ASSERT(pinStrategyIndex >= 0 && pinStrategyIndex < 3,
+              "Invalid pin strategy index");
     std::vector<int> processPinGroup(threadList.size());
 
     processPinGroup.reserve(threadList.size());
     // Get the processor group to pin the threads
     getAffinityVector(processPinGroup, pinStrategyIndex);
     // Pin the threads to the processor group in the processPinGroup
-    setAffinity(threadList, processPinGroup);
+    pinThreads(threadList, processPinGroup);
 }
 
 void
-ThreadPinning::Impl::pinThreads(std::vector<DWORD> const& threadList,
-                                std::vector<int> const&   processPinGroup)
+ThreadPinning::Impl::pinThreads(std::vector<pthread_t>  threadList,
+                                std::vector<int> const& processPinGroup)
 {
+    if (threadList.size() == 0) {
+        return;
+    }
     // Pin the threads to the processor group in the processPinGroup
     setAffinity(threadList, processPinGroup);
 }
