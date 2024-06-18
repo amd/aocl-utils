@@ -20,20 +20,20 @@
 # THE SOFTWARE.
 */
 #include "ThreadPinningImpl.hh"
+#include "Au/Assert.hh"
 namespace Au {
 
 void
 ThreadPinning::Impl::pinThreads(std::vector<pthread_t> threadList,
                                 int                    pinStrategyIndex)
 {
-    AU_ASSERT(threadList.size() > 0, "Thread list is empty");
+    AUD_ASSERT(threadList.size() > 0, "Thread list is empty");
     if (threadList.size() == 0) {
         return;
     }
-    AU_ASSERT(pinStrategyIndex >= 0 && pinStrategyIndex < 3,
+    AUD_ASSERT(pinStrategyIndex >= 0 && pinStrategyIndex < 3,
               "Invalid pin strategy index");
     std::vector<int> processPinGroup(threadList.size());
-
     processPinGroup.reserve(threadList.size());
     // Get the processor group to pin the threads
     getAffinityVector(processPinGroup, pinStrategyIndex);
@@ -45,7 +45,7 @@ void
 ThreadPinning::Impl::pinThreads(std::vector<pthread_t>  threadList,
                                 std::vector<int> const& processPinGroup)
 {
-    if (threadList.size() == 0) {
+    if (threadList.size() == 0 || threadList.size() != processPinGroup.size()) {
         return;
     }
     // Pin the threads to the processor group in the processPinGroup
