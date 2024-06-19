@@ -37,6 +37,7 @@ struct CpuTopology
     uint32_t                               active_processors;
     std::vector<std::pair<KAFFINITY, int>> processorMap;
     std::vector<std::pair<KAFFINITY, int>> cacheMap;
+    std::vector<std::pair<KAFFINITY, int>> groupMap;
 
     static const CpuTopology& get()
     {
@@ -48,6 +49,7 @@ struct CpuTopology
         : active_processors(0)
         , processorMap{}
         , cacheMap{}
+        , groupMap{}
     {
     }
 };
