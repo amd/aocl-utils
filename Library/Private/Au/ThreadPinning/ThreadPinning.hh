@@ -39,6 +39,25 @@ class AffinityVector
 {
   protected:
     const CpuTopology& cpuInfo;
+ 
+  private:
+    int calculateOffset(int group, const std::vector<std::pair<KAFFINITY, int>>& groupMap) {
+      int offset = 0;
+      if (group > 0) {
+          for (int i = 0; i < group; i++) {
+              offset += groupMap[i].second;
+          }
+      }
+      return offset;
+    }
+
+   int calculateCoreNum(std::pair<KAFFINITY, int>& pMap) {
+         return log2(pMap.first & -1 * pMap.first);
+    }
+
+    void updateMap(std::pair<KAFFINITY, int>& pMap, int coreId) {
+        pMap.first &= ~(1ULL << coreId);
+    }
 
   public:
     AffinityVector(const CpuTopology& Info = CpuTopology::get())
@@ -139,26 +158,18 @@ class AffinityVector
 
             // Convert pMap to coreList
             while (pMap.first > 0) { // While there are cores in the cache mask
-                int offset = 0;
-                if (pMap.second > 0) {
-                    // If the cache belongs to a nonzero group,
-                    // calculate the offset of the first core in the group.
-                    for (int i = 0; i < pMap.second; i++) {
-                        offset += cpuInfo.groupMap[i].second;
-                    }
-                }
-                int coreId = (log2(pMap.first & -1 * pMap.first));
+                int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
+                int coreId = calculateCoreNum(pMap);
                 coreList.push_back(coreId + offset);
-                pMap.first = pMap.first & ~(1ULL << coreId);
+                updateMap(pMap, coreId);
             }
 
+            // Spread the percache threads to corelist
             int threadCount = cache.second.size();
-
-            // Create the vector that maps the threads that got mapped to the
-            // cache to cores sharing the cache.
             std::vector<int> Vect(threadCount);
             createVector(Vect, 0, threadCount - 1, 0, coreList.size() - 1);
-
+            
+            // create The processor vector
             int index = 0;
             for (auto thread : cache.second) {
                 procVect[thread] = coreList[Vect[index++]];
@@ -195,27 +206,11 @@ class AffinityVector
                 if (processorMap[coreId].first == 0)
                     continue;
 
-                // If the core belongs to a nonzero group,
-                // calculate the offset corresponding to the first core in the
-                // group.
-                int offset = 0;
-                if (processorMap[coreId].second > 0) {
-                    offset = std::accumulate(cpuInfo.groupMap.begin(),
-                                             cpuInfo.groupMap.begin()
-                                                 + processorMap[coreId].second,
-                                             0,
-                                             [](int sum, const auto& pair) {
-                                                 return sum + pair.second;
-                                             });
-                }
-
-                int coreNum = (log2(processorMap[coreId].first
-                                    & -1 * processorMap[coreId].first));
+                int offset = calculateOffset(processorMap[coreId].second, cpuInfo.groupMap);
+                int coreNum = calculateCoreNum(processorMap[coreId]);
                 procVect.push_back(coreNum + offset);
-
-                // Update the processor map
-                processorMap[coreId].first &= ~(1ULL << coreNum);
-
+                updateMap(processorMap[coreId], coreNum);
+                
                 threadId++;
                 if (threadId == threadCount)
                     break;
