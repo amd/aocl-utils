@@ -95,7 +95,12 @@ class PinThreadsTest : public ::testing::Test
         } else {
             for (size_t core = 0; core < sizeof(groupAffinity.Mask) * CHAR_BIT; ++core) {
                 if (groupAffinity.Mask & (1 << core)) {
-                    return core + groupAffinity.Group * GROUP_SIZE;
+                    int offset = 0;
+                    for (int i = 0; i < groupAffinity.Group;++i)
+                    {
+                           offset = offset + CpuTopology::get().groupMap[i].second;
+                    }
+                        return core + offset;
                 }
             }
         }

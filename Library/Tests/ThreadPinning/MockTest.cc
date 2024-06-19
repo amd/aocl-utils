@@ -44,6 +44,10 @@ class MockCpuTopology : public CpuTopology
     {
         cacheMap = cMap;
     }
+    void setGMap(std::vector<std::pair<KAFFINITY, int>> gMap)
+    {
+        groupMap = gMap;
+    }
 };
 
 INSTANTIATE_TEST_SUITE_P(ThreadPinningTests,
@@ -52,7 +56,7 @@ INSTANTIATE_TEST_SUITE_P(ThreadPinningTests,
 
 TEST_P(ThreadPinningTest, affinityVectorTest)
 {
-    std::vector<std::pair<KAFFINITY, int>> pMap, cMap;
+    std::vector<std::pair<KAFFINITY, int>> pMap, cMap, gMap;
     std::vector<int> coreResult, LogicalResult, SpreadResult;
     int              activeProcessors, numberofThreads;
     String           name;
@@ -62,6 +66,7 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
              numberofThreads,
              pMap,
              cMap,
+             gMap,
              coreResult,
              LogicalResult,
              SpreadResult) = GetParam();
@@ -69,6 +74,7 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
     mockCT.setActiveProcessors(activeProcessors);
     mockCT.setPMap(pMap);
     mockCT.setCMap(cMap);
+    mockCT.setGMap(gMap);
 
     auto             av = AffinityVector(mockCT);
     std::vector<int> processPinGroup(numberofThreads);

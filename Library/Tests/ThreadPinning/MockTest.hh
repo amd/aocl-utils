@@ -40,6 +40,7 @@ class ThreadPinningTest
                      int,
                      std::vector<std::pair<KAFFINITY, int>>,
                      std::vector<std::pair<KAFFINITY, int>>,
+                     std::vector<std::pair<KAFFINITY, int>>,
                      std::vector<int>,
                      std::vector<int>,
                      std::vector<int>>>
@@ -49,7 +50,7 @@ auto testParametersCpuTopology = {
     // Test case 1: No hyperThreading Singlecache number of threads less than
     // number of processors
     std::make_tuple(
-        String("NoHT_SingleCache_PLTC"),
+        String("Test1: NoHT_SingleCache_PLTC"),
         8,
         2,
         std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b1, 0),
@@ -61,6 +62,7 @@ auto testParametersCpuTopology = {
                                                 std::make_pair(0b1000000, 0),
                                                 std::make_pair(0b10000000, 0) },
         std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 8) },
         std::vector<int>{ 0, 1 },
         std::vector<int>{ 0, 1 },
         std::vector<int>{ 0, 4 }),
@@ -68,7 +70,7 @@ auto testParametersCpuTopology = {
     // Test case 2: No hyperThreading Singlecache number of threads greater than
     // number of processors
     std::make_tuple(
-        String("NoHT_SingleCache_PGTP"),
+        String("Test2: NoHT_SingleCache_PGTP"),
         8,
         16,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -81,6 +83,7 @@ auto testParametersCpuTopology = {
             std::make_pair(0b1000000, 0),
             std::make_pair(0b10000000, 0) },
         std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 8) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7 },
         std::vector<int>{ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 }),
@@ -88,7 +91,7 @@ auto testParametersCpuTopology = {
     // Test case 3: No hyperThreading Singlecache number of threads equal to
     // number of processors
     std::make_tuple(
-        String("NoHT_SingleCache_PETP"),
+        String("Test3: NoHT_SingleCache_PETP"),
         8,
         8,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -102,13 +105,14 @@ auto testParametersCpuTopology = {
             std::make_pair(0b10000000, 0),
         },
         std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111, 8) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7 }),
     // Test case 4: No hyperThreading Multicache number of threads less than
     // number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PLTC"),
+        String("Test4: NoHT_MultiCache_PLTC"),
         32,
         15,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -148,6 +152,7 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b1111111111111111, 0),
             std::make_pair(0b11111111111111110000000000000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{
@@ -155,7 +160,7 @@ auto testParametersCpuTopology = {
     // Test case 5: No hyperThreading Multicache number of threads greater than
     // number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PGTP"),
+        String("Test5: NoHT_MultiCache_PGTP"),
         16,
         35,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -179,6 +184,7 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b11111111, 0),
             std::make_pair(0b1111111100000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b111111111111111, 16) },
         std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8, 9, 10, 11,
                           12, 13, 14, 15, 0,  1,  2,  3,  4, 5, 6,  7,
                           8,  9,  10, 11, 12, 13, 14, 15, 0, 1, 2 },
@@ -190,7 +196,7 @@ auto testParametersCpuTopology = {
                           10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15 }),
     // Test case 6: No HyperThreading Multicache number of threads equal to
     // number of processors
-    std::make_tuple(String("NoHT_MultiCache_PETP"),
+    std::make_tuple(String("Test6: NoHT_MultiCache_PETP"),
                     16,
                     16,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -214,6 +220,7 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b11111111, 0),
                         std::make_pair(0b1111111100000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{ std::make_pair(0b111111111111111, 16) },
                     std::vector<int>{
                         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
                     std::vector<int>{
@@ -223,7 +230,7 @@ auto testParametersCpuTopology = {
     // Test case 7: No HyperThreading Multicache multicore group number of
     // threads less than number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PLTC"),
+        String("Test7: NoHT_MultiCache_PLTC"),
         96,
         15,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -329,14 +336,18 @@ auto testParametersCpuTopology = {
                 0b1111111111111111111111111111111111111111111111111111111111111111,
                 0),
             std::make_pair(0b11111111111111111111111111111111, 1) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(
+                0b1111111111111111111111111111111111111111111111111111111111111111,
+                64),
+            std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
-        std::vector<int>{
-            0, 8, 16, 24, 32, 40, 48, 56, 64, 68, 72, 76, 80, 84, 88 }),
+        std::vector<int>{ 0, 8, 16, 24, 32, 40, 48, 56, 64, 68, 72, 76, 80, 84, 88 }),
     // Test case 8: No HyperThreading Multicache multicore group number of
     // threads greater than number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PGTC"),
+        String("Test8: NoHT_MultiCache_PGTC"),
         96,
         100,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -442,6 +453,11 @@ auto testParametersCpuTopology = {
                 0b1111111111111111111111111111111111111111111111111111111111111111,
                 0),
             std::make_pair(0b11111111111111111111111111111111, 1) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(
+                0b1111111111111111111111111111111111111111111111111111111111111111,
+                64),
+            std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{
             0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
@@ -512,13 +528,16 @@ auto testParametersCpuTopology = {
         },
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b11111111111111111111111111111111, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b1111111111111111, 16),
+            std::make_pair(0b1111111111111111, 16) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{
             0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28 }),
     // Test case 11: No HyperThreading Singlecache multicore group number of
     // threads greater than number of processors
-    std::make_tuple(String("NoHT_SingleCache_PGTP"),
+    std::make_tuple(String("Test11: NoHT_SingleCache_PGTP"),
                     32,
                     35,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -557,6 +576,9 @@ auto testParametersCpuTopology = {
                     },
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b11111111111111111111111111111111, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16),
+                    std::make_pair(0b1111111111111111, 16) },
                     std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8,
                                       9,  10, 11, 12, 13, 14, 15, 16, 17,
                                       18, 19, 20, 21, 22, 23, 24, 25, 26,
@@ -573,7 +595,7 @@ auto testParametersCpuTopology = {
     // threads equal to number of processors
     // Test case 13: HyperThreading Singlecache number of threads less than
     // number of processors
-    std::make_tuple(String("HT_SingleCache_PLTC"),
+    std::make_tuple(String("Test13: HT_SingleCache_PLTC"),
                     16,
                     9,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -588,13 +610,15 @@ auto testParametersCpuTopology = {
                     },
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111111111, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16) },
                     std::vector<int>{ 0, 2, 4, 6, 8, 10, 12, 14, 1 },
                     std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8 },
                     std::vector<int>{ 0, 1, 2, 4, 6, 8, 10, 12, 14 }),
     // Test case 14: HyperThreading Singlecache number of threads greater than
     // number of processors
     std::make_tuple(
-        String("HT_SingleCache_PGTP"),
+        String("Test14: HT_SingleCache_PGTP"),
         16,
         18,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -609,6 +633,8 @@ auto testParametersCpuTopology = {
         },
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b1111111111111111, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+        std::make_pair(0b1111111111111111, 16) },
         std::vector<int>{
             0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15, 0, 2 },
         std::vector<int>{
@@ -617,7 +643,7 @@ auto testParametersCpuTopology = {
             0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15 }),
     // Test case 15: HyperThreading Singlecache number of threads equal to
     // number of processors
-    std::make_tuple(String("HT_SingleCache_PETP"),
+    std::make_tuple(String("Test15: HT_SingleCache_PETP"),
                     16,
                     16,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -632,6 +658,8 @@ auto testParametersCpuTopology = {
                     },
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111111111, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16) },
                     std::vector<int>{
                         0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15 },
                     std::vector<int>{
@@ -641,7 +669,7 @@ auto testParametersCpuTopology = {
     // Test case 16: HyperThreading Multicache Singlecore group number of
     // threads less than number of processors
     std::make_tuple(
-        String("HT_MultiCache_Singlecore_PLTC"),
+        String("Test16: HT_MultiCache_Singlecore_PLTC"),
         32,
         15,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -664,6 +692,8 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b1111111111111111, 0),
             std::make_pair(0b11111111111111110000000000000000, 0) },
+            std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{
             0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
@@ -672,7 +702,7 @@ auto testParametersCpuTopology = {
     // Test case 17: HyperThreading Multicache Singlecore group number of
     // threads greater than number of processors
     std::make_tuple(
-        String("HT_MultiCache_Singlecore_PGTP"),
+        String("Test17: HT_MultiCache_Singlecore_PGTP"),
         16,
         35,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -688,6 +718,8 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b11111111, 0),
             std::make_pair(0b1111111100000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+        std::make_pair(0b1111111111111111, 16) },
         std::vector<int>{ 0, 2,  4,  6,  8, 10, 12, 14, 1, 3,  5,  7,
                           9, 11, 13, 15, 0, 2,  4,  6,  8, 10, 12, 14,
                           1, 3,  5,  7,  9, 11, 13, 15, 0, 2,  4 },
@@ -700,7 +732,7 @@ auto testParametersCpuTopology = {
 
     // Test case 18: HyperThreading Multicache Singlecore group number of
     // threads equal to number of processors
-    std::make_tuple(String("HT_MultiCache_Singlecore_PETP"),
+    std::make_tuple(String("Test18: HT_MultiCache_Singlecore_PETP"),
                     16,
                     16,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -716,6 +748,8 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b11111111, 0),
                         std::make_pair(0b1111111100000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16) },
                     std::vector<int>{
                         0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15 },
                     std::vector<int>{
@@ -725,7 +759,7 @@ auto testParametersCpuTopology = {
     // Test case 19: HyperThreading Multicache multicore group number of threads
     // less than number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PLTC"),
+        String("Test19: NoHT_MultiCache_PLTC"),
         96,
         15,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -783,6 +817,11 @@ auto testParametersCpuTopology = {
                 0b1111111111111111111111111111111111111111111111111111111111111111,
                 0),
             std::make_pair(0b11111111111111111111111111111111, 1) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(
+                0b1111111111111111111111111111111111111111111111111111111111111111,
+                64),
+            std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{
             0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
@@ -791,7 +830,7 @@ auto testParametersCpuTopology = {
     // Test case 20: HyperThreading Multicache multicore group number of threads
     // greater than number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_PGTC"),
+        String("Test20: NoHT_MultiCache_PGTC"),
         96,
         100,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -849,6 +888,9 @@ auto testParametersCpuTopology = {
                 0b1111111111111111111111111111111111111111111111111111111111111111,
                 0),
             std::make_pair(0b11111111111111111111111111111111, 1) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b1111111111111111111111111111111111111111111111111111111111111111, 64),
+            std::make_pair(0b11111111111111111111111111111111, 32) },
         std::vector<int>{
             0,  2,  4,  6,  8,  10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32,
             34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66,
@@ -874,7 +916,7 @@ auto testParametersCpuTopology = {
     // equal to number of processors
     // Test case 22: HyperThreading Singlecache multicore group number of
     // threads less than number of processors
-    std::make_tuple(String("NoHT_SingleCache_PLTP"),
+    std::make_tuple(String("Test22: NoHT_SingleCache_PLTP"),
                     32,
                     30,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -897,21 +939,24 @@ auto testParametersCpuTopology = {
                     },
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b11111111111111111111111111111111, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16),
+                    std::make_pair(0b1111111111111111, 16) },
+                    std::vector<int>{ 0,  2,  4,  6,  8,  10, 12, 14, 16,
+                                      18, 20, 22, 24, 26, 28, 30, 1,  3, 
+                                      5,  7,  9,  11, 13, 15, 17, 19, 21,
+                                      23, 25, 27},
                     std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8,
                                       9,  10, 11, 12, 13, 14, 15, 16, 17,
                                       18, 19, 20, 21, 22, 23, 24, 25, 26,
-                                      27, 28, 29, 30, 31, 0,  1,  2 },
+                                      27, 28, 29},
                     std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8,
-                                      9,  10, 11, 12, 13, 14, 15, 16, 17,
-                                      18, 19, 20, 21, 22, 23, 24, 25, 26,
-                                      27, 28, 29, 30, 31, 0,  1,  2 },
-                    std::vector<int>{ 0,  0,  1,  2,  3,  4,  5,  6,  7,
-                                      8,  8,  9,  10, 11, 12, 13, 14, 15,
-                                      16, 16, 17, 18, 19, 20, 21, 22, 23,
-                                      24, 25, 26, 27, 28, 29, 30, 31 }),
+                                      9,  10, 11, 12, 13, 14, 16, 17, 18,
+                                      19, 20, 21, 22, 23, 24, 25, 26, 27,
+                                      28, 29, 30 }),
     // Test case 23: HyperThreading Singlecache multicore group number of
     // threads greater than number of processors
-    std::make_tuple(String("NoHT_SingleCache_PGTP"),
+    std::make_tuple(String("Test23: NoHT_SingleCache_PGTP"),
                     32,
                     35,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -934,10 +979,13 @@ auto testParametersCpuTopology = {
                     },
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b11111111111111111111111111111111, 0) },
-                    std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8,
-                                      9,  10, 11, 12, 13, 14, 15, 16, 17,
-                                      18, 19, 20, 21, 22, 23, 24, 25, 26,
-                                      27, 28, 29, 30, 31, 0,  1,  2 },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                    std::make_pair(0b1111111111111111, 16),
+                    std::make_pair(0b1111111111111111, 16) },
+                    std::vector<int>{ 0,  2,  4,  6,  8,  10, 12, 14, 16,
+                                      18, 20, 22, 24, 26, 28, 30, 1,  3, 
+                                      5,  7,  9,  11, 13, 15, 17, 19, 21,
+                                      23, 25, 27, 29, 31, 0, 2, 4},
                     std::vector<int>{ 0,  1,  2,  3,  4,  5,  6,  7,  8,
                                       9,  10, 11, 12, 13, 14, 15, 16, 17,
                                       18, 19, 20, 21, 22, 23, 24, 25, 26,
@@ -950,7 +998,7 @@ auto testParametersCpuTopology = {
     // threads equal to number of processors
     // Test case 25: No HyperThreading multicache uneven distribution single
     // coregroup. Number of threads less than number of processors
-    std::make_tuple(String("NoHT_MultiCache_UnevenDistribution_PLTC"),
+    std::make_tuple(String("Test25: NoHT_MultiCache_UnevenDistribution_PLTC"),
                     15,
                     2,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -973,10 +1021,12 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111, 0),
                         std::make_pair(0b111110000000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                        std::make_pair(0b111111111111111, 15) },
                     std::vector<int>{ 0, 1 },
                     std::vector<int>{ 0, 1 },
                     std::vector<int>{ 0, 10 }),
-    std::make_tuple(String("NoHT_MultiCache_UnevenDistribution_PLTC"),
+    std::make_tuple(String("Test25b: NoHT_MultiCache_UnevenDistribution_PLTC"),
                     15,
                     7,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -999,13 +1049,15 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111, 0),
                         std::make_pair(0b111110000000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                        std::make_pair(0b111111111111111, 15) },
                     std::vector<int>{ 0, 1, 2, 3, 4, 5, 6 },
                     std::vector<int>{ 0, 1, 2, 3, 4, 5, 6 },
                     std::vector<int>{ 0, 3, 5, 8, 10, 12, 13 }),
     // Test case 26: No HyperThreading multicache uneven distribution single
     // coregroup. Number of threads greater than number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_UnevenDistribution_PGTP"),
+        String("Test26: NoHT_MultiCache_UnevenDistribution_PGTP"),
         15,
         18,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -1028,6 +1080,8 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b111111111111, 0),
             std::make_pair(0b111000000000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b111111111111111, 15) },
         std::vector<int>{
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 1, 2 },
         std::vector<int>{
@@ -1037,7 +1091,7 @@ auto testParametersCpuTopology = {
     // Test case 27: No HyperThreading multicache uneven distribution single
     // coregroup. Number of threads equal to number of processors
     std::make_tuple(
-        String("NoHT_MultiCache_UnevenDistribution_PETP"),
+        String("Test27: NoHT_MultiCache_UnevenDistribution_PETP"),
         15,
         15,
         std::vector<std::pair<KAFFINITY, int>>{
@@ -1060,6 +1114,8 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b1111111111, 0),
             std::make_pair(0b111110000000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b111111111111111, 15) },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
         std::vector<int>{ 0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 12, 13, 13, 14 }),
@@ -1071,7 +1127,7 @@ auto testParametersCpuTopology = {
     // multicoregroup. Number of threads equal to number of processors
     // Test case 31: HyperThreading multicache uneven distribution single
     // coregroup. Number of threads less than number of processors
-    std::make_tuple(String("HT_MultiCache_UnevenDistribution_PLTC"),
+    std::make_tuple(String("Test31: HT_MultiCache_UnevenDistribution_PLTC"),
                     30,
                     2,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -1094,6 +1150,8 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111, 0),
                         std::make_pair(0b111111111111111111110000000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                        std::make_pair(0b1111111111111111111111111111111, 30) },
                     std::vector<int>{ 0, 2 },
                     std::vector<int>{ 0, 1 },
                     std::vector<int>{ 0, 10 }),
@@ -1123,6 +1181,8 @@ auto testParametersCpuTopology = {
         std::vector<std::pair<KAFFINITY, int>>{
             std::make_pair(0b1111111111, 0),
             std::make_pair(0b111111111111111111110000000000, 0) },
+        std::vector<std::pair<KAFFINITY, int>>{
+            std::make_pair(0b1111111111111111111111111111111, 30) },
         std::vector<int>{ 0,  2,  4,  6,  8,  10, 12, 14, 16, 18, 20,
                           22, 24, 26, 28, 1,  3,  5,  7,  9,  11, 13,
                           15, 17, 19, 21, 23, 25, 27, 29, 0,  2 },
@@ -1134,7 +1194,7 @@ auto testParametersCpuTopology = {
                           18, 19, 20, 22, 23, 24, 25, 27, 28, 29 }),
     // Test case 33: HyperThreading multicache uneven distribution single
     // coregroup. Number of threads equal to number of processors
-    std::make_tuple(String("HT_MultiCache_UnevenDistribution_PETP"),
+    std::make_tuple(String("Test33: HT_MultiCache_UnevenDistribution_PETP"),
                     30,
                     30,
                     std::vector<std::pair<KAFFINITY, int>>{
@@ -1157,6 +1217,8 @@ auto testParametersCpuTopology = {
                     std::vector<std::pair<KAFFINITY, int>>{
                         std::make_pair(0b1111111111, 0),
                         std::make_pair(0b111111111111111111110000000000, 0) },
+                    std::vector<std::pair<KAFFINITY, int>>{
+                        std::make_pair(0b1111111111111111111111111111111, 30) },
                     std::vector<int>{ 0,  2,  4,  6,  8,  10, 12, 14, 16, 18,
                                       20, 22, 24, 26, 28, 1,  3,  5,  7,  9,
                                       11, 13, 15, 17, 19, 21, 23, 25, 27, 29 },
@@ -1173,7 +1235,6 @@ auto testParametersCpuTopology = {
     // multicoregroup.  Number of threads greater than number of processors
     // Test case 36: HyperThreading multicache uneven distribution
     // multicoregroup.  Number of threads equal to number of processors
-
 };
 // clang-format on
 } // namespace
