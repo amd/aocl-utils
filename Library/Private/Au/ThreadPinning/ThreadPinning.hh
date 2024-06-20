@@ -39,23 +39,27 @@ class AffinityVector
 {
   protected:
     const CpuTopology& cpuInfo;
- 
+
   private:
-    int calculateOffset(int group, const std::vector<std::pair<KAFFINITY, int>>& groupMap) {
-      int offset = 0;
-      if (group > 0) {
-          for (int i = 0; i < group; i++) {
-              offset += groupMap[i].second;
-          }
-      }
-      return offset;
+    int calculateOffset(int                                           group,
+                        const std::vector<std::pair<KAFFINITY, int>>& groupMap)
+    {
+        int offset = 0;
+        if (group > 0) {
+            for (int i = 0; i < group; i++) {
+                offset += groupMap[i].second;
+            }
+        }
+        return offset;
     }
 
-   int calculateCoreNum(std::pair<KAFFINITY, int>& pMap) {
-         return log2(pMap.first & -1 * pMap.first);
+    int calculateCoreNum(std::pair<KAFFINITY, int>& pMap)
+    {
+        return log2(pMap.first & -1 * pMap.first);
     }
 
-    void updateMap(std::pair<KAFFINITY, int>& pMap, int coreId) {
+    void updateMap(std::pair<KAFFINITY, int>& pMap, int coreId)
+    {
         pMap.first &= ~(1ULL << coreId);
     }
 
@@ -142,7 +146,8 @@ class AffinityVector
     {
         // Create a vector that maps threads to L3 cache.
         std::vector<int> cacheVect(procVect.size());
-        createVector(cacheVect, 0, cacheVect.size() - 1, 0, cpuInfo.cacheMap.size() - 1);
+        createVector(
+            cacheVect, 0, cacheVect.size() - 1, 0, cpuInfo.cacheMap.size() - 1);
 
         // Create a map with L3 cache number as key
         // and list of threads to be spread on cores sharing the cache as value.
@@ -154,21 +159,24 @@ class AffinityVector
         // Create a vector of core numbers sharing each cache.
         for (auto& cache : cacheMap) {
             std::vector<int> coreList;
-            auto             pMap = cpuInfo.cacheMap[cache.first];
+            auto             processorMap = cpuInfo.cacheMap[cache.first];
 
             // Convert pMap to coreList
-            while (pMap.first > 0) { // While there are cores in the cache mask
-                int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
-                int coreId = calculateCoreNum(pMap);
-                coreList.push_back(coreId + offset);
-                updateMap(pMap, coreId);
+            for (auto pMap : processorMap) {
+                while (pMap.first
+                       > 0) { // While there are cores in the cache mask
+                    int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
+                    int coreId = calculateCoreNum(pMap);
+                    coreList.push_back(coreId + offset);
+                    updateMap(pMap, coreId);
+                }
             }
 
             // Spread the percache threads to corelist
-            int threadCount = cache.second.size();
+            int              threadCount = cache.second.size();
             std::vector<int> Vect(threadCount);
             createVector(Vect, 0, threadCount - 1, 0, coreList.size() - 1);
-            
+
             // create The processor vector
             int index = 0;
             for (auto thread : cache.second) {
@@ -198,20 +206,30 @@ class AffinityVector
         while (threadId < threadCount) {
             // If all the first elements of processorMap are 0, reset
             // processorMap
-            if (std::all_of(processorMap.begin(),processorMap.end(),[](auto& p) { return p.first == 0; }))
+            if (std::all_of(
+                    processorMap.begin(), processorMap.end(), [](auto& pMap) {
+                        return (
+                            std::all_of(pMap.begin(), pMap.end(), [](auto& p) {
+                                return p.first == 0;
+                            }));
+                    }))
                 processorMap = cpuInfo.processorMap;
 
             for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
                 // Skip if all the cores in the group are used
-                if (processorMap[coreId].first == 0)
-                    continue;
+                for (auto& pMap : processorMap[coreId]) {
+                    if (pMap.first == 0)
+                        continue;
 
-                int offset = calculateOffset(processorMap[coreId].second, cpuInfo.groupMap);
-                int coreNum = calculateCoreNum(processorMap[coreId]);
-                procVect.push_back(coreNum + offset);
-                updateMap(processorMap[coreId], coreNum);
-                
-                threadId++;
+                    int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
+                    int coreNum = calculateCoreNum(pMap);
+                    procVect.push_back(coreNum + offset);
+                    updateMap(pMap, coreNum);
+
+                    threadId++;
+                    if (threadId == threadCount)
+                        break;
+                }
                 if (threadId == threadCount)
                     break;
             }
