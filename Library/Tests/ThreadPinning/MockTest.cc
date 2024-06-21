@@ -34,13 +34,13 @@ class MockCpuTopology : public CpuTopology
 {
   public:
     MockCpuTopology() = default;
-    // Implement the virtual functions
+
     void setActiveProcessors(int num) { active_processors = num; }
-    void setPMap(std::vector<std::pair<KAFFINITY, int>> pMap)
+    void setPMap(std::vector<std::vector<std::pair<KAFFINITY, int>>> pMap)
     {
         processorMap = pMap;
     }
-    void setCMap(std::vector<std::pair<KAFFINITY, int>> cMap)
+    void setCMap(std::vector<std::vector<std::pair<KAFFINITY, int>>> cMap)
     {
         cacheMap = cMap;
     }
@@ -50,13 +50,15 @@ class MockCpuTopology : public CpuTopology
     }
 };
 
-INSTANTIATE_TEST_SUITE_P(ThreadPinningTests,
-                         ThreadPinningTest,
-                         ::testing::ValuesIn(testParametersCpuTopology));
+INSTANTIATE_TEST_SUITE_P(
+    ThreadPinningTests,
+    ThreadPinningTest,
+    ::testing::ValuesIn(std::move(testParametersCpuTopology)));
 
 TEST_P(ThreadPinningTest, affinityVectorTest)
 {
-    std::vector<std::pair<KAFFINITY, int>> pMap, cMap, gMap;
+    std::vector<std::vector<std::pair<KAFFINITY, int>>> pMap, cMap;
+    std::vector<std::pair<KAFFINITY, int>>              gMap;
     std::vector<int> coreResult, LogicalResult, SpreadResult;
     int              activeProcessors, numberofThreads;
     String           name;
@@ -81,8 +83,8 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
     processPinGroup.reserve(numberofThreads);
 
     std::cout << "Thread Pinning for " << name << std::endl;
-    
-    std::cout << "Core :" ;
+
+    std::cout << "Core :";
     av.getAffinityVector(processPinGroup, 1); // core
     EXPECT_EQ(processPinGroup, coreResult);
     std::cout << " Pass" << std::endl;
@@ -91,8 +93,8 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
     av.getAffinityVector(processPinGroup, 2); // Logical
     EXPECT_EQ(processPinGroup, LogicalResult);
     std::cout << " Pass" << std::endl;
-    
-    std::cout << "Spread :" ;
+
+    std::cout << "Spread :";
     av.getAffinityVector(processPinGroup, 0); // Spread
     std::cout << " Pass" << std::endl;
     EXPECT_EQ(processPinGroup, SpreadResult);

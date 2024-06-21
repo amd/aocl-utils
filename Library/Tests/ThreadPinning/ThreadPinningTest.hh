@@ -27,10 +27,10 @@
  */
 #include "Au/ThreadPinning.hh"
 #include "Au/ThreadPinning/ThreadPinning.hh"
+#include <climits> // for CHAR_BIT
 #include <gtest/gtest.h>
 #include <thread>
 #include <vector>
-#include <climits> // for CHAR_BIT
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -43,20 +43,51 @@ using namespace Au;
 // Test fixture class
 class PinThreadsTest : public ::testing::Test
 {
+  public:
+    PinThreadsTest()
+        : num_threads(0)
+        , thread_ids()
+        , strategy(pinStrategy::SPREAD)
+        , threads()
+        , tp(){};
+
   protected:
+    int                      num_threads;
+    std::vector<pthread_t>   thread_ids;
+    pinStrategy              strategy;
+    std::vector<std::thread> threads;
+    ThreadPinning            tp;
+
+    /**
+     * @brief           SetUp
+     *
+     * @details         Set up the test fixture by creating threads for the test
+     *
+     * @param           void
+     *
+     * @return          void
+     */
     void SetUp() override
     {
-        
+
         num_threads = std::thread::hardware_concurrency()
-                  + rand() % std::thread::hardware_concurrency();
+                      + rand() % (std::thread::hardware_concurrency() - 1);
         createThreads();
-        for(int i = 0; i < num_threads; ++i)
-        {
+        for (int i = 0; i < num_threads; ++i) {
             pthread_t handle = threads[i].native_handle();
             thread_ids.push_back(handle);
         }
     }
 
+    /**
+     * @brief           TearDown
+     *
+     * @details         Tear down the test fixture by joining the threads
+     *
+     * @param           void
+     *
+     * @return          void
+     */
     void TearDown() override
     {
         for (auto& thread : threads) {
@@ -66,41 +97,61 @@ class PinThreadsTest : public ::testing::Test
         }
     }
 
-    int                      num_threads;
-    std::vector<std::thread> threads;
-    std::vector<pthread_t>   thread_ids;
-    pinStrategy              strategy;
-    ThreadPinning    tp;
-
   private:
-    static void printThreadId(int id) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    /**
+     * @brief           printThreadId
+     *
+     * @details         Thread function
+     *
+     * @return          void
+     */
+    static void printThreadId()
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
     }
-    
-    // Helper function to create threads and perform a simple task
+
+    /**
+     * @brief           createThreads
+     *
+     * @details         Create threads.
+     *
+     * @param           void
+     *
+     * @return          void
+     */
     void createThreads()
     {
         for (int i = 0; i < num_threads; ++i) {
-            threads.push_back(std::thread(printThreadId, i));
+            threads.push_back(std::thread(printThreadId));
         }
     }
 
+    /**
+     * @brief           getCoreAffinity
+     *
+     * @details         Get the core affinity of the thread
+     *
+     * @param           threadHandle
+     *
+     * @return          int
+     */
 #ifdef _WIN32
     int getCoreAffinity(HANDLE threadHandle)
     {
         GROUP_AFFINITY groupAffinity;
         BOOL result = GetThreadGroupAffinity(threadHandle, &groupAffinity);
         if (!result) {
-           std::cerr << "Error reading thread affinity for thread " << std::endl;
+            std::cerr << "Error reading thread affinity for thread "
+                      << std::endl;
         } else {
-            for (size_t core = 0; core < sizeof(groupAffinity.Mask) * CHAR_BIT; ++core) {
+            for (size_t core = 0; core < sizeof(groupAffinity.Mask) * CHAR_BIT;
+                 ++core) {
                 if (groupAffinity.Mask & (1 << core)) {
                     int offset = 0;
-                    for (int i = 0; i < groupAffinity.Group;++i)
-                    {
-                           offset = offset + CpuTopology::get().groupMap[i].second;
+                    for (int i = 0; i < groupAffinity.Group; ++i) {
+                        offset = offset + CpuTopology::get().groupMap[i].second;
                     }
-                        return core + offset;
+                    return core + offset;
                 }
             }
         }
@@ -121,25 +172,130 @@ class PinThreadsTest : public ::testing::Test
         return -1;
     }
 #endif
-  public:
-    bool VerifyAffinity()
+
+    /**
+     * @brief           VerifyAffinity
+     *
+     * @details         Verify the core affinity of each thread matches the
+     * expected core
+     *
+     * @param           affinityVector
+     *
+     * @return          bool
+     */
+    bool VerifyAffinity(std::vector<int> affinityVector)
     {
-               
 
-        AffinityVector   av;
-        // Call the getAffinityVector API to get the affinity vector
-        std::vector<int> affinityVector(num_threads);
-        affinityVector.reserve(num_threads);
-        av.getAffinityVector(affinityVector, strategy);
-
-        // Verify the core affinity of each thread matches the expected core
         for (int i = 0; i < num_threads; ++i) {
             int expectedCore = affinityVector[i];
             int actualCore   = getCoreAffinity(thread_ids[i]);
             if (expectedCore != actualCore)
                 return false;
         }
-    return true;
+        return true;
+    }
+
+    /**
+     * @brief           VerifyAffinity
+     *
+     * @details         Verify the core affinity of each thread matches the
+     * expected core
+     *
+     * @return          bool
+     */
+    bool VerifyAffinity()
+    {
+
+        AffinityVector   av;
+        std::vector<int> affinityVector(num_threads);
+        av.getAffinityVector(affinityVector, strategy);
+
+        for (int i = 0; i < num_threads; ++i) {
+            int expectedCore = affinityVector[i];
+            int actualCore   = getCoreAffinity(thread_ids[i]);
+            if (expectedCore != actualCore)
+                return false;
+        }
+        return true;
+    }
+
+  public:
+    /**
+     * @brief           verifyStrategy
+     *
+     * @details         Verify the pinning strategy
+     *
+     * @param           void
+     *
+     * @return          void
+     */
+    void verifyStrategy()
+    {
+        // with number of threads more than hardware concurrency
+        tp.pinThreads(thread_ids, strategy);
+        EXPECT_TRUE(VerifyAffinity());
+
+        // with number of threads equal to hardware concurrency
+        num_threads = std::thread::hardware_concurrency();
+        std::vector<pthread_t> threadIds1(thread_ids.begin(),
+                                          thread_ids.begin() + num_threads);
+        tp.pinThreads(threadIds1, strategy);
+        EXPECT_TRUE(VerifyAffinity());
+
+        // with number of threads less than hardware concurrency
+        num_threads = std::thread::hardware_concurrency()
+                      - (rand() % std::thread::hardware_concurrency() - 1);
+        std::vector<pthread_t> threadIds2(thread_ids.begin(),
+                                          thread_ids.begin() + num_threads);
+        tp.pinThreads(threadIds2, strategy);
+        EXPECT_TRUE(VerifyAffinity());
+    }
+
+    /**
+     * @brief           verifyStrategy
+     *
+     * @details         Verify the pinning strategy
+     *
+     * @param           affinityVector
+     *
+     * @return          void
+     */
+    void verifyStrategy(std::vector<int>& affinityVector)
+    {
+        // initilize the affinity vector with random numbers less than hardware
+        // concurrency
+        for (int i = 0; i < num_threads; i++) {
+            affinityVector.push_back(
+                rand() % (std::thread::hardware_concurrency() - 1));
+        }
+        // with number of threads more than hardware concurrency
+        tp.pinThreads(thread_ids, affinityVector);
+        EXPECT_TRUE(VerifyAffinity(affinityVector));
+
+        // with number of threads equal to hardware concurrency
+        num_threads = std::thread::hardware_concurrency();
+        affinityVector.clear();
+        for (int i = 0; i < num_threads; i++) {
+            affinityVector.push_back(
+                rand() % (std::thread::hardware_concurrency() - 1));
+        }
+        std::vector<pthread_t> threadIds1(thread_ids.begin(),
+                                          thread_ids.begin() + num_threads);
+        tp.pinThreads(threadIds1, affinityVector);
+        EXPECT_TRUE(VerifyAffinity(affinityVector));
+
+        // with number of threads less than hardware concurrency
+        num_threads = std::thread::hardware_concurrency()
+                      - (rand() % std::thread::hardware_concurrency() - 1);
+        affinityVector.clear();
+        for (int i = 0; i < num_threads; i++) {
+            affinityVector.push_back(
+                rand() % (std::thread::hardware_concurrency() - 1));
+        }
+        std::vector<pthread_t> threadIds2(thread_ids.begin(),
+                                          thread_ids.begin() + num_threads);
+        tp.pinThreads(threadIds2, affinityVector);
+        EXPECT_TRUE(VerifyAffinity(affinityVector));
     }
 };
 } // namespace
