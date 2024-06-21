@@ -34,9 +34,9 @@
 #include <vector>
 
 namespace Au {
-typedef unsigned long KAFFINITY;
-// Define DWORD
-typedef unsigned long DWORD;
+typedef unsigned long             DWORD;
+typedef unsigned long             KAFFINITY;
+typedef std::pair<KAFFINITY, int> CoreMask;
 
 class LogicalProcessorInformation
 {
@@ -106,7 +106,7 @@ class LogicalProcessorInformation
      * @details     This function parses the line and stores the information in
      * the Map. The line is a comma separated string of hexadecimal values.
      *
-     * @param[out]   std::vector<std::pair<KAFFINITY, int>>& Map
+     * @param[out]   std::vector<CoreMask>& Map
      *               A vector of pairs that stores the mask and the position of
      * the mask. obtained from parsing the line.
      *
@@ -114,8 +114,7 @@ class LogicalProcessorInformation
      *
      * @return      void
      */
-    void parseLine(std::vector<std::pair<KAFFINITY, int>>& Map,
-                   std::string                             line)
+    void parseLine(std::vector<CoreMask>& Map, std::string line)
     {
         std::reverse(line.begin(), line.end());
         std::stringstream ss(line);
@@ -143,7 +142,7 @@ class LogicalProcessorInformation
      * @details     This function processes the file and stores the information
      * in the Map. The file is a comma separated string of hexadecimal values.
      *
-     * @param[out]   std::vector<std::pair<KAFFINITY, int>>& Map
+     * @param[out]   std::vector<CoreMask>& Map
      *               A vector of pairs that stores the mask and the position of
      * the mask. obtained from parsing the line.
      *
@@ -151,8 +150,7 @@ class LogicalProcessorInformation
      *
      * @return      void
      */
-    void processFile(std::vector<std::pair<KAFFINITY, int>>& Map,
-                     std::ifstream&                          file)
+    void processFile(std::vector<CoreMask>& Map, std::ifstream& file)
     {
         std::string line;
         if (getline(file, line))
@@ -164,13 +162,13 @@ class LogicalProcessorInformation
      *
      * @details     This function gets the current directory entry.
      *
-     * @param[out]   std::vector<std::pair<KAFFINITY, int>>& Map
+     * @param[out]   std::vector<CoreMask>& Map
      *               A vector of pairs that stores the mask and the position of
      * the mask. obtained from parsing the line.
      *
      * @return      void
      */
-    void Current(std::vector<std::pair<KAFFINITY, int>>& Map)
+    void Current(std::vector<CoreMask>& Map)
     {
         if (dp) {
             std::string   dirName(dp->d_name);
@@ -193,12 +191,11 @@ class CpuTopology
      *
      * @details          This function eliminates duplicates from the Map.
      *
-     * @param[in/out]    std::vector<std::vector<std::pair<KAFFINITY, int>>>&
+     * @param[in/out]    std::vector<std::vector<CoreMask>>&
      * Map A vector of unique pairs from the Map.
      * @return      void
      */
-    void eliminateDuplicates(
-        std::vector<std::vector<std::pair<KAFFINITY, int>>>& Map)
+    void eliminateDuplicates(std::vector<std::vector<CoreMask>>& Map)
     {
         std::sort(Map.begin(), Map.end());
         auto newMap = std::unique(Map.begin(), Map.end());
@@ -211,15 +208,15 @@ class CpuTopology
      * @details          Used to reorder the vector after eliminating
      * duplicates.
      *
-     * @param[in]        const std::vector<std::pair<KAFFINITY, int>>& a
+     * @param[in]        const std::vector<CoreMask>& a
      *                   A vector of pairs.
-     * @param[in]        const std::vector<std::pair<KAFFINITY, int>>& b
+     * @param[in]        const std::vector<CoreMask>& b
      *                   A vector of pairs.
      *
      * @return           bool
      */
-    static bool compareVectors(const std::vector<std::pair<KAFFINITY, int>>& a,
-                               const std::vector<std::pair<KAFFINITY, int>>& b)
+    static bool compareVectors(const std::vector<CoreMask>& a,
+                               const std::vector<CoreMask>& b)
     {
         if (a[0].second == b[0].second)
             return a[0].first < b[0].first;
@@ -228,10 +225,10 @@ class CpuTopology
     }
 
   public:
-    uint32_t                                            active_processors;
-    std::vector<std::vector<std::pair<KAFFINITY, int>>> processorMap;
-    std::vector<std::vector<std::pair<KAFFINITY, int>>> cacheMap;
-    std::vector<std::pair<KAFFINITY, int>>              groupMap;
+    uint32_t                           active_processors;
+    std::vector<std::vector<CoreMask>> processorMap;
+    std::vector<std::vector<CoreMask>> cacheMap;
+    std::vector<CoreMask>              groupMap;
 
     static const CpuTopology& get()
     {

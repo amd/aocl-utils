@@ -29,6 +29,7 @@
 #include <windows.h>
 
 namespace Au {
+typedef std::pair<KAFFINITY, int> CoreMask;
 using SLPIEX = SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
 
 /**
@@ -127,10 +128,10 @@ class LogicalProcessorInformation
 class CpuTopology
 {
   public:
-    uint32_t                                            active_processors;
-    std::vector<std::vector<std::pair<KAFFINITY, int>>> processorMap;
-    std::vector<std::vector<std::pair<KAFFINITY, int>>> cacheMap;
-    std::vector<std::pair<KAFFINITY, int>>              groupMap;
+    uint32_t                           active_processors;
+    std::vector<std::vector<CoreMask>> processorMap;
+    std::vector<std::vector<CoreMask>> cacheMap;
+    std::vector<CoreMask>              groupMap;
 
     static const CpuTopology& get()
     {

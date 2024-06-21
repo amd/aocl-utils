@@ -33,16 +33,27 @@
 #endif
 
 #include <Au/ThreadPinning.hh>
-
 namespace Au {
+
 class AffinityVector
 {
   protected:
     const CpuTopology& cpuInfo;
 
   private:
-    int calculateOffset(int                                           group,
-                        const std::vector<std::pair<KAFFINITY, int>>& groupMap)
+    /**
+     * @brief           Calculate the offset
+     *
+     * @details         This function calculates the offset based on the group
+     *                  and groupMap
+     *
+     * @param[in]       group       Group number
+     *
+     * @param[in]       groupMap    Map of groups
+     *
+     * @return          int
+     */
+    int calculateOffset(int group, const std::vector<CoreMask>& groupMap)
     {
         int offset = 0;
         if (group > 0) {
@@ -53,22 +64,134 @@ class AffinityVector
         return offset;
     }
 
-    int calculateCoreNum(std::pair<KAFFINITY, int>& pMap)
+    /**
+     * @brief           Calculate the core number
+     *
+     * @details         This function calculates the core number based on the
+     *                  bitMap
+     *
+     * @param[in]       pMap    ProcessorMap
+     *
+     * @return          int
+     */
+    int calculateCoreNum(CoreMask& pMap)
     {
         return log2(pMap.first & -1 * pMap.first);
     }
 
-    void updateMap(std::pair<KAFFINITY, int>& pMap, int coreId)
+    /**
+     * @brief           Update the map
+     *
+     * @details         This function updates the map by clearing the bit at
+     *                  coreId
+     *
+     * @param[in]       pMap    ProcessorMap
+     *
+     * @param[in]       coreId  Core number
+     *
+     * @return          void
+     */
+    void updateMap(CoreMask& pMap, int coreId)
     {
         pMap.first &= ~(1ULL << coreId);
     }
 
-  public:
-    AffinityVector(const CpuTopology& Info = CpuTopology::get())
-        : cpuInfo{ Info }
+    /**
+     * @brief           Get the cache affinity map
+     *
+     * @details         This function creates a map that maps the given threads
+     * to cache groups.
+     *
+     * @param[in]       procVect    Vector to store the spread affinity
+     *
+     * @param[out]      cacheMap    Map to store the cache affinity
+     *
+     * @return          void
+     */
+    void getCacheAffinityMap(int                              threadCount,
+                             std::map<int, std::vector<int>>& cacheMap)
     {
+
+        std::vector<int> procVect(threadCount);
+        createVector(
+            procVect, 0, threadCount - 1, 0, cpuInfo.cacheMap.size() - 1);
+        for (size_t thread = 0; thread < procVect.size(); thread++) {
+            int coreNum = procVect[thread];
+            cacheMap[coreNum].push_back(thread);
+        }
     }
 
+    /**
+     * @brief           CoreMapToCoreList
+     *
+     * @details         Convert the given bitmap to a list of core numbers
+     *
+     * @param[in]       processorMap    Bitmap of processors
+     *
+     * @param[out]      coreList        List of core numbers
+     *
+     * @return          void
+     */
+    void coreMapToCoreList(const std::vector<CoreMask>& processorMap,
+                           std::vector<int>&            coreList)
+    {
+        for (auto pMap : processorMap) {
+            while (pMap.first > 0) {
+                coreList.push_back(
+                    calculateCoreNum(pMap)
+                    + calculateOffset(pMap.second, cpuInfo.groupMap));
+                updateMap(pMap, calculateCoreNum(pMap));
+            }
+        }
+    }
+
+    /**
+     * @brief           Check if the processorMap is reset
+     *
+     * @details         This function checks if the processorMap is reset
+     *
+     * @param[in]       processorMap    ProcessorMap to check
+     *
+     * @return          bool
+     */
+    bool isReset(std::vector<std::vector<CoreMask>>& processorMap)
+    {
+        return std::all_of(
+            processorMap.begin(), processorMap.end(), [](auto& pMap) {
+                return (
+                    std::all_of(pMap.begin(), pMap.end(), [](const auto& p) {
+                        return p.first == 0;
+                    }));
+            });
+    }
+
+    /**
+     * @brief           Skip the mask
+     *
+     * @details         This return true if all the bits in the mask is 0
+     *
+     * @param[in]       pMap          corMask
+     *
+     * @param[in]       maskIndex     Index of the mask
+     *
+     * @param[in]       processorMap  ProcessorMap
+     *
+     * @return          bool
+     */
+
+    bool skipMask(CoreMask&                    pMap,
+                  size_t&                      maskIndex,
+                  const std::vector<CoreMask>& processorMap)
+    {
+        if (pMap.first == 0 && maskIndex == processorMap.size()) {
+            maskIndex = 0;
+            return true;
+        } else if (pMap.first == 0 && maskIndex < processorMap.size()) {
+            pMap = processorMap[maskIndex];
+            maskIndex++;
+        }
+        return false;
+    }
     /**
      * @brief           Create a vector
      *
@@ -132,6 +255,12 @@ class AffinityVector
                      pListEnd); // Right half
     }
 
+  public:
+    AffinityVector(const CpuTopology& Info = CpuTopology::get())
+        : cpuInfo{ Info }
+    {
+    }
+
     /**
      * @brief           Get the spread affinity vector
      *
@@ -144,43 +273,25 @@ class AffinityVector
      */
     void getSpreadAffinityVectory(std::vector<int>& procVect)
     {
-        // Create a vector that maps threads to L3 cache.
-        std::vector<int> cacheVect(procVect.size());
-        createVector(
-            cacheVect, 0, cacheVect.size() - 1, 0, cpuInfo.cacheMap.size() - 1);
-
-        // Create a map with L3 cache number as key
-        // and list of threads to be spread on cores sharing the cache as value.
         std::map<int, std::vector<int>> cacheMap;
-        for (size_t i = 0; i < cacheVect.size(); i++) {
-            cacheMap[cacheVect[i]].push_back(i);
-        }
+        getCacheAffinityMap(procVect.size(), cacheMap);
 
-        // Create a vector of core numbers sharing each cache.
         for (auto& cache : cacheMap) {
-            std::vector<int> coreList;
             auto             processorMap = cpuInfo.cacheMap[cache.first];
+            std::vector<int> coreList;
+            coreMapToCoreList(processorMap, coreList);
 
-            // Convert pMap to coreList
-            for (auto pMap : processorMap) {
-                while (pMap.first
-                       > 0) { // While there are cores in the cache mask
-                    int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
-                    int coreId = calculateCoreNum(pMap);
-                    coreList.push_back(coreId + offset);
-                    updateMap(pMap, coreId);
-                }
-            }
-
-            // Spread the percache threads to corelist
             int              threadCount = cache.second.size();
-            std::vector<int> Vect(threadCount);
-            createVector(Vect, 0, threadCount - 1, 0, coreList.size() - 1);
+            std::vector<int> procVectPerCache(threadCount);
+            createVector(
+                procVectPerCache, 0, threadCount - 1, 0, coreList.size() - 1);
 
-            // create The processor vector
+            /* Create the final affinity vector */
             int index = 0;
             for (auto thread : cache.second) {
-                procVect[thread] = coreList[Vect[index++]];
+                int item         = procVectPerCache[index++];
+                int coreNum      = coreList[item];
+                procVect[thread] = coreNum;
             }
         }
     }
@@ -203,33 +314,27 @@ class AffinityVector
         auto processorMap = cpuInfo.processorMap;
         int  threadId     = 0;
 
+        std::vector<size_t>   maskIndex(processorMap.size(), 0);
+        std::vector<CoreMask> pMap{};
+        for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
+            pMap.push_back(processorMap[coreId][maskIndex[coreId]++]);
+        }
+
         while (threadId < threadCount) {
-            // If all the first elements of processorMap are 0, reset
-            // processorMap
-            if (std::all_of(
-                    processorMap.begin(), processorMap.end(), [](auto& pMap) {
-                        return (
-                            std::all_of(pMap.begin(), pMap.end(), [](auto& p) {
-                                return p.first == 0;
-                            }));
-                    }))
+            if (isReset(processorMap))
                 processorMap = cpuInfo.processorMap;
 
             for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
-                // Skip if all the cores in the group are used
-                for (auto& pMap : processorMap[coreId]) {
-                    if (pMap.first == 0)
-                        continue;
+                if (skipMask(
+                        pMap[coreId], maskIndex[coreId], processorMap[coreId]))
+                    continue;
 
-                    int offset = calculateOffset(pMap.second, cpuInfo.groupMap);
-                    int coreNum = calculateCoreNum(pMap);
-                    procVect.push_back(coreNum + offset);
-                    updateMap(pMap, coreNum);
+                procVect.push_back(
+                    calculateCoreNum(pMap[coreId])
+                    + calculateOffset(pMap[coreId].second, cpuInfo.groupMap));
+                updateMap(pMap[coreId], calculateCoreNum(pMap[coreId]));
 
-                    threadId++;
-                    if (threadId == threadCount)
-                        break;
-                }
+                threadId++;
                 if (threadId == threadCount)
                     break;
             }
@@ -294,8 +399,8 @@ class AffinityVector
      *
      * @param[in]     processorList    List of processors to pin the threads
      */
-    void setAffinity(std::vector<DWORD> const& threadList,
-                     std::vector<int> const&   processorList)
+    void setAffinity(std::vector<pthread_t> const& threadList,
+                     std::vector<int> const&       processorList)
     {
         for (size_t i = 0; i < threadList.size(); i++) {
             // Pin the thread to the processor
@@ -303,7 +408,7 @@ class AffinityVector
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
             CPU_SET(processorList[i], &cpuset);
-            sched_setaffinity(threadList[i], sizeof(cpu_set_t), &cpuset);
+            pthread_setaffinity_np(threadList[i], sizeof(cpu_set_t), &cpuset);
 #else
             GROUP_AFFINITY groupAffinity;
             ZeroMemory(&groupAffinity, sizeof(GROUP_AFFINITY));
