@@ -37,3 +37,15 @@ au_add_application(cpuid_deprecated_api_example_c
 				SOURCES cpuid_deprecated_api_example.c
 				LIBS au::cpuid
                 INCLUDES ${AU_INCLUDE_DIRS})
+
+if (NOT WIN32)
+	au_add_application(thread_pinning_example_c
+				SOURCES thread_pinning_example_linux.c
+				LIBS au::core
+                INCLUDES ${AU_INCLUDE_DIRS})
+else()
+	au_add_application(thread_pinning_example_c
+				SOURCES thread_pinning_example_windows.c
+				LIBS au::core
+                INCLUDES ${AU_INCLUDE_DIRS})
+endif()
