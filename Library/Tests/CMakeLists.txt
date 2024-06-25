@@ -53,7 +53,7 @@ set(OTHER_TEST_FILES
 
 set(THREAD_PINNING_TEST_FILES
     ThreadPinning/ThreadPinningTest.cc
-    ThreadPinning/MockTest.cc
+    ThreadPinning/ThreadPinningMockTest.cc
 )
 set(ALL_TEST_FILES
     ${MEMORY_TEST_FILES}

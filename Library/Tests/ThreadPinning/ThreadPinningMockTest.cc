@@ -62,6 +62,7 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
     std::vector<int> coreResult, LogicalResult, SpreadResult;
     int              activeProcessors, numberofThreads;
     String           name;
+    std::ofstream    logFile;
 
     std::tie(name,
              activeProcessors,
@@ -81,22 +82,69 @@ TEST_P(ThreadPinningTest, affinityVectorTest)
     auto             av = AffinityVector(mockCT);
     std::vector<int> processPinGroup(numberofThreads);
     processPinGroup.reserve(numberofThreads);
-
     std::cout << "Thread Pinning for " << name << std::endl;
+    // write to log file
+    logFile.open("ThreadPinningMockTest.log", std::ios::app);
+    logFile << "Thread Pinning for " << name << std::endl;
+    logFile << "Topology : " << std::endl;
+    logFile << "Active Processors : " << activeProcessors << std::endl;
+    logFile << "Number of Threads : " << numberofThreads << std::endl;
+    logFile << "Processor Map : " << std::endl;
+    for (long unsigned int i = 0; i < pMap.size(); i++) {
+        logFile << "Processor " << i << " : ";
+        for (long unsigned j = 0; j < pMap[i].size(); j++) {
+            logFile << pMap[i][j].first << "<--------->" << pMap[i][j].second
+                    << " ";
+        }
+        logFile << std::endl;
+    }
+    for (long unsigned int i = 0; i < cMap.size(); i++) {
+        logFile << "Cache " << i << " : ";
+        for (long unsigned int j = 0; j < cMap[i].size(); j++) {
+            logFile << cMap[i][j].first << "<--------->" << cMap[i][j].second
+                    << " ";
+        }
+        logFile << std::endl;
+    }
+    for (long unsigned int i = 0; i < gMap.size(); i++) {
+        logFile << "Group " << i << " : ";
+        logFile << gMap[i].first << "'<---------->" << gMap[i].second
+                << std::endl;
+    }
 
-    std::cout << "Core :";
+    logFile << "Core :" << std::endl;
+    std::cout << "Core :" << std::endl;
     av.getAffinityVector(processPinGroup, 1); // core
+    for (int i = 0; i < numberofThreads; i++) {
+        logFile << processPinGroup[i] << "<--------->" << coreResult[i]
+                << std::endl;
+    }
+    logFile << std::endl;
     EXPECT_EQ(processPinGroup, coreResult);
     std::cout << " Pass" << std::endl;
-
+    logFile << " Pass" << std::endl;
+    logFile << "Logical :" << std::endl;
     std::cout << "Logical :";
     av.getAffinityVector(processPinGroup, 2); // Logical
     EXPECT_EQ(processPinGroup, LogicalResult);
+    for (int i = 0; i < numberofThreads; i++) {
+        logFile << processPinGroup[i] << "<--------->" << LogicalResult[i]
+                << std::endl;
+    }
+    logFile << std::endl;
     std::cout << " Pass" << std::endl;
+    logFile << " Pass" << std::endl;
 
     std::cout << "Spread :";
+    logFile << "Spread :" << std::endl;
     av.getAffinityVector(processPinGroup, 0); // Spread
+    for (int i = 0; i < numberofThreads; i++) {
+        logFile << processPinGroup[i] << "<--------->" << SpreadResult[i]
+                << std ::endl;
+    }
+    logFile << std::endl;
     std::cout << " Pass" << std::endl;
+    logFile << " Pass" << std::endl;
     EXPECT_EQ(processPinGroup, SpreadResult);
 }
 
