@@ -205,11 +205,11 @@ auto testParametersCpuTopology = {
         concatCoreMasks(getCoreMask(64, 0, false, false, 0),
                         getCoreMask(32, 1, false, false, 64)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0)},
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1)}
         },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32)
         },
         std::vector<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
@@ -223,11 +223,11 @@ auto testParametersCpuTopology = {
         concatCoreMasks(getCoreMask(64, 0, false, false, 0),
                         getCoreMask(32, 1, false, false, 64)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0)},
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1)}
         },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32)
         },
         std::vector<int>{
@@ -259,11 +259,11 @@ auto testParametersCpuTopology = {
         concatCoreMasks(getCoreMask(64, 0, false, false, 0),
                         getCoreMask(32, 1, false, false, 64)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0)},
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1)}
         },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32)
         },
         std::vector<int>{
@@ -429,13 +429,13 @@ auto testParametersCpuTopology = {
     // less than number of processors
     std::make_tuple(
         String("Test19"), 96, 15,
-        concatCoreMasks(getCoreMask(48, 0, true, false, 0),
+        concatCoreMasks(getCoreMask(32, 0, true, false, 0),
                         getCoreMask(16, 1, true, false, 0)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0) },
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1) } },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32) },
         std::vector<int>{
             0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28 },
@@ -450,10 +450,10 @@ auto testParametersCpuTopology = {
         concatCoreMasks(getCoreMask(32, 0, true, false, 0),
                         getCoreMask(16, 1, true, false, 0)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0) },
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1) } },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32) },
         std::vector<int>{
             0,  2,  4,  6,  8,  10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32,
@@ -484,10 +484,10 @@ auto testParametersCpuTopology = {
         concatCoreMasks(getCoreMask(32, 0, true, false, 0),
                         getCoreMask(16, 1, true, false, 0)),
         std::vector<std::vector<CoreMask>>{
-            { std::make_pair((1ULL << 64) - 1, 0) },
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 0)},
             { std::make_pair((1ULL << 32) - 1, 1) } },
         std::vector<CoreMask>{
-            std::make_pair((1ULL << 64) - 1, 64),
+            { std::make_pair((((1ULL << 63) - 1) << 1) | 1, 64)},
             std::make_pair((1ULL << 32) - 1, 32) },
         std::vector<int>{
             0,  2,  4,  6,  8,  10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32,

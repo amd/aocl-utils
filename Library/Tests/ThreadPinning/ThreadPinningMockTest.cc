@@ -26,6 +26,7 @@
  *
  */
 #include "MockTest.hh"
+#include <fstream>
 
 namespace {
 

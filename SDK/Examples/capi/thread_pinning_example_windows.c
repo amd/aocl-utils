@@ -33,7 +33,7 @@ threadFunction(LPVOID lpParam)
 {
     int id = *((int*)lpParam);
     printf("Thread started with ID: %d\n", id);
-    sleep(3);
+    Sleep(3);
     return 0;
 }
 
@@ -48,7 +48,7 @@ checkThreadAffinity(HANDLE handle)
     if (!result) {
         printf("Error reading thread affinity for thread  on Windows\n");
     } else {
-        printf("groupAffinity.mask %d \n", groupAffinity.Mask);
+        printf("groupAffinity.mask %llu \n", groupAffinity.Mask);
     }
 }
 
