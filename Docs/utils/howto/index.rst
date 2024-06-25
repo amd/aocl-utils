@@ -1,7 +1,7 @@
 .. _howto:
 
-Cpuid HOWTO
-============
+AOCL-UTILS HOWTO
+================
 
 .. toctree::
     :maxdepth: 2

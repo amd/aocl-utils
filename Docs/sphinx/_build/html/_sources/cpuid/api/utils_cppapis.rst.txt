@@ -1,7 +1,7 @@
 .. _api_cpp:
 
-C++-APIs
-========
+Cpuid C++-APIs
+==============
 .. doxygenclass:: Au::X86Cpu
    :project: aoclutils
    :members-only:
