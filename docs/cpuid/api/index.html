@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cpuid API Reference &mdash; AOCL-UTILS 5.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ee801c84"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Cpuid C-APIs" href="utils_capis.html" />
+    <link rel="prev" title="Details" href="../../utils/howto/utils_readme.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../../index.html" class="icon icon-home">
+            AOCL-UTILS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cpuid API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html">Cpuid C-APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html">Cpuid C++-APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Cpuid TestPlan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/api/index.html">ThreadPinning API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/testing/index.html">ThreadPinning TestPlan</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AOCL-UTILS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Cpuid API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/cpuid/api/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="cpuid-api-reference">
+<span id="api"></span><h1>Cpuid API Reference<a class="headerlink" href="#cpuid-api-reference" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="utils_capis.html">Cpuid C-APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_num_t</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv413au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_flag_t</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv415au_cpuid_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_amd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv419au_cpuid_get_vendor12au_cpu_num_tPc6size_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_get_vendor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv420au_cpuid_arch_is_zen12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv424au_cpuid_arch_is_zenplus12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zenplus()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv421au_cpuid_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv421au_cpuid_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv421au_cpuid_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417au_cpuid_has_flag12au_cpu_num_tA_PCKci"><code class="docutils literal notranslate"><span class="pre">au_cpuid_has_flag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417au_cpuid_is_error10au_error_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv411alci_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_is_amd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv419alci_cpu_get_vendor12au_cpu_num_tPc6size_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_get_vendor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv416alci_arch_is_zen12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417alci_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417alci_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417alci_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417alci_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv417alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_has_flag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_capis.html#_CPPv429alci_cpu_get_last_cache_level12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_get_last_cache_level()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils_cppapis.html">Cpuid C++-APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4N2Au6X86Cpu6X86CpuEP10CpuidUtils7CpuNumT"><code class="docutils literal notranslate"><span class="pre">X86Cpu::X86Cpu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4N2Au6X86Cpu6X86CpuE7CpuNumT"><code class="docutils literal notranslate"><span class="pre">X86Cpu::X86Cpu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4N2Au6X86CpuD0Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::~X86Cpu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu5isAMDEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isAMD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v2Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v3Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v4Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v4()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu7isIntelEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isIntel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu7hasFlagERK10ECpuidFlag"><code class="docutils literal notranslate"><span class="pre">X86Cpu::hasFlag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu11isAvailableERK10ECpuidFlag"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isAvailable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu8getUarchEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getUarch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu7isUarchE6EUarchb"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isUarch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu13getVendorInfoEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getVendorInfo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4N2Au6X86Cpu6updateEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::update()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu11getGovernerEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getGoverner()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4NK2Au6X86Cpu12getCacheViewEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getCacheView()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html#_CPPv4N2Au10ECpuidFlagE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../utils/howto/utils_readme.html" class="btn btn-neutral float-left" title="Details" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils_capis.html" class="btn btn-neutral float-right" title="Cpuid C-APIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, AMD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>
