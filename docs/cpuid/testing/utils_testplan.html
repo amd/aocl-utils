@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cpuid Apis TestPlan &mdash; AOCL-UTILS 5.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ee801c84"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ThreadPinning API Reference" href="../../threadpinning/api/index.html" />
+    <link rel="prev" title="Cpuid TestPlan" href="index.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../../index.html" class="icon icon-home">
+            AOCL-UTILS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Cpuid API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid TestPlan</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cpuid Apis TestPlan</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/api/index.html">ThreadPinning API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/testing/index.html">ThreadPinning TestPlan</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AOCL-UTILS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cpuid TestPlan</a></li>
+      <li class="breadcrumb-item active">Cpuid Apis TestPlan</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/cpuid/testing/utils_testplan.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="cpuid-apis-testplan">
+<span id="cpuid-api-testplan"></span><h1>Cpuid Apis TestPlan<a class="headerlink" href="#cpuid-apis-testplan" title="Link to this heading"></a></h1>
+<p># The cpuid module unit testplan</p>
+<p>## The cpuid module</p>
+<p>The cpuid module provides details of underlying cpu architecture by reading and interpreting the cpuid register of the system.</p>
+<p>## The objective</p>
+<p>The testplan is to have a comprehensive test coverage for all components in the module.</p>
+<p>## Classes of testcases</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>qemu tests</strong></dt><dd><p>Qemu cpu emulator is used to emulate cpus to test both capis and cpp apis.
+Native tests corresponing to this is disabled by default as it doesn’t make sense to run natively.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>mock tests</strong></dt><dd><p>Mock tests are used to test cpp apis and utility functions by mocking the cpuid register call.
+Mocked data is stored in simnow folder.
+The content of the folder is organised as follows.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+simnowdata
+└───&lt;folderperemulated cpuid&gt;</p>
+<blockquote>
+<div><blockquote>
+<div><p>│   &lt;cpuid&gt;
+│   FlagsT.txt
+│   FlagsF.txt</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>The &lt;cpuid&gt; file consists of cpuid register read corresponding to the particular cpuid for a set of inputs,
+in the form {request} : {response}</p></li>
+<li><p>These files are shared by both qemu tests and mocktests.</p></li>
+<li><p>FlagsT.txt and FlagsF.txt files are shared by all the hasflags tests.</p></li>
+<li><p>Flags in FlagsT.txt marks the set of flags that should be present in the cpu</p></li>
+<li><p>Flags in FlagsF.txt marks the set of flags that should not be present in the cpu.</p></li>
+</ul>
+</div></blockquote>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>native tests</strong></dt><dd><p>Few native testcases are written to check edge cases and negative cases. More test are to be added for full coverage.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>### List of cpp apis</p>
+<ul class="simple">
+<li><p>isamd</p></li>
+<li><p>isintel</p></li>
+<li><p>isx86v2</p></li>
+<li><p>isx86v3</p></li>
+<li><p>isx86v4</p></li>
+<li><p>hasflag</p></li>
+<li><p>isuarch</p></li>
+<li><p>getuarch</p></li>
+<li><p>getvendorinfo</p></li>
+</ul>
+<p>### List of capis</p>
+<ul class="simple">
+<li><p>au_cpuid_is_amd</p></li>
+<li><p>au_cupid_has_flag</p></li>
+<li><p>au_cpuid_get_vendor</p></li>
+<li><p>au_cpuid_arch_is_zen</p></li>
+<li><p>au_cpuid_arch_is_zenplus</p></li>
+<li><p>au_cpuid_arch_is_zen2</p></li>
+<li><p>au_cpuid_arch_is_zen3</p></li>
+<li><p>au_cpuid_arch_is_zen4</p></li>
+<li><p>au_cpuid_arch_is_zen5</p></li>
+</ul>
+<p>for all the amd cpu modules provided by qemu
+and below intel cpus,</p>
+<ul class="simple">
+<li><p>broadwell-v1</p></li>
+<li><p>denverton-v1</p></li>
+<li><p>conroe-v1</p></li>
+<li><p>skylake-server-v1</p></li>
+</ul>
+<p>The above c and cpp apis are tested using qemu testcases and mock tests.</p>
+<p>Apart from that,
+the utility functions that directly use the cpuid register read results to fill data in different datastructures used by above functions are tested with mocked up (cpuid register read) data.
+Those functions are,</p>
+<p>### List of utility functions</p>
+<ul class="simple">
+<li><p>getmfginfo</p></li>
+<li><p>getfamily</p></li>
+<li><p>getmodel</p></li>
+<li><p>getstepping</p></li>
+<li><p>hasflag</p></li>
+<li><p>updatecacheview</p></li>
+<li><p>updatecacheinfo</p></li>
+</ul>
+<p>## The test matrix for c/cpp apis</p>
+<p>### cpu features
+#### amd cpus
+| cpu type/function name  | epyc-genoa-v1 | epyc-milan-v1 | epyc-milan-v2 | epyc-rome-v1 <a href="#id7"><span class="problematic" id="id8">|</span></a>epyc-rome-v2 |
+| ———————– | ————- | ————- | ————- | ———— <a href="#id9"><span class="problematic" id="id10">|</span></a>———— |
+| isamd                   | true          | true          | true          | true         <a href="#id11"><span class="problematic" id="id12">|</span></a>true         |
+| isintel                 | false         | false         | false         | false        <a href="#id13"><span class="problematic" id="id14">|</span></a>false        |
+| isx86_64v2              | true          | true          | true          | true         <a href="#id15"><span class="problematic" id="id16">|</span></a>true         |
+| isx86_64v3              | true          | true          | true          | true         <a href="#id17"><span class="problematic" id="id18">|</span></a>true         |
+| isx86_64v4              | true          | false         | false         | false        <a href="#id19"><span class="problematic" id="id20">|</span></a>false        |
+| getuarch                | zen4          | zen3          | zen3          | zen2         <a href="#id21"><span class="problematic" id="id22">|</span></a>zen2         |</p>
+<p>amd cpus(continued)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">cpu type/function name  | epyc-rome-v3 | epyc-rome-v4 | epyc-v1 | epyc-v2 | epyc-v3 | epyc-v4 <a href="#id23"><span class="problematic" id="id24">|</span></a>opteron_g1-v1  |</div>
+<div class="line">———————– | ———— | ———— | ——- | ——- | ——- | ——- <a href="#id77"><span class="problematic" id="id78">|---------------|</span></a></div>
+<div class="line">isamd                   | true         | true         | true    | true    | true    | true    | true          |</div>
+<div class="line">isintel                 | false        | false        | false   | false   | false   | false   | false         |</div>
+<div class="line">isx86_64v2              | true         | true         | true    | true    | true    | true    | false         |</div>
+<div class="line">isx86_64v3              | true         | true         | true    | true    | true    | true    | false         |</div>
+<div class="line">isx86_64v4              | false        | false        | false   | false   | false   | false   | false         |</div>
+<div class="line">getUarch                | zen2         | zen2         | zen     | zen     | zen     | zen     | unknown       |</div>
+</div>
+</div></blockquote>
+<p>amd cpus(continued)</p>
+<div class="line-block">
+<div class="line">cpu type/function name  |  opteron_g2-v1 | opteron_g3-v1 | opteron_g4-v1 | opteron_g5-v1 | phenom-v1 |</div>
+<div class="line">———————– |  ————- | ————- | ————- | ————- | ——— |</div>
+<div class="line">isamd                   |  true          | true          | true          | true          | true      |</div>
+<div class="line">isintel                 |  false         | false         | false         | false         | false     |</div>
+<div class="line">isx86_64v2              |  false         | false         | true          | true          | false     |</div>
+<div class="line">isx86_64v3              |  false         | false         | false         | false         | false     |</div>
+<div class="line">isx86_64v4              |  false         | false         | false         | false         | false     |</div>
+<div class="line">getUarch                |  unknown       | unknown       | unknown       | unknown       | unknown   |</div>
+</div>
+<p>#### intel cpus
+| cpu type/function name  | broadwell-v1 | denverton-v1 | conroe-v1 | skylake-server-v1 |
+| ———————– | ———— | ———— | ——— | —————– |
+| isamd                   | false        | false        | false     | false             |
+| isintel                 | true         | true         | true      | true              |
+| isx86_64v2              | true         | true         | false     | true              |
+| isx86_64v3              | true         | false        | false     | true              |
+| isx86_64v4              | false        | false        | false     | true              |
+| getUarch                |  unknown     | unknown      | unknown   | unknown           |</p>
+<p>### isa features
+#### x86_64v2
+| cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
+| ————- | ————- | ———— | ————- | ——— | —————– | ———— | ———— | ——— |
+| cx16          | true          | true         | true          | false     | true              | true         | true         | false     |
+| lahf_lm       | true          | true         | true          | false     | true              | true         | true         | false     |
+| popcnt        | true          | true         | true          | false     | true              | true         | true         | false     |
+| sse4_1        | true          | true         | true          | false     | true              | true         | true         | false     |
+| sse4_2        | true          | true         | true          | false     | true              | true         | true         | false     |
+| ssse3         | true          | true         | true          | false     | true              | true         | true         | false     |</p>
+<p>#### x86_64v3</p>
+<div class="line-block">
+<div class="line">cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |</div>
+<div class="line">————- | ————- | ———— | ————- | ——— | —————– | ———— | ———— | ——— |</div>
+<div class="line">avx           | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">avx2          | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">bmi1          | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">bmi2          | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">f16c          | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">fma           | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">abm           | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">movbe         | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+<div class="line">xsave         | true          | true         | false         | false     | true              | true         | false        | false     |</div>
+</div>
+<p>#### x86_64v4
+| cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
+| ————- | ————- | ———— | ————- | ——— | —————– | ———— | ———— | ——— |
+| avx512f       | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512bw      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512cd      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512dq      | true          | false        | false         | false     | true              | false        | false        | false     |
+| avx512vl      | true          | false        | false         | false     | true              | false        |              |           |</p>
+<dl>
+<dt>## Utility function test matrix</dt><dd><div class="line-block">
+<div class="line">CpuType/VendorInfo| Vendor| Family | Model | Stepping   | Uarch   |</div>
+<div class="line">—————– | —– | ——-| —-  | ———- <a href="#id25"><span class="problematic" id="id26">|</span></a>——– |</div>
+<div class="line">EPYC-Genoa-v1     |  Amd  | Zen4   | 0x11  <a href="#id27"><span class="problematic" id="id28">|</span></a>0x0         | zen4    |</div>
+<div class="line">EPYC-Milan-v1     |  Amd  | Zen4   | 0x01  <a href="#id29"><span class="problematic" id="id30">|</span></a>0x1         | zen3    |</div>
+<div class="line">EPYC-Milan-v2     |  Amd  | Zen4   | 0x01  <a href="#id31"><span class="problematic" id="id32">|</span></a>0x1         | zen3    |</div>
+<div class="line">EPYC-Rome-v1      |  Amd  | Zen2   | 0x31  <a href="#id33"><span class="problematic" id="id34">|</span></a>0x0         | zen2    |</div>
+<div class="line">EPYC-Rome-v2      |  Amd  | Zen2   | 0x31  <a href="#id35"><span class="problematic" id="id36">|</span></a>0x0         | zen2    |</div>
+<div class="line">EPYC-Rome-v3      |  Amd  | Zen2   | 0x31  <a href="#id37"><span class="problematic" id="id38">|</span></a>0x0         | zen2    |</div>
+<div class="line">EPYC-Rome-v4      |  Amd  | Zen2   | 0x31  <a href="#id39"><span class="problematic" id="id40">|</span></a>0x0         | zen2    |</div>
+<div class="line">EPYC-v1           |  Amd  | Zen2   | 0x01  <a href="#id41"><span class="problematic" id="id42">|</span></a>0x2         | zen     |</div>
+<div class="line">EPYC-v2           |  Amd  | Zen2   | 0x01  <a href="#id43"><span class="problematic" id="id44">|</span></a>0x2         | zen     |</div>
+<div class="line">EPYC-v3           |  Amd  | Zen2   | 0x01  <a href="#id45"><span class="problematic" id="id46">|</span></a>0x2         | zen     |</div>
+<div class="line">EPYC-v4           |  Amd  | Zen2   | 0x01  <a href="#id47"><span class="problematic" id="id48">|</span></a>0x2         | zen     |</div>
+<div class="line">Opteron_G1-v1     |  Amd  | Unknown| 0x06  <a href="#id49"><span class="problematic" id="id50">|</span></a>0x1         | Unknown |</div>
+<div class="line">Opteron_G2-v1     |  Amd  | Unknown| 0x06  <a href="#id51"><span class="problematic" id="id52">|</span></a>0x1         | Unknown |</div>
+<div class="line">Opteron_G3-v1     |  Amd  | Unknown| 0x02  <a href="#id53"><span class="problematic" id="id54">|</span></a>0x3         | Unknown |</div>
+<div class="line">Opteron_G4-v1     |  Amd  | Unknown| 0x01  <a href="#id55"><span class="problematic" id="id56">|</span></a>0x2         | Unknown |</div>
+<div class="line">Opteron_G5-v1     |  Amd  | Unknown| 0x02  <a href="#id57"><span class="problematic" id="id58">|</span></a>0x0         | Unknown |</div>
+<div class="line">phenom-v1         |  Amd  | Unknown| 0x02  <a href="#id59"><span class="problematic" id="id60">|</span></a>0x3         | Unknown |</div>
+<div class="line">Broadwell-v1      |  Intel| Unknown| 0X3D  <a href="#id61"><span class="problematic" id="id62">|</span></a>0x2         | Unknown |</div>
+<div class="line">Denverton-v1      |  Intel| Unknown| 0x5F  <a href="#id63"><span class="problematic" id="id64">|</span></a>0x1         | Unknown |</div>
+<div class="line">Conroe-v1         |  Intel| Unknown| 0x0F  <a href="#id65"><span class="problematic" id="id66">|</span></a>0x3         | Unknown |</div>
+<div class="line">Skylake-Server-v1 |  Intel| Unknown| 0x55  <a href="#id67"><span class="problematic" id="id68">|</span></a>0x4         | Unknown |</div>
+</div>
+</dd>
+</dl>
+<p>## Integration tests &lt;TBD&gt;</p>
+<p>## How to run the tests</p>
+<p><cite>ctest</cite> runs all the tests by default along with other tests. if running independently, call <cite>core_cpuidtests</cite>. it has to be done from the build folder as <cite>./release/core_cpuidtest</cite>.</p>
+<p><strong>Note to developer:</strong>
+the test creates the x86cpu test suites with all the unit test cases for functions listed in the scope of the test. these tests are disabled by default because it doesn’t make sense to run them on the host whose architecture might be unknown. use the <cite>–gtest_also_run_disabled_tests</cite> flag if these need to be enabled on the host.</p>
+<p>a python script is written to invoke tests in the x86cpu test suite to run on different qemu emulated cpus. the script is placed in the same folder as the test sources. the script can be run as follows:</p>
+<p><a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a>bash
+python ../library/tests/cpuid/cpuidtest.py epyc x86cpuid.disabled_isamd</p>
+<p><a href="#id73"><span class="problematic" id="id74">``</span></a><a href="#id75"><span class="problematic" id="id76">`</span></a></p>
+<p>the qemutest suites run by invoking the above python script to run on different emulated cpus.</p>
+<p>#   :parser: <a href="#id79"><span class="problematic" id="id80">myst_parser.sphinx_</span></a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cpuid TestPlan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../threadpinning/api/index.html" class="btn btn-neutral float-right" title="ThreadPinning API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, AMD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>
