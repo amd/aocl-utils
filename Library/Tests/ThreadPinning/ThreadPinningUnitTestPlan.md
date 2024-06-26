@@ -1,17 +1,21 @@
 # The Threadpinning module testplan
 
 ## The thread pinning module
+
 The thread pinning module provides an interface that can facilitate pinning threads to cores based on the pinning strategy requested.
 
-## The objective.
+## The objective
+
 To have a compreshensive test coverage for the threadpinning API
 
 ## Classes of testcases
 
 * **mock Tests**
 * **native tests**
-## APIs tested.
-```
+
+## APIs tested
+
+``` bash
 * ThreadPinning::pinThreads()       -- Cpp API   -- External API
 * Affinity::getAffinityVector()     -- Cpp API   -- Internal Using mock tests
 * au_pin_threads_core()             -- C API     -- External API
@@ -21,7 +25,9 @@ To have a compreshensive test coverage for the threadpinning API
 ```
 
 ## The test matrix for the threadpinning module mock tests
+
 combinations of 5 variables are tested. They are:
+
 * **Number of threads**
 * **Number of cores**
 * **Pinning strategy**
@@ -106,12 +112,13 @@ and verifies that the affinity vector returned is as expected.
 | 71 | Multi              |     HT         | Multi        | = no of cores |          Logical |
 | 72 | Multi              |     HT         | Multi        | = no of cores |          Spread  |
 
-
 ## The test matrix for the threadpinning module native tests
+
 Native tests are run on the actual hardware. The test matrix is as follows:
 Verifies that the thread pinning is done correctly on the actual hardware.
 by checking the affinity of the threads to the cores.
 Variables testsed are:
+
 * **Number of threads**
 * **Pinning strategy**
 
