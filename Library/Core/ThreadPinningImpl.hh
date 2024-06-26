@@ -23,6 +23,7 @@
 
 #include "Au/ThreadPinning.hh"
 #include "Au/ThreadPinning/ThreadPinning.hh"
+#include <thread>
 
 namespace Au {
 class ThreadPinning::Impl : public AffinityVector
@@ -40,8 +41,7 @@ class ThreadPinning::Impl : public AffinityVector
      *
      * @return         None
      */
-    void pinThreads(std::vector<DWORD> const& threadList, int pinStrategyIndex);
-
+    void pinThreads(std::vector<pthread_t> threadList, int pinStrategyIndex);
     /**
      * @brief          pinThreads
      *
@@ -52,7 +52,7 @@ class ThreadPinning::Impl : public AffinityVector
      * @param[in]      processPinGroup   Processor Group to pin the threads
      *
      */
-    void pinThreads(std::vector<DWORD> const& threadList,
-                    std::vector<int> const&   processPinGroup);
+    void pinThreads(std::vector<pthread_t>  threadList,
+                    std::vector<int> const& processPinGroup);
 };
 } // namespace Au

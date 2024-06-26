@@ -58,6 +58,7 @@ set(EVENT_SRC_FILES
 set(CAPI_SRC_FILES
     #Capi/base64.cc
     Capi/environ.cc
+    Capi/threadpinning.cc
         )
 
 set(AVX2_FILES

@@ -31,15 +31,15 @@ ThreadPinning::ThreadPinning()
 ThreadPinning::~ThreadPinning() {}
 
 void
-ThreadPinning::pinThreads(std::vector<DWORD> const& threadList,
-                          int                       pinStrategyIndex)
+ThreadPinning::pinThreads(std::vector<pthread_t> const& threadList,
+                          int                           pinStrategyIndex)
 {
     pImpl()->pinThreads(threadList, pinStrategyIndex);
 }
 
 void
-ThreadPinning::pinThreads(std::vector<DWORD> const& threadList,
-                          std::vector<int> const&   processPinGroup)
+ThreadPinning::pinThreads(std::vector<pthread_t> const& threadList,
+                          std::vector<int> const&       processPinGroup)
 {
     pImpl()->pinThreads(threadList, processPinGroup);
 }
