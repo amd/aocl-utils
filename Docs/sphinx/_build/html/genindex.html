@@ -10,25 +10,25 @@
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
+
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=ee801c84"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-          
-          
+
+
           <a href="index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -41,9 +41,11 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="cpuid/howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpuid/api/index.html">Cpuid API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpuid/testing/index.html">Cpuid TestPlan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="threadpinning/api/index.html">ThreadPinning API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="threadpinning/testing/index.html">ThreadPinning TestPlan</a></li>
 </ul>
 
         </div>
@@ -68,14 +70,23 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+
 
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#A"><strong>A</strong></a>
- 
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+
 </div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="threadpinning/api/tp_capis.html#c._GNU_SOURCE">_GNU_SOURCE (C macro)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -86,6 +97,8 @@
       <li><a href="cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen312au_cpu_num_t">alci_arch_is_zen3 (C++ function)</a>
 </li>
       <li><a href="cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen412au_cpu_num_t">alci_arch_is_zen4 (C++ function)</a>
+</li>
+      <li><a href="cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen512au_cpu_num_t">alci_arch_is_zen5 (C++ function)</a>
 </li>
       <li><a href="cpuid/api/utils_capis.html#_CPPv429alci_cpu_get_last_cache_level12au_cpu_num_t">alci_cpu_get_last_cache_level (C++ function)</a>
 </li>
@@ -287,14 +300,14 @@
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9nrip_saveE">Au::ECpuidFlag::nrip_save (C++ enumerator)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4nxxdE">Au::ECpuidFlag::nxxd (C++ enumerator)</a>
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5ospkeE">Au::ECpuidFlag::ospke (C++ enumerator)</a>
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4osvwE">Au::ECpuidFlag::osvw (C++ enumerator)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7osxsaveE">Au::ECpuidFlag::osxsave (C++ enumerator)</a>
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3paeE">Au::ECpuidFlag::pae (C++ enumerator)</a>
@@ -443,6 +456,12 @@
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4xtprE">Au::ECpuidFlag::xtpr (C++ enumerator)</a>
 </li>
+      <li><a href="threadpinning/api/tp_cppapis.html#_CPPv4N2Au13ThreadPinning10pinThreadsERKNSt6vectorI9pthread_tEERKNSt6vectorIiEE">Au::ThreadPinning::pinThreads (C++ function)</a>, <a href="threadpinning/api/tp_cppapis.html#_CPPv4N2Au13ThreadPinning10pinThreadsERKNSt6vectorI9pthread_tEEi">[1]</a>
+</li>
+      <li><a href="threadpinning/api/tp_cppapis.html#_CPPv4N2Au13ThreadPinning13ThreadPinningEv">Au::ThreadPinning::ThreadPinning (C++ function)</a>
+</li>
+      <li><a href="threadpinning/api/tp_cppapis.html#_CPPv4N2Au13ThreadPinningD0Ev">Au::ThreadPinning::~ThreadPinning (C++ function)</a>
+</li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu12getCacheViewEv">Au::X86Cpu::getCacheView (C++ function)</a>
 </li>
       <li><a href="cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu11getGovernerEv">Au::X86Cpu::getGoverner (C++ function)</a>
@@ -497,6 +516,14 @@
 </li>
       <li><a href="cpuid/api/utils_capis.html#_CPPv417au_cpuid_is_error10au_error_t">au_cpuid_is_error (C++ function)</a>
 </li>
+      <li><a href="threadpinning/api/tp_capis.html#_CPPv419au_pin_threads_coreP9pthread_t6size_t">au_pin_threads_core (C++ function)</a>
+</li>
+      <li><a href="threadpinning/api/tp_capis.html#_CPPv421au_pin_threads_customP9pthread_t6size_tPi6size_t">au_pin_threads_custom (C++ function)</a>
+</li>
+      <li><a href="threadpinning/api/tp_capis.html#_CPPv422au_pin_threads_logicalP9pthread_t6size_t">au_pin_threads_logical (C++ function)</a>
+</li>
+      <li><a href="threadpinning/api/tp_capis.html#_CPPv421au_pin_threads_spreadP9pthread_t6size_t">au_pin_threads_spread (C++ function)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -515,7 +542,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -526,7 +553,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>

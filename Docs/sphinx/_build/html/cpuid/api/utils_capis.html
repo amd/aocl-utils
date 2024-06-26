@@ -4,34 +4,34 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C-APIs &mdash; AOCL-UTILS 5.0 documentation</title>
+  <title>Cpuid C-APIs &mdash; AOCL-UTILS 5.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
+
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="C++-APIs" href="utils_cppapis.html" />
-    <link rel="prev" title="Cpuid API Reference" href="index.html" /> 
+    <link rel="next" title="Cpuid C++-APIs" href="utils_cppapis.html" />
+    <link rel="prev" title="Cpuid API Reference" href="index.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-          
-          
+
+
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -44,9 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">C-APIs</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cpuid C-APIs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_num_t</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv413au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_flag_t</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv415au_cpuid_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_amd()</span></code></a></li>
@@ -65,14 +65,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417alci_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417alci_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen3()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417alci_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417alci_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen5()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_has_flag()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv429alci_cpu_get_last_cache_level12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_get_last_cache_level()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html">C++-APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_cppapis.html">Cpuid C++-APIs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Cpuid TestPlan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/api/index.html">ThreadPinning API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../threadpinning/testing/index.html">ThreadPinning TestPlan</a></li>
 </ul>
 
         </div>
@@ -90,7 +93,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Cpuid API Reference</a></li>
-      <li class="breadcrumb-item active">C-APIs</li>
+      <li class="breadcrumb-item active">Cpuid C-APIs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/cpuid/api/utils_capis.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,44 +102,44 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="c-apis">
-<span id="api-c"></span><h1>C-APIs<a class="headerlink" href="#c-apis" title="Link to this heading"></a></h1>
+
+  <section id="cpuid-c-apis">
+<span id="api-c"></span><h1>Cpuid C-APIs<a class="headerlink" href="#cpuid-c-apis" title="Link to this heading"></a></h1>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_is_amd">
-<span class="target" id="cpuid_8h_1aceaa24eaf6ad6bd9dd547d48bf3daeb2"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_is_amd</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_is_amd(0)</span><a class="headerlink" href="#c.alcpu_is_amd" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1aceaa24eaf6ad6bd9dd547d48bf3daeb2"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_is_amd</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_is_amd(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_is_amd" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_arch_is_zen">
-<span class="target" id="cpuid_8h_1ac48ca7c5a88944fc1ffd6ded20ff001d"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen(0)</span><a class="headerlink" href="#c.alcpu_arch_is_zen" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1ac48ca7c5a88944fc1ffd6ded20ff001d"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_arch_is_zen" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_arch_is_zen2">
-<span class="target" id="cpuid_8h_1a1bab160045dfbbbb7643c3cf64e6ab26"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen2</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen2(0)</span><a class="headerlink" href="#c.alcpu_arch_is_zen2" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1a1bab160045dfbbbb7643c3cf64e6ab26"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen2</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen2(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_arch_is_zen2" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_arch_is_zen3">
-<span class="target" id="cpuid_8h_1aba320606f088c48023d131d840d96001"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen3</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen3(0)</span><a class="headerlink" href="#c.alcpu_arch_is_zen3" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1aba320606f088c48023d131d840d96001"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen3</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen3(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_arch_is_zen3" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_arch_is_zen4">
-<span class="target" id="cpuid_8h_1a98d2e22c04a6331069971ab606f065cf"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen4</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen4(0)</span><a class="headerlink" href="#c.alcpu_arch_is_zen4" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1a98d2e22c04a6331069971ab606f065cf"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen4</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen4(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_arch_is_zen4" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_arch_is_zen5">
-<span class="target" id="cpuid_8h_1a99ed2661aa156003589ff5acfd2e76c1"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen5</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen5(0)</span><a class="headerlink" href="#c.alcpu_arch_is_zen5" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1a99ed2661aa156003589ff5acfd2e76c1"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_arch_is_zen5</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="pre">alci_arch_is_zen5(ALCI_CURRENT_CPU_NUM)</span><a class="headerlink" href="#c.alcpu_arch_is_zen5" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.alcpu_flag_is_available">
-<span class="target" id="cpuid_8h_1a6bbcf9f05ef86bec7c8b6e99346cab22"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_flag_is_available</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">flag</span></span><span class="sig-paren">)</span> <span class="pre">alci_cpu_has_flag(0,</span> <span class="pre">flag)</span><a class="headerlink" href="#c.alcpu_flag_is_available" title="Link to this definition"></a><br /></dt>
+<span class="target" id="cpuid_8h_1a6bbcf9f05ef86bec7c8b6e99346cab22"></span><span class="sig-name descname"><span class="n"><span class="pre">alcpu_flag_is_available</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">flag</span></span><span class="sig-paren">)</span> &#160;&#160;&#160; <span class="pre">alci_cpu_has_flag(ALCI_CURRENT_CPU_NUM,</span> <span class="pre">flag)</span><a class="headerlink" href="#c.alcpu_flag_is_available" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -417,6 +420,25 @@
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417alci_arch_is_zen512au_cpu_num_t">
+<span id="_CPPv317alci_arch_is_zen512au_cpu_num_t"></span><span id="_CPPv217alci_arch_is_zen512au_cpu_num_t"></span><span id="alci_arch_is_zen5__au_cpu_num_t"></span><span class="target" id="cpuid_8h_1a0e9651feffdb3905594afb05d0880b0e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">alci_arch_is_zen5</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv412au_cpu_num_t" title="au_cpu_num_t"><span class="n"><span class="pre">au_cpu_num_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417alci_arch_is_zen512au_cpu_num_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the processor arch is ZEN5. </p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">Note</span><span class="p">:</span> <span class="n">The</span> <span class="n">api</span> <span class="ow">is</span> <span class="n">deprecated</span><span class="o">.</span> <span class="n">Use</span> <span class="n">au_cpuid_arch_is_zen5</span>
+            <span class="n">instead</span><span class="o">.</span>
+</pre></div>
+</div>
+ </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpu_num</strong> – CPU number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1/true if processor architecture is AMD ZEN5. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv417alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t">
 <span id="_CPPv317alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t"></span><span id="_CPPv217alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t"></span><span id="alci_cpu_has_flag__au_cpu_num_t.au_cpu_flag_t"></span><span class="target" id="cpuid_8h_1a92e552c3a9482b22c7b2901d17f59a05"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">alci_cpu_has_flag</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv412au_cpu_num_t" title="au_cpu_num_t"><span class="n"><span class="pre">au_cpu_num_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span>, <a class="reference internal" href="#_CPPv413au_cpu_flag_t" title="au_cpu_flag_t"><span class="n"><span class="pre">au_cpu_flag_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">flag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417alci_cpu_has_flag12au_cpu_num_t13au_cpu_flag_t" title="Link to this definition"></a><br /></dt>
 <dd><p>Allows caller to check if the flag is available. </p>
@@ -457,7 +479,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Cpuid API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="utils_cppapis.html" class="btn btn-neutral float-right" title="C++-APIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="utils_cppapis.html" class="btn btn-neutral float-right" title="Cpuid C++-APIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -469,7 +491,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -480,7 +502,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>
