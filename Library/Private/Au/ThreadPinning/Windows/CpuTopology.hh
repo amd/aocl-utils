@@ -28,6 +28,7 @@
 #include <tuple>
 #include <vector>
 #include <windows.h>
+#include "Au/Config.h"
 
 namespace Au {
 typedef std::pair<KAFFINITY, int> CoreMask;

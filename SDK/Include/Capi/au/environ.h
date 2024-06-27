@@ -33,6 +33,7 @@
 #include "Capi/au/au.h"
 #include "Capi/au/error.h"
 #include "Capi/au/macros.h"
+#include "Au/Defs.hh"
 
 AUD_EXTERN_C_BEGIN;
 
