@@ -161,20 +161,23 @@ class CpuTopology
 
         for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
             // Collect the L3 Cache --> Logical core mapping
+            std::vector<CoreMask> cachePMap;
             if (cInfo->u.Cache.Level == 3
                 && (cInfo->u.Cache.Type == CacheData
                     || cInfo->u.Cache.Type == CacheUnified)) {
-                cacheMap.push_back(
-                    { std::make_pair(cInfo->u.Cache.u.GroupMask.Mask,
-                                     cInfo->u.Cache.u.GroupMask.Group) });
+                for (auto i = 0; i < cInfo->u.Cache.GroupCount; i++)
+                    cachePMap.push_back(
+                        std::make_pair(cInfo->u.Cache.GroupMasks[i].Mask,
+                                       cInfo->u.Cache.GroupMasks[i].Group));
+                cacheMap.push_back(cachePMap);
             }
         }
         for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
-
             // Collect the Group --> Logical core mapping
-            groupMap.push_back(
-                std::make_pair(gInfo->u.Group.GroupInfo->ActiveProcessorMask,
-                               gInfo->u.Group.GroupInfo->ActiveProcessorCount));
+            for (auto i = 0; i < gInfo->u.Group.ActiveGroupCount; i++)
+                groupMap.push_back(std::make_pair(
+                    gInfo->u.Group.GroupInfo[i].ActiveProcessorMask,
+                    gInfo->u.Group.GroupInfo[i].ActiveProcessorCount));
         }
 #else
         for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
@@ -186,19 +189,23 @@ class CpuTopology
 
         for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
             // Collect the L3 Cache --> Logical core mapping
+            std::vector<CoreMask> cachePMap;
             if (cInfo->Cache.Level == 3
                 && (cInfo->Cache.Type == CacheData
                     || cInfo->Cache.Type == CacheUnified)) {
-                cacheMap.push_back(
-                    { std::make_pair(cInfo->Cache.GroupMask.Mask,
-                                     cInfo->Cache.GroupMask.Group) });
+                for (auto i = 0; i < cInfo->Cache.GroupCount; i++)
+                    cachePMap.push_back(
+                        std::make_pair(cInfo->Cache.GroupMasks[i].Mask,
+                                       cInfo->Cache.GroupMasks[i].Group));
+                cacheMap.push_back(cachePMap);
             }
         }
         for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
             // Collect the Group --> Logical core mapping
-            groupMap.push_back(
-                std::make_pair(gInfo->Group.GroupInfo->ActiveProcessorMask,
-                               gInfo->Group.GroupInfo->ActiveProcessorCount));
+            for (auto i = 0; i < gInfo->Group.ActiveGroupCount; i++)
+                groupMap.push_back(std::make_pair(
+                    gInfo->Group.GroupInfo[i].ActiveProcessorMask,
+                    gInfo->Group.GroupInfo[i].ActiveProcessorCount));
         }
 #endif
     }
