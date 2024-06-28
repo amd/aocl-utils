@@ -175,7 +175,7 @@ class PinThreadsTest : public ::testing::Test
         return -1;
     }
 #endif
-
+  public:
     /**
      * @brief           VerifyAffinity
      *
@@ -262,7 +262,6 @@ class PinThreadsTest : public ::testing::Test
         return true;
     }
 
-  public:
     /**
      * @brief           verifyStrategy
      *

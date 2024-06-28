@@ -105,6 +105,12 @@ class AffinityVector
      * @param[in]       procVect    Vector to store the spread affinity
      *
      * @param[out]      cacheMap    Map to store the cache affinity
+     * It is a map of cache number to a vector of thread indexes
+     * Example:
+     * cacheMap[0] = [0, 1, 2, 3]
+     * cacheMap[1] = [4, 5, 6, 7]
+     * Implies, threads at indices 0,1,2,3 are pinned to cache 0 and threads at
+     * indices 4,5,6,7 are pinned to cache 1
      *
      * @return          void
      */
@@ -255,6 +261,102 @@ class AffinityVector
                      pListEnd); // Right half
     }
 
+    // clang-format off
+    /**
+     * @brief           Update the final affinity vector
+     *
+     * @details         This function updates the affinity vector by
+     * distributing the threads in the procVectPerCache among the cores in the
+     * coreList
+     *
+     * @param[out]      procVect            Vector to store the affinity
+     *
+     * @param[in]       procVectPerCache    Affinity vector for a cache[ holds
+     * the index of cores in the coreList]
+     * Example
+     * coreList = [8, 9, 10, 11, 12, 13, 14, 15]
+     * procVectPerCache = [0, 2, 4, 6]
+     * Implies, threadindices at indices 0,1,2,3 of threads vector are pinned to
+     * cores 8, 10, 12, 14
+     * Example
+     * threads = [0, 1, 5, 6]
+     * Implies
+     *
+     * thread at 0th index in threads is pinned to core at 0th index of coreList,
+     * thread at 1st index in threads is pinned to core at 2nd index of coreList,
+     * thread at 5th index in threads is pinned to core at 4th index of coreList,
+     * thread at 6th index in threads is pinned to core at 6th index of coreList
+     *
+     * threads holds the indices of the threads in the input threadlist to be
+     * pinned to the cores procVectPerCache holds the indices of the cores in
+     * the coreList to which the threads are to be pinned there is a one to one
+     * mapping between the threads and procVectPerCache
+     * @param[in]       coreList            List of core numbers sharing the
+     * cache
+     *
+     * @param[in]       threads             List of threadindices to be pinned
+     * to the cores sharing the cache.
+     */
+    // clang-format on
+    void updateprocVect(std::vector<int>&       procVect,
+                        const std::vector<int>& procVectPerCache,
+                        const std::vector<int>& coreList,
+                        const std::vector<int>& threads)
+    {
+        int index = 0;
+        for (auto thread : threads) {
+            int item         = procVectPerCache[index++];
+            int coreNum      = coreList[item];
+            procVect[thread] = coreNum;
+        }
+    }
+
+    /**
+     * @brief           Update the final affinity vector
+     *
+     * @details         This function updates the affinity vector based on the
+     *                  processorMap and the threadCount
+     *                  It updates the affinity vector by picking one core from
+     *                  a processor at a time and then moving to the next
+     * processor.
+     *
+     * @param[out]      procVect        Vector to store the affinity
+     *
+     * @param[in]       processorMap    The processor topology
+     *
+     * @param[in]       pMap            A single core mask corresponding to each
+     * processor (Processors can have multiple coremasks of 64 bits each)
+     *
+     * @param[in]       maskIndex       Index of the coremask in the processor's
+     * mask list
+     *
+     * @param[in]       threadCount     Number of threads to pin
+     *
+     * @param[in,out]   threadId        Index of the thread to pin
+     */
+    void updateprocVect(std::vector<int>&                   procVect,
+                        std::vector<std::vector<CoreMask>>& processorMap,
+                        std::vector<CoreMask>&              pMap,
+                        std::vector<size_t>&                maskIndex,
+                        int                                 threadCount,
+                        int&                                threadId)
+    {
+
+        for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
+            if (skipMask(pMap[coreId], maskIndex[coreId], processorMap[coreId]))
+                continue;
+
+            procVect.push_back(
+                calculateCoreNum(pMap[coreId])
+                + calculateOffset(pMap[coreId].second, cpuInfo.groupMap));
+            updateMap(pMap[coreId], calculateCoreNum(pMap[coreId]));
+
+            threadId++;
+            if (threadId == threadCount)
+                return;
+        }
+    }
+
   public:
     AffinityVector(const CpuTopology& Info = CpuTopology::get())
         : cpuInfo{ Info }
@@ -286,16 +388,9 @@ class AffinityVector
             createVector(
                 procVectPerCache, 0, threadCount - 1, 0, coreList.size() - 1);
 
-            /* Create the final affinity vector */
-            int index = 0;
-            for (auto thread : cache.second) {
-                int item         = procVectPerCache[index++];
-                int coreNum      = coreList[item];
-                procVect[thread] = coreNum;
-            }
+            updateprocVect(procVect, procVectPerCache, coreList, cache.second);
         }
     }
-
     /**
      * @brief           Get the core affinity vector
      *
@@ -308,36 +403,24 @@ class AffinityVector
      */
     void getCoreAffinityVector(std::vector<int>& procVect)
     {
-        int threadCount = procVect.size();
-        procVect.clear();
-
         auto processorMap = cpuInfo.processorMap;
+        int  threadCount  = procVect.size();
         int  threadId     = 0;
 
-        std::vector<size_t>   maskIndex(processorMap.size(), 0);
-        std::vector<CoreMask> pMap{};
-        for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
-            pMap.push_back(processorMap[coreId][maskIndex[coreId]++]);
+        std::vector<size_t>   maskIndex(processorMap.size(), 1);
+        std::vector<CoreMask> pMap;
+        for (const auto& core : processorMap) {
+            pMap.push_back(core[0]);
         }
 
+        procVect.clear();
         while (threadId < threadCount) {
-            if (isReset(processorMap))
+            if (isReset(processorMap)) {
+                // if all the cores are used, reset the processorMap
                 processorMap = cpuInfo.processorMap;
-
-            for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
-                if (skipMask(
-                        pMap[coreId], maskIndex[coreId], processorMap[coreId]))
-                    continue;
-
-                procVect.push_back(
-                    calculateCoreNum(pMap[coreId])
-                    + calculateOffset(pMap[coreId].second, cpuInfo.groupMap));
-                updateMap(pMap[coreId], calculateCoreNum(pMap[coreId]));
-
-                threadId++;
-                if (threadId == threadCount)
-                    break;
             }
+            updateprocVect(
+                procVect, processorMap, pMap, maskIndex, threadCount, threadId);
         }
     }
 

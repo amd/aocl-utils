@@ -34,10 +34,16 @@ ThreadPinning::Impl::pinThreads(std::vector<pthread_t> threadList,
     AUD_ASSERT(pinStrategyIndex >= 0 && pinStrategyIndex < 3,
                "Invalid pin strategy index");
     std::vector<int> processPinGroup(threadList.size());
+    if (threadList.size() == 0) {
+        return;
+    }
     processPinGroup.reserve(threadList.size());
     // Get the processor group to pin the threads
     getAffinityVector(processPinGroup, pinStrategyIndex);
     // Pin the threads to the processor group in the processPinGroup
+    if (processPinGroup.size() == 0) {
+        return;
+    }
     pinThreads(threadList, processPinGroup);
 }
 
