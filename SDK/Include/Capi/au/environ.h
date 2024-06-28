@@ -33,9 +33,8 @@
 #include "Capi/au/au.h"
 #include "Capi/au/error.h"
 #include "Capi/au/macros.h"
-#include "Au/Defs.hh"
 
-AUD_EXTERN_C_BEGIN;
+AUD_EXTERN_C_BEGIN
 
 /**
  * @brief Initialize environment from applications's "const char * envp[]"
@@ -129,6 +128,6 @@ au_env_is_enabled(const char*);
 AUD_API_EXPORT bool
 au_env_is_set(const char*);
 
-AUD_EXTERN_C_END;
+AUD_EXTERN_C_END
 
 #endif /* AU_CAPI_ENVIRON_H */

@@ -46,7 +46,7 @@ str_tolower(String& s)
     });
 }
 
-AUD_EXTERN_C_BEGIN;
+AUD_EXTERN_C_BEGIN
 
 AUD_API_EXPORT const char*
 au_env_get(const char* name)
@@ -117,4 +117,4 @@ au_env_is_set(const char* cc)
     return true;
 }
 
-AUD_EXTERN_C_END;
+AUD_EXTERN_C_END
