@@ -46,6 +46,11 @@
 #cmakedefine01 AU_BUILD_TYPE_DEVELOPER
 #cmakedefine01 AU_CPU_ARCH_X86
 
+// Compiler detection
+
+#cmakedefine AU_COMPILER_IS_GNU @AU_COMPILER_IS_GNU@
+#cmakedefine AU_COMPILER_IS_CLANG @AU_COMPILER_IS_CLANG@
+#cmakedefine AU_COMPILER_IS_MSVC @AU_COMPILER_IS_MSVC@
 
 #cmakedefine AU_TARGET_OS_IS_LINUX
 #cmakedefine AU_TARGET_OS_IS_WINDOWS

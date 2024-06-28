@@ -28,10 +28,10 @@
 #set(AU_MODULE "core")
 au_module("core")
 
-if (UNIX)
-	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
+if (MSVC)
+	add_compile_options(-W4  /Za /DLL)
 else()
-	add_compile_options(-W4 -Weffc++ /Za /DLL)
+	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
 
 set(LOGGER_SRC_FILES

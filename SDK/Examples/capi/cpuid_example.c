@@ -31,11 +31,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#define size 16
 static void
 display_core_info()
 {
     int   core_num = 0;
-    int   size     = 16;
     char  buf[size];
     char* token = NULL;
     int   index = 0;

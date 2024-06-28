@@ -20,6 +20,7 @@
 # THE SOFTWARE.
 */
 #pragma once
+#include "Au/Config.h"
 #include <bitset>
 #include <cmath>
 #include <iostream>
@@ -31,7 +32,7 @@
 namespace Au {
 typedef std::pair<KAFFINITY, int> CoreMask;
 using SLPIEX = SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
-
+// if compiler is msvc
 /**
  * @brief       Advance a pointer by a number of bytes.
  *
@@ -150,6 +151,32 @@ class CpuTopology
         LogicalProcessorInformation cacheInfo(RelationCache);
         LogicalProcessorInformation groupInfo(RelationGroup);
 
+#ifdef AU_COMPILER_IS_MSVC
+        for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
+            // Collect the physical core -> logical core mapping
+            processorMap.push_back(
+                { std::make_pair(pInfo->u.Processor.GroupMask->Mask,
+                                 pInfo->u.Processor.GroupMask->Group) });
+        }
+
+        for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
+            // Collect the L3 Cache --> Logical core mapping
+            if (cInfo->u.Cache.Level == 3
+                && (cInfo->u.Cache.Type == CacheData
+                    || cInfo->u.Cache.Type == CacheUnified)) {
+                cacheMap.push_back(
+                    { std::make_pair(cInfo->u.Cache.u.GroupMask.Mask,
+                                     cInfo->u.Cache.u.GroupMask.Group) });
+            }
+        }
+        for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
+
+            // Collect the Group --> Logical core mapping
+            groupMap.push_back(
+                std::make_pair(gInfo->u.Group.GroupInfo->ActiveProcessorMask,
+                               gInfo->u.Group.GroupInfo->ActiveProcessorCount));
+        }
+#else
         for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
             // Collect the physical core -> logical core mapping
             processorMap.push_back(
@@ -173,6 +200,7 @@ class CpuTopology
                 std::make_pair(gInfo->Group.GroupInfo->ActiveProcessorMask,
                                gInfo->Group.GroupInfo->ActiveProcessorCount));
         }
+#endif
     }
 };
 } // namespace Au

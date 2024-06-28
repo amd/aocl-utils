@@ -71,16 +71,32 @@ project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
 # Require C++-20
 set(CMAKE_CXX_STANDARD ${AU_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(AU_COMPILER_IS_GNU 0)
+set(AU_COMPILER_IS_CLANG 0)
+set(AU_COMPILER_IS_MSVC 0)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # require at least gcc 9
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
         message(FATAL_ERROR "GCC version must be at least 9!")
+    else()
+        set(AU_COMPILER_IS_GNU 1)
     endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # require at least clang 12
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
         message(FATAL_ERROR "Clang version must be at least 12.0!")
+    else()
+        set(AU_COMPILER_IS_CLANG 1)
     endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    message("MSVC version: " ${CMAKE_CXX_COMPILER_VERSION})
+    # require at least MSVC 19.29
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.29)
+        message(FATAL_ERROR "MSVC version must be at least 19.29!")
+    else()
+        set(AU_COMPILER_IS_MSVC 1)
+    endif()
+
 else()
     message(WARNING "Unsupported compiler! Compilation has
     only been tested with above versions.")
