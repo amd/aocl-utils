@@ -48,7 +48,7 @@ checkThreadAffinity(pthread_t thread)
     if (pthread_getaffinity_np(thread, sizeof(cpu_set_t), &cpuset) != 0) {
         printf("Error reading thread affinity on Linux\n");
     } else {
-        printf("Affinity mask: %d\n", cpuset.__bits[0]);
+        printf("Affinity mask: %lu\n", cpuset.__bits[0]);
     }
 }
 

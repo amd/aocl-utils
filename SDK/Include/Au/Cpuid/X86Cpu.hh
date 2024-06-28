@@ -370,7 +370,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            flags, false otherwise
      */
 #ifdef AU_WARN_DEPRECATION
-    __attribute__((deprecated("Use hasFlag instead."))) bool
+    [[deprecated("Use hasFlag instead.")]] bool
 #else
     bool
 #endif

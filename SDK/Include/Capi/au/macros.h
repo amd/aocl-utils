@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,10 +51,19 @@
 #define AUD_EXTERN_C_END
 #define AUD_EXTERN_C
 #endif
-
 #if defined(AU_WARN_DEPRECATION)
-#define AU_DEPRECATED_API __attribute__((deprecated("Depricated, consult userguide.")))
+#if defined(_MSC_VER)
+#define AU_DEPRECATED_API                                                      \
+    __declspec(deprecated("Deprecated, consult userguide."))
+#else
+#define AU_DEPRECATED_API                                                      \
+    __attribute__((deprecated("Deprecated, consult userguide.")))
+#endif
+#if defined(_MSC_VER)
+#define AU_DEPRECATED_API_X(msg) __declspec(deprecated(msg))
+#else
 #define AU_DEPRECATED_API_X(msg) __attribute__((deprecated(msg)))
+#endif
 #else
 #define AU_DEPRECATED_API
 #define AU_DEPRECATED_API_X(msg)

@@ -63,7 +63,7 @@ OpEq(T const& x, T const& y)
 {
     AUD_ASSERT_NOT_IMPLEMENTED();
     // x &= ~y;
-	return false;
+    return false;
 }
 
 template<typename T>
@@ -113,7 +113,6 @@ BitMap::count() const
 #if defined(__GNUG__) || defined(__clang__)
         cnt += __builtin_popcountll(word);
 #else
-#error "Compiler does not support __builtin_popcount()"
         cnt += __popcnt64(word);
 #endif
     }

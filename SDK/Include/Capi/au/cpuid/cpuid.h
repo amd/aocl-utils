@@ -174,7 +174,7 @@ alci_is_amd(au_cpu_num_t cpu_num);
  *
  * @return         1/true if getting vendor info is successful.
  */
-AU_DEPRECATED_API_X("Use alci_cpu_get_vendor instead.")
+AU_DEPRECATED_API_X("Use au_cpu_get_vendor instead.")
 AUD_API_EXPORT au_error_t
 alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
 
@@ -283,4 +283,4 @@ alci_cpu_get_last_cache_level(au_cpu_num_t core);
 
 AUD_EXTERN_C_END
 
-#endif
+#endif /* __AU_CPUID_CPUID_H__ */

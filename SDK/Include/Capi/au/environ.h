@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,6 +29,7 @@
 #ifndef __AU_CAPI_ENVIRON_H__
 #define __AU_CAPI_ENVIRON_H__
 
+#include "Au/Defs.hh"
 #include "Capi/au/au.h"
 #include "Capi/au/error.h"
 #include "Capi/au/macros.h"
@@ -42,7 +43,7 @@ AUD_EXTERN_C_BEGIN;
  *
  * @return None
  */
-void
+AUD_API_EXPORT void
 au_env_init(const char** envp);
 
 /**
@@ -56,7 +57,7 @@ au_env_init(const char** envp);
  * @return NULL if the environment is not set
  *         pointer to char array (null-terminated)string if set.
  */
-const char*
+AUD_API_EXPORT const char*
 au_env_get(const char* name);
 
 /**
@@ -70,7 +71,7 @@ au_env_get(const char* name);
  * @return NULL if the environment is not set
  *         pointer to char array (null-terminated)string if set.
  */
-const char*
+AUD_API_EXPORT const char*
 au_env_set(const char* name, const char* val);
 
 /**
@@ -81,7 +82,7 @@ au_env_set(const char* name, const char* val);
  *
  * @return void
  */
-void
+AUD_API_EXPORT void
 au_env_unset(const char* name);
 
 /**
@@ -105,7 +106,7 @@ au_env_unset(const char* name);
  *               AU_BLIS_DEBUG=FALSE
  *               AU_BLIS_DEBUG=NO
  */
-bool
+bool AUD_API_EXPORT
 au_env_is_enabled(const char*);
 
 /**
@@ -124,7 +125,7 @@ au_env_is_enabled(const char*);
  *
  * However it will return 'false' only if the variable is empty or not set.
  */
-bool
+AUD_API_EXPORT bool
 au_env_is_set(const char*);
 
 AUD_EXTERN_C_END;
