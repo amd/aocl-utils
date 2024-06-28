@@ -94,6 +94,9 @@ main()
     printf("CUSTOM\n");
     int affinityVector[NUM_THREADS] = { 0, 1, 4, 6, 7 };
     au_pin_threads_custom(threads, NUM_THREADS, affinityVector, NUM_THREADS);
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        checkThreadAffinity(threads[i]);
+    }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         WaitForSingleObject(threads[i], INFINITE);
