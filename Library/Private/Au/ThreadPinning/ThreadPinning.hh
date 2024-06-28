@@ -500,7 +500,7 @@ class AffinityVector
             int core  = 0;
             int group = 0;
             for (auto gMap : cpuInfo.groupMap) {
-                if (processorList[i] > core + gMap.second) {
+                if (processorList[i] > core + gMap.second - 1) {
                     core = core + gMap.second;
                     group++;
                 } else {
