@@ -167,8 +167,8 @@ class CpuTopology
                     || cInfo->u.Cache.Type == CacheUnified)) {
                 for (auto i = 0; i < cInfo->u.Cache.GroupCount; i++)
                     cachePMap.push_back(
-                        std::make_pair(cInfo->u.Cache.GroupMasks[i].Mask,
-                                       cInfo->u.Cache.GroupMasks[i].Group));
+                        std::make_pair(cInfo->u.Cache.u.GroupMasks[i].Mask,
+                                       cInfo->u.Cache.u.GroupMasks[i].Group));
                 cacheMap.push_back(cachePMap);
             }
         }
