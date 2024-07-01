@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <map>
 #include <numeric>
+#include <thread>
 #include <vector>
 
 #ifdef __linux__
@@ -32,6 +33,7 @@
 #include <windows.h>
 #endif
 
+#include "Au/Assert.hh"
 #include <Au/ThreadPinning.hh>
 namespace Au {
 
@@ -487,6 +489,8 @@ class AffinityVector
     {
         for (size_t i = 0; i < threadList.size(); i++) {
             // Pin the thread to the processor
+            AUD_ASSERT(processorList[i] < std::thread::hardware_concurrency(),
+                       "Invalid processor Id");
 #ifdef __linux__
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);

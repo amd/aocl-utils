@@ -76,4 +76,64 @@ TEST_F(PinThreadsTest, capiVerifyCustom)
                           affinityVector.size());
     EXPECT_TRUE(VerifyAffinity(affinityVector));
 }
+
+#if AU_BUILD_TYPE_DEBUG == 1
+// Negative test case
+TEST_F(PinThreadsNegativeTest, capiVerifyInvalidcorenumber)
+{
+    // Test custom strategy
+    pthread_t*       threadList = &thread_ids[0];
+    std::vector<int> affinityVector(thread_ids.size(),
+                                    std::thread::hardware_concurrency() + 1);
+
+    EXPECT_ANY_THROW(au_pin_threads_custom(threadList,
+                                           thread_ids.size(),
+                                           &affinityVector[0],
+                                           affinityVector.size()));
+}
+
+TEST_F(PinThreadsNegativeTest, capiVerifyNullThreadList)
+{
+    // Test custom strategy
+    pthread_t*       threadList = nullptr;
+    std::vector<int> affinityVector{};
+
+    // initilize the affinity vector with random numbers less than hardware
+    // concurrency
+    for (int i = 0; i < num_threads; i++) {
+        affinityVector.push_back(rand()
+                                 % (std::thread::hardware_concurrency() - 1));
+    }
+    EXPECT_ANY_THROW(au_pin_threads_custom(threadList,
+                                           thread_ids.size(),
+                                           &affinityVector[0],
+                                           affinityVector.size()));
+}
+// Null affinity vector
+TEST_F(PinThreadsNegativeTest, capiVerifyNullAffintyVector)
+{
+    // Test custom strategy
+    pthread_t* threadList = &thread_ids[0];
+    EXPECT_ANY_THROW(
+        au_pin_threads_custom(threadList, thread_ids.size(), nullptr, 0));
+}
+// unequally sized thread list and affinity vector
+TEST_F(PinThreadsNegativeTest, capiVerifyInvalidAffinityVector)
+{
+    // Test custom strategy
+    pthread_t*       threadList = &thread_ids[0];
+    std::vector<int> affinityVector{};
+
+    // initilize the affinity vector with random numbers less than hardware
+    // concurrency
+    for (int i = 0; i < num_threads; i++) {
+        affinityVector.push_back(rand()
+                                 % (std::thread::hardware_concurrency() - 1));
+    }
+    EXPECT_ANY_THROW(au_pin_threads_custom(threadList,
+                                           thread_ids.size(),
+                                           &affinityVector[0],
+                                           affinityVector.size() - 1));
+}
+#endif
 } // namespace
