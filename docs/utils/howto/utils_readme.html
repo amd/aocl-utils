@@ -11,7 +11,7 @@
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-
+  
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
@@ -21,17 +21,17 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Cpuid API Reference" href="../../cpuid/api/index.html" />
-    <link rel="prev" title="Cpuid HOWTO" href="index.html" />
+    <link rel="prev" title="AOCL-UTILS HOWTO" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -44,7 +44,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid HOWTO</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">AOCL-UTILS HOWTO</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Details</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#aocl-utils">AOCL-UTILS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#project-structure">Project structure</a></li>
@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#windows-build-with-llvm-clang">Windows Build with LLVM/Clang:</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id2">Build</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#list-of-build-options">List of build options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-functionalities-provided-by-each-utils-modules">List of functionalities provided by each utils modules</a></li>
 </ul>
 </li>
 </ul>
@@ -85,7 +86,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Cpuid HOWTO</a></li>
+          <li class="breadcrumb-item"><a href="index.html">AOCL-UTILS HOWTO</a></li>
       <li class="breadcrumb-item active">Details</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/utils/howto/utils_readme.rst.txt" rel="nofollow"> View page source</a>
@@ -95,7 +96,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="details">
 <span id="readme"></span><h1>Details<a class="headerlink" href="#details" title="Link to this heading"></a></h1>
 <section id="aocl-utils">
@@ -145,6 +146,13 @@
     <span class="n">make</span> <span class="n">install</span>
 </pre></div>
 </div>
+<p>This command creates</p>
+<ol class="arabic simple">
+<li><p>The necessary header files in the <Install Path>/include
+folder</p></li>
+<li><p>static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
+Link with these libraries based on the functionality required.</p></li>
+</ol>
 <p>Note: This command creates lib/lib64 directory for the binaries.
 To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
 </section>
@@ -237,6 +245,22 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
 </pre></div>
 </div>
 </section>
+<section id="list-of-functionalities-provided-by-each-utils-modules">
+<h3>List of functionalities provided by each utils modules<a class="headerlink" href="#list-of-functionalities-provided-by-each-utils-modules" title="Link to this heading"></a></h3>
+<section id="au-core">
+<h4>au_core<a class="headerlink" href="#au-core" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>thread pinning</p></li>
+</ul>
+</section>
+<section id="au-cpuid">
+<h4>au_cpuid<a class="headerlink" href="#au-cpuid" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>cpu flag detection</p></li>
+<li><p>cpu arichitecture detection.</p></li>
+</ul>
+</section>
+</section>
 </section>
 </section>
 
@@ -244,7 +268,7 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Cpuid HOWTO" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="AOCL-UTILS HOWTO" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../../cpuid/api/index.html" class="btn btn-neutral float-right" title="Cpuid API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
@@ -257,7 +281,7 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -268,7 +292,7 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

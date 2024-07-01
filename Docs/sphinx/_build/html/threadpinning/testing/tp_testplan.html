@@ -11,7 +11,7 @@
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-
+  
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
@@ -20,17 +20,17 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="ThreadPinning TestPlan" href="index.html" />
+    <link rel="prev" title="ThreadPinning TestPlan" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -43,16 +43,16 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../cpuid/howto/index.html">Cpuid HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cpuid/api/index.html">Cpuid API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cpuid/testing/index.html">Cpuid TestPlan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">ThreadPinning API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">ThreadPinning TestPlan</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The Threadpinning module testplan</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-thread-pinning-module">The thread pinning module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-objective">The objective.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-objective">The objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#classes-of-testcases">Classes of testcases</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#apis-tested">APIs tested.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apis-tested">APIs tested</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#the-test-matrix-for-the-threadpinning-module-mock-tests">The test matrix for the threadpinning module mock tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#the-test-matrix-for-the-threadpinning-module-native-tests">The test matrix for the threadpinning module native tests</a></li>
 </ul>
@@ -85,7 +85,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="the-threadpinning-module-testplan">
 <span id="api-testplan"></span><h1>The Threadpinning module testplan<a class="headerlink" href="#the-threadpinning-module-testplan" title="Link to this heading"></a></h1>
 <section id="the-thread-pinning-module">
@@ -93,7 +93,7 @@
 <p>The thread pinning module provides an interface that can facilitate pinning threads to cores based on the pinning strategy requested.</p>
 </section>
 <section id="the-objective">
-<h2>The objective.<a class="headerlink" href="#the-objective" title="Link to this heading"></a></h2>
+<h2>The objective<a class="headerlink" href="#the-objective" title="Link to this heading"></a></h2>
 <p>To have a compreshensive test coverage for the threadpinning API</p>
 </section>
 <section id="classes-of-testcases">
@@ -104,13 +104,13 @@
 </ul>
 </section>
 <section id="apis-tested">
-<h2>APIs tested.<a class="headerlink" href="#apis-tested" title="Link to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">ThreadPinning</span><span class="p">::</span><span class="n">pinThreads</span><span class="p">()</span>       <span class="o">--</span> <span class="n">Cpp</span> <span class="n">API</span>   <span class="o">--</span> <span class="n">External</span> <span class="n">API</span>
-<span class="o">*</span> <span class="n">Affinity</span><span class="p">::</span><span class="n">getAffinityVector</span><span class="p">()</span>     <span class="o">--</span> <span class="n">Cpp</span> <span class="n">API</span>   <span class="o">--</span> <span class="n">Internal</span> <span class="n">Using</span> <span class="n">mock</span> <span class="n">tests</span>
-<span class="o">*</span> <span class="n">au_pin_threads_core</span><span class="p">()</span>             <span class="o">--</span> <span class="n">C</span> <span class="n">API</span>     <span class="o">--</span> <span class="n">External</span> <span class="n">API</span>
-<span class="o">*</span> <span class="n">au_pin_threads_logical</span><span class="p">()</span>          <span class="o">--</span> <span class="n">C</span> <span class="n">API</span>     <span class="o">--</span> <span class="n">External</span> <span class="n">API</span>
-<span class="o">*</span> <span class="n">au_pin_threads_spread</span><span class="p">()</span>           <span class="o">--</span> <span class="n">C</span> <span class="n">API</span>     <span class="o">--</span> <span class="n">External</span> <span class="n">API</span>
-<span class="o">*</span> <span class="n">au_pin_threads_custom</span><span class="p">()</span>           <span class="o">--</span> <span class="n">C</span> <span class="n">API</span>     <span class="o">--</span> <span class="n">External</span> <span class="n">API</span>
+<h2>APIs tested<a class="headerlink" href="#apis-tested" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>*<span class="w"> </span>ThreadPinning::pinThreads<span class="o">()</span><span class="w">       </span>--<span class="w"> </span>Cpp<span class="w"> </span>API<span class="w">   </span>--<span class="w"> </span>External<span class="w"> </span>API
+*<span class="w"> </span>Affinity::getAffinityVector<span class="o">()</span><span class="w">     </span>--<span class="w"> </span>Cpp<span class="w"> </span>API<span class="w">   </span>--<span class="w"> </span>Internal<span class="w"> </span>Using<span class="w"> </span>mock<span class="w"> </span>tests
+*<span class="w"> </span>au_pin_threads_core<span class="o">()</span><span class="w">             </span>--<span class="w"> </span>C<span class="w"> </span>API<span class="w">     </span>--<span class="w"> </span>External<span class="w"> </span>API
+*<span class="w"> </span>au_pin_threads_logical<span class="o">()</span><span class="w">          </span>--<span class="w"> </span>C<span class="w"> </span>API<span class="w">     </span>--<span class="w"> </span>External<span class="w"> </span>API
+*<span class="w"> </span>au_pin_threads_spread<span class="o">()</span><span class="w">           </span>--<span class="w"> </span>C<span class="w"> </span>API<span class="w">     </span>--<span class="w"> </span>External<span class="w"> </span>API
+*<span class="w"> </span>au_pin_threads_custom<span class="o">()</span><span class="w">           </span>--<span class="w"> </span>C<span class="w"> </span>API<span class="w">     </span>--<span class="w"> </span>External<span class="w"> </span>API
 </pre></div>
 </div>
 </section>
@@ -720,7 +720,7 @@ Variables testsed are:</p>
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -731,7 +731,7 @@ Variables testsed are:</p>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

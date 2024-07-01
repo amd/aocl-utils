@@ -43,6 +43,13 @@ To install the library, run the following command:
     make
     make install
 ```
+This command creates
+
+1. The necessary header files in the <Install Path>/include
+folder
+2.  static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
+    Link with these libraries based on the functionality required.
+
 Note: This command creates lib/lib64 directory for the binaries.
 To have custom library path, use CMAKE_INSTALL_LIBDIR
 ### Testing
@@ -127,3 +134,15 @@ AU_ENABLE_OLD_API:BOOL=OFF
 AU_ENABLE_SLOW_TESTS:BOOL=OFF
 --
 ```
+
+## List of functionalities provided by each utils modules
+
+### au_core
+
+* thread pinning
+
+### au_cpuid
+
+* cpu flag detection
+
+* cpu arichitecture detection.
