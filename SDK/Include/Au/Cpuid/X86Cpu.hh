@@ -267,7 +267,7 @@ AUD_DEFINE_ENUM(ECpuidFlag,
                 movdiri,
                 movdir64b,
                 avx512_vpintersect,
-                x2avic);
+                x2avic)
 
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {

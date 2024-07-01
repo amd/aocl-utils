@@ -46,23 +46,26 @@ class PinThreadsTest : public ::testing::Test
 {
   public:
     PinThreadsTest()
-        : num_threads(0)
-        , thread_ids()
+        : thread_ids()
+        , tp()
+        , num_threads(0)
         , strategy(pinStrategy::SPREAD)
-        , threads()
-        , tp(){};
+        , threads(){};
+
+    std::vector<pthread_t> thread_ids;
+    ThreadPinning          tp;
 
   protected:
     int                      num_threads;
-    std::vector<pthread_t>   thread_ids;
     pinStrategy              strategy;
     std::vector<std::thread> threads;
-    ThreadPinning            tp;
 
+  protected:
     /**
      * @brief           SetUp
      *
-     * @details         Set up the test fixture by creating threads for the test
+     * @details         Set up the test fixture by creating threads for the
+     * test
      *
      * @param           void
      *
@@ -210,6 +213,7 @@ class PinThreadsTest : public ::testing::Test
     {
 
         AffinityVector   av;
+        auto             ret = true;
         std::vector<int> affinityVector(num_threads);
         av.getAffinityVector(affinityVector, strategy);
 
@@ -217,49 +221,48 @@ class PinThreadsTest : public ::testing::Test
             int expectedCore = affinityVector[i];
             int actualCore   = getCoreAffinity(thread_ids[i]);
             if (expectedCore != actualCore) {
-                auto          Info = CpuTopology::get();
-                std::ofstream logFile;
-                logFile.open("ThreadPinningTest.log", std::ios::app);
-                logFile << "ThreadPinningTest Failed" << std::endl;
-                logFile << "Topology : " << std::endl;
-                logFile << "Active Processors : " << Info.active_processors
-                        << std::endl;
-                logFile << "Number of Threads : " << num_threads << std::endl;
-                logFile << "Processor Map : " << std::endl;
-                for (long unsigned int i = 0; i < Info.processorMap.size();
-                     i++) {
-                    logFile << "Processor " << i << " : ";
-                    for (long unsigned j = 0; j < Info.processorMap[i].size();
-                         j++) {
-                        logFile << Info.processorMap[i][j].first
-                                << "<--------->"
-                                << Info.processorMap[i][j].second << " ";
-                    }
-                    logFile << std::endl;
-                }
-                for (long unsigned int i = 0; i < Info.cacheMap.size(); i++) {
-                    logFile << "Cache " << i << " : ";
-                    for (long unsigned int j = 0; j < Info.cacheMap[i].size();
-                         j++) {
-                        logFile << Info.cacheMap[i][j].first << "<--------->"
-                                << Info.cacheMap[i][j].second << " ";
-                    }
-                    logFile << std::endl;
-                }
-                for (long unsigned int i = 0; i < Info.groupMap.size(); i++) {
-                    logFile << "Group " << i << " : ";
-                    logFile << Info.groupMap[i].first << "'<---------->"
-                            << Info.groupMap[i].second << std::endl;
-                }
-                for (int i = 0; i < num_threads; i++) {
-                    logFile << "Thread " << i << " : ";
-                    logFile << "Expected Core : " << expectedCore << " ";
-                    logFile << "Actual Core : " << actualCore << std::endl;
-                }
-                return false;
+                ret = false;
+                break;
             }
         }
-        return true;
+        auto          Info = CpuTopology::get();
+        std::ofstream logFile;
+        logFile.open("ThreadPinningTest.log", std::ios::app);
+        logFile << "ThreadPinningTest Failed" << std::endl;
+        logFile << "Topology : " << std::endl;
+        logFile << "Active Processors : " << Info.active_processors
+                << std::endl;
+        logFile << "Number of Threads : " << num_threads << std::endl;
+        logFile << "Processor Map : " << std::endl;
+        for (long unsigned int i = 0; i < Info.processorMap.size(); i++) {
+            logFile << "Processor " << i << " : ";
+            for (long unsigned j = 0; j < Info.processorMap[i].size(); j++) {
+                logFile << Info.processorMap[i][j].first << "<--------->"
+                        << Info.processorMap[i][j].second << " ";
+            }
+            logFile << std::endl;
+        }
+        for (long unsigned int i = 0; i < Info.cacheMap.size(); i++) {
+            logFile << "Cache " << i << " : ";
+            for (long unsigned int j = 0; j < Info.cacheMap[i].size(); j++) {
+                logFile << Info.cacheMap[i][j].first << "<--------->"
+                        << Info.cacheMap[i][j].second << " ";
+            }
+            logFile << std::endl;
+        }
+        for (long unsigned int i = 0; i < Info.groupMap.size(); i++) {
+            logFile << "Group " << i << " : ";
+            logFile << Info.groupMap[i].first << "'<---------->"
+                    << Info.groupMap[i].second << std::endl;
+        }
+        for (int i = 0; i < num_threads; i++) {
+            logFile << "Thread " << i << " : ";
+            int expectedCore = affinityVector[i];
+            int actualCore   = getCoreAffinity(thread_ids[i]);
+            logFile << "Expected Core : " << expectedCore << " ";
+            logFile << "Actual Core : " << actualCore << std::endl;
+        }
+        return ret;
     }
 
     /**
@@ -340,4 +343,14 @@ class PinThreadsTest : public ::testing::Test
         EXPECT_TRUE(VerifyAffinity(affinityVector));
     }
 };
+
+class PinThreadsNegativeTest : public PinThreadsTest
+{
+  public:
+    PinThreadsNegativeTest()
+        : PinThreadsTest()
+    {
+    }
+};
+
 } // namespace

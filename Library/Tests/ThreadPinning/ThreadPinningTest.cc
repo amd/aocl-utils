@@ -49,11 +49,47 @@ TEST_F(PinThreadsTest, verifyLogical)
     strategy = pinStrategy::LOGICAL;
     verifyStrategy();
 }
-
 TEST_F(PinThreadsTest, verifyCustom)
 {
     // Test custom strategy
     std::vector<int> AffinityVector{};
     verifyStrategy(AffinityVector);
 }
+#if AU_BUILD_TYPE_DEBUG == 1
+TEST_F(PinThreadsNegativeTest, verifyInvalidStrategy)
+{
+    // Test invalid strategy
+    int strategy = 5;
+    EXPECT_ANY_THROW(tp.pinThreads(thread_ids, strategy));
+}
+
+TEST_F(PinThreadsNegativeTest, verifyInvalidAffinity)
+{
+    // Test invalid affinity
+    std::vector<int> AffinityVector(thread_ids.size(),
+                                    std::thread::hardware_concurrency() + 1);
+    EXPECT_ANY_THROW(tp.pinThreads(thread_ids, AffinityVector));
+}
+
+TEST_F(PinThreadsNegativeTest, verifyInvalidAffinitySize)
+{
+    // Test invalid affinity size
+    std::vector<int> AffinityVector = { 0, 1, 2, 3, 4 };
+    EXPECT_ANY_THROW(tp.pinThreads(thread_ids, AffinityVector));
+}
+
+TEST_F(PinThreadsNegativeTest, verifyNullAffinity)
+{
+    // Test null affinity
+    std::vector<int> AffinityVector;
+    EXPECT_ANY_THROW(tp.pinThreads(thread_ids, AffinityVector));
+}
+
+TEST_F(PinThreadsNegativeTest, verifyNullThreadList)
+{
+    // Test null thread list
+    std::vector<pthread_t> thread_ids;
+    EXPECT_ANY_THROW(tp.pinThreads(thread_ids, strategy));
+}
+#endif
 } // namespace
