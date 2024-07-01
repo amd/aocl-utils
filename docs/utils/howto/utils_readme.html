@@ -58,6 +58,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#environment-setup">Environment Setup:</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#windows-build-with-llvm-clang">Windows Build with LLVM/Clang:</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id2">Build</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Install</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#list-of-build-options">List of build options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#list-of-functionalities-provided-by-each-utils-modules">List of functionalities provided by each utils modules</a></li>
 </ul>
@@ -211,14 +212,28 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
 <p><code class="docutils literal notranslate"><span class="pre">Powershell</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
                 `-Build binaries will be written to cmake_source_directory/build`
-* 2. cmake --build .\build --config=release
+* 2. cmake --build .\build --config=release -j
 </pre></div>
 </div>
 </section>
+<section id="id3">
+<h3>Install<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-Powershell notranslate"><div class="highlight"><pre><span></span><span class="p">*</span> <span class="n">cmake</span> <span class="p">-</span><span class="n">-install</span> <span class="p">.\</span><span class="n">build</span> <span class="p">-</span><span class="n">-config</span><span class="p">=</span><span class="n">release</span>
+</pre></div>
+</div>
+<p>This command creates</p>
+<ol class="arabic simple">
+<li><p>The necessary header files in the <Install Path>/include
+folder</p></li>
+<li><p>static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
+Link with these libraries based on the functionality required.</p></li>
+</ol>
+<p>Note: This command creates lib/lib64 directory for the binaries.
+To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
+</section>
 <section id="list-of-build-options">
 <h3>List of build options<a class="headerlink" href="#list-of-build-options" title="Link to this heading"></a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-<span class="o">//</span> <span class="n">Generate</span> <span class="n">Docs</span> <span class="n">during</span> <span class="n">build</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Generate</span> <span class="n">Docs</span> <span class="n">during</span> <span class="n">build</span>
 <span class="n">AU_BUILD_DOCS</span><span class="p">:</span><span class="n">BOOL</span><span class="o">=</span><span class="n">OFF</span>
 <span class="o">--</span>
 <span class="o">//</span> <span class="n">Enable</span> <span class="n">examples</span>
@@ -259,6 +274,8 @@ To have custom library path, use CMAKE_INSTALL_LIBDIR</p>
 <li><p>cpu flag detection</p></li>
 <li><p>cpu arichitecture detection.</p></li>
 </ul>
+<p>Note: Refer to API Documentation and Examples in Example folder to understand
+how to link and use the modules.</p>
 </section>
 </section>
 </section>
