@@ -104,11 +104,28 @@ PS > cmake -A [platform: x86/x64] -B [build_directory] [Enable features] -DCMAKE
 ```
 * 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
 		`-Build binaries will be written to cmake_source_directory/build`
-* 2. cmake --build .\build --config=release
-```
-## List of build options
+* 2. cmake --build .\build --config=release -j
 ```
 
+## Install
+
+```Powershell
+* cmake --install .\build --config=release
+
+```
+This command creates
+
+1. The necessary header files in the <Install Path>/include
+folder
+2.  static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
+    Link with these libraries based on the functionality required.
+
+Note: This command creates lib/lib64 directory for the binaries.
+To have custom library path, use CMAKE_INSTALL_LIBDIR
+
+
+## List of build options
+```
 // Generate Docs during build
 AU_BUILD_DOCS:BOOL=OFF
 --
@@ -146,3 +163,6 @@ AU_ENABLE_SLOW_TESTS:BOOL=OFF
 * cpu flag detection
 
 * cpu arichitecture detection.
+
+Note: Refer to API Documentation and Examples in Example folder to understand
+how to link and use the modules.
