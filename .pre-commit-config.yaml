@@ -31,6 +31,8 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+      - id: check-case-conflict
+      - id: mixed-line-ending
 
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
@@ -42,7 +44,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: cppcheck
-        args: [--enable=all, --suppress=missingIncludeSystem, --suppress=missingInclude]
+        args: [--enable=all, --suppress=missingIncludeSystem, --suppress=missingInclude, --suppress=unusedFunction, --suppress=unmatchedSuppression]
   - repo: local
     hooks:
       - id: copyrightcheck

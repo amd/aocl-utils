@@ -36,10 +36,10 @@
 static void
 display_core_info()
 {
-    int   core_num = 0;
-    char  buf[size];
-    char* token = NULL;
-    int   index = 0;
+    int         core_num = 0;
+    char        buf[size];
+    const char* token = NULL;
+    int         index = 0;
 
     memset(buf, 0, size * sizeof(char));
     const char* vendorInfo[13] = { "Vendor   : ",

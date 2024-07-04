@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -71,5 +71,3 @@ if (UNIX)
 elseif(WIN32)
   set(AU_TARGET_OS_IS_WINDOWS TRUE)
 endif()
-
-

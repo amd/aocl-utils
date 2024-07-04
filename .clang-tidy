@@ -41,4 +41,3 @@ CheckOptions:
   readability-identifier-naming.MemberPrefix: 'm_'
   readability-identifier-naming.MemberSuffix: ''
 ...
-
