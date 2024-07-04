@@ -93,7 +93,7 @@ function(au_cc_test testName)
     message("Test : " ${testName} "[SKIPPED]")
     return()
   endif()
-  
+
   if ( ${${fPrefix}_WINDOWS_DISABLED} AND WIN32)
     message("Test : " ${testName} "[WIN32-DISABLED]")
     return()
@@ -152,7 +152,7 @@ function(au_cc_test testName)
     )
 
   #message("Adding Test: " ${_target_name})
-  
+
   if (HAVE_CMAKE_GTEST)
     # If we have CMake's built-in gtest support use it to add each test
     # function as a separate test.
@@ -162,15 +162,14 @@ function(au_cc_test testName)
     set_tests_properties(${test_cases} PROPERTIES TIMEOUT 120)
   else()
     # Otherwise add each test executable as a single test.
-    add_test(NAME ${_target_name} 
-            COMMAND ${_target_name} 
+    add_test(NAME ${_target_name}
+            COMMAND ${_target_name}
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
           )
           #set_tests_properties(
-          #ctest_run_test_code 
+          #ctest_run_test_code
           #PROPERTIES DEPENDS ${_target_name})
   endif()
- 
+
 # TODO: Set the CONTENTS directory and copy its contents to ${CMAKE_BINARY_DIR}
 endfunction(au_cc_test)
-

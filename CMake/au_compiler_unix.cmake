@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,9 +26,9 @@
 #
 
 set(AU_CXX_FLAGS_COMMON "-Wall -Wextra" "-fno-rtti" "-fno-exceptions")
-set(AU_CXX_FLAGS_DEBUG 
-        "-Wsuggest-final-types" 
-        "-Wsuggest-final-methods" 
+set(AU_CXX_FLAGS_DEBUG
+        "-Wsuggest-final-types"
+        "-Wsuggest-final-methods"
         "-Wsuggest-override"
         "-g")
 set(AU_CXX_FLAGS_RELEASE "-O3" "-Wno-unused")
@@ -38,5 +38,3 @@ list(APPEND CXX_FLAGS_RELEASE "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_RELEASE}")
 
 # Note that CMAKE_REQUIRED_FLAGS must be a string, not a list
 #set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=${CXX_STD}")
-
-

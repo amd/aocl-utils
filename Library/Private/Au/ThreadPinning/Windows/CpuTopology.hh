@@ -161,10 +161,10 @@ class CpuTopology
 
         for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
             // Collect the L3 Cache --> Logical core mapping
-            std::vector<CoreMask> cachePMap;
             if (cInfo->u.Cache.Level == 3
                 && (cInfo->u.Cache.Type == CacheData
                     || cInfo->u.Cache.Type == CacheUnified)) {
+                std::vector<CoreMask> cachePMap;
                 for (auto i = 0; i < cInfo->u.Cache.GroupCount; i++)
                     cachePMap.push_back(
                         std::make_pair(cInfo->u.Cache.u.GroupMasks[i].Mask,

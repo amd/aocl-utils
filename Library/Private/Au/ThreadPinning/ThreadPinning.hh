@@ -336,12 +336,12 @@ class AffinityVector
      *
      * @param[in,out]   threadId        Index of the thread to pin
      */
-    void updateprocVect(std::vector<int>&                   procVect,
-                        std::vector<std::vector<CoreMask>>& processorMap,
-                        std::vector<CoreMask>&              pMap,
-                        std::vector<size_t>&                maskIndex,
-                        int                                 threadCount,
-                        int&                                threadId)
+    void updateprocVect(std::vector<int>&                         procVect,
+                        const std::vector<std::vector<CoreMask>>& processorMap,
+                        std::vector<CoreMask>&                    pMap,
+                        std::vector<size_t>&                      maskIndex,
+                        int                                       threadCount,
+                        int&                                      threadId)
     {
 
         for (size_t coreId = 0; coreId < processorMap.size(); coreId++) {
