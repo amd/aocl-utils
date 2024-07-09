@@ -43,7 +43,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Determine versions and its components
 #
 include(au_version)
-file (STRINGS ${CMAKE_SOURCE_DIR}/version.txt AU_VERSION_FROM_FILE)
+
+file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_FROM_FILE)
 au_extract_version_details("AU_VERSION" "${AU_VERSION_FROM_FILE}")
 
 set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATCH}")
@@ -129,8 +130,8 @@ set(AU_TARGET_IS_LITTLE_ENDIAN TRUE)
 endif()
 
 include(au_options)
-add_compile_definitions(PROJECT_BUILD_DIR="${CMAKE_BINARY_DIR}")
-add_compile_definitions(PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+add_compile_definitions(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+add_compile_definitions(PROJECT_BUILD_DIR="${PROJECT_BINARY_DIR}")
 
 if(MSVC)
   include(au_compiler_msvc)
@@ -166,8 +167,8 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION
 
 #include_directories("${AU_CONFIG_DIR}")
 set(AU_INCLUDE_DIRS
-  ${CMAKE_SOURCE_DIR}/SDK/Include
-  ${CMAKE_SOURCE_DIR}/Library/Private
+    ${PROJECT_SOURCE_DIR}/SDK/Include
+    ${PROJECT_SOURCE_DIR}/Library/Private
   ${AU_CONFIG_DIR}
 )
 
@@ -178,7 +179,7 @@ au_add_interface(sdk__include
 )
 set_target_properties(sdk__include
   PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/SDK/Include"
+  INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/SDK/Include"
 )
 
 

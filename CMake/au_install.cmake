@@ -26,13 +26,13 @@
 #
 
 install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/SDK/Include/
+    DIRECTORY ${PROJECT_SOURCE_DIR}/SDK/Include/
   DESTINATION include
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
 # for backward compatibility.
 install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/SDK/Bcl/
+    DIRECTORY ${PROJECT_SOURCE_DIR}/SDK/Bcl/
   DESTINATION include
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
@@ -58,7 +58,7 @@ install(EXPORT ${AU_INSTALL_EXPORT_NAME}
 )
 
 install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/CMake/
+    DIRECTORY ${PROJECT_SOURCE_DIR}/CMake/
   DESTINATION ${AU_INSTALL_LIB_DIR}/cmake
   FILES_MATCHING PATTERN "*.cmake"
 )
@@ -80,26 +80,26 @@ if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
 endif()
 
 if (UNIX)
-    if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
+    if (EXISTS ${PROJECT_BINARY_DIR}/Library/Cpuid)
         install(CODE "file(COPY_FILE \
-          ${CMAKE_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.so \
-          ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.so \
+          ${PROJECT_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.so \
+          ${PROJECT_BINARY_DIR}/Library/Cpuid/libaoclutils.so \
         )")
         install(CODE "file( COPY_FILE \
-          ${CMAKE_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.a \
-          ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.a \
+          ${PROJECT_BINARY_DIR}/Library/Cpuid/libau_cpuid${DEBUG_POSTFIX}.a \
+          ${PROJECT_BINARY_DIR}/Library/Cpuid/libaoclutils.a \
         )")
-        install( FILES ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.so DESTINATION lib)
-        install( FILES ${CMAKE_BINARY_DIR}/Library/Cpuid/libaoclutils.a DESTINATION lib)
+        install( FILES ${PROJECT_BINARY_DIR}/Library/Cpuid/libaoclutils.so DESTINATION lib)
+        install( FILES ${PROJECT_BINARY_DIR}/Library/Cpuid/libaoclutils.a DESTINATION lib)
     endif()
 else()
-    if (EXISTS ${CMAKE_BINARY_DIR}/Library/Cpuid)
+    if (EXISTS ${PROJECT_BINARY_DIR}/Library/Cpuid)
         if (${CMAKE_GENERATOR} MATCHES "Ninja")
-            set(LIB_DIR     "${CMAKE_BINARY_DIR}/Library/Cpuid")
-            set(BIN_DIR     "${CMAKE_BINARY_DIR}/bin")
+            set(LIB_DIR     "${PROJECT_BINARY_DIR}/Library/Cpuid")
+            set(BIN_DIR     "${PROJECT_BINARY_DIR}/bin")
         else()
-            set(LIB_DIR     "${CMAKE_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}")
-            set(BIN_DIR     "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
+            set(LIB_DIR     "${PROJECT_BINARY_DIR}/Library/Cpuid/${CMAKE_BUILD_TYPE}")
+            set(BIN_DIR     "${PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
         endif()
         install(CODE "file(COPY_FILE \
         ${LIB_DIR}/au_cpuid${DEBUG_POSTFIX}.lib \
@@ -110,17 +110,17 @@ else()
         ${BIN_DIR}/libaoclutils.lib \
         )")
         install(CODE "file( COPY_FILE \
-        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll \
-        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll \
+        ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll \
+        ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll \
         )")
         install( FILES
             ${LIB_DIR}/libaoclutils_static.lib DESTINATION lib)
         install( FILES
             ${BIN_DIR}/libaoclutils.lib DESTINATION lib)
         install( FILES
-            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll DESTINATION lib)
+            ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/libaoclutils.dll DESTINATION lib)
         install( FILES
-            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll DESTINATION lib)
+            ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/au_cpuid${DEBUG_POSTFIX}.dll DESTINATION lib)
     endif()
 endif(UNIX)
 
@@ -135,6 +135,7 @@ set(CPACK_PACKAGE_NAME                  "${PACKAGE_NAME}")
 set(CPACK_PACKAGE_DESCRIPTION           "AOCL Foundations")
 set(CPACK_PACKAGE_VENDOR                "AMD")
 set(CPACK_PACKAGE_DESCRIPTION_FILE      "${CMAKE_CURRENT_SOURCE_DIR}/Readme.md")
+set(CPACK_RESOURCE_FILE_README          "${CMAKE_CURRENT_SOURCE_DIR}/Readme.md")
 set(CPACK_RESOURCE_FILE_LICENSE         "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY     "${CMAKE_INSTALL_PREFIX}")
 set(CPACK_PACKAGE_VERSION_MAJOR         ${AU_VERSION_MAJOR})
