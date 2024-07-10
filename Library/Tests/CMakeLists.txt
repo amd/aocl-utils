@@ -123,7 +123,7 @@ if (${EXISTS__})
         ${PRVDR_FILES}
         PROPERTIES
         #DIRECTORY "Provider"
-        INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/Library"
+        INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/Library"
     )
 
     au_cc_test(ProviderTest

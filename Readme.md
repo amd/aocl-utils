@@ -91,7 +91,7 @@ Using Powershell:
 
 1. Checkout the latest code.
 2. Open the powershell.exe (as administrator)
-3. Set path to current working directory/cmake_source_directory
+3. Set path to current working directory/project_source_directory
 
 ## Build
 
@@ -103,7 +103,7 @@ PS > cmake -A [platform: x86/x64] -B [build_directory] [Enable features] -DCMAKE
 `Powershell`
 ```
 * 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
-		`-Build binaries will be written to cmake_source_directory/build`
+		`-Build binaries will be written to project_source_directory/build`
 * 2. cmake --build .\build --config=release -j
 ```
 

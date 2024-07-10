@@ -144,8 +144,8 @@ function(au_cc_library NAME)
 	      CXX_STANDARD ${AU_CXX_STANDARD}
 	      CXX_STANDARD_REQUIRED true
 	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-          RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"    # For DLLs
-          ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"    #for import lib
+          RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"    # For DLLs
+          ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"    #for import lib
           OUTPUT_NAME ${__target_name}
       )
     else()

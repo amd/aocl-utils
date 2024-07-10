@@ -35,9 +35,9 @@ option(AU_CMAKE_VERBOSE "Set cmake verbosity" ON)
 
 
 # Figure out where to put the Config.h
-# Input for this is config.h.in in ${CMAKE_SOURCE_DIR}/Library
+# Input for this is config.h.in in ${PROJECT_SOURCE_DIR}/Library
 if (NOT DEFINED AU_CONFIG_DIR)
-  set(AU_CONFIG_DIR "${CMAKE_BINARY_DIR}/generated")
+  set(AU_CONFIG_DIR "${PROJECT_BINARY_DIR}/generated")
 endif()
 
 if (NOT DEFINED AU_VERSION_OUTPUT_FILE)
@@ -70,5 +70,5 @@ set(AU_INSTALL_EXPORT_NAME aocl_utils)
 
 if(WIN32)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 endif()
