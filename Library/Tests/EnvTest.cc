@@ -32,6 +32,12 @@
 
 #include <cstdlib>
 
+#if defined(WIN32) || defined(_WINDOWS)
+    auto homeEnv = "USERPROFILE";
+#else
+    auto homeEnv = "HOME";
+#endif
+
 namespace {
 using namespace Au;
 
@@ -46,9 +52,9 @@ using namespace Au;
 TEST(Environ, getUserEnv)
 {
     // Get a user environment ($USER, or $HOME)
-    auto home = Env::get("HOME");
+    auto home = Env::get(homeEnv);
 
-    EXPECT_STREQ(home.data(), std::getenv("HOME"));
+    EXPECT_STREQ(home.data(), std::getenv(homeEnv));
 }
 
 TEST(Environ, setNewUserEnv)
@@ -82,14 +88,14 @@ TEST(Environ, checkInit)
 
 TEST(Environ, setExistingUserEnv)
 {
-    auto orig_home = Env::get("HOME");
+    auto orig_home = Env::get(homeEnv);
     auto dummytxt  = "abcd";
 
-    Env::set("HOME", dummytxt);
-    EXPECT_EQ(Env::get("HOME"), dummytxt);
+    Env::set(homeEnv, dummytxt);
+    EXPECT_EQ(Env::get(homeEnv), dummytxt);
 
-    Env::set("HOME", String(orig_home));
-    EXPECT_EQ(Env::get("HOME"), orig_home);
+    Env::set(homeEnv, String(orig_home));
+    EXPECT_EQ(Env::get(homeEnv), orig_home);
 }
 
 TEST(Environ, setUserEmpty)
@@ -147,17 +153,17 @@ TEST(Environ, checkSystemEnv)
     // modifications to Userenv
     // should not change system env
 
-    auto orig_home = Env::get("HOME");
+    auto orig_home = Env::get(homeEnv);
 
-    Env::set("HOME", "abcd");
-    EXPECT_STREQ(Env::get("HOME").data(), "abcd");
+    Env::set(homeEnv, "abcd");
+    EXPECT_STREQ(Env::get(homeEnv).data(), "abcd");
 
     // std::getenv gets it from system environment, independent of our
     // cached values.
-    EXPECT_STRNE(Env::get("HOME").data(), std::getenv("HOME"));
+    EXPECT_STRNE(Env::get(homeEnv).data(), std::getenv(homeEnv));
 
-    Env::set("HOME", orig_home.data());
-    EXPECT_STREQ(Env::get("HOME").data(), std::getenv("HOME"));
+    Env::set(homeEnv, orig_home.data());
+    EXPECT_STREQ(Env::get(homeEnv).data(), std::getenv(homeEnv));
 }
 
 TEST(Environ, checkScopedString)
