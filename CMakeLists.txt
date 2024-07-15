@@ -51,7 +51,6 @@ set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATC
 if(AU_VERSION_SUFFIX)
    set(AU_VERSION_STRING "${AU_VERSION_STRING}.${AU_VERSION_SUFFIX}${AU_VERSION_SUFFIX_EXTRA}")
 endif()
-include(au_git_hash)
 
 
 set(PACKAGE           "libau")
@@ -157,6 +156,7 @@ if (AU_BUILD_EXAMPLES)
 endif()
 
 include(au_variables)
+include(au_git_hash)
 include(au_functions)
 include(au_helpers)
 
@@ -217,15 +217,20 @@ if(AU_CMAKE_VERBOSE AND TRUE)
   endif()
 
   if (AU_BUILD_WITH_ASAN)
-  message(STATUS " ASAN                  : " "Enabled")
+  message(STATUS "  ASAN                  : " "Enabled")
   else()
-  message(STATUS " ASAN                  : " "Disabled")
+  message(STATUS "  ASAN                  : " "Disabled")
   endif()
 
   if (AU_BUILD_DOCS)
   message(STATUS "  Docs                 : " "Enabled")
   else()
   message(STATUS "  Docs                 : " "Off")
+  endif()
+  if (AU_ENABLE_ASSERTIONS)
+  message(STATUS "  Assertions           : " "Enabled")
+  else()
+  message(STATUS "  Assertions           : " "Disabled")
   endif()
   if (AU_ENABLE_OLD_API)
   message(STATUS "  Deprecated APIs Warning  : " "Disabled")

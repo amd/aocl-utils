@@ -77,7 +77,7 @@ TEST_F(PinThreadsTest, capiVerifyCustom)
     EXPECT_TRUE(VerifyAffinity(affinityVector));
 }
 
-#if AU_BUILD_TYPE_DEBUG == 1
+#if AU_ENABLE_ASSERTS == 1
 // Negative test case
 TEST_F(PinThreadsNegativeTest, capiVerifyInvalidcorenumber)
 {

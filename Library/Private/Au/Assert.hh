@@ -42,7 +42,7 @@
 
 namespace Au {
 
-#if defined(DEBUG) || AU_BUILD_TYPE_DEBUG
+#if defined(DEBUG) || defined(AU_USE_ASSERTIONS)
 #define AU_USE_ASSERTIONS 1
 #endif
 

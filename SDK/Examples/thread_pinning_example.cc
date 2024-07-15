@@ -21,7 +21,6 @@
  */
 
 #include "Au/ThreadPinning.hh"
-using namespace Au;
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -32,6 +31,8 @@ using namespace Au;
 #include <pthread.h>
 #include <sched.h>
 #endif
+
+using namespace Au;
 
 // Function for the thread to execute
 void

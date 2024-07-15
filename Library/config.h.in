@@ -59,6 +59,7 @@
 #cmakedefine AU_TARGET_ENDIAN_LITTLE
 
 #cmakedefine AU_WARN_DEPRECATION
-
+// enable assertion
+#cmakedefine01 AU_ENABLE_ASSERTIONS
 // clang-format on
 #endif // _AU_CONFIG_H_INCLUDED

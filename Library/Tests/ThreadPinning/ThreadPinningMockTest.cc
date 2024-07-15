@@ -34,7 +34,7 @@ using namespace Au;
 class MockCpuTopology : public CpuTopology
 {
   public:
-    MockCpuTopology() = default;
+    MockCpuTopology(){};
 
     void setActiveProcessors(int num) { active_processors = num; }
     void setPMap(std::vector<std::vector<std::pair<KAFFINITY, int>>> pMap)

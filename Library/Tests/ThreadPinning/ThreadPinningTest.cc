@@ -55,7 +55,7 @@ TEST_F(PinThreadsTest, verifyCustom)
     std::vector<int> AffinityVector{};
     verifyStrategy(AffinityVector);
 }
-#if AU_BUILD_TYPE_DEBUG == 1
+#if AU_ENABLE_ASSERTIONS == 1
 TEST_F(PinThreadsNegativeTest, verifyInvalidStrategy)
 {
     // Test invalid strategy

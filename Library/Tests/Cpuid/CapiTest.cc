@@ -77,7 +77,7 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 
 TEST(CapiX86Cpuid, hasFlags)
 {
-    if (AU_BUILD_TYPE_DEBUG) {
+    if (AU_ENABLE_ASSERTIONS) {
         std::vector<char*> testFlags = { "" };
         EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
         testFlags = { "Test" };
