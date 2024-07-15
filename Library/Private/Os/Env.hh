@@ -36,7 +36,8 @@
 #ifdef AU_TARGET_OS_IS_LINUX
 #include <cstdlib>
 extern const char** environ;
-#else // Windows environment ?
+#else
+#include <stdlib.h>
 #endif
 
 #include <map>
@@ -76,41 +77,23 @@ namespace Au { namespace Os::Env {
         return std::make_tuple(key, val);
     }
 
-#ifdef AU_TARGET_OS_IS_LINUX
-    namespace Linux {
-        static env_map _getAll()
-        {
-            env_map __env;
-            auto    envp = environ;
+    static env_map _getAll()
+    {
+        env_map __env;
+        auto    envp = environ;
 
-            for (; envp && *envp; ++envp) {
-                String s(*envp);
-                auto   keyval    = split(s);
-                auto& [key, val] = keyval;
-                __env[key]       = val;
-            }
-
-            return __env;
+        for (; envp && *envp; ++envp) {
+            String s(*envp);
+            auto   keyval    = split(s);
+            auto& [key, val] = keyval;
+            __env[key]       = val;
         }
-    } // namespace Linux
-#else
-    namespace Windows {
-        static env_map _getAll()
-        {
-            /* FIXME: Add windows specific code */
-            env_map __env;
 
-            return __env;
-        }
-    } // namespace Windows
-#endif
+        return __env;
+    }
 
     env_map getAll()
     {
-#ifdef AU_TARGET_OS_IS_LINUX
-        return Linux::_getAll();
-#else
-        return Windows::_getAll();
-#endif
+        return _getAll();
     }
 }} // namespace Au::Os::Env

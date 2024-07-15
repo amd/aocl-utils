@@ -32,11 +32,17 @@
 
 #include <cstdlib>
 
+#if defined(WIN32) || defined(_WINDOWS)
+    auto homeEnv = "USERPROFILE";
+#else
+    auto homeEnv = "HOME";
+#endif
+
 namespace {
 
 TEST(Integration, au_env_get)
 {
-    EXPECT_STREQ(au_env_get("HOME"), std::getenv("HOME"));
+    EXPECT_STREQ(au_env_get(homeEnv), std::getenv(homeEnv));
 }
 
 TEST(Integration, au_env_set)
