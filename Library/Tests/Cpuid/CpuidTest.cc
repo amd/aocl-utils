@@ -177,7 +177,7 @@ TEST(X86Cpuid, CheckCpuNumber)
     checkAffinity(currentMask);
     // Verify that an exception is thrown when the core number is greater
     // than the number of phycal cores.
-    if (AU_BUILD_TYPE_DEBUG) {
+    if (AU_ENABLE_ASSERTIONS) {
         auto nthreads = std::thread::hardware_concurrency();
         EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
     }

@@ -32,7 +32,7 @@ option(AU_BUILD_DOCS "Generate Docs during build" OFF)
 option(AU_BUILD_EXAMPLES "Enable examples" OFF)
 option(AU_ENABLE_SLOW_TESTS "Option to Enable SLOW tests" OFF)
 option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
-option(AU_ENABLE_ASSERTIONS "Enable asserts in the code, Default enabled in Debug mode" OFF)
+option(AU_ENABLE_ASSERTIONS "Enable asserts in the code" OFF)
 option(AU_ENABLE_OLD_API "Enable OLD alci_* APIs" OFF)
 option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
 
@@ -59,13 +59,10 @@ cmake_dependent_option(AU_BUILD_TYPE_RELEASE "" ON "upper_CMAKE_BUILD_TYPE STREQ
 cmake_dependent_option(AU_BUILD_TYPE_DEBUG "" ON "upper_CMAKE_BUILD_TYPE STREQUAL DEBUG" OFF)
 cmake_dependent_option(AU_BUILD_TYPE_DEVELOPER "" ON "upper_CMAKE_BUILD_TYPE STREQUAL DEVELOPER" OFF)
 
-cmake_dependent_option(AU_ENABLE_ASSERTIONS "Enable Assertions" ON
-	"AU_BUILD_TYPE_DEBUG|AU_BUILD_TYPE_DEVELOPER" OFF)
-
 mark_as_advanced(AU_BUILD_TYPE_RELEASE
 	AU_BUILD_TYPE_DEBUG
 	AU_BUILD_TYPE_DEVELOPER
-	AU_ENABLE_ASSERTIONS
+    AU_ENABLE_ASSERTIONS
     AU_WARN_DEPRECATION)
 
 if (AU_CMAKE_VERBOSE AND FALSE)

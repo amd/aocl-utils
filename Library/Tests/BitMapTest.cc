@@ -40,7 +40,7 @@ TEST(BitMap, Construct)
     EXPECT_EQ(b.size(), 10);
 
     /* This should fail for 0 size in debug mode */
-    if (AU_BUILD_TYPE_DEBUG) {
+    if (AU_ENABLE_ASSERTIONS) {
         ASSERT_ANY_THROW({
             BitMap b1(0);
             EXPECT_EQ(b1.size(), 0);
@@ -118,7 +118,7 @@ TEST(BitMap, SetPosApi)
     b.set(9);
     EXPECT_EQ(b.count(), 3);
     /* out of bound, count should remain as before */
-    if (AU_BUILD_TYPE_DEBUG) {
+    if (AU_ENABLE_ASSERTIONS) {
         ASSERT_ANY_THROW(b.set(13));
         EXPECT_EQ(b.count(), 3);
     }
@@ -129,7 +129,7 @@ TEST(BitMap, SetPosApi)
     EXPECT_EQ(b1.count(), 1);
 
     /* out of bound, count() should remain as before */
-    if (AU_BUILD_TYPE_DEBUG) {
+    if (AU_ENABLE_ASSERTIONS) {
         ASSERT_ANY_THROW({
             b1.set(64);
             EXPECT_EQ(b1.count(), 1);
