@@ -65,7 +65,7 @@ endfunction(au_install_with_dir)
 if (UNIX)
   if(APPLE)
     set(AU_TARGET_OS_IS_MACOS TRUE)
-  elseif(${CMAKE_HOST_LINUX})
+  elseif(${CMAKE_HOST_UNIX})
     set(AU_TARGET_OS_IS_LINUX TRUE) # Linux/FreeBSD/Solaris
   endif()
 elseif(WIN32)
