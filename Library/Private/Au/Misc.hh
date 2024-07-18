@@ -66,7 +66,7 @@ extract32(Uint32 value, int start, int length)
  *
  * @return       Integer type of T
  */
-template<typename T>
+template<typename T, class=typename std::enable_if<std::is_enum<T>::value>::type>
 inline constexpr auto
 operator*(T const e) noexcept
     -> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
