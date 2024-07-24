@@ -153,9 +153,10 @@ TEST(X86Cpuid, CheckCpuNumber)
 // Verify that the core is set to the correct CPU
 #ifdef __linux__
     cpu_set_t currentMask;
-    int       tid    = gettid();
-    int       result = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
-    CpuNumT   m_cpu  = 0;
+    int       tid   = gettid();
+    CpuNumT   m_cpu = 0;
+
+    sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
 
     for (m_cpu = 0; m_cpu < CPU_SETSIZE; ++m_cpu) {
         if (CPU_ISSET(m_cpu, &currentMask)) {
