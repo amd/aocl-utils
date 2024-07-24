@@ -35,23 +35,6 @@ CMAKE_VERSION=$1
 C_COMPILER=$2
 CXX_COMPILER=$3
 
-# get the clang version for C_COMPILER
-#
-# clang-10 -> 10
-# clang-11 -> 11
-# clang-12 -> 12
-
-# check if the C_COMPILER is clang-xx
-# if it is, then get the version of clang
-if [[ "$C_COMPILER" == *"clang-"* ]]; then
-    echo "C_COMPILER is clang"
-    clang_version=$(echo $C_COMPILER | cut -d'-' -f2)
-    # install clang-tidy for the clang version
-    apt-get update && apt-get install -y clang-tidy-$clang_version
-    # make it the default clang-tidy
-    update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-$clang_version 100
-fi
-
 mkdir -p Tests/sanity_test/cmake-$CMAKE_VERSION/$C_COMPILER
 log_folder=Tests/sanity_test/cmake-$CMAKE_VERSION/$C_COMPILER
 
@@ -62,6 +45,24 @@ if [ ! -d "cmake-$CMAKE_VERSION.0-linux-x86_64" ]; then
 fi
 cd -
 
+# install llvm and clang-tidy of the same version as the compiler if the compiler is clang
+
+# extract the compiler name
+compiler_name=$(echo $C_COMPILER | sed -e 's/[^clang]//g')
+echo "compiler_name: $compiler_name"
+
+# extract the compiler version
+compiler_version=$(echo $C_COMPILER | sed -e 's/[^0-9]//g')
+
+## FIXME: The clang-tidy version same as the compiler version is not available in the repo
+if [ "$compiler_name" = "clang" ]; then
+    # install clang-tidy and llvm of compiler_version and make it the default clang-tidy from repo
+    apt-get install -y clang-tidy-$compiler_version
+    # make the installed clang-tidy the default clang-tidy
+    update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-$compiler_version 100
+fi
+
+touch environment.log
 # update the environment.log
 echo "************C_COMPILER: --version***************************" >$log_folder/environment.log
 $C_COMPILER --version >>$log_folder/environment.log
@@ -71,7 +72,8 @@ echo "************CMAKE_VERSION: cmake --version******************" >>$log_folde
 $CMAKE_VERSION --version >>$log_folder/environment.log
 echo "************CLANG-TIDY VERSION: clang-tidy --version********" >>$log_folder/environment.log
 clang-tidy --version >>$log_folder/environment.log
-
+echo "************NINJA VERSION ninja --version******************" >>$log_folder/environment.log
+ninja --version >>$log_folder/environment.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --version >>$log_folder/environment.log
 
 set -e
@@ -79,27 +81,27 @@ set -e
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -DAU_ENABLE_OLD_API=TRUE -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
     -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER 2>&1 >$log_folder/configure_make.log
 
-Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -DAU_ENABLE_OLD_API=TRUE -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
+Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -G Ninja -DAU_ENABLE_OLD_API=TRUE -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
     -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER 2>&1 >$log_folder/configure_ninja.log
+
 # build the project
+touch build_make.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --build \
     Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make --config Release -j 2>&1 >$log_folder/build_make.log
 
+touch build_ninja.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --build \
     Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja --config Release -j 2>&1 >$log_folder/build_ninja.log
+
 # test the project
+touch test_make.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/ctest -C release \
     --test-dir Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make 2>&1 >$log_folder/test_make.log
-Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/ctest -C release \
-    --test-dir Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja 2>&1 >$log_folder/test_ninja.log
+#touch test_ninja.log
+#ninja test
 
 # if failure log existst copy LastLog.txt to the host
 if [ -f Tests/sanity_test/cmake-$CMAKE_VERSION/build-$C_COMPILER/Testing/Temporary/LastTestsFailed.log ]; then
     cp Tests/sanity_test/cmake-$CMAKE_VERSION/build-$C_COMPILER/Testing/Temporary/LastTest.log $log_folder/
     cp Tests/sanity_test/cmake-$CMAKE_VERSION/build-$C_COMPILER/Testing/Temporary/LastTestsFailed.log $log_folder/
 fi
-
-# clean up
-rm -rf Tests/sanity_test/cmake-$CMAKE_VERSION/build-$C_COMPILER
-rm -rf Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64
-rm -rf Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64.tar.gz
