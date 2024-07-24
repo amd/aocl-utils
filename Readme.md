@@ -2,167 +2,138 @@
 
   An effort to factor out common functionality across libraries.
 
-# Project structure
+## Table of Contents
+
+- [AOCL-UTILS](#aocl-utils)
+  - [Table of Contents](#table-of-contents)
+  - [Project structure](#project-structure)
+    - [BUILD AND INSTALL](#build-and-install)
+      - [Dependencies](#dependencies)
+      - [Getting started](#getting-started)
+        - [Checkout the latest code](#checkout-the-latest-code)
+        - [Configure](#configure)
+        - [Build](#build)
+        - [Install](#install)
+        - [Testing](#testing)
+      - [List of build options](#list-of-build-options)
+      - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
+        - [au\_core](#au_core)
+        - [au\_cpuid](#au_cpuid)
+
+## Project structure
 
 The project is structured as follows:
 
-* `Library`: This directory contains the source code for the project.
-* `SDK`: The release folder.
-* `Tests`: This directory contains the necessary unit tests for the project.
-* `Tools`: The necessary tools to work with the project.
-# BUILD AND INSTALL ON LINUX
+- `Library`: This directory contains the source code for the project.
 
-## Dependencies
+- `SDK`: The release folder.
 
-The project depends on the following libraries:
+- `Tests`: This directory contains the necessary unit tests for the project.
 
-* CMake 3.22
-* Gcc-9 and above [Appropriate libstdc++-dev version needs to be installed]
-*  Clang-12 and above
-*  Clang-tidy 12 and above
-* GoogleTest
+- `Tools`: The necessary tools to work with the project.
 
-## Getting started
+### BUILD AND INSTALL
 
-### Build
+#### Dependencies
 
-To build the project, run the following command:
+Refer [supported package matrix document](./supported_package_matrix.md)
 
+#### Getting started
+
+Same commands can be used on both Linux and Windows. The only difference is the environment setup. The default compiler and generator used will be  the platform defaults.
+
+For specific compiler and generator, use the following command:
+
+```console
+    cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G "Unix Makefiles" ..
 ```
-    mkdir build
-    cd build
-    cmake ..
-    cmake build .
-```
-### Install
 
-To install the library, run the following command:
+**Note: Replace the compiler(clang) and generator(Unix Makefiles) with the required one.**
 
+Refer [supported package matrix document](./supported_package_matrix.md) for the supported compiler and generator.
+
+##### Checkout the latest code
+
+```console
+    git clone
+    cd aocl-utils
 ```
-    cmake  -DCMAKE_INSTALL_PREFIX=<Install Path> ..
-    make
-    make install
+
+##### Configure
+
+```console
+    cmake -B  default -DCMAKE_INSTALL_PREFIX=install_dir
 ```
+
+##### Build
+
+```console
+    cmake --build default --config release -j
+```
+
+##### Install
+
+```console
+    cmake --install default --config release
+```
+
 This command creates
 
-1. The necessary header files in the <Install Path>/include
-folder
-2.  static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
+1. The necessary header files in the \<Install Path\>/includefolder
+2. static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
     Link with these libraries based on the functionality required.
+**Note:**
+   1. This command creates lib/lib64 directory for the binaries. To have custom library path, use CMAKE_INSTALL_LIBDIR.
+   2. Rightly update the include path and library path in the project to link with the installed libraries. or use LD_LIBRARY_PATH to point to the installed library path.(PATH environment variable in windows)
+   3. Refer to the [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and examples in the Example folder to understand how to link and use the modules.
 
-Note: This command creates lib/lib64 directory for the binaries.
-To have custom library path, use CMAKE_INSTALL_LIBDIR
-### Testing
-Note: To build with tests enabled use
 
-```
-    cmake -DAU_BUILD_TESTS=TRUE -DAU_CMAKE_VERBOSE=TRUE ..
-```
+**Important:**
 
-To run the unit tests, run the following command:
-
-```
-    ctest
-```
-# BUILD AND INSTALL ON WINDOWS
-
-## Dependencies
-
-The project depends on the following libraries:
-
-- MS Visual Studio (2019 or greater)
-- Clang 15.0 or above
-- Python 3.7 or greater
-- Cmake 3.22 or greater
-- Git
-
-## Environment Setup:
-
-1. Install visual Studio with workload: *Desktop development with c++*
-	- Enable Clang/cl tools(required) & Address Santizer(if require)
-2. If using LLVM/Clang as external toolset:
-	- Install LLVM
-	- Install plugin: *llvm2019.vsix* :https://marketplace.visualstudio.com/items?itemName=MarekAniola.mangh-llvm2019
-	- Install VS19 version 16.10
-
-## Windows Build with LLVM/Clang:
-
-Using Powershell:
-
-1. Checkout the latest code.
-2. Open the powershell.exe (as administrator)
-3. Set path to current working directory/project_source_directory
-
-## Build
-
-`Run from source directory`
-```
-PS > cmake -A [platform: x86/x64] -B [build_directory] [Enable features] -DCMAKE_BUILD_TYPE=[RELEASE] -G "[generator: Visual Studio 17 2022]" -T [toolset:ClangCl/LLVM]
+```console
+    a binary named aoclutils is present in the lib directory, to facilitate backward compatibility with the 4.2
+    version of the library. This binary is a wrapper around the cpuid module. It is recommended to use the cpuid module if you are using only the cpuid functionality.
+    If not incase of copying the binaries to a non installed path, copy the cpuid binary to the same path as the aoclutils binary.
 ```
 
-`Powershell`
-```
-* 1. cmake -A x64 -DCMAKE_BUILD_TYPE=RELEASE -B build -T ClangCl
-		`-Build binaries will be written to project_source_directory/build`
-* 2. cmake --build .\build --config=release -j
-```
+##### Testing
 
-## Install
-
-```Powershell
-* cmake --install .\build --config=release
-
-```
-This command creates
-
-1. The necessary header files in the <Install Path>/include
-folder
-2.  static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
-    Link with these libraries based on the functionality required.
-
-Note: This command creates lib/lib64 directory for the binaries.
-To have custom library path, use CMAKE_INSTALL_LIBDIR
-
-
-## List of build options
-```
-// Generate Docs during build
-AU_BUILD_DOCS:BOOL=OFF
---
-// Enable examples
-AU_BUILD_EXAMPLES:BOOL=FALSE
---
-// Build shared libraries
-AU_BUILD_SHARED_LIBS:BOOL=TRUE
---
-// Enable the tests.
-AU_BUILD_TESTS:BOOL=OFF
---
-// Set cmake verbosity
-AU_CMAKE_VERBOSE:BOOL=ON
---
-// Option to Enable BROKEN tests
-AU_ENABLE_BROKEN_TESTS:BOOL=OFF
---
-// Enable OLD alci_* APIs
-AU_ENABLE_OLD_API:BOOL=OFF
---
-// Option to Enable SLOW tests
-AU_ENABLE_SLOW_TESTS:BOOL=OFF
---
+```console
+    ctest -C release
 ```
 
-## List of functionalities provided by each utils modules
+build with AU_BUILD_TESTS=ON to run the tests. Below are other available build options.
 
-### au_core
+qemu-x86_64 is a dependency for running tests. Install it using the following command:
 
-* thread pinning
+```console
+    sudo apt-get install qemu-user # For Ubuntu
+    sudo dnf install qemu-user # For Fedora/RHEL/CentOS
+    # qemu tests are disable on windows as qemu-user is not available on windows
+```
 
-### au_cpuid
+#### List of build options
 
-* cpu flag detection
+```console
+Build FLags                             Description                  Default         Alternate Values
+--------------------------------------------------------------------------------------------------
+AU_BUILD_DOCS                           Generate Docs during build   OFF            ON
+AU_BUILD_EXAMPLES                       Build examples               OFF            ON
+AU_BUILD_TESTS                          Build tests                  OFF            ON
+AU_BUILD_TYPE                           Build type                   Release        Debug, Developer
+AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF            ON                  Use to avoid deprecation warnings
+```
 
-* cpu arichitecture detection.
+#### List of functionalities provided by each utils modules
 
-Note: Refer to API Documentation and Examples in Example folder to understand
-how to link and use the modules.
+##### au_core
+
+- thread pinning
+
+##### au_cpuid
+
+- cpu flag detection
+
+- cpu architecture detection.
+
+**Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in [Example](SDK/Examples/) folder to understand how to link and use the modules.**

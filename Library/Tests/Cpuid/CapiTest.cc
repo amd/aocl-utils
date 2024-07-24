@@ -77,13 +77,17 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 
 TEST(CapiX86Cpuid, hasFlags)
 {
+    String testflag;
     if (AU_ENABLE_ASSERTIONS) {
-        std::vector<char*> testFlags = { "" };
+        std::vector<char*> testFlags = { testflag.data() };
         EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
-        testFlags = { "Test" };
+        // update testflag to have an invalid flag
+        testflag.assign("Test");
+        testFlags = { testflag.data() };
         EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
         EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 0));
-        testFlags = { "avx512f", "Test" };
+        testflag.assign("avx512f");
+        testFlags.push_back(testflag.data());
         EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 2));
     }
 }
