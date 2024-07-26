@@ -75,7 +75,7 @@ def create_docker_image(image_name, dockerfile, c_compiler, cxx_compiler):
     except subprocess.CalledProcessError as e:
         print("Error: " + e.output.decode('utf-8'))
         remove_docker_image(image_name)
-        pass
+        sys.exit(1)
 
 
 def run_docker_container(image_name, container_name, cmd):
@@ -89,7 +89,7 @@ def run_docker_container(image_name, container_name, cmd):
     except subprocess.CalledProcessError as e:
         print("Error: " + e.output.decode('utf-8'))
         remove_docker_container(container_name)
-        pass
+        sys.exit(1)
 
 
 def stop_docker_container(container_name):
@@ -107,55 +107,51 @@ def remove_docker_image(image_name):
     run_cmd(cmd)
 
 
-def show_progress_bar():
-    for _ in tqdm(range(100), desc="Running sanity test"):
-        time.sleep(.8)  # Update the progress bar every second
+def test_cmake_version(image_name, c_compiler, cxx_compiler, cmake_version):
+    container_name = image_name + "_" + cmake_version
+    cmd = "-e CMAKE_VERSION=" + cmake_version + \
+          " -e C_COMPILER=" + c_compiler + " -e CXX_COMPILER=" + cxx_compiler
+    run_docker_container(image_name, container_name, cmd)
+    # Get the container status
+    status = get_docker_container_status(container_name)
+    print("Container status: " + status.decode('utf-8'))
+    # Get the container exit code
+    exit_code = get_docker_container_exit_code(container_name)
+    print("Container exit code: " + exit_code.decode('utf-8'))
+    return_code = 0
+    if exit_code.decode('utf-8').strip() != "0":
+        print("Sanity test failed")
+        return_code = 1
+    else:
+        print("Sanity test passed")
+    print("COmbination: " + c_compiler + " " +
+          cxx_compiler + " " + cmake_version)
+    print("Cleaning up...")
+    print("Stopping container...")
+    stop_docker_container(container_name)
+    print("Removing container...")
+    remove_docker_container(container_name)
+    sys.exit(return_code)
+
 
 def main():
     dockerfile = "Tests/Dockerfile"
-    C_COMPILER = ["gcc-9", "gcc-10", "gcc-11", "gcc-12", "gcc-13", "gcc-14",
-                  "clang-12", "clang-13", "clang-14", "clang-15", "clang-16", "clang-17"]
-    C_COMPILER = ["clang-14", "clang-15", "clang-16", "clang-17"]
-    CXX_COMPILER = ["clang++-14", "clang++-15", "clang++-16", "clang++-17"]
-    for c_compiler, cxx_compiler in zip(C_COMPILER, CXX_COMPILER):
-        print("C Compiler: " + c_compiler)
-        print("CXX Compiler: " + cxx_compiler)
-        image_name = "build_sanity_test_" + c_compiler
-        create_docker_image(image_name, dockerfile, c_compiler, cxx_compiler)
-        # RUN DOCKER CONTAINER FOR THE LIST OF CMAKE VERSIONS
-        CMAKE_VERSIONS = ["3.22", "3.23", "3.24", "3.25",
-                          "3.26", "3.27", "3.28", "3.29", "3.30"]
-        for cmake_version in CMAKE_VERSIONS:
-            container_name = image_name + "_" + cmake_version
-            cmd = "-e CMAKE_VERSION=" + cmake_version + \
-                  " -e C_COMPILER=" + c_compiler + " -e CXX_COMPILER=" + cxx_compiler
-            #run_docker_container(image_name, container_name, cmd)
-            process_thread = threading.Thread(target=run_docker_container, args=(image_name, container_name, cmd))
-            progress_thread = threading.Thread(target=show_progress_bar)
-            process_thread.start()
-            progress_thread.start()
-            process_thread.join()
-            progress_thread.join()
-            # Get the container status
-            status = get_docker_container_status(container_name)
-            print("Container status: " + status.decode('utf-8'))
+    if len(sys.argv) != 4:
+        print("Usage: script.py arg1 arg2 arg3")
+        sys.exit(1)
 
-            # Get the container exit code
-            exit_code = get_docker_container_exit_code(container_name)
-            print("Container exit code: " + exit_code.decode('utf-8'))
-            if exit_code.decode('utf-8').strip() != "0":
-                print("Sanity test failed")
-            else:
-                print("Sanity test passed")
-            print("Cleaning up...")
-            print("Stopping container...")
-            stop_docker_container(container_name)
-            print("Removing container...")
-            remove_docker_container(container_name)
-
-        run_cmd(cmd)
-        print("Removing image...")
-        remove_docker_image(image_name)
+    c_compiler = sys.argv[1]
+    cxx_compiler = sys.argv[2]
+    cmake_version = sys.argv[3]
+    print("C Compiler: " + c_compiler)
+    print("CXX Compiler: " + cxx_compiler)
+    image_name = "build_sanity_test_" + c_compiler
+    create_docker_image(image_name, dockerfile, c_compiler, cxx_compiler)
+    test_cmake_version(image_name, c_compiler, cxx_compiler, cmake_version)
+    time.sleep(5)
+    # print("Removing image...")
+    # remove_docker_image(image_name)
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()

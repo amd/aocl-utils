@@ -15,6 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update and install necessary packages
 RUN apt-get update && apt-get install -y \
     build-essential \
+    software-properties-common \
     qemu-user \
     $C_COMPILER \
     $CXX_COMPILER \
@@ -22,16 +23,12 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     git \
     wget \
+    ninja-build \
+    clang-tidy \
     && rm -rf /var/lib/apt/lists/*
-
+RUN add-apt-repository universe && apt-get update
 # Set the working directory inside the container
 VOLUME /usr/src/app
 WORKDIR /usr/src/app
 
-
-# Install CMake and build the project
-# check if cmake folder exists
-# if not, download and extract the cmake tarball
-CMD sh Tests/build_sanity_test.sh  $CMAKE_VERSION $C_COMPILER $CXX_COMPILER
-# List the directories and files in the current directory
-# docker run -e CMAKE_VERSION=3.22 -e C_COMPILER=gcc-10 -e CXX_COMPILER=g++-10 -t utils_build_sanity_test
+CMD sh Tests/build_sanity_tests/build_sanity_test.sh  $CMAKE_VERSION $C_COMPILER $CXX_COMPILER
