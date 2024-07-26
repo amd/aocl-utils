@@ -75,9 +75,9 @@ set(AU_COMPILER_IS_GNU 0)
 set(AU_COMPILER_IS_CLANG 0)
 set(AU_COMPILER_IS_MSVC 0)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # require at least gcc 9
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
-        message(FATAL_ERROR "GCC version must be at least 9!")
+    # require at least gcc 8
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)
+        message(FATAL_ERROR "GCC version must be at least 8!")
     else()
         set(AU_COMPILER_IS_GNU 1)
     endif()
