@@ -92,8 +92,8 @@ set(CORE_SRC_FILES
 )
 
 au_cc_library(core
- PUBLIC
- SOURCES
+PRIVATE
+SOURCES
       ${CORE_SRC_FILES}
 
 HEADERS
@@ -102,6 +102,17 @@ USING
  af::sdk::include
 )
 
+
+au_module("aoclutils")
+au_cc_library(aoclutils
+ PUBLIC
+ SOURCES
+      ${CORE_SRC_FILES}
+ HEADERS
+      Core/ThreadPinningImpl.hh
+ USING
+ af::sdk::include
+)
 
 if(AU_BUILD_TESTS)
     add_subdirectory(Tests)

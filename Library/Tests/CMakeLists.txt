@@ -99,7 +99,7 @@ foreach(testFile IN LISTS ALL_TEST_FILES)
         SOURCES  "${__TestFile}"
         DIRECTORY ${__parent_path}
         DEPENDS
-        au::core
+        au::aoclutils
         #au_provider
     )
 endforeach()

@@ -57,7 +57,6 @@ function(au_add_application NAME)
     target_link_libraries(${NAME}
       PRIVATE
         ${APP_LIBS}
-        au::core
     )
   endif()
   if(DEFINED APP_INCLUDES)
