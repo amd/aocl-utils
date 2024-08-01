@@ -79,9 +79,6 @@ if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
     set(DEBUG_POSTFIX "-dbg")
 endif()
 
-#install(TARGETS console
-#  RUNTIME COMPONENT runtime
-#)
 
 #
 # CPACK configuration
