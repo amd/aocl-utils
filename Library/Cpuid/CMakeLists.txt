@@ -36,7 +36,7 @@ set(CPUID_SRC_FILES
   ../Capi/cpuid.cc
   X86Cpu.cc
 )
-if(${AU_BUILD_TYPE_DEBUG})
+if(${AU_ENABLE_ASSERTIONS})
     au_cc_library(cpuid
     PUBLIC
     SOURCES

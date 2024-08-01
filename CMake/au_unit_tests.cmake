@@ -133,7 +133,7 @@ function(au_cc_test testName)
   # Add additional dependencies,
   # au_base will be added towards end by default
   #
-  list(APPEND ${fPrefix}_DEPENDS au::core)
+  list(APPEND ${fPrefix}_DEPENDS )
   if(${fPrefix}_DEPENDS)
       target_link_libraries(${_target_name} PRIVATE ${${fPrefix}_DEPENDS})
   endif()

@@ -30,16 +30,16 @@ include(au_examples)
 
 au_add_application(cpuid_example_cpp
 				SOURCES cpuid_example.cc
-				LIBS au::cpuid
+				LIBS au::aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 au_add_application(cpuid_deprecated_api_example_cpp
 				SOURCES cpuid_deprecated_api_example.cc
-				LIBS au::cpuid
+				LIBS au::aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 au_add_application(thread_pinning_example_cpp
 				SOURCES thread_pinning_example.cc
-				LIBS au::core
+				LIBS au::aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 add_subdirectory(capi)
