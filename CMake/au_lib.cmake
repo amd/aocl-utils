@@ -222,11 +222,21 @@ function(au_cc_library NAME)
         )
       else()
         install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+        )
+        install(TARGETS ${__target_name} EXPORT
                 RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
         )
         install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
+        )
+        install(TARGETS ${__target_name}_shared
                 RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
