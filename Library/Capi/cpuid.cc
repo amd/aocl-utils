@@ -170,24 +170,27 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
                   int               count)
 {
-    X86Cpu            cpu{ cpu_num };
-    std::stringstream ss;
-    String            token;
-    int               index  = 0;
-    bool*             result = (bool*)malloc(count * sizeof(bool));
-    AUD_ASSERT(result, "Memory allocation failed");
-    if (!result)
-        return nullptr;
     AUD_ASSERT(count > 0, "No flags to check");
     if (count == 0)
         return nullptr;
 
+    std::stringstream        ss;
     std::vector<std::string> flag_names(flag_array, flag_array + count);
-
     ss << flag_names;
     AUD_ASSERT(flag_names.size() > 1, "The flags list is empty");
     if (flag_names.size() == 1)
         return nullptr;
+
+    X86Cpu cpu{ cpu_num };
+    String token;
+    int    index = 0;
+    // Use malloc to allocate memory, as it is used in C API. and will be freed
+    // using free in a cprogram.
+    bool* result = (bool*)malloc(count * sizeof(bool));
+    AUD_ASSERT(result, "Memory allocation failed");
+    if (!result)
+        return nullptr;
+
     while (std::getline(ss, token, ':')) {
         au_cpu_flag_t flag = stoi(token);
         AUD_ASSERT(flag > static_cast<Uint32>(ECpuidFlag::Min)
@@ -201,6 +204,42 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
     }
     return result;
 }
+
+AUD_API_EXPORT
+bool
+au_cpuid_has_flags(au_cpu_num_t      cpu_num,
+                   const char* const flag_array[],
+                   int               count)
+{
+    AUD_ASSERT(count > 0, "No flags to check");
+    if (count == 0)
+        return false;
+
+    std::stringstream        ss;
+    std::vector<std::string> flag_names(flag_array, flag_array + count);
+    ss << flag_names;
+    AUD_ASSERT(flag_names.size() > 1, "The flags list is empty");
+    if (flag_names.size() == 1)
+        return false;
+
+    X86Cpu cpu{ cpu_num };
+    String token;
+    bool   result = 0;
+
+    while (std::getline(ss, token, ':')) {
+        au_cpu_flag_t flag = stoi(token);
+        AUD_ASSERT(flag > static_cast<Uint32>(ECpuidFlag::Min)
+                       && flag < static_cast<Uint32>(ECpuidFlag::Max),
+                   "Flag not supported");
+        if (flag < static_cast<Uint32>(ECpuidFlag::Min)
+            || flag > static_cast<Uint32>(ECpuidFlag::Max))
+            continue;
+        auto cpuid_flag = static_cast<ECpuidFlag>(flag);
+        result &= cpu.hasFlag(cpuid_flag);
+    }
+    return result;
+}
+
 AUD_API_EXPORT
 bool
 alci_cpu_has_flag(au_cpu_num_t cpu_num, au_cpu_flag_t flag)

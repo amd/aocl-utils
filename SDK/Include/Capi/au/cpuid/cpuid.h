@@ -134,11 +134,25 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *
  * @return         an array indicating  feature availability
  */
+AU_DEPRECATED_API_X("Use au_cpuid_has_flags instead.")
 AUD_API_EXPORT bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
                   int               count);
 
+/**
+ * @brief          Allows caller to check if the flag is available.
+ *
+ * @param[in]      cpu_num   CPU number.
+ * @param[in]      flag_array  CPU feature flag names.
+ * @param[in]      count   Number of flags in the list.
+ *
+ * @return         A boolean indicating presence or absence of the features
+ */
+AUD_API_EXPORT bool
+au_cpuid_has_flags(au_cpu_num_t      cpu_num,
+                   const char* const flag_array[],
+                   int               count);
 /**
  * @brief          Portable API to check if an error has occured
  *

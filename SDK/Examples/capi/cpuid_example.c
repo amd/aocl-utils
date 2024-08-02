@@ -35,10 +35,10 @@
 static void
 display_core_info()
 {
-    int   core_num = 0;
-    char  buf[size];
-    char* token = NULL;
-    int   index = 0;
+    int         core_num = 0;
+    char        buf[size];
+    const char* token = NULL;
+    int         index = 0;
 
     memset(buf, 0, size * sizeof(char));
     const char* vendorInfo[13] = { "Vendor   : ",
@@ -87,17 +87,14 @@ display_isa_info()
                "supported\n");
     }
     printf("\nCpu Feature Identification...\n");
-    // clang-format off
-        const char* const flags_array[] = {"tsc_adjust", "avx", "avxvnni", "avx2",
-       "avx512f"};
-        bool *result = au_cpuid_has_flag(core_num, flags_array, 5);
-        printf("TSC_ADJUST : %s\n", (result[0] ? "yes" : "no"));
-        printf("AVX        : %s\n", (result[1] ? "yes" : "no"));
-        printf("AVXVNNI    : %s\n", (result[2] ? "yes" : "no"));
-        printf("AVX2       : %s\n", (result[3] ? "yes" : "no"));
-        printf("AVX512     : %s\n", (result[4] ? "yes" : "no"));
-        free(result);
-    // clang-format on
+    const char* const flags_array[] = {
+        "tsc_adjust", "avx", "avxvnni", "avx2", "avx512f"
+    };
+    bool result = au_cpuid_has_flags(core_num, flags_array, 5);
+    printf("Checking for TSC_ADJUST, AVX, AVXVNNI, AVX2, AVX512...\n");
+    printf("%s\n",
+           (result ? "All are present"
+                   : "One or more of the flags are not present"));
 }
 
 int
