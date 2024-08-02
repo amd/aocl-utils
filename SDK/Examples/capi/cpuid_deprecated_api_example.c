@@ -85,14 +85,27 @@ display_isa_info()
     }
     printf("\nCpu Feature Identification...\n");
     // clang-format off
-        printf("TSC_ADJUST : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_TSC_ADJUST) ? "yes" : "no"));
-        printf("AVX        : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX) ? "yes" : "no"));
-        printf("AVXVNNI    : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVXVNNI) ? "yes" : "no"));
-        printf("AVX2       : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX2) ? "yes" : "no"));
-        printf("AVX512     : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX512F) ? "yes" : "no"));
+     printf("TSC_ADJUST : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_TSC_ADJUST) ? "yes" : "no"));
+     printf("AVX        : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX) ? "yes" : "no"));
+     printf("AVXVNNI    : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVXVNNI) ? "yes" : "no"));
+     printf("AVX2       : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX2) ? "yes" : "no"));
+     printf("AVX512     : %s\n", (alci_cpu_has_flag(core_num, ALC_E_FLAG_AVX512F) ? "yes" : "no"));
+    // clang-format on
+
+    printf("\nCpu Feature Identification...\n");
+    // clang-format off
+     const char* const flags_array[] = {"tsc_adjust", "avx", "avxvnni", "avx2",
+    "avx512f"};
+     bool *result = au_cpuid_has_flag(core_num, flags_array, 5);
+     printf("TSC_ADJUST : %s\n", (result[0] ? "yes" : "no"));
+     printf("AVX        : %s\n", (result[1] ? "yes" : "no"));
+     printf("AVXVNNI    : %s\n", (result[2] ? "yes" : "no"));
+     printf("AVX2       : %s\n", (result[3] ? "yes" : "no"));
+     printf("AVX512     : %s\n", (result[4] ? "yes" : "no"));
+     // explictly free the result array to avoid memory leak
+     free(result);
     // clang-format on
 }
-
 int
 main(void)
 {
