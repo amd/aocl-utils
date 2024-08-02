@@ -28,6 +28,39 @@ macro(au_normalize_name name var)
   STRING(REPLACE "::" "__" ${var} ${name})
 endmacro()
 
+macro(setlibname NAME isPublic __target_name)
+  if(UNIX)
+    # set the target name if it is public or the name not equal to aoclutils
+    if(${isPublic})
+      if(${NAME} STREQUAL "aoclutils")
+          set(__target_name "aoclutils")
+      else()
+          set(__target_name "au_${NAME}")
+      endif()
+    else()
+      if(${NAME} STREQUAL "aoclutils")
+          set(__target_name "aoclutils")
+      else()
+          set(__target_name "au_internal_${NAME}")
+      endif()
+    endif()
+  else()
+    if(${isPublic})
+      if(${NAME} STREQUAL "aoclutils")
+          set(__target_name "libaoclutils")
+      else()
+          set(__target_name "au_${NAME}")
+      endif()
+    else()
+      if(${NAME} STREQUAL "aoclutils")
+          set(__target_name "libaoclutils")
+      else()
+          set(__target_name "au_internal_${NAME}")
+      endif()
+    endif()
+  endif()
+endmacro()
+
 
 # au_add_interface(<name> PACKAGE <package>
 #   [INCLUDES include...]
@@ -65,6 +98,7 @@ function(au_add_interface NAME)
   add_library(${AU_MODULE}::${NAME} ALIAS ${__new_name})
 endfunction(au_add_interface)
 
+
 # Produces a static library that can be linked into other test, binary or
 # library targets.
 #
@@ -100,149 +134,108 @@ function(au_cc_library NAME)
     ${ARGN}
     )
 
-    # Check if header-only library
-    set(tmp_src_list ${${fPrefix}_SOURCES})
-    list(FILTER tmp_src_list INCLUDE REGEX "\\.cc$")
-    
-    if(UNIX)
-      # set the target name if it is public or the name not equal to aoclutils
-      if(cclib_PUBLIC)
-        if(${NAME} STREQUAL "aoclutils")
-            set(__target_name "aoclutils")
-        else()
-            set(__target_name "au_${NAME}")
-        endif()
-      else()
-        if(${NAME} STREQUAL "aoclutils")
-            set(__target_name "aoclutils")
-        else()
-            set(__target_name "au_internal_${NAME}")
-        endif()
-      endif()
+  # Check if header-only library
+  set(tmp_src_list ${${fPrefix}_SOURCES})
+  list(FILTER tmp_src_list INCLUDE REGEX "\\.cc$")
 
-      if (TARGET aoclutils)
-        target_sources(aoclutils
-            PRIVATE
-            ${${fPrefix}_SOURCES}
-            ${${fPrefix}_HEADERS}
-       )
-        target_sources(aoclutils_shared
-            PRIVATE
-            ${${fPrefix}_SOURCES}
-            ${${fPrefix}_HEADERS}
-        )
-      endif()
-    else()
-      # set the target name if it is public or the name not equal to aoclutils
-      if(cclib_PUBLIC)
-        if(${NAME} STREQUAL "aoclutils")
-            set(__target_name "libaoclutils")
-        else()
-            set(__target_name "au_${NAME}")
-        endif()
-      else()
-        if(${NAME} STREQUAL "aoclutils")
-            set(__target_name "libaoclutils")
-        else()
-            set(__target_name "au_internal_${NAME}")
-        endif()
-      endif()
+  if(UNIX)
+    set(libaoclutils "aoclutils")
+  else()
+    set(libaoclutils "libaoclutils")
+  endif()
 
-      if (TARGET libaoclutils)
-        target_sources(libaoclutils
-            PRIVATE
-            ${${fPrefix}_SOURCES}
-            ${${fPrefix}_HEADERS}
-       )
-        target_sources(libaoclutils_shared
-            PRIVATE
-            ${${fPrefix}_SOURCES}
-            ${${fPrefix}_HEADERS}
-        )
-      endif()
-    endif()
+  if (TARGET ${libaoclutils})
+    target_sources(${libaoclutils} PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+    target_sources(${libaoclutils}_shared  PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+  endif()
 
-    if (DEFINED tmp_src_list)
+  if (DEFINED tmp_src_list)
+    set(isPublic ${cclib_PUBLIC})
+    setlibname(${NAME} ${isPublic} __target_name)
+
     if(UNIX)
       set(output_name ${__target_name})
     else()
       set(output_name ${__target_name}_static)
     endif()
-      add_library(${__target_name} STATIC "")
-      target_sources(${__target_name}
-	      PRIVATE
-	      ${${fPrefix}_SOURCES}
-      	      ${${fPrefix}_HEADERS})
-          target_link_libraries(${__target_name}
-	          PUBLIC ${cclib_DEPENDS}
-          )
-      set_target_properties(${__target_name}
-	      PROPERTIES
-	      CXX_STANDARD ${AU_CXX_STANDARD}
-	      CXX_STANDARD_REQUIRED true
-	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-          NO_SONAME 1
-          SOVERSION ""
-          VERSION ""
-          OUTPUT_NAME ${output_name}
+
+    add_library(${__target_name} STATIC "")
+    target_sources(${__target_name}
+	    PRIVATE
+	    ${${fPrefix}_SOURCES}
+    	${${fPrefix}_HEADERS})
+
+    target_link_libraries(${__target_name}
+	    PUBLIC ${cclib_DEPENDS}
+    )
+
+    set_target_properties(${__target_name}
+	    PROPERTIES
+	    CXX_STANDARD ${AU_CXX_STANDARD}
+	    CXX_STANDARD_REQUIRED true
+	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+      NO_SONAME 1
+      SOVERSION ""
+      VERSION ""
+      OUTPUT_NAME ${output_name}
+    )
+
+    #target_link_libraries(af::all PUBLIC ${__target_name})
+    add_library(${__target_name}_shared SHARED "")
+    target_sources(${__target_name}_shared
+	    PRIVATE
+	    ${${fPrefix}_SOURCES}
+    	${${fPrefix}_HEADERS}
       )
-      #target_link_libraries(af::all PUBLIC ${__target_name})
-      add_library(${__target_name}_shared SHARED "")
-      target_sources(${__target_name}_shared
-	      PRIVATE
-	      ${${fPrefix}_SOURCES}
-      	      ${${fPrefix}_HEADERS})
-      target_link_libraries(${__target_name}
-	         PUBLIC ${cclib_DEPENDS}
-          )
-      set_target_properties(${__target_name}_shared
-	      PROPERTIES
-	      CXX_STANDARD ${AU_CXX_STANDARD}
-	      CXX_STANDARD_REQUIRED true
-	      INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-          RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"    # For DLLs
-          ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"    #for import lib
-          OUTPUT_NAME ${__target_name}
-          SOVERSION ""
-          VERSION ""
-          NO_SONAME 1
+    target_link_libraries(${__target_name}_shared
+	       PUBLIC ${cclib_DEPENDS}
+        )
+    set_target_properties(${__target_name}_shared
+	    PROPERTIES
+	    CXX_STANDARD ${AU_CXX_STANDARD}
+	    CXX_STANDARD_REQUIRED true
+	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+      OUTPUT_NAME ${__target_name}
+      SOVERSION ""
+      VERSION ""
+      NO_SONAME 1
+    )
+  else()
+    add_library(${__target_name} INTERFACE)
+    target_include_directories(${__target_name} INTERFACE ${AU_INCLUDE_DIRS})
+  endif()
+
+  # install targets that are not internal
+  if (cclib_PUBLIC)
+    if(UNIX)
+      install(TARGETS ${__target_name} ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
       )
     else()
-      add_library(${__target_name} INTERFACE)
-      target_include_directories(${__target_name} INTERFACE ${AU_INCLUDE_DIRS})
+      install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+      )
+      install(TARGETS ${__target_name} EXPORT
+              RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
+              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+      )
+      install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+              ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
+      )
+      install(TARGETS ${__target_name}_shared
+              RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
+              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+      )
     endif()
-    # install targets that are not internal
-
-    if (cclib_PUBLIC)
-      if(UNIX)
-        install(TARGETS ${__target_name} ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
-                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-        )
-      else()
-        install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
-                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-        )
-        install(TARGETS ${__target_name} EXPORT
-                RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-        )
-        install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
-                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
-        )
-        install(TARGETS ${__target_name}_shared
-                RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-        )
-      endif()
-    endif()
-    add_library(au::${AU_MODULE} ALIAS ${__target_name})
+  endif()
+  add_library(au::${AU_MODULE} ALIAS ${__target_name})
 
 endfunction(au_cc_library)
