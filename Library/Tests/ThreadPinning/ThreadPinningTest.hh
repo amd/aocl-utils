@@ -228,7 +228,7 @@ class PinThreadsTest : public ::testing::Test
         auto          Info = CpuTopology::get();
         std::ofstream logFile;
         logFile.open("ThreadPinningTest.log", std::ios::app);
-        logFile << "ThreadPinningTest Failed" << std::endl;
+        logFile << "Strategy : " << strategy << std::endl;
         logFile << "Topology : " << std::endl;
         logFile << "Active Processors : " << Info.active_processors
                 << std::endl;

@@ -521,6 +521,9 @@ class AffinityVector
                 std::cout << "SetThreadGroupAffinity Failed\n";
             }
 #endif
+        std::cout << "Thread " << threadList[i] << " is pinned to processor "
+                  << processorList[i] << std::endl;
+
         }
     }
 };
