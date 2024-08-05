@@ -17,8 +17,9 @@
         - [Testing](#testing)
       - [List of build options](#list-of-build-options)
       - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
-        - [au\_core](#au_core)
+        - [au\_core (internal)](#au_core-internal)
         - [au\_cpuid](#au_cpuid)
+        - [aoclutils](#aoclutils)
 
 ## Project structure
 
@@ -36,7 +37,7 @@ The project is structured as follows:
 
 #### Dependencies
 
-Refer [supported package matrix document](./supported_package_matrix.md)
+Refer [supported package matrix document](https://github.amd.com/pages/AOCL/aocl-utils/utils/support_matrix/index.html)
 
 #### Getting started
 
@@ -126,7 +127,7 @@ AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF        
 
 #### List of functionalities provided by each utils modules
 
-##### au_core
+##### au_core (internal)
 
 - thread pinning
 
@@ -136,4 +137,7 @@ AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF        
 
 - cpu architecture detection.
 
-**Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in [Example](SDK/Examples/) folder to understand how to link and use the modules.**
+##### aoclutils
+- All features of au_cpuid and au_core combined.
+
+**Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**

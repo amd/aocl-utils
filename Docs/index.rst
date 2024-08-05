@@ -24,6 +24,7 @@ Table of Contents
     :maxdepth: 2
 
     utils/howto/index
+    utils/support_matrix/index
     cpuid/api/index
     cpuid/testing/index
     threadpinning/api/index

@@ -45,6 +45,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils/support_matrix/index.html">AOCL-UTILS SUPPORTED PACKAGES MATRIX</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Cpuid API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Cpuid C-APIs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_num_t</span></code></a></li>
@@ -58,6 +59,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen4()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv421au_cpuid_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen5()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417au_cpuid_has_flag12au_cpu_num_tA_PCKci"><code class="docutils literal notranslate"><span class="pre">au_cpuid_has_flag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv418au_cpuid_has_flags12au_cpu_num_tA_PCKci"><code class="docutils literal notranslate"><span class="pre">au_cpuid_has_flags()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv417au_cpuid_is_error10au_error_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_error()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv411alci_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_is_amd()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv419alci_cpu_get_vendor12au_cpu_num_tPc6size_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_get_vendor()</span></code></a></li>
@@ -288,6 +290,24 @@
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an array indicating feature availability </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418au_cpuid_has_flags12au_cpu_num_tA_PCKci">
+<span id="_CPPv318au_cpuid_has_flags12au_cpu_num_tA_PCKci"></span><span id="_CPPv218au_cpuid_has_flags12au_cpu_num_tA_PCKci"></span><span id="au_cpuid_has_flags__au_cpu_num_t.cCPCA.i"></span><span class="target" id="cpuid_8h_1a9212ebdd3be5eb96d09b279c8b1d9b19"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">au_cpuid_has_flags</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv412au_cpu_num_t" title="au_cpu_num_t"><span class="n"><span class="pre">au_cpu_num_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">cpu_num</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flag_array</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418au_cpuid_has_flags12au_cpu_num_tA_PCKci" title="Link to this definition"></a><br /></dt>
+<dd><p>Allows caller to check if the flag is available. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cpu_num</strong> – <strong>[in]</strong> CPU number. </p></li>
+<li><p><strong>flag_array</strong> – <strong>[in]</strong> CPU feature flag names. </p></li>
+<li><p><strong>count</strong> – <strong>[in]</strong> Number of flags in the list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean indicating presence or absence of the features </p>
 </dd>
 </dl>
 </dd></dl>
