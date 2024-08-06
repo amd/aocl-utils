@@ -1,4 +1,3 @@
-SupportedPackageMatrix.md
 
 One of the compilers and generators on the platform has to be installed to build the library, along with atleast the minimum version of cmake. The following table lists the supported compilers and generators for the library.
 
