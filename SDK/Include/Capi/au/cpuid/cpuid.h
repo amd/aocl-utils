@@ -126,7 +126,10 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the flag is available.
+ * @brief          Allows caller to check if the flags are available.
+ *
+ *                 Note: The api is deprecated. Use au_cpuid_has_flags
+ *                 instead.
  *
  * @param[in]      cpu_num   CPU number.
  * @param[in]      flag_array  CPU feature flag names.
@@ -181,6 +184,9 @@ alci_is_amd(au_cpu_num_t cpu_num);
 
 /**
  * @brief          Get Cpu vendor info.
+ *
+ *                 Note: The api is deprecated. Use au_cpuid_get_vendor
+ *                 instead.
  *
  * @param[in]      cpu_num   CPU number.
  * @param[out]     arr       Vendor info array.

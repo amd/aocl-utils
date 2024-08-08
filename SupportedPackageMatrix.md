@@ -1,3 +1,4 @@
+# Detailed Information of the required packages and its supported versions for the library
 
 One of the compilers and generators on the platform has to be installed to build the library, along with atleast the minimum version of cmake. The following table lists the supported compilers and generators for the library.
 
@@ -5,130 +6,79 @@ One of the compilers and generators on the platform has to be installed to build
 
 ## Supported Compilers and Generators
 
+**Note** Other versions may or may not work.
+
 ## Windows
 
-| Package | Version | Supported | Notes |
-| ------- | ------- | --------- | ----- |
-| clang   | 11.0    | No        |       |
-| clang   | 12.0    | Yes       | Minimum clang version supported.      |
-| clang   | 13.0    | Yes       |       |
-| clang   | 14.0    | Yes       |       |
-| clang   | 15.0    | Yes       |       |
-| clang   | 16.0    | Yes       |       |
-| clang   | 17.0    | Yes       |       |
-| clang   | 18.0    | Yes       |       |
-| aocc    | 4.2     | Yes       | Download from|
-| aocc    | 5.0     | Yes       | Download from|
-| msvc    | 2019    | Yes       |       |
-| msvc    | 2022    | Yes       |       |
-| cmake   | 3.22    | Yes       | Minimum version supported.      |
-| cmake   | 3.23    | Yes       |       |
-| cmake   | 3.24    | Yes       |       |
-| cmake   | 3.25    | Yes       |       |
-| cmake   | 3.26    | Yes       |       |
-| cmake   | 3.27    | Yes       |       |
-| cmake   | 3.28    | Yes       |       |
-| cmake   | 3.29    | Yes       |       |
-| cmake   | 3.30    | Yes       |       |
-| ninja   | 1.10    | Yes       | Minimum version supported.      |
-| visualstudio | 2019 | Yes       |       |
-| visualstudio | 2022 | Yes       |       |
-
-TODO: Add download links for aocc.
-verify clang-tidy is working
+| Package | Version        | Notes |
+| ------- | ---------------| ----- |
+| clang   | 12.0 - 18.0    |       |
+| aocc    | 4.2 and 5.0    | Download from <http://aocc.amd.com/>|
+| msvc    | 2019 and 2022  |       |
+| cmake   | 3.22 - 3.30    |       |
+| ninja   | 1.10           |       |
+| visualstudio | 2019 and 2022 |       |
 
 ## Linux
 
-| Package | Version | Supported | Notes |
-| ------- | ------- | --------- | ----- |
-| clang   | 11.0    | No        |       |
-| clang   | 12.0    | Yes       | Minimum clang version supported.      |
-| clang   | 13.0    | Yes       |       |
-| clang   | 14.0    | Yes       |       |
-| clang   | 15.0    | Yes       |       |
-| clang   | 16.0    | Yes       |       |
-| clang   | 17.0    | Yes       |       |
-| clang   | 18.0    | Yes       |       |
-| aocc    | 4.2     | Yes       | Download from|
-| aocc    | 5.0     | Yes       | Download from|
-| gcc     | 8.5     | Yes       |       |
-| gcc     | 9       | Yes       |       |
-| gcc     | 10      | Yes       |       |
-| gcc     | 11      | Yes       |       |
-| gcc     | 12      | Yes       |       |
-| gcc     | 13      | Yes       |       |
-| gcc     | 14      | Yes       |       |
-| cmake   | 3.22    | Yes       | Minimum version supported.      |
-| cmake   | 3.23    | Yes       |       |
-| cmake   | 3.24    | Yes       |       |
-| cmake   | 3.25    | Yes       |       |
-| cmake   | 3.26    | Yes       |       |
-| cmake   | 3.27    | Yes       |       |
-| cmake   | 3.28    | Yes       |       |
-| cmake   | 3.29    | Yes       |       |
-| cmake   | 3.30    | Yes       |       |
-| ninja   | 1.10    | Yes       | Minimum version supported.      |
-| clang-tidy | 12.0  | Yes       | Minimum version supported.      |
-| clang-tidy | 13.0  | Yes       |       |
-| clang-tidy | 14.0  | Yes       |       |
-| clang-tidy | 15.0  | Yes       |       |
-| clang-tidy | 16.0  | Yes       |       |
-| clang-tidy | 17.0  | Yes       |       |
-| clang-tidy | 18.0  | Yes       |       |
-
-TODO: Steps to disable clang tidy.
+| Package | Version        | Notes |
+| ------- | ---------------| ----- |
+| clang   | 12.0 - 18.0    |              |
+| aocc    | 4.2 and 5.0    | Download from <http://aocc.amd.com/>|
+| gcc     | 8.5 - 14       |              |
+| cmake   | 3.22 - 3.30    |              |
+| ninja   | 1.10           |              |
+| clang-tidy | 12.0 -18.8  |              |
 
 ### Standard Libraries
 
 The library uses the standard C++ libraries and does not have any external dependencies. The library is tested with the following standard libraries:
 
-#### cpuid
+#### au_cpuid
 
-| Package | Version | Supported | Notes |
-| ------- | ------- | --------- | ----- |
-| libstdc++ | 8.5   | Yes       |       |
-| libstdc++ | 9     | Yes       |       |
-| libstdc++ | 10    | Yes       |       |
-| libstdc++ | 11    | Yes       |       |
-| libc++    | 8.5   | Yes       |       |
-| libc++    | 9     | Yes       |       |
-| libc++    | 10    | Yes       |       |
-| libc++    | 11    | Yes       |       |
-| libc++    | 12    | Yes       |       |
-| libc++    | 13    | Yes       |       |
-| libc++    | 14    | Yes       |       |
+| Package    |Notes |
+| -----------|----- |
+| libstdc++  |      |
+| libc++     |      |
 
-#### core
+#### au_core
 
-| Package | Version | Supported | Notes |
-| ------- | ------- | --------- | ----- |
-| libstdc++ | 8.5   | Yes       |       |
-| libstdc++ | 9     | Yes       |       |
-| libstdc++ | 10    | Yes       |       |
-| libstdc++ | 11    | Yes       |       |
-| libc++    | 8.5   | Yes       |       |
-| libc++    | 9     | Yes       |       |
-| libc++    | 10    | Yes       |       |
-| libc++    | 11    | Yes       |       |
-| libc++    | 12    | Yes       |       |
-| libc++    | 13    | Yes       |       |
-| libc++    | 14    | Yes       |       |
-|libpthread | 8.5    | Yes       |       |
-|libpthread | 9      | Yes       |       |
-|libpthread | 10     | Yes       |       |
-|libpthread | 11     | Yes       |       |
-|libpthread | 12     | Yes       |       |
-|libpthread | 13     | Yes       |       |
-|libpthread | 14     | Yes       |       |
+| Package    |Notes |
+| -----------|----- |
+| libstdc++  |      |
+| libc++     |      |
+| libpthread |      |
 
 #### tests
 
-| Package  | Version | Supported | Notes |
-| -------  | ------- | --------- | ----- |
-| python   | 3.9     | Yes       | Minimum version supported.      |
-| python   | 3.10    | Yes       |       |
-| python   | 3.11    | Yes       |       |
-| python   | 3.12    | Yes       |       |
-| qemu-user|         | Yes       |       |
+| Package  | Version  |   Notes |
+| -------  | -------  |   ----- |
+| python   | 3.9 -3.12|         |
+| qemu-user|          |         |
 
 **Note: One might have to install the required packages based on the platform.  and explicitly link the depency libraries.**
+
+## Checklist
+
+1. **While linking to the new combined binary**
+   1. The combined binary is a combination of all the modules in utils. It is going to be larger in size.
+       1. Will have to link explicitly to libstdc++ libpthread,  -ldl -lutil explicitly.[section 2 for more details]
+       2. Make sure that headers used are corresponding to the compiler being used for compilation and uses the same glibc as the binary.
+   2. Backward compatibility issues.
+       1. Libraries linking with libaoclutils are good here, but if somebody moved to au_cpuid, the backward compatibility breaks.
+       2. Use version.txt document to find the version and link to libaoclutils if version is 4.2 otherwise libau_cpuid
+
+2. **Common issues and solutions.**
+
+|     Sl no    |     Issue                                                                          |     Root cause                                                            |  Solution                                                                            |
+|--------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+|     1        |       Could NOT find Python3 (missing:   Python3_INCLUDE_DIRS Python3_LIBRARIES    |     Not python3   or python3-devel package not present.                   |     Install   python3 and devel package.                                                                                                                                         |
+|              |                                                                                    |     Older   cmake(3.22, 3.23 and 3.24) unable to find python3 library.    |     PYTHON_LIBRARIES     = path to the python library         PYTHON_INCLUDE_PATH  = path to where Python.h is found     PYTHON_EXECUTABLE   = path to the Python interpreter    |
+|     2        |     failing cmake   --build command with python related issues.                    |     Not able to   find the library(libaoclutils) in the std path          |     Compile utils   with -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -lutil"                                                                                                            |
+|     3        |     Missing   symbol                                                               |     Not able to   find the library(libaoclutils) in the std path          |     Update   LD_LIBRARY_PATH on linux update PATH on windows.                                                                                                                    |
+|     4        |     Missing   symbols and errors related to types and type_traits                  |     unable to   link to libstdc++ automatically on older oses.            |     DCMAKE_CXX_STANDARD_LIBRARIES="-libstdc++"                                                                                                                                   |
+|     5        |                                                                                    |     <   glibc2.34 has libpthread as a separate library.                   |     gcc 10 and   below or if the compiler is linking to glibc version < 2.34 explicitly   link to lpthread while compiling utils.                                                |
+
+3. **Testing.**
+   1. Testing requires qemu-x86_64 (qemu-user package) to be installed to run.  Make sure that this is installed before running the test. Do a clean build after installation.
+   2. Cupid test depends on python too. Make sure that python3 and python-dev(el) package is installed.

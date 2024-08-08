@@ -109,6 +109,7 @@
 <li><p><a class="reference internal" href="#configure"><span class="std std-ref">Configure</span></a></p></li>
 <li><p><a class="reference internal" href="#build"><span class="std std-ref">Build</span></a></p></li>
 <li><p><a class="reference internal" href="#install"><span class="std std-ref">Install</span></a></p></li>
+<li><p><a class="reference internal" href="#current-api-stack"><span class="xref myst">Current API Stack</span></a></p></li>
 <li><p><a class="reference internal" href="#testing"><span class="std std-ref">Testing</span></a></p></li>
 </ul>
 </li>
@@ -190,18 +191,28 @@ Link with these libraries based on the functionality required.
 </li>
 </ol>
 <p><strong>Important:</strong></p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">    a binary named aoclutils is present in the lib directory, to facilitate backward compatibility with the 4.2</span>
-<span class="go">    version of the library. This binary is a wrapper around the cpuid module. It is recommended to use the cpuid module if you are using only the cpuid functionality.</span>
-<span class="go">    If not incase of copying the binaries to a non installed path, copy the cpuid binary to the same path as the aoclutils binary.</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">    1. Most of the CPUID APIs(Along with the headers) from 4.2 release is deprecated and will be removed in the future release. Refer to the API documentation for the new APIs.</span>
+<span class="go">    2. The old APIs can be enabled using AU_ENABLE_OLD_API=ON during build, otherwise utils build will throw deprecated warnings.</span>
+<span class="go">    3. The aoclutils module is a combination of au_core and au_cpuid modules.</span>
+<span class="go">    4. The aoclutils module is the default module to be used for all the functionalities.</span>
 </pre></div>
 </div>
 </section>
+<section id="current-api-stack">
+<h6>Current API Stack<a class="headerlink" href="#current-api-stack" title="Link to this heading"></a></h6>
+<p><img alt="alt text" src="../../_images/CPUID_API_STACK.png" />
+<strong>Note</strong></p>
+<ol class="arabic simple">
+<li><p>The APIs in the grey box are deprecated and will be removed in the future release.</p></li>
+<li><p>X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.</p></li>
+</ol>
+</section>
 <section id="testing">
 <h6>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h6>
+<p>Build with AU_BUILD_TESTS=ON to run the tests.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">    ctest -C release</span>
 </pre></div>
 </div>
-<p>build with AU_BUILD_TESTS=ON to run the tests. Below are other available build options.</p>
 <p>qemu-x86_64 is a dependency for running tests. Install it using the following command:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">    sudo apt-get install qemu-user # For Ubuntu</span>
 <span class="go">    sudo dnf install qemu-user # For Fedora/RHEL/CentOS</span>
