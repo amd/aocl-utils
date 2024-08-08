@@ -174,9 +174,6 @@ function(au_cc_library NAME)
 	    CXX_STANDARD ${AU_CXX_STANDARD}
 	    CXX_STANDARD_REQUIRED true
 	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-      NO_SONAME 1
-      SOVERSION ""
-      VERSION ""
       OUTPUT_NAME ${output_name}
     )
 
@@ -196,9 +193,6 @@ function(au_cc_library NAME)
 	    CXX_STANDARD_REQUIRED true
 	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
       OUTPUT_NAME ${__target_name}
-      SOVERSION ""
-      VERSION ""
-      NO_SONAME 1
     )
   else()
     add_library(${__target_name} INTERFACE)
