@@ -14,6 +14,7 @@
         - [Configure](#configure)
         - [Build](#build)
         - [Install](#install)
+        - [Current API Stack](#current-api-stack)
         - [Testing](#testing)
       - [List of build options](#list-of-build-options)
       - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
@@ -92,18 +93,27 @@ This command creates
 **Important:**
 
 ```console
-    a binary named aoclutils is present in the lib directory, to facilitate backward compatibility with the 4.2
-    version of the library. This binary is a wrapper around the cpuid module. It is recommended to use the cpuid module if you are using only the cpuid functionality.
-    If not incase of copying the binaries to a non installed path, copy the cpuid binary to the same path as the aoclutils binary.
+    1. Most of the CPUID APIs(Along with the headers) from 4.2 release is deprecated and will be removed in the future release. Refer to the API documentation for the new APIs.
+    2. The old APIs can be enabled using AU_ENABLE_OLD_API=ON during build, otherwise utils build will throw deprecated warnings.
+    3. The aoclutils module is a combination of au_core and au_cpuid modules.
+    4. The aoclutils module is the default module to be used for all the functionalities.
 ```
 
+##### Current API Stack
+
+![alt text](CPUID_API_STACK.png "Current Cpuid API stack")
+**Note**
+
+1. The APIs in the grey box are deprecated and will be removed in the future release.
+2. X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.
+
 ##### Testing
+
+Build with AU_BUILD_TESTS=ON to run the tests.
 
 ```console
     ctest -C release
 ```
-
-build with AU_BUILD_TESTS=ON to run the tests. Below are other available build options.
 
 qemu-x86_64 is a dependency for running tests. Install it using the following command:
 
@@ -138,6 +148,7 @@ AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF        
 - cpu architecture detection.
 
 ##### aoclutils
+
 - All features of au_cpuid and au_core combined.
 
 **Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**

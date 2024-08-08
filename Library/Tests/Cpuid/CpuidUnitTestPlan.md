@@ -18,12 +18,12 @@ The testplan is to have a comprehensive test coverage for all components in the 
     Mocked data is stored in simnow folder.
     The content of the folder is organised as follows.
 
-```
+``` console
 simnowdata
 └───<folderperemulated cpuid>
-    │   <cpuid>
-    │   FlagsT.txt
-    │   FlagsF.txt
+    └───<cpuid>
+    └───FlagsT.txt
+    └───FlagsF.txt
  * The \<cpuid> file consists of cpuid register read corresponding to the particular cpuid for a set of inputs,
    in the form {request} : {response}
  * These files are shared by both qemu tests and mocktests.
@@ -84,54 +84,58 @@ Those functions are,
 * updatecacheview
 * updatecacheinfo
 
-
 ## The test matrix for c/cpp apis
 
 ### cpu features
+
 #### amd cpus
-| cpu type/function name  | epyc-genoa-v1 | epyc-milan-v1 | epyc-milan-v2 | epyc-rome-v1 |epyc-rome-v2 |
-| ----------------------- | ------------- | ------------- | ------------- | ------------ |------------ |
-| isamd                   | true          | true          | true          | true         |true         |
-| isintel                 | false         | false         | false         | false        |false        |
-| isx86_64v2              | true          | true          | true          | true         |true         |
-| isx86_64v3              | true          | true          | true          | true         |true         |
-| isx86_64v4              | true          | false         | false         | false        |false        |
-| getuarch                | zen4          | zen3          | zen3          | zen2         |zen2         |
+
+| cpu type/function name | epyc-genoa-v1 | epyc-milan-v1 | epyc-milan-v2 | epyc-rome-v1 | epyc-rome-v2 |
+|------------------------|---------------|---------------|---------------|--------------|--------------|
+|isamd                   |true           |true           | true          | true         |true          |
+|isintel                 |false          |false          | false         | false        |false         |
+|isx86_64v2              |true           |true           | true          | true         |true          |
+|isx86_64v3              |true           |true           | true          | true         |true          |
+|isx86_64v4              |true           |false          | false         | false        |false         |
+|getuarch                |zen4           |zen3           | zen3          | zen2         |zen2          |
 
 amd cpus(continued)
 
- | cpu type/function name  | epyc-rome-v3 | epyc-rome-v4 | epyc-v1 | epyc-v2 | epyc-v3 | epyc-v4 |opteron_g1-v1  |
- | ----------------------- | ------------ | ------------ | ------- | ------- | ------- | ------- |---------------|
- | isamd                   | true         | true         | true    | true    | true    | true    | true          |
- | isintel                 | false        | false        | false   | false   | false   | false   | false         |
- | isx86_64v2              | true         | true         | true    | true    | true    | true    | false         |
- | isx86_64v3              | true         | true         | true    | true    | true    | true    | false         |
- | isx86_64v4              | false        | false        | false   | false   | false   | false   | false         |
- | getUarch                | zen2         | zen2         | zen     | zen     | zen     | zen     | unknown       |
+ | cpu type/function name | epyc-rome-v3 | epyc-rome-v4 | epyc-v1 | epyc-v2 | epyc-v3 | epyc-v4 | opteron_g1-v1  |
+ |------------------------|--------------|--------------|---------|---------|---------|---------|----------------|
+ |isamd                   |true          |true          |true     |true     |true     |true     | true           |
+ |isintel                 |false         |false         |false    |false    |false    |false    | false          |
+ |isx86_64v2              |true          |true          |true     |true     |true     |true     | false          |
+ |isx86_64v3              |true          |true          |true     |true     |true     |true     | false          |
+ |isx86_64v4              |false         |false         |false    |false    |false    |false    | false          |
+ |getUarch                |zen2          |zen2          |zen      |zen      |zen      |zen      | unknown        |
 
 amd cpus(continued)
 
-| cpu type/function name  |  opteron_g2-v1 | opteron_g3-v1 | opteron_g4-v1 | opteron_g5-v1 | phenom-v1 |
-| ----------------------- |  ------------- | ------------- | ------------- | ------------- | --------- |
-| isamd                   |  true          | true          | true          | true          | true      |
-| isintel                 |  false         | false         | false         | false         | false     |
-| isx86_64v2              |  false         | false         | true          | true          | false     |
-| isx86_64v3              |  false         | false         | false         | false         | false     |
-| isx86_64v4              |  false         | false         | false         | false         | false     |
-| getUarch                |  unknown       | unknown       | unknown       | unknown       | unknown   |
+|cpu type/function name | opteron_g2-v1|opteron_g3-v1|opteron_g4-v1|opteron_g5-v1|phenom-v1|
+|-----------------------| -------------|-------------|-------------|-------------|---------|
+|isamd                  | true         |true         |true         |true         |true     |
+|isintel                | false        |false        |false        |false        |false    |
+|isx86_64v2             | false        |false        |true         |true         |false    |
+|isx86_64v3             | false        |false        |false        |false        |false    |
+|isx86_64v4             | false        |false        |false        |false        |false    |
+|getUarch               | unknown      |unknown      |unknown      |unknown      |unknown  |
 
 #### intel cpus
-| cpu type/function name  | broadwell-v1 | denverton-v1 | conroe-v1 | skylake-server-v1 |
-| ----------------------- | ------------ | ------------ | --------- | ----------------- |
-| isamd                   | false        | false        | false     | false             |
-| isintel                 | true         | true         | true      | true              |
-| isx86_64v2              | true         | true         | false     | true              |
-| isx86_64v3              | true         | false        | false     | true              |
-| isx86_64v4              | false        | false        | false     | true              |
-| getUarch                |  unknown     | unknown      | unknown   | unknown           |
+
+|cpu type/function name |broadwell-v1|denverton-v1|conroe-v1|skylake-server-v1|
+|-----------------------|------------|------------|---------|-----------------|
+|isamd                  |false       |false       |false    |false            |
+|isintel                |true        |true        |true     |true             |
+|isx86_64v2             |true        |true        |false    |true             |
+|isx86_64v3             |true        |false       |false    |true             |
+|isx86_64v4             |false       |false       |false    |true             |
+|getUarch               | unknown    |unknown     |unknown  |unknown          |
 
 ### isa features
+
 #### x86_64v2
+
 | cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
 | ------------- | ------------- | ------------ | ------------- | --------- | ----------------- | ------------ | ------------ | --------- |
 | cx16          | true          | true         | true          | false     | true              | true         | true         | false     |
@@ -156,6 +160,7 @@ amd cpus(continued)
 | xsave         | true          | true         | false         | false     | true              | true         | false        | false     |
 
 #### x86_64v4
+
 | cpu type/flag | epyc-genoa-v1 | epyc-rome-v1 | opteron_g4-v1 | phenom-v1 | skylake-server-v1 | broadwell-v1 | denverton-v1 | conroe-v1 |
 | ------------- | ------------- | ------------ | ------------- | --------- | ----------------- | ------------ | ------------ | --------- |
 | avx512f       | true          | false        | false         | false     | true              | false        | false        | false     |
@@ -165,6 +170,7 @@ amd cpus(continued)
 | avx512vl      | true          | false        | false         | false     | true              | false        |              |           |
 
 ## Utility function test matrix
+
   | CpuType/VendorInfo| Vendor| Family | Model | Stepping   | Uarch   |
   | ----------------- | ----- | -------| ----  | ---------- |-------- |
   | EPYC-Genoa-v1     |  Amd  | Zen4   | 0x11  |0x0         | zen4    |
@@ -190,7 +196,6 @@ amd cpus(continued)
   | Skylake-Server-v1 |  Intel| Unknown| 0x55  |0x4         | Unknown |
 
 ## Integration tests <TBD>
-
 
 ## How to run the tests
 
