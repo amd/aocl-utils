@@ -35,6 +35,7 @@ option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
 option(AU_ENABLE_ASSERTIONS "Enable asserts in the code" OFF)
 option(AU_ENABLE_OLD_API "Enable OLD alci_* APIs" OFF)
 option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
+option(AU_ENABLE_CODE_COVERAGE "Enable Code coverage on build" OFF)
 
 # Define the processor type
 string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)

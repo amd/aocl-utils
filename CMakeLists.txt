@@ -139,12 +139,15 @@ if(MSVC)
 else()
   include(au_compiler_unix)
 endif()
-
-# Fetch googletest if "testing" is enabled
+if(AU_ENABLE_CODE_COVERAGE)
+    add_compile_options(-O0 -fprofile-arcs -ftest-coverage)
+    add_link_options(-lgcov --coverage)
+endif()
 if (AU_BUILD_WITH_ASAN)
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
 endif()
+# Fetch googletest if "testing" is enabled
 if (AU_BUILD_TESTS)
   enable_testing()
   include(au_find_gtest)
