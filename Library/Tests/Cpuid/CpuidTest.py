@@ -44,7 +44,10 @@ def run_qemu(architecture="x86_64", cpu_model="EPYC", binary_path="", test_name=
         "--gtest_output=json:result.json",
         "--gtest_also_run_disabled_tests"
     ]
+    #print("Running test: " + test_name)
+    #print(" ".join(qemu_cmd))
     qemu_process = subprocess.run(qemu_cmd, capture_output=True, timeout=1)
+    #print(qemu_process.stderr.decode())
     if qemu_process.stdout:
         print(qemu_process.stdout.decode())
         result = open('result.json')
@@ -59,6 +62,6 @@ if __name__ == "__main__":
     if len(sys.argv) >= 3:
         cpu_model, test_name = sys.argv[1], sys.argv[2]
         print("SUCCESS" if run_qemu(cpu_model=cpu_model,
-              binary_path="./Release/core_CpuidTest", test_name=test_name) else "FAILURE")
+              binary_path="./Release/aoclutils_CpuidTest", test_name=test_name) else "FAILURE")
     else:
         print("Usage: python script.py  <cpu_model> <test_name> from the build folder")
