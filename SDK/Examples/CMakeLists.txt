@@ -26,20 +26,24 @@
 
 cmake_minimum_required(VERSION 3.20...3.27)
 project(cpuid_example_cpp)
+
+list(APPEND CMAKE_MODULE_PATH ${AUROOT}/lib/CMake)
 include(au_examples)
+list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
 
 au_add_application(cpuid_example_cpp
 				SOURCES cpuid_example.cc
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 au_add_application(cpuid_deprecated_api_example_cpp
 				SOURCES cpuid_deprecated_api_example.cc
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
+project(thread_pinning_example_cpp)
 au_add_application(thread_pinning_example_cpp
 				SOURCES thread_pinning_example.cc
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 add_subdirectory(capi)
