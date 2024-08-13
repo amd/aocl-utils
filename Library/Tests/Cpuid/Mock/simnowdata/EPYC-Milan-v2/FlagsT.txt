@@ -54,7 +54,6 @@ sha_ni
 umip
 pku
 rdpid
-avx512_bf16
 lahf_lm
 svm
 cr8legacy

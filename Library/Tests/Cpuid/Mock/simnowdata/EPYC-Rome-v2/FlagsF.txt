@@ -42,6 +42,7 @@ avx512_vpopcntdq
 la57
 avx512_4vnniw
 avx512_4fmaps
+avx512_bf16
 avxvnni
 xsaveopt
 xsavec
