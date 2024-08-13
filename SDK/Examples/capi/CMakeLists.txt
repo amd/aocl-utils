@@ -27,25 +27,24 @@
 cmake_minimum_required(VERSION 3.20...3.27)
 
 project(cpuid_example_c)
-
 au_add_application(cpuid_example_c
 				SOURCES cpuid_example.c
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 au_add_application(cpuid_deprecated_api_example_c
 				SOURCES cpuid_deprecated_api_example.c
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 if (NOT WIN32)
 	au_add_application(thread_pinning_example_c
 				SOURCES thread_pinning_example_linux.c
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 else()
 	au_add_application(thread_pinning_example_c
 				SOURCES thread_pinning_example_windows.c
-				LIBS au::aoclutils
+				LIBS aoclutils
                 INCLUDES ${AU_INCLUDE_DIRS})
 endif()
