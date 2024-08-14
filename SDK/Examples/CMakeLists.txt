@@ -31,19 +31,27 @@ list(APPEND CMAKE_MODULE_PATH ${AUROOT}/lib/CMake)
 include(au_examples)
 list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
 
+# on windows platform, libname to be linked is libaoclutils.
+
+if(WIN32)
+    set(AU_LIBS libaoclutils)
+else()
+    set(AU_LIBS aoclutils)
+endif()
+
 au_add_application(cpuid_example_cpp
 				SOURCES cpuid_example.cc
-				LIBS aoclutils
+				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 au_add_application(cpuid_deprecated_api_example_cpp
 				SOURCES cpuid_deprecated_api_example.cc
-				LIBS aoclutils
+				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 
 project(thread_pinning_example_cpp)
 au_add_application(thread_pinning_example_cpp
 				SOURCES thread_pinning_example.cc
-				LIBS aoclutils
+				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 add_subdirectory(capi)

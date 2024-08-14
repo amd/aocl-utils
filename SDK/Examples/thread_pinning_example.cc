@@ -92,26 +92,20 @@ main()
     }
     std::cout << "Pinning threads using custom pin strategy" << std::endl;
     // pin threads using the custom strategy.
-    for (int i = 0; i < n; ++i) {
-        tp.pinThreads(threadList, { 0, 5, 2, 10, 4 });
-    }
+    tp.pinThreads(threadList, { 0, 5, 2, 10, 4 });
     for (int i = 0; i < n; ++i) {
         checkThreadAffinity(threads[i]);
     }
     std::cout << "Pinning threads using spread pin strategy" << std::endl;
     // pin threads using the spread strategy
-    for (size_t i = 0; i < n; i++) {
-        tp.pinThreads(threadList, 0);
-    }
+    tp.pinThreads(threadList, 0);
     // Verify thread affinity for each thread
     for (int i = 0; i < n; ++i) {
         checkThreadAffinity(threads[i]);
     }
     std::cout << "Pinning threads using core pin strategy" << std::endl;
     // pin threads using the core strategy
-    for (size_t i = 0; i < n; i++) {
-        tp.pinThreads(threadList, 1);
-    }
+    tp.pinThreads(threadList, 1);
     // Verify thread affinity for each thread
     for (int i = 0; i < n; ++i) {
         checkThreadAffinity(threads[i]);
@@ -119,9 +113,7 @@ main()
 
     std::cout << "Pinning threads using logical pin strategy" << std::endl;
     // pin threads using the Logical strategy
-    for (size_t i = 0; i < n; i++) {
-        tp.pinThreads(threadList, 2);
-    }
+    tp.pinThreads(threadList, 2);
     // Verify thread affinity for each thread
     for (int i = 0; i < n; ++i) {
         checkThreadAffinity(threads[i]);
