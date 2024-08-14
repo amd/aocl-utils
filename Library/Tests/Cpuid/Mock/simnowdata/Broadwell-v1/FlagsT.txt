@@ -49,7 +49,6 @@ invpcid
 rdseed
 adx
 smap
-avx512_bf16
 lahf_lm
 abm
 _3dnowprefetch

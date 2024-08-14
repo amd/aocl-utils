@@ -22,7 +22,6 @@ mmx
 fxsr
 sse
 sse2
-avx512_bf16
 lahf_lm
 syscall
 nxxd

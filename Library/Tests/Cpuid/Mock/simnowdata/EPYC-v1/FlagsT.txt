@@ -47,7 +47,6 @@ adx
 smap
 clflushopt
 sha_ni
-avx512_bf16
 lahf_lm
 svm
 cr8legacy

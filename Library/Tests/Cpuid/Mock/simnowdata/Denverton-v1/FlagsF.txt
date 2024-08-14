@@ -48,6 +48,7 @@ la57
 rdpid
 avx512_4vnniw
 avx512_4fmaps
+avx512_bf16
 avxvnni
 xsaveopt
 xsavec

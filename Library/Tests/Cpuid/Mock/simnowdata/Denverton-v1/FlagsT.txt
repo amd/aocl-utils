@@ -44,7 +44,6 @@ rdseed
 smap
 clflushopt
 sha_ni
-avx512_bf16
 lahf_lm
 _3dnowprefetch
 syscall

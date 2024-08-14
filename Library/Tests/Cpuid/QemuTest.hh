@@ -147,7 +147,7 @@ class QemuTestBase :public testing::Test
                 if (AU_BUILD_TYPE_DEVELOPER)
                     releaseType = "Library/Tests";
 
-                binaryPath += "/" + releaseType + "/core_CpuidTest";
+                binaryPath += "/" + releaseType + "/aoclutils_CpuidTest";
 
                 PyObject* pArgs =
                     PyTuple_Pack(4,
