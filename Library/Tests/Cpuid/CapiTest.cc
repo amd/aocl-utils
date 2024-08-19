@@ -56,9 +56,8 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagPositive)
     for (size_t i = 0; i < flags.size(); ++i)
         flagsArray.push_back(flags[i].c_str());
 
-    auto result = au_cpuid_has_flag(0, flagsArray.data(), flags.size());
-    for (size_t i = 0; i < flags.size(); ++i)
-        EXPECT_TRUE(result[i]);
+    auto result = au_cpuid_has_flags(0, flagsArray.data(), flags.size());
+    EXPECT_TRUE(result);
 }
 
 TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
@@ -70,9 +69,8 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
     for (size_t i = 0; i < flags.size(); ++i)
         flagsArray.push_back(flags[i].c_str());
 
-    auto result = au_cpuid_has_flag(0, flagsArray.data(), flags.size());
-    for (size_t i = 0; i < flags.size(); ++i)
-        EXPECT_FALSE(result[i]);
+    auto result = au_cpuid_has_flags(0, flagsArray.data(), flags.size());
+    EXPECT_FALSE(result);
 }
 
 TEST(CapiX86Cpuid, hasFlags)
@@ -80,15 +78,15 @@ TEST(CapiX86Cpuid, hasFlags)
     String testflag;
     if (AU_ENABLE_ASSERTIONS) {
         std::vector<char*> testFlags = { testflag.data() };
-        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
+        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
         // update testflag to have an invalid flag
         testflag.assign("Test");
         testFlags = { testflag.data() };
-        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 1));
-        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 0));
+        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
+        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 0));
         testflag.assign("avx512f");
         testFlags.push_back(testflag.data());
-        EXPECT_ANY_THROW(au_cpuid_has_flag(0, testFlags.data(), 2));
+        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 2));
     }
 }
 
