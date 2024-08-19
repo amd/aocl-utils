@@ -54,6 +54,7 @@ function(au_add_application NAME)
   add_executable(${APP_PACKAGE}::${NAME} ALIAS ${NAME})
 
   if(DEFINED APP_LIBS)
+    target_link_directories(${NAME} PRIVATE ${CMAKE_BINARY_DIR}/Library)
     target_link_libraries(${NAME}
       PRIVATE
         ${APP_LIBS}

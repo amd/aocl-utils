@@ -28,8 +28,9 @@ cmake_minimum_required(VERSION 3.20...3.27)
 project(cpuid_example_cpp)
 
 list(APPEND CMAKE_MODULE_PATH ${AUROOT}/lib/CMake)
-include(au_examples)
 list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
+link_directories(${AUROOT}/lib)
+include(au_examples)
 
 # on windows platform, libname to be linked is libaoclutils.
 
@@ -54,4 +55,18 @@ au_add_application(thread_pinning_example_cpp
 				SOURCES thread_pinning_example.cc
 				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
+
+#if built inside the source tree, add dependencies.
+if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
+    if(WIN32)
+        add_dependencies(cpuid_example_cpp libaoclutils_shared au_cpuid_shared)
+        add_dependencies(cpuid_deprecated_api_example_cpp libaoclutils_shared au_cpuid_shared)
+        add_dependencies(thread_pinning_example_cpp libaoclutils_shared au_internal_core_shared)
+    else()
+        add_dependencies(cpuid_example_cpp aoclutils_shared au_cpuid_shared)
+        add_dependencies(cpuid_deprecated_api_example_cpp aoclutils_shared au_cpuid_shared)
+        add_dependencies(thread_pinning_example_cpp aoclutils_shared au_internal_core_shared)
+    endif()
+endif()
+
 add_subdirectory(capi)
