@@ -31,7 +31,6 @@ if(AU_CMAKE_VERBOSE)
   message(STATUS "Configuring...")
 endif()
 
-option(AU_CMAKE_VERBOSE "Set cmake verbosity" ON)
 
 
 # Figure out where to put the Config.h

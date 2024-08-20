@@ -38,6 +38,7 @@ option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
 option(AU_ENABLE_CODE_COVERAGE "Enable Code coverage on build" OFF)
 option(AU_BUILD_STATIC_LIBS "Build static libraries" ON)
 option(AU_BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(AU_CMAKE_VERBOSE "Set cmake verbosity" OFF)
 
 # Define the processor type
 string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)
