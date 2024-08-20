@@ -65,7 +65,6 @@ set(PROJECT_FULL_NAME "AOCL Utilities Library")
 set(PROJECT_NAME "AOCL Library")
 message("version " ${AU_VERSION_STRING})
 project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
-
 #
 # Set language features
 # Require C++-20
@@ -165,6 +164,11 @@ include(au_git_hash)
 include(au_functions)
 include(au_helpers)
 
+if(NOT AU_BUILD_SHARED_LIBS AND NOT AU_BUILD_STATIC_LIBS)
+    # nothing to build raise warning and exit
+    message(WARNING "Nothing to build. Please set AU_BUILD_SHARED_LIBS and/or AU_BUILD_STATIC_LIBS to ON")
+    return()
+endif()
 # Config.h generation
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
 

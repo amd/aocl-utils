@@ -144,9 +144,15 @@ function(au_cc_library NAME)
     set(libaoclutils "libaoclutils")
   endif()
 
-  if (TARGET ${libaoclutils})
-    target_sources(${libaoclutils} PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
-    target_sources(${libaoclutils}_shared  PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+  if(${AU_BUILD_STATIC_LIBS})
+    if (TARGET ${libaoclutils})
+        target_sources(${libaoclutils} PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+    endif()
+  endif()
+  if(${AU_BUILD_SHARED_LIBS})
+    if (TARGET ${libaoclutils}_shared)
+        target_sources(${libaoclutils}_shared  PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+    endif()
   endif()
 
   if (DEFINED tmp_src_list)
@@ -158,42 +164,44 @@ function(au_cc_library NAME)
     else()
       set(output_name ${__target_name}_static)
     endif()
+    if(${AU_BUILD_STATIC_LIBS})
+        add_library(${__target_name} STATIC "")
+        target_sources(${__target_name}
+	        PRIVATE
+	        ${${fPrefix}_SOURCES}
+    	    ${${fPrefix}_HEADERS})
 
-    add_library(${__target_name} STATIC "")
-    target_sources(${__target_name}
-	    PRIVATE
-	    ${${fPrefix}_SOURCES}
-    	${${fPrefix}_HEADERS})
-
-    target_link_libraries(${__target_name}
-	    PUBLIC ${cclib_DEPENDS}
-    )
-
-    set_target_properties(${__target_name}
-	    PROPERTIES
-	    CXX_STANDARD ${AU_CXX_STANDARD}
-	    CXX_STANDARD_REQUIRED true
-	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-      OUTPUT_NAME ${output_name}
-    )
-
-    #target_link_libraries(af::all PUBLIC ${__target_name})
-    add_library(${__target_name}_shared SHARED "")
-    target_sources(${__target_name}_shared
-	    PRIVATE
-	    ${${fPrefix}_SOURCES}
-    	${${fPrefix}_HEADERS}
-      )
-    target_link_libraries(${__target_name}_shared
-	       PUBLIC ${cclib_DEPENDS}
+        target_link_libraries(${__target_name}
+	        PUBLIC ${cclib_DEPENDS}
         )
-    set_target_properties(${__target_name}_shared
-	    PROPERTIES
-	    CXX_STANDARD ${AU_CXX_STANDARD}
-	    CXX_STANDARD_REQUIRED true
-	    INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-      OUTPUT_NAME ${__target_name}
-    )
+
+        set_target_properties(${__target_name}
+	        PROPERTIES
+	        CXX_STANDARD ${AU_CXX_STANDARD}
+	        CXX_STANDARD_REQUIRED true
+	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+            OUTPUT_NAME ${output_name}
+        )
+    endif()
+    if(${AU_BUILD_SHARED_LIBS})
+        #target_link_libraries(af::all PUBLIC ${__target_name})
+        add_library(${__target_name}_shared SHARED "")
+        target_sources(${__target_name}_shared
+	        PRIVATE
+	        ${${fPrefix}_SOURCES}
+    	    ${${fPrefix}_HEADERS}
+        )
+        target_link_libraries(${__target_name}_shared
+	           PUBLIC ${cclib_DEPENDS}
+        )
+        set_target_properties(${__target_name}_shared
+	        PROPERTIES
+	        CXX_STANDARD ${AU_CXX_STANDARD}
+	        CXX_STANDARD_REQUIRED true
+	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+        OUTPUT_NAME ${__target_name}
+        )
+    endif()
   else()
     add_library(${__target_name} INTERFACE)
     target_include_directories(${__target_name} INTERFACE ${AU_INCLUDE_DIRS})
@@ -202,34 +210,53 @@ function(au_cc_library NAME)
   # install targets that are not internal
   if (cclib_PUBLIC)
     if(UNIX)
-      install(TARGETS ${__target_name} ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
-              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-      )
+        if(${AU_BUILD_STATIC_LIBS})
+            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+        )
+        endif()
+        if(${AU_BUILD_SHARED_LIBS})
+            install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+                  RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                  LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                  ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+          )
+        endif()
     else()
-      install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
-              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-      )
-      install(TARGETS ${__target_name} EXPORT
-              RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
-              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-      )
-      install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
-              RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-              ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
-      )
-      install(TARGETS ${__target_name}_shared
-              RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
-              LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-              ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-      )
+        if(${AU_BUILD_STATIC_LIBS})
+            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+            )
+            install(TARGETS ${__target_name} EXPORT
+                RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+            )
+        endif()
+        if(${AU_BUILD_SHARED_LIBS})
+            install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+                RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
+            )
+            install(TARGETS ${__target_name}_shared
+                RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
+                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+            )
+        endif()
     endif()
   endif()
-  add_library(au::${AU_MODULE} ALIAS ${__target_name})
+  if (${AU_BUILD_STATIC_LIBS} AND ${AU_BUILD_SHARED_LIBS})
+      add_library(au::${AU_MODULE} ALIAS ${__target_name})
+  elseif (${AU_BUILD_STATIC_LIBS})
+      add_library(au::${AU_MODULE} ALIAS ${__target_name})
+  elseif (${AU_BUILD_SHARED_LIBS})
+      add_library(au::${AU_MODULE} ALIAS ${__target_name}_shared)
+  endif()
 
 endfunction(au_cc_library)
