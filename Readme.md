@@ -16,6 +16,7 @@
         - [Install](#install)
         - [Current API Stack](#current-api-stack)
         - [Testing](#testing)
+        - [Examples](#examples)
       - [List of build options](#list-of-build-options)
       - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
         - [au\_core (internal)](#au_core-internal)
@@ -39,6 +40,7 @@ The project is structured as follows:
 #### Dependencies
 
 Refer [supported package matrix document](https://github.amd.com/pages/AOCL/aocl-utils/utils/support_matrix/index.html)
+(supported_package_matrix.md file)
 
 #### Getting started
 
@@ -52,7 +54,7 @@ For specific compiler and generator, use the following command:
 
 **Note: Replace the compiler(clang) and generator(Unix Makefiles) with the required one.**
 
-Refer [supported package matrix document](./supported_package_matrix.md) for the supported compiler and generator.
+Refer [supported_package_matrix.md file](./supported_package_matrix.md) for the supported compiler and generator.
 
 ##### Checkout the latest code
 
@@ -123,6 +125,17 @@ qemu-x86_64 is a dependency for running tests. Install it using the following co
     # qemu tests are disable on windows as qemu-user is not available on windows
 ```
 
+##### Examples
+
+Build with AU_BUILD_EXAMPLES=ON to run the examples.
+
+```console
+    cmake -B default -DAU_BUILD_EXAMPLES=ON
+    cmake --build default --config release -j
+```
+
+The binaries are in the default/release folder. Refer to the SDK/Examples folder Readme.md for details on out of tree compilation.
+
 #### List of build options
 
 ```console
@@ -133,22 +146,29 @@ AU_BUILD_EXAMPLES                       Build examples               OFF        
 AU_BUILD_TESTS                          Build tests                  OFF            ON
 AU_BUILD_TYPE                           Build type                   Release        Debug, Developer
 AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF            ON                  Use to avoid deprecation warnings
+AU_BUILD_SHARED_LIBS                    Build shared  libraries      ON             OFF
+AU_BUILD_STATIC_LIBS                    Build static libraries       ON             OFF
 ```
 
 #### List of functionalities provided by each utils modules
 
 ##### au_core (internal)
 
-- thread pinning
+| Functionality | Headerfiles(C)   | Headerfiles(C++) |
+| ------------- | --------------   | ---------------- |
+| thread pinning| ThreadPinning.hh | threadpinning.h |
 
 ##### au_cpuid
 
-- cpu flag detection
-
-- cpu architecture detection.
-
+| Functionality | Headerfiles(C)   | Headerfiles(C++) |
+| ------------- | --------------   | ---------------- |
+| cpu architecture detection | cpuid.h | X86Cpu.hh |
+| cpuid feature flag detection | cpuid.h | X86Cpu.hh |
+|  Deprecated APIs | arch.h |  |cpu.hh|
 ##### aoclutils
 
 - All features of au_cpuid and au_core combined.
 
+The C headers are in the <installpath>/include/Capi folder and the C++ headers are in the include/Au folder.
+Deprecated APIs are in the include/alci folder.
 **Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**
