@@ -12,7 +12,7 @@ One of the compilers and generators on the platform has to be installed to build
 
 | Package | Version        | Notes |
 | ------- | ---------------| ----- |
-| clang   | 12.0 - 18.0    |       |
+| clang   | 12.0 - 18.0    | Pass -A x64 during configure|
 | msvc    | 2019 and 2022  |       |
 | cmake   | 3.22 - 3.30    |       |
 | ninja   | 1.10           |       |
