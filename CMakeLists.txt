@@ -107,8 +107,6 @@ if( NOT CMAKE_BUILD_TYPE )
 endif()
 
 if(NOT CMAKE_CXX_CLANG_TIDY)
-  message("CMAKE_CXX_CLANG_TIDY ${CMAKE_CXX_CLANG_TIDY}")
-  message(STATUS "Searching for clang-tidy")
   find_program(CLANG_TIDY "clang-tidy")
   if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
     if (MSVC)
