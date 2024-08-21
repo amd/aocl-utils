@@ -14,14 +14,18 @@
         - [Configure](#configure)
         - [Build](#build)
         - [Install](#install)
-        - [Current API Stack](#current-api-stack)
         - [Testing](#testing)
         - [Examples](#examples)
       - [List of build options](#list-of-build-options)
       - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
         - [au\_core (internal)](#au_core-internal)
+          - [Current API Stack(Core)](#current-api-stackcore)
         - [au\_cpuid](#au_cpuid)
+          - [Current API Stack(Cpuid)](#current-api-stackcpuid)
         - [aoclutils](#aoclutils)
+      - [Integration with other projects](#integration-with-other-projects)
+        - [CMAKE](#cmake)
+        - [Make](#make)
 
 ## Project structure
 
@@ -91,7 +95,6 @@ This command creates
    2. Rightly update the include path and library path in the project to link with the installed libraries. or use LD_LIBRARY_PATH to point to the installed library path.(PATH environment variable in windows)
    3. Refer to the [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and examples in the Example folder to understand how to link and use the modules.
 
-
 **Important:**
 
 ```console
@@ -100,14 +103,6 @@ This command creates
     3. The aoclutils module is a combination of au_core and au_cpuid modules.
     4. The aoclutils module is the default module to be used for all the functionalities.
 ```
-
-##### Current API Stack
-
-![alt text](CPUID_API_STACK.png "Current Cpuid API stack")
-**Note**
-
-1. The APIs in the grey box are deprecated and will be removed in the future release.
-2. X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.
 
 ##### Testing
 
@@ -158,17 +153,57 @@ AU_BUILD_STATIC_LIBS                    Build static libraries       ON         
 | ------------- | --------------   | ---------------- |
 | thread pinning| ThreadPinning.hh | threadpinning.h |
 
+###### Current API Stack(Core)
+
+1. ThreadPinning
+
+<img src="TP_API_STACK.png" alt="Current ThreadPinning API stack" width="400"/>
+
 ##### au_cpuid
 
 | Functionality | Headerfiles(C)   | Headerfiles(C++) |
 | ------------- | --------------   | ---------------- |
 | cpu architecture detection | cpuid.h | X86Cpu.hh |
 | cpuid feature flag detection | cpuid.h | X86Cpu.hh |
-|  Deprecated APIs | arch.h |  |cpu.hh|
+|  Deprecated APIs | arch.h |  cpu.hh |
+
+###### Current API Stack(Cpuid)
+
+<img src="CPUID_API_STACK.png" alt="Current Cpuid API stack" width="500"/>
+
+**Note**
+
+1. The APIs in the grey box are deprecated and will be removed in the future release.
+2. X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.
+
 ##### aoclutils
 
 - All features of au_cpuid and au_core combined.
 
-The C headers are in the <installpath>/include/Capi folder and the C++ headers are in the include/Au folder.
+The C headers are in the \<installpath\>/include/Capi folder and the C++ headers are in the include/Au folder.
 Deprecated APIs are in the include/alci folder.
 **Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**
+
+#### Integration with other projects
+
+Following are the build systems to integrate in library/application with AOCL-Utils:
+
+##### CMAKE
+
+In the CMake file, use the following:
+
+```console
+TARGET_INCLUDE_DIRECTORIES() – path of libaoclutils include directory
+
+TARGET_LINK_LIBRARIES() – path to link libaoclutils binaries
+```
+
+##### Make
+
+In the compiler flags of Make file, use the following:
+
+```console
+“–I” - path of libaoclutils include directory
+
+“-l, -L” - path to link libaoclutils binaries
+```
