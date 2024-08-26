@@ -46,7 +46,7 @@ if(${AU_ENABLE_ASSERTIONS})
     X86RawData.hh
 
     DEPENDS
-    au::core
+    au::aoclutils
     )
 else()
     au_cc_library(cpuid

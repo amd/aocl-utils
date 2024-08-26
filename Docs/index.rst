@@ -4,19 +4,13 @@
    contain the root `toctree` directive.
 
 
-Welcome to AOCL-UTILS's documentation!
+AOCL-UTILS's documentation!
 ======================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
 
 Table of Contents
 ^^^^^^^^^^^^^^^^^

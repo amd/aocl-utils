@@ -1,8 +1,7 @@
 .. _supported_packages_matrix:
 
-AOCL-UTILS SUPPORTED PACKAGES MATRIX
-====================================
-
+Supported package Matrix
+=======================
 .. toctree::
     :maxdepth: 2
     :glob:

@@ -1,4 +1,4 @@
-# Detailed Information of the required packages and its supported versions for the library
+# AOCL-Utils Supported Packages Matrix
 
 One of the compilers and generators on the platform has to be installed to build the library, along with atleast the minimum version of cmake. The following table lists the supported compilers and generators for the library.
 
@@ -24,7 +24,7 @@ One of the compilers and generators on the platform has to be installed to build
 | ------- | ------------------------------ | -----  |
 | clang   | 12.0 - 18.0                    |        |
 | aocc    | 4.2(clang-16) and 5.0(clang-17)| Download from <http://aocc.amd.com/>|
-| gcc     | 8.5 - 13.1                     | 8.5 requires "-lstdc++ -lfs"  to be supplied on commandline.       |
+| gcc     | 8.5 - 13.1                     | 8.5 requires "-lstdc++fs"  to be supplied on commandline.       |
 | cmake   | 3.22 - 3.30                    |        |
 | ninja   | 1.10                           |        |
 | clang-tidy | 12.0 -17.0                  |        |

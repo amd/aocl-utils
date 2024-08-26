@@ -89,10 +89,10 @@ html_theme_options = {
     'logo_only': False,
 
     # Toc options
-    'collapse_navigation': True,
+    'collapse_navigation': False,
     'sticky_navigation': True,
-    'navigation_depth': 4,
-    'includehidden': True,
+    'navigation_depth': 6,
+    'includehidden': False,
     'titles_only': False
 }
 # html_logo = ''

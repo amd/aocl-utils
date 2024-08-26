@@ -1,6 +1,6 @@
 .. _supported-package-versions:
 
-Details
-=======
+Dependecies
+===========
 .. include:: ../../../SupportedPackageMatrix.md
    :parser: myst_parser.sphinx_

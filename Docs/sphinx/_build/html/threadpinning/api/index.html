@@ -11,7 +11,7 @@
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
+
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=ee801c84"></script>
@@ -21,17 +21,17 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Thread Pinning C-APIs" href="tp_capis.html" />
-    <link rel="prev" title="Cpuid Apis TestPlan" href="../../cpuid/testing/utils_testplan.html" /> 
+    <link rel="prev" title="Cpuid Apis TestPlan" href="../../cpuid/testing/utils_testplan.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-          
-          
+
+
           <a href="../../index.html" class="icon icon-home">
             AOCL-UTILS
           </a>
@@ -44,16 +44,341 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/index.html">AOCL-UTILS HOWTO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../utils/support_matrix/index.html">AOCL-UTILS SUPPORTED PACKAGES MATRIX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cpuid/api/index.html">Cpuid API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cpuid/testing/index.html">Cpuid TestPlan</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadPinning API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tp_capis.html">Thread Pinning C-APIs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tp_cppapis.html">Thread Pinning C++-APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils/howto/utils_readme.html">Readme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/howto/utils_readme.html#aocl-utils">AOCL-UTILS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#project-structure">Project structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#build-and-install">BUILD AND INSTALL</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#dependencies">Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#getting-started">Getting started</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#checkout-the-latest-code">Checkout the latest code</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#configure">Configure</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#build">Build</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#install">Install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">ThreadPinning TestPlan</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#testing">Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#list-of-build-options">List of build options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#list-of-functionalities-provided-by-each-utils-modules">List of functionalities provided by each utils modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#au-core-internal">au_core (internal)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#current-api-stack-core">Current API Stack(Core)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#au-cpuid">au_cpuid</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../utils/howto/utils_readme.html#current-api-stack-cpuid">Current API Stack(Cpuid)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#aoclutils">aoclutils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/howto/utils_readme.html#integration-with-other-projects">Integration with other projects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#cmake">CMAKE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/howto/utils_readme.html#make">Make</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html">AOCL-Utils Supported Packages Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#supported-compilers-and-generators">Supported Compilers and Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#windows">Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#linux">Linux</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#standard-libraries">Standard Libraries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#au-cpuid">au_cpuid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#au-core">au_core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#tests">tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/support_matrix/supported_package_version.html#checklist">Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpuid/api/index.html">Cpuid API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cpuid/api/utils_capis.html">Cpuid C-APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_num_t</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv413au_cpu_flag_t"><code class="docutils literal notranslate"><span class="pre">au_cpu_flag_t</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv415au_cpuid_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_amd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv419au_cpuid_get_vendor12au_cpu_num_tPc6size_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_get_vendor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv420au_cpuid_arch_is_zen12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv424au_cpuid_arch_is_zenplus12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zenplus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv421au_cpuid_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv421au_cpuid_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv421au_cpuid_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv421au_cpuid_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_arch_is_zen5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv418au_cpuid_has_flags12au_cpu_num_tA_PCKci"><code class="docutils literal notranslate"><span class="pre">au_cpuid_has_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv417au_cpuid_is_error10au_error_t"><code class="docutils literal notranslate"><span class="pre">au_cpuid_is_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv411alci_is_amd12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_is_amd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv416alci_arch_is_zen12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen212au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen312au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen412au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv417alci_arch_is_zen512au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_arch_is_zen5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv429alci_cpu_get_last_cache_level12au_cpu_num_t"><code class="docutils literal notranslate"><span class="pre">alci_cpu_get_last_cache_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv410flag_array"><code class="docutils literal notranslate"><span class="pre">flag_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv43arr"><code class="docutils literal notranslate"><span class="pre">arr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_capis.html#_CPPv44flag"><code class="docutils literal notranslate"><span class="pre">flag</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html">Cpuid C++-APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au6X86Cpu6X86CpuEP10CpuidUtils7CpuNumT"><code class="docutils literal notranslate"><span class="pre">X86Cpu::X86Cpu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au6X86Cpu6X86CpuE7CpuNumT"><code class="docutils literal notranslate"><span class="pre">X86Cpu::X86Cpu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au6X86CpuD0Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::~X86Cpu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu5isAMDEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isAMD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v2Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v3Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu10isX86_64v4Ev"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isX86_64v4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu7isIntelEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isIntel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu7hasFlagERK10ECpuidFlag"><code class="docutils literal notranslate"><span class="pre">X86Cpu::hasFlag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu11isAvailableERK10ECpuidFlag"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isAvailable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu8getUarchEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getUarch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu7isUarchE6EUarchb"><code class="docutils literal notranslate"><span class="pre">X86Cpu::isUarch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu13getVendorInfoEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getVendorInfo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au6X86Cpu6updateEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu11getGovernerEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getGoverner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4NK2Au6X86Cpu12getCacheViewEv"><code class="docutils literal notranslate"><span class="pre">X86Cpu::getCacheView()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlagE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3MinE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::Min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4sse3E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9pclmulqdqE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pclmulqdq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6dtes64E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::dtes64</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7monitorE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::monitor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5dscplE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::dscpl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3vmxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::vmx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3smxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::smx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3estE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::est</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3tm2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tm2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5ssse3E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ssse3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3cidE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3fmaE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fma</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4cx16E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cx16</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4xtprE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xtpr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4pdcmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pdcm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4pcidE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pcid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3dcaE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::dca</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6sse4_1E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse4_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6sse4_2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse4_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6x2apicE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::x2apic</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5movbeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::movbe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6popcntE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::popcnt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag12tsc_deadlineE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tsc_deadline</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3aesE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::aes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5xsaveE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xsave</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7osxsaveE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::osxsave</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3avxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4f16cE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::f16c</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6rdrandE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::rdrand</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10hypervisorE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::hypervisor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3fpuE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fpu</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3vmeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::vme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2deE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::de</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pseE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3tscE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tsc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3msrE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::msr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3paeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pae</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3mceE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mce</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3cx8E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cx8</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4apicE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::apic</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3sepE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4mtrrE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mtrr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pgeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3mcaE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mca</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4cmovE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cmov</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3patE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5pse36E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pse36</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2pnE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7clflushE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::clflush</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2dsE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4acpiE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::acpi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3mmxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mmx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4fxsrE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fxsr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3sseE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4sse2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2ssE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ss</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2htE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ht</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag2tmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4ia64E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ia64</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pbeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pbe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4aratE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::arat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8fsgsbaseE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fsgsbase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10tsc_adjustE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tsc_adjust</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4bmi1E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::bmi1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3hleE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::hle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4avx2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4smepE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::smep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4bmi2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::bmi2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4ermsE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::erms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7invpcidE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::invpcid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3rtmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::rtm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3mpxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mpx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7avx512fE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512f</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512dqE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512dq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6rdseedE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::rdseed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3adxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::adx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4smapE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::smap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10avx512ifmaE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512ifma</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7pcommitE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pcommit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10clflushoptE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::clflushopt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4clwbE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::clwb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512pfE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512pf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512erE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512er</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512cdE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512cd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6sha_niE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sha_ni</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512bwE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512bw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8avx512vlE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512vl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10avx512vbmiE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512vbmi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4umipE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::umip</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pkuE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pku</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5ospkeE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ospke</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag16avx512_vpopcntdqE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_vpopcntdq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4la57E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::la57</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5rdpidE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::rdpid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag13avx512_4vnniwE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_4vnniw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag13avx512_4fmapsE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_4fmaps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11avx512_bf16E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_bf16</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7avxvnniE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avxvnni</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8xsaveoptE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xsaveopt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6xsavecE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xsavec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7xgetbv1E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xgetbv1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6xsavesE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xsaves</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7lahf_lmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::lahf_lm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10cmp_legacyE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cmp_legacy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3svmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::svm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7extapicE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::extapic</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9cr8legacyE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::cr8legacy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3abmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::abm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5sse4aE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::sse4a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11misalignsseE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::misalignsse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag14_3dnowprefetchE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::_3dnowprefetch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4osvwE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::osvw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3ibsE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ibs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3xopE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6skinitE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::skinit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3wdtE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::wdt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3lwpE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::lwp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4fma4E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fma4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3tceE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tce</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10nodeid_msrE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::nodeid_msr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3tbmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tbm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7topoextE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::topoext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag12perfctr_coreE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::perfctr_core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10perfctr_nbE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::perfctr_nb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7syscallE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::syscall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4nxxdE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::nxxd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6mmxextE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::mmxext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8fxsr_optE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::fxsr_opt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7pdpe1gbE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pdpe1gb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6rdtscpE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::rdtscp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag5lmi64E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::lmi64</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9_3dnowextE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::_3dnowext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6_3dnowE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::_3dnow</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6invtscE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::invtsc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3nptE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::npt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4lbrvE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::lbrv</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag8svm_lockE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::svm_lock</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9nrip_saveE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::nrip_save</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9tsc_scaleE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::tsc_scale</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10vmcb_cleanE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::vmcb_clean</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11flushbyasidE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::flushbyasid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag13decodeassistsE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::decodeassists</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag12pause_filterE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pause_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11pfthresholdE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pfthreshold</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6xstoreE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xstore</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9xstore_enE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xstore_en</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6xcryptE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xcrypt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9xcrypt_enE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::xcrypt_en</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4ace2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ace2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7ace2_enE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::ace2_en</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pheE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::phe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6phe_enE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::phe_en</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3pmmE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pmm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6pmm_enE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::pmm_en</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag4vaesE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::vaes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag10vpclmulqdqE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::vpclmulqdq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11avx512_vnniE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_vnni</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag13avx512_bitalgE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_bitalg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag11avx512vbmi2E"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512vbmi2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag7movdiriE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::movdiri</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag9movdir64bE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::movdir64b</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag18avx512_vpintersectE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::avx512_vpintersect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag6x2avicE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::x2avic</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/api/utils_cppapis.html#_CPPv4N2Au10ECpuidFlag3MaxE"><code class="docutils literal notranslate"><span class="pre">ECpuidFlag::Max</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpuid/testing/index.html">Cpuid TestPlan</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html">Cpuid Apis TestPlan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#the-cpuid-module-unit-testplan">The cpuid module unit testplan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#the-cpuid-module">The cpuid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#the-objective">The objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#classes-of-testcases">Classes of testcases</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#list-of-cpp-apis">List of cpp apis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#list-of-capis">List of capis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#list-of-utility-functions">List of utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#the-test-matrix-for-c-cpp-apis">The test matrix for c/cpp apis</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#cpu-features">cpu features</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#amd-cpus">amd cpus</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#intel-cpus">intel cpus</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#isa-features">isa features</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#x86-64v2">x86_64v2</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#x86-64v3">x86_64v3</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#x86-64v4">x86_64v4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#utility-function-test-matrix">Utility function test matrix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#integration-tests">Integration tests <TBD></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cpuid/testing/utils_testplan.html#how-to-run-the-tests">How to run the tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadPinning API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tp_capis.html">Thread Pinning C-APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tp_capis.html#_CPPv419au_pin_threads_coreP9pthread_t6size_t"><code class="docutils literal notranslate"><span class="pre">au_pin_threads_core()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_capis.html#_CPPv422au_pin_threads_logicalP9pthread_t6size_t"><code class="docutils literal notranslate"><span class="pre">au_pin_threads_logical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_capis.html#_CPPv421au_pin_threads_spreadP9pthread_t6size_t"><code class="docutils literal notranslate"><span class="pre">au_pin_threads_spread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_capis.html#_CPPv421au_pin_threads_customP9pthread_t6size_tPi6size_t"><code class="docutils literal notranslate"><span class="pre">au_pin_threads_custom()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tp_cppapis.html">Thread Pinning C++-APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tp_cppapis.html#_CPPv4N2Au13ThreadPinning13ThreadPinningEv"><code class="docutils literal notranslate"><span class="pre">ThreadPinning::ThreadPinning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_cppapis.html#_CPPv4N2Au13ThreadPinningD0Ev"><code class="docutils literal notranslate"><span class="pre">ThreadPinning::~ThreadPinning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_cppapis.html#_CPPv4N2Au13ThreadPinning10pinThreadsERKNSt6vectorI9pthread_tEEi"><code class="docutils literal notranslate"><span class="pre">ThreadPinning::pinThreads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tp_cppapis.html#_CPPv4N2Au13ThreadPinning10pinThreadsERKNSt6vectorI9pthread_tEERKNSt6vectorIiEE"><code class="docutils literal notranslate"><span class="pre">ThreadPinning::pinThreads()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">ThreadPinning TestPlan</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../testing/tp_testplan.html">Thread Pinning API Test Plan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../testing/tp_testplan.html#the-threadpinning-module-testplan">The Threadpinning module testplan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#the-thread-pinning-module">The thread pinning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#the-objective">The objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#classes-of-testcases">Classes of testcases</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#apis-tested">APIs tested</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#the-test-matrix-for-the-threadpinning-module-mock-tests">The test matrix for the threadpinning module mock tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../testing/tp_testplan.html#the-test-matrix-for-the-threadpinning-module-native-tests">The test matrix for the threadpinning module native tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -79,7 +404,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+
   <section id="threadpinning-api-reference">
 <span id="api"></span><h1>ThreadPinning API Reference<a class="headerlink" href="#threadpinning-api-reference" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
@@ -119,7 +444,7 @@
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -130,7 +455,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>
