@@ -22,5 +22,6 @@ build/
 docs/.doxygen
 docs/_doxygen
 docs/.sphinx
+docs/sphinx
 sanity_test/
 ```
