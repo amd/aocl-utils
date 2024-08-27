@@ -1,7 +1,0 @@
-.. _supported_packages_matrix:
-
-.. toctree::
-    :maxdepth: 2
-    :glob:
-
-    *

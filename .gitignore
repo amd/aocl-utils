@@ -19,7 +19,8 @@ tests/CTestTestfile.cmake
 tests/Makefile
 tests/cmake_install.cmake
 build/
-docs/doxygen/html/
-Docs/_doxygen
+docs/.doxygen
+docs/_doxygen
+docs/.sphinx
 sanity_test/
 ```

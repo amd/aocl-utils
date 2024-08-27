@@ -196,7 +196,7 @@ if (AU_BUILD_TESTS)
   add_subdirectory(Tests)
 endif()
 if (AU_BUILD_DOCS)
-  add_subdirectory(Docs)
+  add_subdirectory(docs)
 endif()
 
 if (AU_BUILD_EXAMPLES)
