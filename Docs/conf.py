@@ -57,8 +57,12 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.inheritance_diagram',
     'myst_parser',
-    'breathe'
-]
+    'breathe',
+    'rocm_docs',
+    'rocm_docs.doxygen',
+    'sphinxcontrib.doxylink'
+    ]
+
 source_suffix = {
     '.rst': 'restructuredtext',
     '.txt': 'markdown',
@@ -68,41 +72,25 @@ breathe_show_define_initializer = True
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']
 
+f = open(".sphinx/_toc.yml.in", "w")
+f.write("root: index")
+f.close()
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-#html_theme = 'alabaster'
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-html_theme = 'sphinx_rtd_theme'
+html_title = 'Home'
+html_theme = 'rocm_docs_theme'
 html_theme_options = {
-    'canonical_url': '',
-    'analytics_id': '',
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
-    'body_max_width': 'none',
-
-    'logo_only': False,
-
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 6,
-    'includehidden': False,
-    'titles_only': False
+    "link_main_doc": False,
+    "flavor": "local",
+    "repository_provider" : None,
 }
-# html_logo = ''
-# github_url = ''
-# html_baseurl = ''
-# html_static_path = ['sphinx/_build/html/_static']
-# -- Breathe configuration -------------------------------------------------
 
-#breathe_projects = {
-#	"AOCL-UTILS": "_buildtest/xml/"
-#}
+# -- Breathe configuration -------------------------------------------------
 breathe_default_project = "aoclutils"
 breathe_default_members = ('members', 'undoc-members')
+myst_title_to_header = True
+myst_heading_anchors = 3
+suppress_warnings = ["myst.header", "myst.xref_missing"]

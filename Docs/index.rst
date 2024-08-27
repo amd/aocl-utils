@@ -17,9 +17,9 @@ Table of Contents
 .. toctree::
     :maxdepth: 2
 
-    utils/howto/index
-    utils/support_matrix/index
-    cpuid/api/index
-    cpuid/testing/index
-    threadpinning/api/index
-    threadpinning/testing/index
+    root/utils/howto/index
+    root/utils/support_matrix/index
+    root/cpuid/api/index
+    root/cpuid/testing/index
+    root/threadpinning/api/index
+    root/threadpinning/testing/index

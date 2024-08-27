@@ -20,5 +20,6 @@ tests/Makefile
 tests/cmake_install.cmake
 build/
 docs/doxygen/html/
+Docs/_doxygen
 sanity_test/
 ```
