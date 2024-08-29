@@ -7,25 +7,25 @@
 - [AOCL-UTILS](#aocl-utils)
   - [Table of Contents](#table-of-contents)
   - [Project structure](#project-structure)
-    - [BUILD AND INSTALL](#build-and-install)
-      - [Dependencies](#dependencies)
-      - [Getting started](#getting-started)
-        - [Checkout the latest code](#checkout-the-latest-code)
-        - [Configure](#configure)
-        - [Build](#build)
-        - [Install](#install)
-        - [Testing](#testing)
-        - [Examples](#examples)
-      - [List of build options](#list-of-build-options)
-      - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
-        - [au\_core (internal)](#au_core-internal)
-          - [Current API Stack(Core)](#current-api-stackcore)
-        - [au\_cpuid](#au_cpuid)
-          - [Current API Stack(Cpuid)](#current-api-stackcpuid)
-        - [aoclutils](#aoclutils)
-      - [Integration with other projects](#integration-with-other-projects)
-        - [CMAKE](#cmake)
-        - [Make](#make)
+  - [BUILD AND INSTALL](#build-and-install)
+    - [Dependencies](#dependencies)
+    - [Getting started](#getting-started)
+      - [Checkout the latest code](#checkout-the-latest-code)
+      - [Configure](#configure)
+      - [Build](#build)
+      - [Install](#install)
+  - [Testing](#testing)
+  - [Examples](#examples)
+  - [List of build options](#list-of-build-options)
+  - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
+    - [au\_core (internal)](#au_core-internal)
+      - [Current API Stack(Core)](#current-api-stackcore)
+    - [au\_cpuid](#au_cpuid)
+      - [Current API Stack(Cpuid)](#current-api-stackcpuid)
+    - [aoclutils](#aoclutils)
+  - [Integration with other projects](#integration-with-other-projects)
+    - [CMAKE](#cmake)
+    - [Make](#make)
 
 ## Project structure
 
@@ -39,14 +39,14 @@ The project is structured as follows:
 
 - `Tools`: The necessary tools to work with the project.
 
-### BUILD AND INSTALL
+## BUILD AND INSTALL
 
-#### Dependencies
+### Dependencies
 
 Refer [supported package matrix document](https://github.amd.com/pages/AOCL/aocl-utils/utils/support_matrix/index.html)
 (supported_package_matrix.md file)
 
-#### Getting started
+### Getting started
 
 Same commands can be used on both Linux and Windows. The only difference is the environment setup. The default compiler and generator used will be  the platform defaults.
 
@@ -60,26 +60,26 @@ For specific compiler and generator, use the following command:
 
 Refer [supported_package_matrix.md file](./supported_package_matrix.md) for the supported compiler and generator.
 
-##### Checkout the latest code
+#### Checkout the latest code
 
 ```console
     git clone
     cd aocl-utils
 ```
 
-##### Configure
+#### Configure
 
 ```console
     cmake -B  default -DCMAKE_INSTALL_PREFIX=install_dir
 ```
 
-##### Build
+#### Build
 
 ```console
     cmake --build default --config release -j
 ```
 
-##### Install
+#### Install
 
 ```console
     cmake --install default --config release
@@ -104,7 +104,7 @@ This command creates
     4. The aoclutils module is the default module to be used for all the functionalities.
 ```
 
-##### Testing
+## Testing
 
 Build with AU_BUILD_TESTS=ON to run the tests.
 
@@ -120,7 +120,7 @@ qemu-x86_64 is a dependency for running tests. Install it using the following co
     # qemu tests are disable on windows as qemu-user is not available on windows
 ```
 
-##### Examples
+## Examples
 
 Build with AU_BUILD_EXAMPLES=ON to run the examples.
 
@@ -131,7 +131,7 @@ Build with AU_BUILD_EXAMPLES=ON to run the examples.
 
 The binaries are in the default/release folder. Refer to the SDK/Examples folder Readme.md for details on out of tree compilation.
 
-#### List of build options
+## List of build options
 
 ```console
 Build FLags                             Description                  Default         Alternate Values
@@ -145,21 +145,21 @@ AU_BUILD_SHARED_LIBS                    Build shared  libraries      ON         
 AU_BUILD_STATIC_LIBS                    Build static libraries       ON             OFF
 ```
 
-#### List of functionalities provided by each utils modules
+## List of functionalities provided by each utils modules
 
-##### au_core (internal)
+### au_core (internal)
 
 | Functionality | Headerfiles(C)   | Headerfiles(C++) |
 | ------------- | --------------   | ---------------- |
 | thread pinning| ThreadPinning.hh | threadpinning.h |
 
-###### Current API Stack(Core)
+#### Current API Stack(Core)
 
 1. ThreadPinning
 
 <img src="TP_API_STACK.png" alt="Current ThreadPinning API stack" width="400"/>
 
-##### au_cpuid
+### au_cpuid
 
 | Functionality | Headerfiles(C)   | Headerfiles(C++) |
 | ------------- | --------------   | ---------------- |
@@ -167,7 +167,7 @@ AU_BUILD_STATIC_LIBS                    Build static libraries       ON         
 | cpuid feature flag detection | cpuid.h | X86Cpu.hh |
 |  Deprecated APIs | arch.h |  cpu.hh |
 
-###### Current API Stack(Cpuid)
+#### Current API Stack(Cpuid)
 
 <img src="CPUID_API_STACK.png" alt="Current Cpuid API stack" width="500"/>
 
@@ -176,7 +176,7 @@ AU_BUILD_STATIC_LIBS                    Build static libraries       ON         
 1. The APIs in the grey box are deprecated and will be removed in the future release.
 2. X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.
 
-##### aoclutils
+### aoclutils
 
 - All features of au_cpuid and au_core combined.
 
@@ -184,11 +184,11 @@ The C headers are in the \<installpath\>/include/Capi folder and the C++ headers
 Deprecated APIs are in the include/alci folder.
 **Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**
 
-#### Integration with other projects
+## Integration with other projects
 
 Following are the build systems to integrate in library/application with AOCL-Utils:
 
-##### CMAKE
+### CMAKE
 
 In the CMake file, use the following:
 
@@ -198,7 +198,7 @@ TARGET_INCLUDE_DIRECTORIES() – path of libaoclutils include directory
 TARGET_LINK_LIBRARIES() – path to link libaoclutils binaries
 ```
 
-##### Make
+### Make
 
 In the compiler flags of Make file, use the following:
 
