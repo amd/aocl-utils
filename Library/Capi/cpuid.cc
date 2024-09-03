@@ -224,7 +224,7 @@ au_cpuid_has_flags(au_cpu_num_t      cpu_num,
 
     X86Cpu cpu{ cpu_num };
     String token;
-    bool   result = 0;
+    bool   result = 1;
 
     while (std::getline(ss, token, ':')) {
         au_cpu_flag_t flag = stoi(token);
