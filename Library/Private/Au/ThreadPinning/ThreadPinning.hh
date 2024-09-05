@@ -381,16 +381,18 @@ class AffinityVector
         getCacheAffinityMap(procVect.size(), cacheMap);
 
         for (auto& cache : cacheMap) {
-            auto             processorMap = cpuInfo.cacheMap[cache.first];
-            std::vector<int> coreList;
-            coreMapToCoreList(processorMap, coreList);
+            if (cpuInfo.cacheMap.size() != 0){
+                auto             processorMap = cpuInfo.cacheMap[cache.first];
+                std::vector<int> coreList;
+                coreMapToCoreList(processorMap, coreList);
 
-            int              threadCount = cache.second.size();
-            std::vector<int> procVectPerCache(threadCount);
-            createVector(
-                procVectPerCache, 0, threadCount - 1, 0, coreList.size() - 1);
-
-            updateprocVect(procVect, procVectPerCache, coreList, cache.second);
+                int              threadCount = cache.second.size();
+                std::vector<int> procVectPerCache(threadCount);
+                createVector(
+                    procVectPerCache, 0, threadCount - 1, 0, coreList.size() - 1);
+                if (procVectPerCache.size() != 0 && coreList.size() != 0)
+                    updateprocVect(procVect, procVectPerCache, coreList, cache.second);
+            }
         }
     }
     /**

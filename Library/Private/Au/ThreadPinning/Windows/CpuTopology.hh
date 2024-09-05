@@ -169,7 +169,8 @@ class CpuTopology
                     cachePMap.push_back(
                         std::make_pair(cInfo->u.Cache.u.GroupMasks[i].Mask,
                                        cInfo->u.Cache.u.GroupMasks[i].Group));
-                cacheMap.push_back(cachePMap);
+                if (cachePMap.size() != 0)
+                    cacheMap.push_back(cachePMap);
             }
         }
         for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
@@ -197,7 +198,8 @@ class CpuTopology
                     cachePMap.push_back(
                         std::make_pair(cInfo->Cache.GroupMasks[i].Mask,
                                        cInfo->Cache.GroupMasks[i].Group));
-                cacheMap.push_back(cachePMap);
+                if (cachePMap.size() != 0)
+                    cacheMap.push_back(cachePMap);
             }
         }
         for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
