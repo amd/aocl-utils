@@ -203,6 +203,11 @@ if (AU_BUILD_EXAMPLES)
   add_subdirectory(SDK/Examples)
 endif()
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/CMake/aocl-utils.pc.in
+        ${CMAKE_BINARY_DIR}/aocl-utils.pc
+        @ONLY
+    )
 #
 # Print a banner if verbosity is enabled
 #
