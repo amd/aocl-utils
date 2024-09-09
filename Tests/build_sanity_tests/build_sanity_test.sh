@@ -95,7 +95,7 @@ Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --build \
 
 # test the project
 touch test_make.log
-Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/ctest -C release \
+export PYTHONPYCACHEPREFIX=Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make; Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/ctest -C release \
     --test-dir Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make 2>&1 >$log_folder/test_make.log
 #touch test_ninja.log
 #ninja test

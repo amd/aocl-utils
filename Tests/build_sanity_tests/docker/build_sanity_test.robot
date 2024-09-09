@@ -14,8 +14,19 @@ Run Compiler And CMake Test
 
     ${result}=                 Run Process     python   Tests/build_sanity_tests/build_sanity_test.py   ${compiler}    ${cxx_compiler}    ${cmake_version}    stdout=/tmp/stdout.txt    stderr=/tmp/stderr.txt
 
+    Create File		       ${logfolder}/environment.log
+    Create File		       ${logfolder}/configure_make.log
+    Create File		       ${logfolder}/build_make.log
+    Create File		       ${logfolder}/configure_ninja.log
+    Create File		       ${logfolder}/build_ninja.log
+    Create File		       ${logfolder}/test_make.log
+
     ${rc} =                    Set Variable    ${result.rc}
 
+    ${stdout} =                Get File        /tmp/stdout.txt
+    Log    ${stdout}
+    ${stderr} =                Get File        /tmp/stderr.txt
+    Log    ${stderr}
     ${stdout} =                Get File        /tmp/stdout.txt
     Log    ${stdout}
     ${stderr} =                Get File        /tmp/stderr.txt
@@ -155,6 +166,7 @@ Gcc-11 CMake-3.30
 Gcc-12 CMake-3.22
     [Tags]    gcc-12    cmake-3.22
     gcc-12    g++-12    3.22
+
 Gcc-12 CMake-3.23
     [Tags]    gcc-12    cmake-3.23
     gcc-12    g++-12    3.23
