@@ -204,10 +204,10 @@ if (AU_BUILD_EXAMPLES)
 endif()
 
 configure_file(
-    ${CMAKE_SOURCE_DIR}/CMake/aocl-utils.pc.in
-        ${CMAKE_BINARY_DIR}/aocl-utils.pc
-        @ONLY
-    )
+  ${PROJECT_SOURCE_DIR}/CMake/aocl-utils.pc.in
+  ${PROJECT_BINARY_DIR}/aocl-utils.pc
+  @ONLY
+)
 #
 # Print a banner if verbosity is enabled
 #
