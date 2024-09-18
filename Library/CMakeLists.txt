@@ -34,10 +34,12 @@ else()
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
 
-set(LOGGER_SRC_FILES
-    Logger.cc
-    LoggerFactory.cc
-)
+# Select all files under Core/Logger and assign to LOGGER_SRC_FILES
+FILE(GLOB LOGGER_SRC_FILES "Core/Logger/*.cc")
+# set(LOGGER_SRC_FILES
+#     Logger.cc
+#     LoggerFactory.cc
+# )
 
 set(BASE64_SRC_FILES
     Base64/Base64.cc
@@ -83,7 +85,7 @@ set(CORE_SRC_FILES
   Core/ThreadPinning.cc
   #Core/DynamicLoader.cc
   #${BASE64_SRC_FILES}
-  #  ${LOGGER_SRC_FILES}
+  ${LOGGER_SRC_FILES}
   #${MEMORY_SRC_FILES}
   #  ${MESSAGE_SRC_FILES}
   #  ${EVENT_SRC_FILES}
