@@ -30,6 +30,8 @@
 #include <cassert>
 #include <iostream>
 
+namespace Au::Logger {
+
 // Class GenericSink begins
 void
 GenericSink::write(const Message& msg)
@@ -38,18 +40,18 @@ GenericSink::write(const Message& msg)
 }
 
 void
-GenericSink::setSinkName(const std::string& sinkName)
+GenericSink::setSinkName(const String& sinkName)
 {
     m_sinkName = sinkName;
 }
 
-std::string
+String
 GenericSink::getSinkName() const
 {
     return m_sinkName;
 }
 
-std::string
+String
 GenericSink::getSinkType() const
 {
     return "GenericSink";
@@ -70,7 +72,7 @@ ConsoleSink::write(const Message& msg)
     std::cout << msg.getMsg() << std::endl;
 }
 
-std::string
+String
 ConsoleSink::getSinkType() const
 {
     return "ConsoleSink";
@@ -90,7 +92,7 @@ DummySink::write(const Message& msg)
     // Do nothing
 }
 
-std::string
+String
 DummySink::getSinkType() const
 {
     return "DummySink";
@@ -105,7 +107,7 @@ DummySink::flush()
 // Class DummySink ends
 
 // Class FileSink begins
-FileSink::FileSink(const std::string& filename)
+FileSink::FileSink(const String& filename)
     : m_filename{ filename }
     , m_file{ fopen(filename.c_str(), "a") }
 {
@@ -130,7 +132,7 @@ FileSink::flush()
     }
 }
 
-std::string
+String
 FileSink::getSinkType() const
 {
     return "FileSink";
@@ -147,8 +149,7 @@ FileSink::~FileSink()
 
 // Class SinkFactory begins
 std::unique_ptr<ISink>
-SinkFactory::createSink(const std::string& sinkType,
-                        const std::string& sinkName)
+SinkFactory::createSink(const String& sinkType, const String& sinkName)
 {
     if (sinkType == "ConsoleSink") {
         return std::make_unique<ConsoleSink>();
@@ -163,7 +164,7 @@ SinkFactory::createSink(const std::string& sinkType,
 
 // FIXME: Find better implementation
 void
-SinkFactory::validateSinkType(const std::string& sinkType)
+SinkFactory::validateSinkType(const String& sinkType)
 {
     if (sinkType != "ConsoleSink" && sinkType != "DummySink"
         && sinkType != "FileSink") {
@@ -172,3 +173,4 @@ SinkFactory::validateSinkType(const std::string& sinkType)
 }
 
 // Class SinkFactory ends
+} // namespace Au::Logger

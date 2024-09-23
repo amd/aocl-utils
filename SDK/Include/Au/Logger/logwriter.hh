@@ -30,6 +30,8 @@
 #include "Au/Logger/queue.hh"
 #include "Au/Logger/sinks.hh"
 
+namespace Au::Logger {
+
 /**
  * @brief LogWriter class
  */
@@ -50,6 +52,7 @@ class LogWriter
     void stop();
     void log(std::vector<Message>& msgs);
     void addSink(std::unique_ptr<ISink>& sink);
-    void removeSinkByType(const std::string& sinkType);
-    void removeSinkByName(const std::string& sinkName);
+    void removeSinkByType(const String& sinkType);
+    void removeSinkByName(const String& sinkName);
 };
+} // namespace Au::Logger

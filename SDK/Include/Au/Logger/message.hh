@@ -33,11 +33,13 @@
 #include <map>
 #include <memory>
 #include <mutex>
-#include <string>
 #include <thread>
 #include <vector>
 
-#include "types.hh"
+#include "Au/Types.hh"
+
+using Au::String;
+namespace Au::Logger {
 
 // Class to create a timestamp
 class Timestamp
@@ -47,13 +49,13 @@ class Timestamp
 
   public:
     Timestamp();
-    std::string getTimestamp() const;
-    Uint64      getHour() const;
-    Uint64      getMinute() const;
-    Uint64      getSecond() const;
-    Uint64      getMillisecond() const;
-    Uint64      getMicrosecond() const;
-    Uint64      getNanosecond() const;
+    String getTimestamp() const;
+    Uint64 getHour() const;
+    Uint64 getMinute() const;
+    Uint64 getSecond() const;
+    Uint64 getMillisecond() const;
+    Uint64 getMicrosecond() const;
+    Uint64 getNanosecond() const;
 };
 
 // Class to keep the priority of the log message
@@ -74,9 +76,9 @@ class Priority
     };
 
     Priority();
-    Priority(PriorityLevel level);
+    explicit Priority(PriorityLevel level);
 
-    std::string toStr() const;
+    String toStr() const;
 
     // Operator overloads to compare the priority
     bool operator<(const Priority& rhs) const;
@@ -86,11 +88,11 @@ class Priority
     bool operator==(const Priority& rhs) const;
     bool operator!=(const Priority& rhs) const;
 
-    static std::map<Priority::PriorityLevel, std::string>* getMap();
+    static std::map<Priority::PriorityLevel, String>* getMap();
 
   private:
-    static std::unique_ptr<std::map<PriorityLevel, std::string>> m_str_map;
-    static std::once_flag                                        initFlag;
+    static std::unique_ptr<std::map<PriorityLevel, String>> m_str_map;
+    static std::once_flag                                   initFlag;
 
     PriorityLevel m_level;
 };
@@ -99,14 +101,15 @@ class Priority
 class Message
 {
   private:
-    std::string m_msg;
-    Priority    m_priority;
-    Timestamp   m_timestamp;
+    String    m_msg;
+    Priority  m_priority;
+    Timestamp m_timestamp;
 
   public:
-    Message(const std::string& msg);
-    Message(const std::string& msg, Priority& priority);
-    std::string getMsg() const;
-    Priority    getPriority() const;
-    Timestamp   getTimestamp() const;
+    explicit Message(const String& msg);
+    explicit Message(const String& msg, Priority& priority);
+    String    getMsg() const;
+    Priority  getPriority() const;
+    Timestamp getTimestamp() const;
 };
+} // namespace Au::Logger

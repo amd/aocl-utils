@@ -28,6 +28,8 @@
 
 #include "Au/Logger/queue.hh"
 
+namespace Au::Logger {
+
 // Class LockingQueueElement begins
 LockingQueueElement::LockingQueueElement(const Message msg)
     : m_msg{ msg }
@@ -177,7 +179,7 @@ NoLockQueue::getCount()
 
 // Class QueueFactory begins
 std::unique_ptr<IQueue>
-QueueFactory::createQueue(const std::string& queueType)
+QueueFactory::createQueue(const String& queueType)
 {
     if (queueType == "NoLockQueue") {
         return std::make_unique<NoLockQueue>();
@@ -189,10 +191,9 @@ QueueFactory::createQueue(const std::string& queueType)
 }
 
 bool
-QueueFactory::validateQueueType(const std::string& queueType)
+QueueFactory::validateQueueType(const String& queueType)
 {
-    std::vector<std::string> validQueueTypes = { "NoLockQueue",
-                                                 "LockingQueue" };
+    std::vector<String> validQueueTypes = { "NoLockQueue", "LockingQueue" };
     for (auto& type : validQueueTypes) {
         if (type == queueType) {
             return true;
@@ -200,3 +201,4 @@ QueueFactory::validateQueueType(const std::string& queueType)
     }
     return false;
 }
+} // namespace Au::Logger

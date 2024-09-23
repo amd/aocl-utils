@@ -28,6 +28,8 @@
 
 #include "Au/Logger/logger.hh"
 
+namespace Au::Logger {
+
 pthread_key_t Logger::m_key;
 
 void
@@ -79,3 +81,4 @@ Logger::~Logger()
     pthread_setspecific(m_key, nullptr);
     delete m_storage;
 }
+} // namespace Au::Logger

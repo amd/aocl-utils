@@ -32,6 +32,8 @@
 
 #define USE_NO_LOCK 0
 
+namespace Au::Logger {
+
 // Class LogWriter begins
 void
 LogWriter::loggerThread()
@@ -46,7 +48,7 @@ LogWriter::loggerThread()
             // std::cout << "HERE" << std::endl;
 
             // FIXME: Find better way
-            if (msg.getMsg().find("Empty Queue") != std::string::npos) {
+            if (msg.getMsg().find("Empty Queue") != String::npos) {
                 continue;
             }
 
@@ -83,7 +85,7 @@ LogWriter::addSink(std::unique_ptr<ISink>& sink)
 }
 
 void
-LogWriter::removeSinkByType(const std::string& sinkType)
+LogWriter::removeSinkByType(const String& sinkType)
 {
     for (auto it = m_sinks.begin(); it != m_sinks.end(); ++it) {
         if ((*it)->getSinkType() == sinkType) {
@@ -94,7 +96,7 @@ LogWriter::removeSinkByType(const std::string& sinkType)
 }
 
 void
-LogWriter::removeSinkByName(const std::string& sinkName)
+LogWriter::removeSinkByName(const String& sinkName)
 {
     for (auto it = m_sinks.begin(); it != m_sinks.end(); ++it) {
         if ((*it)->getSinkName() == sinkName) {
@@ -147,3 +149,4 @@ LogWriter::log(std::vector<Message>& msgs)
 }
 
 // Class LogWriter ends
+} // namespace Au::Logger

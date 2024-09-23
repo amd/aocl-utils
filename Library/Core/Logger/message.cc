@@ -34,17 +34,19 @@
 // C++ User header files
 #include "Au/Logger/message.hh"
 
+namespace Au::Logger {
+
 // Class Timestamp begins
 Timestamp::Timestamp()
     : m_now(std::chrono::system_clock::now())
 {
 }
 
-std::string
+String
 Timestamp::getTimestamp() const
 {
-    auto        now_c     = std::chrono::system_clock::to_time_t(m_now);
-    std::string timestamp = std::ctime(&now_c);
+    auto   now_c     = std::chrono::system_clock::to_time_t(m_now);
+    String timestamp = std::ctime(&now_c);
     timestamp.erase(timestamp.find_last_not_of("\n") + 1);
     return timestamp;
 }
@@ -106,17 +108,15 @@ Timestamp::getNanosecond() const
 // Class Timestamp ends
 
 // Class Priority begins
-std::unique_ptr<std::map<Priority::PriorityLevel, std::string>>
-               Priority::m_str_map;
-std::once_flag Priority::initFlag;
+std::unique_ptr<std::map<Priority::PriorityLevel, String>> Priority::m_str_map;
+std::once_flag                                             Priority::initFlag;
 
-std::map<Priority::PriorityLevel, std::string>*
+std::map<Priority::PriorityLevel, String>*
 Priority::getMap()
 {
     if (m_str_map.get() == nullptr) {
         std::call_once(initFlag, []() {
-            m_str_map =
-                std::make_unique<std::map<PriorityLevel, std::string>>();
+            m_str_map = std::make_unique<std::map<PriorityLevel, String>>();
             *(m_str_map.get()) = { { PriorityLevel::eFatal, "Fatal" },
                                    { PriorityLevel::ePanic, "Panic" },
                                    { PriorityLevel::eError, "Error" },
@@ -140,7 +140,7 @@ Priority::Priority(PriorityLevel level)
 {
 }
 
-std::string
+String
 Priority::toStr() const
 {
     auto map = getMap();
@@ -188,21 +188,21 @@ Priority::operator!=(const Priority& rhs) const
 
 // Class Message begins
 
-Message::Message(const std::string& msg)
+Message::Message(const String& msg)
     : m_msg{ msg }
     , m_priority{ Priority() }
     , m_timestamp{ Timestamp() }
 {
 }
 
-Message::Message(const std::string& msg, Priority& priority)
+Message::Message(const String& msg, Priority& priority)
     : m_msg(msg)
     , m_priority{ priority }
     , m_timestamp{ Timestamp() }
 {
 }
 
-std::string
+String
 Message::getMsg() const
 {
     // Example "Mon Sep  2 11:31:36 2024 : Info : This is a message"
@@ -223,3 +223,5 @@ Message::getTimestamp() const
 }
 
 // Class Message ends
+
+} // namespace Au::Logger

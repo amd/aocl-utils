@@ -32,28 +32,29 @@
 /**
  * @brief ISink class - Writes the message to the output
  */
+namespace Au::Logger {
 class ISink
 {
   public:
-    virtual void        write(const Message& msg)                = 0;
-    virtual void        flush()                                  = 0;
-    virtual void        setSinkName(const std::string& sinkName) = 0;
-    virtual std::string getSinkName() const                      = 0;
-    virtual std::string getSinkType() const                      = 0;
-    virtual ~ISink()                                             = default;
+    virtual void   write(const Message& msg)           = 0;
+    virtual void   flush()                             = 0;
+    virtual void   setSinkName(const String& sinkName) = 0;
+    virtual String getSinkName() const                 = 0;
+    virtual String getSinkType() const                 = 0;
+    virtual ~ISink()                                   = default;
 };
 
 class GenericSink : public ISink
 {
   protected:
-    std::string m_sinkName;
+    String m_sinkName;
 
   public:
-    virtual void        write(const Message& msg) override;
-    virtual void        setSinkName(const std::string& sinkName) override;
-    virtual std::string getSinkName() const override;
-    virtual std::string getSinkType() const override;
-    virtual void        flush() override;
+    virtual void   write(const Message& msg) override;
+    virtual void   setSinkName(const String& sinkName) override;
+    virtual String getSinkName() const override;
+    virtual String getSinkType() const override;
+    virtual void   flush() override;
     virtual ~GenericSink() override = default;
 };
 
@@ -63,18 +64,18 @@ class GenericSink : public ISink
 class ConsoleSink : public GenericSink
 {
   public:
-    void        write(const Message& msg) override;
-    std::string getSinkType() const override;
-    void        flush() override;
+    void   write(const Message& msg) override;
+    String getSinkType() const override;
+    void   flush() override;
     ~ConsoleSink() override = default;
 };
 
 class DummySink : public GenericSink
 {
   public:
-    void        write(const Message& msg) override;
-    std::string getSinkType() const override;
-    void        flush() override;
+    void   write(const Message& msg) override;
+    String getSinkType() const override;
+    void   flush() override;
     ~DummySink() override = default;
 };
 
@@ -84,19 +85,19 @@ class DummySink : public GenericSink
 class FileSink : public GenericSink
 {
   private:
-    std::string m_filename;
-    FILE*       m_file;
+    String m_filename;
+    FILE*  m_file;
 
   public:
-    FileSink(const std::string& filename);
+    FileSink(const String& filename);
 
     // Disable copy constructor and assignment operator
     FileSink(const FileSink&)            = delete;
     FileSink& operator=(const FileSink&) = delete;
 
-    void        write(const Message& msg) override;
-    void        flush() override;
-    std::string getSinkType() const override;
+    void   write(const Message& msg) override;
+    void   flush() override;
+    String getSinkType() const override;
 
     ~FileSink();
 };
@@ -109,7 +110,8 @@ class FileSink : public GenericSink
 class SinkFactory
 {
   public:
-    static std::unique_ptr<ISink> createSink(const std::string& sinkType,
-                                             const std::string& sinkName);
-    static void                   validateSinkType(const std::string& sinkType);
+    static std::unique_ptr<ISink> createSink(const String& sinkType,
+                                             const String& sinkName);
+    static void                   validateSinkType(const String& sinkType);
 };
+} // namespace Au::Logger

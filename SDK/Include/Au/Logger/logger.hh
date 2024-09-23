@@ -30,6 +30,8 @@
 
 #include "logwriter.hh"
 
+namespace Au::Logger {
+
 // Logger uses thread local storage to store log messages temporarily
 // Once logger is done with storing messages, user can call flush to commit
 // messages
@@ -51,8 +53,9 @@ class Logger
     static std::vector<Message>* getStorage();
 
   public:
-    Logger(LogWriter& logWriter);
+    explicit Logger(LogWriter& logWriter);
     void log(Message& msg);
     void flush();
     ~Logger();
 };
+} // namespace Au::Logger

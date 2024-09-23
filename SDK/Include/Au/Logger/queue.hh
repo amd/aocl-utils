@@ -28,6 +28,7 @@
 
 #pragma once
 #include "Au/Logger/message.hh"
+namespace Au::Logger {
 
 class IQueue
 {
@@ -44,7 +45,7 @@ class LockingQueueElement
   public:
     Message m_msg;
 
-    LockingQueueElement(const Message msg);
+    explicit LockingQueueElement(const Message msg);
 
     // Disable copy constructor and assignment operator
     LockingQueueElement(const LockingQueueElement&)            = delete;
@@ -82,7 +83,7 @@ class NoLockQueueElement
 {
   public:
     Message m_msg;
-    NoLockQueueElement(const Message msg);
+    explicit NoLockQueueElement(const Message msg);
     std::atomic<NoLockQueueElement*> m_next;
 };
 
@@ -92,7 +93,7 @@ class NoLockQueueElement
 class NoLockQueue : public IQueue
 {
   private:
-    std::vector<std::string>         log_messages = {};
+    std::vector<String>              log_messages = {};
     std::atomic<NoLockQueueElement*> m_queue = nullptr; // Head of the queue
     std::atomic<NoLockQueueElement*> m_tail  = nullptr; // Tail of the queue
     std::atomic<Uint64>              m_count = 0;       // Atomic count variable
@@ -109,6 +110,8 @@ class NoLockQueue : public IQueue
 class QueueFactory
 {
   public:
-    static std::unique_ptr<IQueue> createQueue(const std::string& queueType);
-    static bool validateQueueType(const std::string& queueType);
+    static std::unique_ptr<IQueue> createQueue(const String& queueType);
+    static bool                    validateQueueType(const String& queueType);
 };
+
+} // namespace Au::Logger
