@@ -30,6 +30,11 @@ install(
   DESTINATION include
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
+install(
+  FILES ${PROJECT_BINARY_DIR}/aocl-utils.pc
+  DESTINATION ${AU_INSTALL_LIB_DIR}/pkgconfig
+)
+
 # for backward compatibility.
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/SDK/Bcl/
