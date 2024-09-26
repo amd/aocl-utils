@@ -51,3 +51,5 @@ nxxd
 pdpe1gb
 rdtscp
 lmi64
+xsaveopt
+xsavec
