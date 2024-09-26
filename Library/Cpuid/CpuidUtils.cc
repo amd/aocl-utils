@@ -27,19 +27,21 @@
  */
 
 #include "Au/Cpuid/CpuidUtils.hh"
-#include "Au/Misc.hh"
 #include "Au/Config.h"
+#include "Au/Misc.hh"
 #include <iostream>
 #ifdef _WIN32
 #include <intrin.h>
 #endif
 namespace Au {
-ResponseT CpuidUtils::__raw_cpuid(RequestT& req)
+ResponseT
+CpuidUtils::__raw_cpuid(RequestT& req)
 {
     ResponseT resp;
 #ifdef _WIN32
     int cpuInfo[4] = { -1 }; // Array to store the cpuid output
-    if (req.eax == 0x00000007 || (req.eax == 0x00000001 && req.ecx == 0x00000001)) {
+    if (req.eax == 0x00000007
+        || (req.eax == 0x00000001 && req.ecx == 0x00000001)) {
         __cpuidex(cpuInfo, req.eax, req.ecx);
     } else {
         __cpuid(cpuInfo, req.eax);
@@ -55,13 +57,13 @@ ResponseT CpuidUtils::__raw_cpuid(RequestT& req)
         asm volatile(
             "cpuid"
             : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "0"(req.eax), "2"(req.ecx));
+            : "a"(req.eax), "c"(req.ecx));
     } else {
         asm volatile(
             "cpuid"
             : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "0"(req.eax));
-     }
+            : "a"(req.eax), "b"(0), "c"(req.ecx), "d"(0));
+    }
 #endif
     return resp;
 }
