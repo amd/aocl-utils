@@ -111,7 +111,7 @@ endforeach()
 #list(FIND "provider" AU_MODULES_LIST EXISTS__)
 #if (${EXISTS__} GREATER -1)
 au_module_exists("provider" EXISTS__)
-message("Exists " ${EXISTS__})
+# message("Exists " ${EXISTS__})
 if (${EXISTS__})
     set(PROVIDER_TEST_FILES
         ProviderTest.cc
