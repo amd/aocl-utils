@@ -50,6 +50,11 @@ au_add_application(cpuid_deprecated_api_example_cpp
 				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 
+au_add_application(cpuid_all_flags_example_cpp
+                SOURCES cpuid_all_flags_example.cc
+                LIBS ${AU_LIBS}
+                INCLUDES ${AU_INCLUDE_DIRS})
+
 project(thread_pinning_example_cpp)
 au_add_application(thread_pinning_example_cpp
 				SOURCES thread_pinning_example.cc
@@ -61,10 +66,12 @@ if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(WIN32)
         add_dependencies(cpuid_example_cpp libaoclutils_shared au_cpuid_shared)
         add_dependencies(cpuid_deprecated_api_example_cpp libaoclutils_shared au_cpuid_shared)
+        add_dependencies(cpuid_all_flags_example_cpp libaoclutils_shared au_internal_core_shared)
         add_dependencies(thread_pinning_example_cpp libaoclutils_shared au_internal_core_shared)
     else()
         add_dependencies(cpuid_example_cpp aoclutils_shared au_cpuid_shared)
         add_dependencies(cpuid_deprecated_api_example_cpp aoclutils_shared au_cpuid_shared)
+        add_dependencies(cpuid_all_flags_example_cpp aoclutils_shared au_internal_core_shared)
         add_dependencies(thread_pinning_example_cpp aoclutils_shared au_internal_core_shared)
     endif()
 endif()

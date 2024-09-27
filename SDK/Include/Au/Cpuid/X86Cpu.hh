@@ -65,6 +65,26 @@
             os << flags[value] << ":";                                         \
         }                                                                      \
         return os;                                                             \
+    }                                                                          \
+    inline std::string name##toString(Uint64 value)                            \
+    {                                                                          \
+        String            str = #__VA_ARGS__;                                  \
+        std::stringstream ss(str);                                             \
+        Uint64            current = 1;                                         \
+        String            token;                                               \
+                                                                               \
+        if (value == 0) {                                                      \
+            /* 0th value does not exist */                                     \
+            return "UNDEF";                                                    \
+        }                                                                      \
+        while (std::getline(ss, token, ',')) {                                 \
+            if (current == value) {                                            \
+                break;                                                         \
+            }                                                                  \
+            current++;                                                         \
+        }                                                                      \
+        token = token.substr(1, token.length() - 1);                           \
+        return token;                                                          \
     }
 
 namespace Au {
