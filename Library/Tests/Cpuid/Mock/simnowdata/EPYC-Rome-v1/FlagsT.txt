@@ -66,3 +66,6 @@ rdtscp
 lmi64
 npt
 nrip_save
+xsaveopt
+xsavec
+xgetbv1

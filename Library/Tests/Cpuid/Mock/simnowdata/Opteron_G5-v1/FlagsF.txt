@@ -61,9 +61,6 @@ avx512_4vnniw
 avx512_4fmaps
 avx512_bf16
 avxvnni
-xsaveopt
-xsavec
-xgetbv1
 xsaves
 cmp_legacy
 extapic

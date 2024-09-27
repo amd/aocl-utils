@@ -39,10 +39,6 @@ la57
 avx512_4vnniw
 avx512_4fmaps
 avxvnni
-xsaveopt
-xsavec
-xgetbv1
-xsaves
 cmp_legacy
 extapic
 misalignsse

@@ -144,10 +144,10 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
     {{0x00000007}, {0, 0, 0, 0x00000008}, EFlag::avx512_4fmaps},
     {{0x00000007}, {0, 0, 0, 0x00000100}, EFlag::avx512_vpintersect},
 /* processor extended state enumeration */
-    {{0x0000000d}, {0x00000001}, EFlag::xsaveopt},
-    {{0x0000000d}, {0x00000002}, EFlag::xsavec},
-    {{0x0000000d}, {0x00000004}, EFlag::xgetbv1},
-    {{0x0000000d}, {0x00000008}, EFlag::xsaves},
+    {{0x0000000d,0,0}, {0x00000001}, EFlag::xsaveopt},
+    {{0x0000000d,0,0}, {0x00000002}, EFlag::xsavec},
+    {{0x0000000d,0,0}, {0x00000004}, EFlag::xgetbv1},
+    {{0x0000000d,0,0}, {0,0,0x00000008}, EFlag::xsaves},
 #if 0
 /* FIXME : do we need it  on host ?? */
     {{0x40000001}, {.eax = 0x00000001}, EFlag::kvmclock},
