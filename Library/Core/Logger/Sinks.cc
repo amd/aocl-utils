@@ -26,7 +26,7 @@
  *
  */
 
-#include "Au/Logger/sinks.hh"
+#include "Au/Logger/Sinks.hh"
 #include <cassert>
 #include <iostream>
 

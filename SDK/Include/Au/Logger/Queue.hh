@@ -27,7 +27,7 @@
  */
 
 #pragma once
-#include "Au/Logger/message.hh"
+#include "Au/Logger/Message.hh"
 namespace Au::Logger {
 
 class IQueue

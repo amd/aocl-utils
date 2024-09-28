@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,32 +27,35 @@
  */
 
 #pragma once
-#include "Au/Logger/queue.hh"
-#include "Au/Logger/sinks.hh"
+
+#include "Au/Logger/LogWriter.hh"
 
 namespace Au::Logger {
 
-/**
- * @brief LogWriter class
- */
-class LogWriter
+// Logger uses thread local storage to store log messages temporarily
+// Once logger is done with storing messages, user can call flush to commit
+// messages
+class Logger
 {
   private:
-    std::thread                         m_thread;
-    std::vector<std::unique_ptr<ISink>> m_sinks;
-    std::atomic<bool>                   m_running; // Modified to atomic boolean
-    std::unique_ptr<IQueue>             m_queue;
+    // pthreads key
+    static pthread_key_t m_key;
 
-    void loggerThread();
+    // Thread local storage for vector of log messages
+    std::vector<Message>* m_storage;
+    LogWriter*            m_logWriter = nullptr;
+
+    // Disable copy constructor and assignment operator
+    Logger(const Logger&)            = delete;
+    Logger& operator=(const Logger&) = delete;
+
+    static void                  createKey();
+    static std::vector<Message>* getStorage();
 
   public:
-    LogWriter();
-    ~LogWriter();
-    void start();
-    void stop();
-    void log(std::vector<Message>& msgs);
-    void addSink(std::unique_ptr<ISink>& sink);
-    void removeSinkByType(const String& sinkType);
-    void removeSinkByName(const String& sinkName);
+    explicit Logger(LogWriter& logWriter);
+    void log(Message& msg);
+    void flush();
+    ~Logger();
 };
 } // namespace Au::Logger

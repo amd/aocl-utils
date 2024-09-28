@@ -30,7 +30,7 @@
 #include <thread>
 #include <vector>
 
-#include "Au/Logger/logger.hh"
+#include "Au/Logger/Logger.hh"
 
 using namespace Au::Logger;
 LogWriter logWriter;

@@ -56,11 +56,17 @@ set(THREAD_PINNING_TEST_FILES
     ThreadPinning/ThreadPinningCapiTest.cc
     ThreadPinning/ThreadPinningMockTest.cc
 )
+
+set(LOGGER_TEST_FILES
+    Logger/LoggerTest.cc
+)
+
 set(ALL_TEST_FILES
     ${MEMORY_TEST_FILES}
     ${BASE_TEST_FILES}
     ${OTHER_TEST_FILES}
     ${THREAD_PINNING_TEST_FILES}
+    ${LOGGER_TEST_FILES}
 )
 
 # Single test Files gets added in a Loop, more complex ones are below

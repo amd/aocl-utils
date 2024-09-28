@@ -36,10 +36,6 @@ endif()
 
 # Select all files under Core/Logger and assign to LOGGER_SRC_FILES
 FILE(GLOB LOGGER_SRC_FILES "Core/Logger/*.cc")
-# set(LOGGER_SRC_FILES
-#     Logger.cc
-#     LoggerFactory.cc
-# )
 
 set(BASE64_SRC_FILES
     Base64/Base64.cc

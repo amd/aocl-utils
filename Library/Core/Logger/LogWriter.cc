@@ -26,7 +26,7 @@
  *
  */
 
-#include "Au/Logger/logwriter.hh"
+#include "Au/Logger/LogWriter.hh"
 
 #include <iostream>
 

@@ -26,7 +26,7 @@
  *
  */
 
-#include "Au/Logger/logger.hh"
+#include "Au/Logger/Logger.hh"
 
 namespace Au::Logger {
 

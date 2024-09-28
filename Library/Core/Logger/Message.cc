@@ -32,7 +32,7 @@
 #include <thread>
 
 // C++ User header files
-#include "Au/Logger/message.hh"
+#include "Au/Logger/Message.hh"
 
 namespace Au::Logger {
 

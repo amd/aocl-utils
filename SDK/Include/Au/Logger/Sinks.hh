@@ -27,7 +27,7 @@
  */
 
 #pragma once
-#include "Au/Logger/message.hh"
+#include "Au/Logger/Message.hh"
 
 /**
  * @brief ISink class - Writes the message to the output
