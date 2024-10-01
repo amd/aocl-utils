@@ -20,42 +20,9 @@
  * THE SOFTWARE.
  */
 
-#ifndef __AU_LOGGER_H__
-#define __AU_LOGGER_H__
+#ifndef __AU_LOGGER_CTX_H__
+#define __AU_LOGGER_CTX_H__
 
-#include "Au/Config.h"
-#include "Au/Defs.hh"
-#include "Capi/au/macros.h"
+typedef struct Logger Logger;
 
-#include "Capi/au/logger_ctx.h"
-
-AUD_EXTERN_C_BEGIN
-
-typedef enum
-{
-    AUD_LOG_LEVEL_TRACE,
-    AUD_LOG_LEVEL_DEBUG,
-    AUD_LOG_LEVEL_INFO,
-    AUD_LOG_LEVEL_WARN,
-    AUD_LOG_LEVEL_ERROR,
-    AUD_LOG_LEVEL_FATAL
-} log_level_t;
-
-Logger*
-au_logger_create();
-
-void
-au_logger_add_sink(Logger* logger, const char* sink_type);
-
-void
-au_logger_log(Logger* logger, const char* message, log_level_t level);
-
-void
-au_logger_flush(Logger* logger);
-
-void
-au_logger_destroy(Logger* logger);
-
-AUD_EXTERN_C_END
-
-#endif // __AU_LOGGER_H__
+#endif // __AU_LOGGER_CTX_H__

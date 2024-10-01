@@ -57,6 +57,7 @@ set(CAPI_SRC_FILES
     #Capi/base64.cc
     Capi/environ.cc
     Capi/threadpinning.cc
+    Capi/logger.cc
         )
 
 set(AVX2_FILES

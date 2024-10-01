@@ -33,26 +33,27 @@
 #include "Au/Logger/Logger.hh"
 
 using namespace Au::Logger;
-LogWriter logWriter;
 
 int
 main(int argc, char const* argv[])
 {
+    LogWriter logWriter; // Create a log writer.
+
     std::unique_ptr<ISink> consoleSink =
-        SinkFactory::createSink("ConsoleSink", "ConsoleSink");
+        SinkFactory::createSink("ConsoleSink", "Main Console");
 
     logWriter.addSink(consoleSink);
 
     logWriter.start();
 
-    std::vector<Message> msgs;
+    Logger logger(logWriter);
 
     for (int i = 0; i < 10; ++i) {
         Message msg("This is a message " + std::to_string(i));
-        msgs.push_back(msg);
+        logger.log(msg);
     }
 
-    logWriter.log(msgs);
+    logger.flush();
 
     return 0;
 }

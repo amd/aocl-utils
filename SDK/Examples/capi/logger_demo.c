@@ -20,42 +20,22 @@
  * THE SOFTWARE.
  */
 
-#ifndef __AU_LOGGER_H__
-#define __AU_LOGGER_H__
+#include "Capi/au/logger.h"
 
-#include "Au/Config.h"
-#include "Au/Defs.hh"
-#include "Capi/au/macros.h"
-
-#include "Capi/au/logger_ctx.h"
-
-AUD_EXTERN_C_BEGIN
-
-typedef enum
+int
+main(int argc, char const* argv[])
 {
-    AUD_LOG_LEVEL_TRACE,
-    AUD_LOG_LEVEL_DEBUG,
-    AUD_LOG_LEVEL_INFO,
-    AUD_LOG_LEVEL_WARN,
-    AUD_LOG_LEVEL_ERROR,
-    AUD_LOG_LEVEL_FATAL
-} log_level_t;
-
-Logger*
-au_logger_create();
-
-void
-au_logger_add_sink(Logger* logger, const char* sink_type);
-
-void
-au_logger_log(Logger* logger, const char* message, log_level_t level);
-
-void
-au_logger_flush(Logger* logger);
-
-void
-au_logger_destroy(Logger* logger);
-
-AUD_EXTERN_C_END
-
-#endif // __AU_LOGGER_H__
+    Logger* logger = au_logger_create();
+    au_logger_add_sink(logger, "ConsoleSink");
+    au_logger_log(logger, "Hello From Logger", AUD_LOG_LEVEL_INFO);
+    au_logger_log(logger, "This is default message", AUD_LOG_LEVEL_INFO);
+    au_logger_log(logger, "This is trace message", AUD_LOG_LEVEL_TRACE);
+    au_logger_log(logger, "This is debug message", AUD_LOG_LEVEL_DEBUG);
+    au_logger_log(logger, "This is info message", AUD_LOG_LEVEL_INFO);
+    au_logger_log(logger, "This is warn message", AUD_LOG_LEVEL_WARN);
+    au_logger_log(logger, "This is error message", AUD_LOG_LEVEL_ERROR);
+    au_logger_log(logger, "This is fatal message", AUD_LOG_LEVEL_FATAL);
+    au_logger_flush(logger);
+    au_logger_destroy(logger);
+    return 0;
+}

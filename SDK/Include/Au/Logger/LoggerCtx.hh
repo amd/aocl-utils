@@ -27,33 +27,11 @@
  */
 
 #pragma once
-#include "Au/Logger/Queue.hh"
-#include "Au/Logger/Sinks.hh"
 
-namespace Au::Logger {
+#include "Au/Logger/Logger.hh"
 
-// FIXME: Make LogWriter singleton
-/**
- * @brief LogWriter class
- */
-class LogWriter
+struct Logger
 {
-  private:
-    std::thread                         m_thread;
-    std::vector<std::unique_ptr<ISink>> m_sinks;
-    std::atomic<bool>                   m_running; // Modified to atomic boolean
-    std::unique_ptr<IQueue>             m_queue;
-
-    void loggerThread();
-
-  public:
-    LogWriter();
-    ~LogWriter();
-    void start();
-    void stop();
-    void log(std::vector<Message>& msgs);
-    void addSink(std::unique_ptr<ISink>& sink);
-    void removeSinkByType(const String& sinkType);
-    void removeSinkByName(const String& sinkName);
+    Au::Logger::LogWriter               logWriter;
+    std::unique_ptr<Au::Logger::Logger> logger;
 };
-} // namespace Au::Logger
