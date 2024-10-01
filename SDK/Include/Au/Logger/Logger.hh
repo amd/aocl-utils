@@ -38,19 +38,13 @@ namespace Au::Logger {
 class Logger
 {
   private:
-    // pthreads key
-    static pthread_key_t m_key;
-
     // Thread local storage for vector of log messages
-    std::vector<Message>* m_storage;
-    LogWriter*            m_logWriter = nullptr;
+    static thread_local std::vector<Message> m_storage;
+    LogWriter*                               m_logWriter = nullptr;
 
     // Disable copy constructor and assignment operator
     Logger(const Logger&)            = delete;
     Logger& operator=(const Logger&) = delete;
-
-    static void                  createKey();
-    static std::vector<Message>* getStorage();
 
   public:
     explicit Logger(LogWriter& logWriter);

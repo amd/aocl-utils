@@ -30,55 +30,25 @@
 
 namespace Au::Logger {
 
-pthread_key_t Logger::m_key;
-
-void
-Logger::createKey()
-{
-    pthread_key_create(&Logger::m_key, nullptr);
-}
+thread_local std::vector<Message> Logger::m_storage;
 
 Logger::Logger(LogWriter& logWriter)
-    : m_storage{}
-    , m_logWriter{ &logWriter }
+    : m_logWriter{ &logWriter }
 {
-    // Initialize key for all threads
-    static pthread_once_t keyOnce = PTHREAD_ONCE_INIT;
-    pthread_once(&keyOnce, Logger::createKey);
-
-    m_storage = Logger::getStorage();
-}
-
-std::vector<Message>*
-Logger::getStorage()
-{
-    std::vector<Message>* temp;
-    if (pthread_getspecific(m_key) == nullptr) {
-        temp = new std::vector<Message>();
-        pthread_setspecific(m_key, temp);
-    }
-    temp = reinterpret_cast<std::vector<Message>*>(pthread_getspecific(m_key));
-    return temp;
 }
 
 void
 Logger::log(Message& msg)
 {
-    m_storage->push_back(msg);
+    m_storage.push_back(msg);
 }
 
 void
 Logger::flush()
 {
-    m_logWriter->log(*m_storage);
-    m_storage->clear();
+    m_logWriter->log(m_storage);
+    m_storage.clear();
 }
 
-Logger::~Logger()
-{
-    // pthread_key_delete(m_key);
-    // set thread local storage to nullptr
-    pthread_setspecific(m_key, nullptr);
-    delete m_storage;
-}
+Logger::~Logger() {}
 } // namespace Au::Logger

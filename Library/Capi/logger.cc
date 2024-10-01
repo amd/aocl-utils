@@ -29,7 +29,18 @@ Logger*
 au_logger_create()
 {
     Logger* logger = new Logger();
+    // Check if memory allocation is successful
+    if (logger == nullptr) {
+        return nullptr;
+    }
+
     logger->logger = std::make_unique<Au::Logger::Logger>(logger->logWriter);
+    // Check if memory allocation is successful
+    if (logger->logger == nullptr) {
+        delete logger;
+        return nullptr;
+    }
+
     logger->logWriter.start();
     return logger;
 }
@@ -85,4 +96,5 @@ au_logger_destroy(Logger* logger)
 {
     delete logger;
 }
+
 AUD_EXTERN_C_END

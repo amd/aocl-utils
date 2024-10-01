@@ -41,19 +41,51 @@ typedef enum
     AUD_LOG_LEVEL_FATAL
 } log_level_t;
 
-Logger*
+/**
+ * @brief          Create a logger context.
+ *
+ * @return         Logger context.
+ */
+AUD_API_EXPORT Logger*
 au_logger_create();
 
-void
+/**
+ * @brief          Add a sink to the logger.
+ * @param[in]      logger          Logger context.
+ * @param[in]      sink_type       Sink type.
+ *
+ * @return void
+ */
+AUD_API_EXPORT void
 au_logger_add_sink(Logger* logger, const char* sink_type);
 
-void
+/**
+ * @brief          Log a message.
+ * @param[in]      logger          Logger context.
+ * @param[in]      message         Message to log.
+ * @param[in]      level           Log level.
+ *
+ * @return void
+ */
+AUD_API_EXPORT void
 au_logger_log(Logger* logger, const char* message, log_level_t level);
 
-void
+/**
+ * @brief          Flush the logger.
+ * @param[in]      logger          Logger context.
+ *
+ * @return void
+ */
+AUD_API_EXPORT void
 au_logger_flush(Logger* logger);
 
-void
+/**
+ * @brief          Destroy the logger.
+ * @param[in]      logger          Logger context.
+ *
+ * @return void
+ */
+AUD_API_EXPORT void
 au_logger_destroy(Logger* logger);
 
 AUD_EXTERN_C_END
