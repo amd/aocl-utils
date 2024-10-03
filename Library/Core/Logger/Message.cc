@@ -28,6 +28,8 @@
 
 // C++ Standard header files
 #include <chrono>
+#include <iomanip>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -45,10 +47,11 @@ Timestamp::Timestamp()
 String
 Timestamp::getTimestamp() const
 {
-    auto   now_c     = std::chrono::system_clock::to_time_t(m_now);
-    String timestamp = std::ctime(&now_c);
-    timestamp.erase(timestamp.find_last_not_of("\n") + 1);
-    return timestamp;
+    auto               now_c = std::chrono::system_clock::to_time_t(m_now);
+    std::tm*           time  = std::localtime(&now_c);
+    std::ostringstream oss;
+    oss << std::put_time(time, "%a %b %d %Y %H:%M:%S");
+    return oss.str();
 }
 
 Uint64
@@ -205,9 +208,11 @@ Message::Message(const String& msg, Priority& priority)
 String
 Message::getMsg() const
 {
-    // Example "Mon Sep  2 11:31:36 2024 : Info : This is a message"
-    return m_timestamp.getTimestamp() + " : " + m_priority.toStr() + " : "
-           + m_msg;
+    // Example "Mon Sep 02 2024 11:31:36  : Info : This is a message"
+    std::ostringstream oss;
+    oss << m_timestamp.getTimestamp() << " : " << std::left << std::setw(7)
+        << m_priority.toStr() << " : " << m_msg;
+    return oss.str();
 }
 
 Priority

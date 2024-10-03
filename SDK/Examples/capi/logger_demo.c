@@ -26,7 +26,8 @@ int
 main(int argc, char const* argv[])
 {
     Logger* logger = au_logger_create();
-    au_logger_add_sink(logger, "ConsoleSink");
+    au_logger_add_sink(logger, "ConsoleSink", "Main Console");
+    au_logger_add_sink(logger, "FileSink", "AU_Demo.log");
     au_logger_log(logger, "Hello From Logger", AUD_LOG_LEVEL_INFO);
     au_logger_log(logger, "This is default message", AUD_LOG_LEVEL_INFO);
     au_logger_log(logger, "This is trace message", AUD_LOG_LEVEL_TRACE);

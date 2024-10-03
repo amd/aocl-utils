@@ -46,10 +46,10 @@ au_logger_create()
 }
 
 void
-au_logger_add_sink(Logger* logger, const char* sink_type)
+au_logger_add_sink(Logger* logger, const char* sink_type, const char* sink_name)
 {
     std::unique_ptr<Au::Logger::ISink> sink =
-        Au::Logger::SinkFactory::createSink(sink_type, sink_type);
+        Au::Logger::SinkFactory::createSink(sink_type, sink_name);
     logger->logWriter.addSink(sink);
 }
 

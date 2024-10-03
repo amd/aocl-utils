@@ -57,7 +57,9 @@ au_logger_create();
  * @return void
  */
 AUD_API_EXPORT void
-au_logger_add_sink(Logger* logger, const char* sink_type);
+au_logger_add_sink(Logger*     logger,
+                   const char* sink_type,
+                   const char* sink_name);
 
 /**
  * @brief          Log a message.
