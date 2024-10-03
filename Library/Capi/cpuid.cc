@@ -165,6 +165,30 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
 }
 
 AUD_API_EXPORT
+bool
+au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isX86_64v2();
+}
+
+AUD_API_EXPORT
+bool
+au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isX86_64v3();
+}
+
+AUD_API_EXPORT
+bool
+au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isX86_64v4();
+}
+
+AUD_API_EXPORT
 bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
@@ -186,7 +210,7 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
     int    index = 0;
     // Use malloc to allocate memory, as it is used in C API. and will be freed
     // using free in a cprogram.
-    bool* result = (bool*)malloc(count * sizeof(bool));
+    bool* result = reinterpret_cast<bool*>(malloc(count * sizeof(bool)));
     AUD_ASSERT(result, "Memory allocation failed");
     if (!result)
         return nullptr;

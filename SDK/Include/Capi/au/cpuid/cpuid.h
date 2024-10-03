@@ -126,6 +126,36 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
+ * @brief          Allows caller to check if the processor arch is x86_64v2.
+ *
+ * @param[in]      cpu_num   CPU number.
+ *
+ * @return         1/true if processor architecture is x86_64v2.
+ */
+AUD_API_EXPORT bool
+au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
+
+/**
+ * @brief          Allows caller to check if the processor arch is x86_64v3.
+ *
+ * @param[in]      cpu_num   CPU number.
+ *
+ * @return         1/true if processor architecture is x86_64v3.
+ */
+AUD_API_EXPORT bool
+au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
+
+/**
+ * @brief          Allows caller to check if the processor arch is x86_64v4.
+ *
+ * @param[in]      cpu_num   CPU number.
+ *
+ * @return         1/true if processor architecture is x86_64v4.
+ */
+AUD_API_EXPORT bool
+au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
+
+/**
  * @brief          Allows caller to check if the flags are available.
  *
  *                 Note: The api is deprecated. Use au_cpuid_has_flags

@@ -86,6 +86,17 @@ display_isa_info()
         printf("CPU does not support zen or higher ISA or this Cpu is not "
                "supported\n");
     }
+    if (au_cpuid_arch_is_x86_64v4(core_num)) {
+        printf("CPU supports x86-64v4 ISA\n");
+    }
+    if (au_cpuid_arch_is_x86_64v3(core_num)) {
+        printf("CPU supports x86-64v3 ISA\n");
+    }
+    if (au_cpuid_arch_is_x86_64v2(core_num)) {
+        printf("CPU supports x86-64v2 ISA\n");
+    } else {
+        printf("CPU does not support x86-64v2 or higher ISA\n");
+    }
     printf("\nCpu Feature Identification...\n");
     const char* const flags_array[] = {
         "tsc_adjust", "avx", "avxvnni", "avx2", "avx512f"
