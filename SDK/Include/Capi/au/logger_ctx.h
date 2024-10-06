@@ -23,6 +23,6 @@
 #ifndef __AU_LOGGER_CTX_H__
 #define __AU_LOGGER_CTX_H__
 
-typedef struct Logger Logger;
+typedef void logger_ctx_t;
 
 #endif // __AU_LOGGER_CTX_H__

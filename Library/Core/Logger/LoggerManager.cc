@@ -26,40 +26,29 @@
  *
  */
 
-#pragma once
-#include "Au/Logger/Message.hh"
-#include <deque>
+#include "Au/Logger/LogManager.hh"
+
 namespace Au::Logger {
 
-class LockingQueue
+thread_local std::vector<Message> LogManager::m_storage;
+
+LogManager::LogManager(LogWriter& logWriter)
+    : m_logWriter{ &logWriter }
 {
-  private:
-    std::mutex          m_mutex;
-    std::deque<Message> m_queue;
+}
 
-  public:
-    LockingQueue();
-
-    // Disable copy constructor and assignment operator
-    LockingQueue(const LockingQueue&)            = delete;
-    LockingQueue& operator=(const LockingQueue&) = delete;
-
-    void    enqueue(const Message& msg);
-    Message dequeue();
-    bool    empty();
-    Uint64  getCount();
-
-    ~LockingQueue() = default;
-};
-
-// Classes implementing no locking queue
-
-class NoLockQueueElement
+void
+LogManager::log(Message& msg)
 {
-  public:
-    Message m_msg;
-    explicit NoLockQueueElement(const Message msg);
-    std::atomic<NoLockQueueElement*> m_next;
-};
+    m_storage.push_back(msg);
+}
 
+void
+LogManager::flush()
+{
+    m_logWriter->log(m_storage);
+    m_storage.clear();
+}
+
+LogManager::~LogManager() {}
 } // namespace Au::Logger

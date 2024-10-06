@@ -34,8 +34,12 @@ else()
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
 
-# Select all files under Core/Logger and assign to LOGGER_SRC_FILES
-FILE(GLOB LOGGER_SRC_FILES "Core/Logger/*.cc")
+SET(LOGGER_SRC_FILES "Core/Logger/LogWriter.cc"
+                     "Core/Logger/Logger.cc"
+                     "Core/Logger/LoggerManager.cc"
+                     "Core/Logger/Message.cc"
+                     "Core/Logger/Queue.cc"
+)
 
 set(BASE64_SRC_FILES
     Base64/Base64.cc

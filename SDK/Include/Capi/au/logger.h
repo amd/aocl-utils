@@ -46,20 +46,8 @@ typedef enum
  *
  * @return         Logger context.
  */
-AUD_API_EXPORT Logger*
+AUD_API_EXPORT logger_ctx_t*
 au_logger_create();
-
-/**
- * @brief          Add a sink to the logger.
- * @param[in]      logger          Logger context.
- * @param[in]      sink_type       Sink type.
- *
- * @return void
- */
-AUD_API_EXPORT void
-au_logger_add_sink(Logger*     logger,
-                   const char* sink_type,
-                   const char* sink_name);
 
 /**
  * @brief          Log a message.
@@ -70,7 +58,7 @@ au_logger_add_sink(Logger*     logger,
  * @return void
  */
 AUD_API_EXPORT void
-au_logger_log(Logger* logger, const char* message, log_level_t level);
+au_logger_log(logger_ctx_t* logger, const char* message, log_level_t level);
 
 /**
  * @brief          Flush the logger.
@@ -79,7 +67,7 @@ au_logger_log(Logger* logger, const char* message, log_level_t level);
  * @return void
  */
 AUD_API_EXPORT void
-au_logger_flush(Logger* logger);
+au_logger_flush(logger_ctx_t* logger);
 
 /**
  * @brief          Destroy the logger.
@@ -88,7 +76,7 @@ au_logger_flush(Logger* logger);
  * @return void
  */
 AUD_API_EXPORT void
-au_logger_destroy(Logger* logger);
+au_logger_destroy(logger_ctx_t* logger);
 
 AUD_EXTERN_C_END
 

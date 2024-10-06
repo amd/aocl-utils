@@ -30,8 +30,13 @@
 
 #include "Au/Logger/Logger.hh"
 
-struct Logger
+struct LoggerCtx
 {
-    Au::Logger::LogWriter               logWriter;
-    std::unique_ptr<Au::Logger::Logger> logger;
+    std::unique_ptr<Au::Logger::LogWriter>  logWriter;
+    std::unique_ptr<Au::Logger::LogManager> logger;
+    LoggerCtx()
+        : logWriter(nullptr)
+        , logger(nullptr)
+    {
+    }
 };

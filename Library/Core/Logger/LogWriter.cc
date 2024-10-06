@@ -39,71 +39,26 @@ void
 LogWriter::loggerThread()
 {
     while (m_running) {
-        if (!m_queue->empty()) {
-            // Print the size of queue
-            // if (verbose) {
-            // std::cout << "Queue size: " << m_queue.getCount() << std::endl;
-            // }
-            Message msg = m_queue->dequeue();
-            // std::cout << "HERE" << std::endl;
+        if (!m_queue.empty()) {
+            Message msg = m_queue.dequeue();
 
-            // FIXME: Find better way
+            // FIXME: Find better way, move to assert
+            /*
             if (msg.getMsg().find("Empty Queue") != String::npos) {
                 continue;
             }
-
-            for (auto& sink : m_sinks) {
-                sink->write(msg);
-                // Announce writing message
-                // if (verbose) {
-                // std::cout << "Writing message: " << msg.getMsg() <<
-                // std::endl;
-                // }
-            }
+            */
+            m_logger->write(msg);
         }
     }
 }
 
-LogWriter::LogWriter()
+LogWriter::LogWriter(std::unique_ptr<ILogger>& logger)
     : m_thread{}
-    , m_sinks{}
+    , m_logger{ std::move(logger) }
     , m_running{ false }
-    , m_queue{ nullptr }
+    , m_queue{}
 {
-    QueueFactory factory;
-#if USE_NO_LOCK == 0
-    m_queue = factory.createQueue("LockingQueue");
-#else
-    m_queue = factory.createQueue("NoLockQueue");
-#endif
-}
-
-void
-LogWriter::addSink(std::unique_ptr<ISink>& sink)
-{
-    m_sinks.push_back(std::move(sink));
-}
-
-void
-LogWriter::removeSinkByType(const String& sinkType)
-{
-    for (auto it = m_sinks.begin(); it != m_sinks.end(); ++it) {
-        if ((*it)->getSinkType() == sinkType) {
-            m_sinks.erase(it);
-            break;
-        }
-    }
-}
-
-void
-LogWriter::removeSinkByName(const String& sinkName)
-{
-    for (auto it = m_sinks.begin(); it != m_sinks.end(); ++it) {
-        if ((*it)->getSinkName() == sinkName) {
-            m_sinks.erase(it);
-            break;
-        }
-    }
 }
 
 void
@@ -121,7 +76,7 @@ LogWriter::stop()
     }
 
     // Wait for queue to be empty
-    while (!m_queue->empty()) {
+    while (!m_queue.empty()) {
         // Sleep for 0.01 seconds
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
@@ -133,18 +88,14 @@ LogWriter::stop()
 LogWriter::~LogWriter()
 {
     stop();
-
-    // Flush all sinks
-    for (auto it = m_sinks.begin(); it != m_sinks.end(); ++it) {
-        (*it)->flush();
-    }
+    m_logger->flush();
 }
 
 void
 LogWriter::log(std::vector<Message>& msgs)
 {
     for (auto& msg : msgs) {
-        m_queue->enqueue(msg);
+        m_queue.enqueue(msg);
     }
 }
 

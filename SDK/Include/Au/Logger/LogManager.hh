@@ -27,39 +27,29 @@
  */
 
 #pragma once
-#include "Au/Logger/Message.hh"
-#include <deque>
+
+#include "Au/Logger/LogWriter.hh"
+
 namespace Au::Logger {
 
-class LockingQueue
+// Logger uses thread local storage to store log messages temporarily
+// Once logger is done with storing messages, user can call flush to commit
+// messages
+class LogManager
 {
   private:
-    std::mutex          m_mutex;
-    std::deque<Message> m_queue;
-
-  public:
-    LockingQueue();
+    // Thread local storage for vector of log messages
+    static thread_local std::vector<Message> m_storage;
+    LogWriter*                               m_logWriter = nullptr;
 
     // Disable copy constructor and assignment operator
-    LockingQueue(const LockingQueue&)            = delete;
-    LockingQueue& operator=(const LockingQueue&) = delete;
+    LogManager(const LogManager&)            = delete;
+    LogManager& operator=(const LogManager&) = delete;
 
-    void    enqueue(const Message& msg);
-    Message dequeue();
-    bool    empty();
-    Uint64  getCount();
-
-    ~LockingQueue() = default;
-};
-
-// Classes implementing no locking queue
-
-class NoLockQueueElement
-{
   public:
-    Message m_msg;
-    explicit NoLockQueueElement(const Message msg);
-    std::atomic<NoLockQueueElement*> m_next;
+    explicit LogManager(LogWriter& logWriter);
+    void log(Message& msg);
+    void flush();
+    ~LogManager();
 };
-
 } // namespace Au::Logger

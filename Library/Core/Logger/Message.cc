@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,10 +47,11 @@ Timestamp::Timestamp()
 String
 Timestamp::getTimestamp() const
 {
-    auto               now_c = std::chrono::system_clock::to_time_t(m_now);
-    std::tm*           time  = std::localtime(&now_c);
-    std::ostringstream oss;
-    oss << std::put_time(time, "%a %b %d %Y %H:%M:%S");
+    auto    now_c = std::chrono::system_clock::to_time_t(m_now);
+    std::tm time  = {};
+    localtime_r(&now_c, &time); // Use localtime_r for thread safety
+    std::ostringstream oss = {};
+    oss << std::put_time(&time, "%a %b %d %Y %H:%M:%S");
     return oss.str();
 }
 

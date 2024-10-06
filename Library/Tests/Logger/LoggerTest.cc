@@ -23,7 +23,7 @@
 #include <iostream>
 #include <thread>
 
-#include "Au/Logger/Logger.hh"
+#include "Au/Logger/LogManager.hh"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -40,6 +40,7 @@ class ArgumentParser
 
   public:
     ArgumentParser(int argc, char** argv)
+        : m_args()
     {
         for (int i = 1; i < argc; ++i) {
             this->m_args.push_back(argv[i]);
@@ -52,12 +53,8 @@ class ArgumentParser
 
     bool isArgumentPresent(const std::string& arg)
     {
-        for (const auto& a : this->m_args) {
-            if (a == arg) {
-                return true;
-            }
-        }
-        return false;
+        return std::find(this->m_args.begin(), this->m_args.end(), arg)
+               != this->m_args.end();
     }
 
     void printArguments()
@@ -159,90 +156,35 @@ TEST(LoggerTest, MessageTest)
     }
 }
 
-TEST(LoggerTest, NoLockQueueTest)
-{
-    NoLockQueue queue;
-
-    // Check if the queue is empty
-    EXPECT_TRUE(queue.empty());
-
-    // Enqueue a message
-    Message msg("This is a message");
-    queue.enqueue(msg);
-
-    // Check if the queue is not empty
-    EXPECT_FALSE(queue.empty());
-
-    // Dequeue the message
-    Message msg_dequeued = queue.dequeue();
-
-    // Check if the message is same as the one enqueued
-    EXPECT_TRUE(msg.getMsg().find("This is a message") != std::string::npos);
-}
-
-TEST(LoggerTest, NoLockQueueMultiThreadTest)
-{
-    // Worker lambda function
-    NoLockQueue queue;
-
-    auto worker = [](NoLockQueue& queue, int id) {
-        for (int i = 0; i < 100; ++i) {
-            Message msg("This is a message from thread " + std::to_string(id));
-            queue.enqueue(msg);
-        }
-    };
-
-    // Create 10 threads
-    std::vector<std::thread> threads;
-    for (int i = 0; i < 100; ++i) {
-        threads.emplace_back(std::thread(worker, std::ref(queue), i));
-    }
-
-    // Join the threads
-    for (auto& t : threads) {
-        t.join();
-    }
-
-    // Check if the queue is not empty
-    EXPECT_FALSE(queue.empty());
-
-    // Check if the count is 1000
-    EXPECT_EQ(queue.getCount(), 10000);
-
-    // Dequeue the messages
-    for (int i = 0; i < 10000; ++i) {
-        Message msg = queue.dequeue();
-        if (verbose) {
-            std::cout << "Message: " << msg.getMsg() << std::endl;
-        }
-    }
-
-    // Check if the queue is empty
-    EXPECT_TRUE(queue.empty());
-}
-
-class MockSink : public GenericSink
+class MockLogger : public GenericLogger
 {
   public:
     MOCK_METHOD(void, write, (const Message& msg), (override));
     MOCK_METHOD(void, flush, (), (override));
-    std::string getSinkType() const override { return "MockSink"; }
+    std::string getLoggerType() const override { return "MockLogger"; }
     // Destructor
-    virtual ~MockSink() {}
+    virtual ~MockLogger() {}
+    MockLogger()
+        : GenericLogger()
+    // , gmock01_write_165{}
+    // , gmock00_flush_166{}
+    {
+        setLoggerName("MockLogger");
+    }
 };
 
-TEST(LoggerTest, SinkFactoryTest)
+TEST(LoggerTest, LoggerFactoryTest)
 {
-    // Lets use gmock to mock sink classes
+    // Lets use gmock to mock logger classes
 
-    // Create a mockSink
-    std::unique_ptr<MockSink> mockSink = std::make_unique<MockSink>();
+    // Create a mockLogger
+    std::unique_ptr<MockLogger> mockLogger = std::make_unique<MockLogger>();
 
 #if 0
     // Set the expectations
     for (int i = 0; i < 10; i++) {
         // Mock method to write
-        EXPECT_CALL(*mockSink.get(),
+        EXPECT_CALL(*mockLogger.get(),
                     write(testing::Truly([i](const Message& msg) {
                         return msg.getMsg().find("This is a message "
                                                  + std::to_string(i))
@@ -251,21 +193,19 @@ TEST(LoggerTest, SinkFactoryTest)
             .Times(1);
     }
 #else
-    EXPECT_CALL(*mockSink.get(), write(testing::Truly([](const Message& msg) {
+    EXPECT_CALL(*mockLogger.get(), write(testing::Truly([](const Message& msg) {
         return msg.getMsg().find("This is a message ") != std::string::npos;
     }))).Times(10);
 #endif
 
     // Mock method to flush
-    EXPECT_CALL(*mockSink.get(), flush()).Times(1);
+    EXPECT_CALL(*mockLogger.get(), flush()).Times(1);
 
-    auto mockSinkPointer = std::unique_ptr<ISink>(mockSink.release());
+    auto mockLoggerPointer = std::unique_ptr<ILogger>(mockLogger.release());
 
     // Create a LogWriter
-    LogWriter logWriter;
+    LogWriter logWriter(mockLoggerPointer);
 
-    // Add the mockSink to the logWriter
-    logWriter.addSink(mockSinkPointer);
     logWriter.start();
 
     std::vector<Message> messageVect = {};
@@ -283,34 +223,32 @@ TEST(LoggerTest, SinkFactoryTest)
 
 TEST(LoggerTest, LoggerClass)
 {
-    // Create a LogWriter
-    LogWriter logWriter;
-
-    // Create a MockSink
-    std::unique_ptr<MockSink> mockSink = std::make_unique<MockSink>();
+    // Create a MockLogger
+    std::unique_ptr<MockLogger> mockLogger = std::make_unique<MockLogger>();
 
     // Create expectations
-    EXPECT_CALL(*mockSink.get(), write(testing::Truly([](const Message& msg) {
+    EXPECT_CALL(*mockLogger.get(), write(testing::Truly([](const Message& msg) {
         return msg.getMsg().find("This is a message") != std::string::npos;
     }))).Times(1);
 
     // Create expectations
-    EXPECT_CALL(*mockSink.get(), write(testing::Truly([](const Message& msg) {
+    EXPECT_CALL(*mockLogger.get(), write(testing::Truly([](const Message& msg) {
         return msg.getMsg().find("This is another message")
                != std::string::npos;
     }))).Times(1);
 
     // Mock method to flush
-    EXPECT_CALL(*mockSink.get(), flush()).Times(1);
+    EXPECT_CALL(*mockLogger.get(), flush()).Times(1);
 
-    auto mockSinkPointer = std::unique_ptr<ISink>(mockSink.release());
+    auto mockLoggerPointer = std::unique_ptr<ILogger>(mockLogger.release());
 
-    // Add the mockSink to the logWriter
-    logWriter.addSink(mockSinkPointer);
+    // Create a LogWriter
+    LogWriter logWriter(mockLoggerPointer);
+
     logWriter.start();
 
     // Create a Logger
-    Logger logger(logWriter);
+    LogManager logger(logWriter);
 
     // Create a Message
     Message msg("This is a message");

@@ -21,41 +21,41 @@
  */
 
 #include "Capi/au/logger.h"
+#include "Au/Logger/LogManager.hh"
 #include "Au/Logger/LoggerCtx.hh"
 
 AUD_EXTERN_C_BEGIN
 
-Logger*
+logger_ctx_t*
 au_logger_create()
 {
-    Logger* logger = new Logger();
+    LoggerCtx* logger = new LoggerCtx();
     // Check if memory allocation is successful
     if (logger == nullptr) {
         return nullptr;
     }
 
-    logger->logger = std::make_unique<Au::Logger::Logger>(logger->logWriter);
+    std::unique_ptr<Au::Logger::ILogger> consoleLogger =
+        Au::Logger::LoggerFactory::createLogger("ConsoleLogger",
+                                                "Main Console");
+    logger->logWriter = std::make_unique<Au::Logger::LogWriter>(consoleLogger);
+
+    logger->logger =
+        std::make_unique<Au::Logger::LogManager>(*(logger->logWriter));
     // Check if memory allocation is successful
     if (logger->logger == nullptr) {
         delete logger;
         return nullptr;
     }
 
-    logger->logWriter.start();
+    logger->logWriter->start();
     return logger;
 }
 
 void
-au_logger_add_sink(Logger* logger, const char* sink_type, const char* sink_name)
+au_logger_log(logger_ctx_t* logger, const char* message, log_level_t level)
 {
-    std::unique_ptr<Au::Logger::ISink> sink =
-        Au::Logger::SinkFactory::createSink(sink_type, sink_name);
-    logger->logWriter.addSink(sink);
-}
-
-void
-au_logger_log(Logger* logger, const char* message, log_level_t level)
-{
+    LoggerCtx* loggerCtx = reinterpret_cast<LoggerCtx*>(logger);
     Au::Logger::Priority::PriorityLevel priority;
     switch (level) {
         case AUD_LOG_LEVEL_TRACE:
@@ -82,19 +82,21 @@ au_logger_log(Logger* logger, const char* message, log_level_t level)
     }
     Au::Logger::Priority p(priority);
     Au::Logger::Message  msg(message, p);
-    logger->logger->log(msg);
+    loggerCtx->logger->log(msg);
 }
 
 void
-au_logger_flush(Logger* logger)
+au_logger_flush(logger_ctx_t* logger)
 {
-    logger->logger->flush();
+    LoggerCtx* loggerCtx = reinterpret_cast<LoggerCtx*>(logger);
+    loggerCtx->logger->flush();
 }
 
 void
-au_logger_destroy(Logger* logger)
+au_logger_destroy(logger_ctx_t* logger)
 {
-    delete logger;
+    LoggerCtx* loggerCtx = reinterpret_cast<LoggerCtx*>(logger);
+    delete loggerCtx;
 }
 
 AUD_EXTERN_C_END

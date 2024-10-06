@@ -27,8 +27,8 @@
  */
 
 #pragma once
+#include "Au/Logger/Logger.hh"
 #include "Au/Logger/Queue.hh"
-#include "Au/Logger/Sinks.hh"
 
 namespace Au::Logger {
 
@@ -39,21 +39,19 @@ namespace Au::Logger {
 class LogWriter
 {
   private:
-    std::thread                         m_thread;
-    std::vector<std::unique_ptr<ISink>> m_sinks;
-    std::atomic<bool>                   m_running; // Modified to atomic boolean
-    std::unique_ptr<IQueue>             m_queue;
+    std::thread              m_thread;
+    std::unique_ptr<ILogger> m_logger;
+    std::atomic<bool>        m_running; // Modified to atomic boolean
+    LockingQueue             m_queue;
 
     void loggerThread();
 
   public:
-    LogWriter();
+    LogWriter() = delete;
+    explicit LogWriter(std::unique_ptr<ILogger>& logger);
     ~LogWriter();
     void start();
     void stop();
     void log(std::vector<Message>& msgs);
-    void addSink(std::unique_ptr<ISink>& sink);
-    void removeSinkByType(const String& sinkType);
-    void removeSinkByName(const String& sinkName);
 };
 } // namespace Au::Logger
