@@ -1,103 +1,259 @@
-##Copyright (C) 2023, Advanced Micro Devices, Inc.##
+#
+# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
-PROJECT (aoclutils)
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE "Release" CACHE STRING
-     "Choose the type of build, options are: Debug Release"
-     FORCE)
-ENDIF()
+# We use the GoogleTest module if it is available (only in CMake 3.9+)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
-# ADDING INCLUDE DIRECTORY
-INCLUDE_DIRECTORIES(INCLUDE)
+# CMake extensions include directory
+set(CMAKE_MODULE_PATH
+  "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
+  # Add the default path
+  ${CMAKE_MODULE_PATH}
+  )
 
-# SPECIFY THE C STANDARD
-SET(CMAKE_C_STANDARD 11)
-SET(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_C_STANDARD_REQUIRED TRUE)
-SET(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+# Export to CMakePresets.json, which is used by various IDE,
+# easy integration on any IDE using LSP (Language Server Protocol)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-IF(UNIX)
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -Wall -Werror -Wpedantic")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -Wall -Werror -Wpedantic")
-ELSEIF(WIN32)
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /std:c11 -Wall -Wpedantic")
-# Disable C++98 compatibility warnings.
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 -Wall -Wpedantic -Wno-c++98-compat -Wno-c++98-compat-pedantic")
-# Prefix all shared libraries with 'lib'.
-SET(CMAKE_SHARED_LIBRARY_PREFIX "lib")
-# Prefix all static libraries with 'lib'.
-SET(CMAKE_STATIC_LIBRARY_PREFIX "lib")
-# Export all symbols.
-SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-ENDIF()
+#
+# Determine versions and its components
+#
+include(au_version)
 
-SET(AOCL_RELEASE_VERSION "4.2.0")
+file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_FROM_FILE)
+au_extract_version_details("AU_VERSION" "${AU_VERSION_FROM_FILE}")
 
-STRING(TIMESTAMP AOCL_UTILS_RELEASE_VERSION_STRING "AOCL-Utils ${AOCL_RELEASE_VERSION} Build %Y%m%d")
+set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATCH}")
+if(AU_VERSION_SUFFIX)
+   set(AU_VERSION_STRING "${AU_VERSION_STRING}.${AU_VERSION_SUFFIX}${AU_VERSION_SUFFIX_EXTRA}")
+endif()
 
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# CONTROL WHERE THE STATIC AND SHARED LIBRARIES ARE BUILT SO THAT ON WINDOWS
-# WE DON'T NEED TO TINKER WITH THE PATH TO RUN THE EXECUTABLE
-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(PACKAGE           "libau")
+set(PACKAGE_NAME      "au")
+set(PACKAGE_STRING    "${PACKAGE_NAME} ${AU_VERSION_STRING}")
+set(PACKAGE_TARNAME   "${PACKAGE_NAME}-${AU_VERSION_STRING}")
+set(PACKAGE_BUGREPORT "aocl@amd.com")
+set(PACKAGE_URL       "https://developer.amd.com/aocl/")
+set(PACKAGE_VERSION   "${AU_VERSION_STRING}")
 
-SET(CMAKE_INSTALL_LIBDIR "lib")
-
-OPTION(ALCI_DOCS "ENABLE DOCUMENTATION" ON)
-OPTION(ALCI_DOXYGEN_DOC "ENABLE DOXYGEN DOCUMENTATION" OFF)
-
-IF (NOT DEFINED BUILD_SHARED_LIBS)
-OPTION(BUILD_SHARED_LIBS "Build shared library" ON)
-ENDIF()
-
-SET(CMAKE_DEBUG_POSTFIX _DEBUG)
-
-ADD_SUBDIRECTORY(lib)
-
-IF (ALCI_DOCS)
-	if (ALCI_DOXYGEN_DOC)
-    find_package(Doxygen 1.9.6)
-    set(W_DIR "${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen")
-    if(NOT (DOXYGEN_FOUND))
-        message(STATUS "Doxygen not found please install doxygen and try again.")
+set(PROJECT_FULL_NAME "AOCL Utilities Library")
+set(PROJECT_NAME "AOCL Library")
+message("version " ${AU_VERSION_STRING})
+project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
+#
+# Set language features
+# Require C++-20
+set(CMAKE_CXX_STANDARD ${AU_CXX_STANDARD})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(AU_COMPILER_IS_GNU 0)
+set(AU_COMPILER_IS_CLANG 0)
+set(AU_COMPILER_IS_MSVC 0)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # require at least gcc 8
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)
+        message(FATAL_ERROR "GCC version must be at least 8!")
     else()
-        execute_process(COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
-                WORKING_DIRECTORY ${W_DIR}
-                COMMAND_ECHO STDOUT)
+        set(AU_COMPILER_IS_GNU 1)
     endif()
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen/html/index.html)
-        message(STATUS "Documentation generated successfully, to view documentation open docs/doxygen/html/index.html")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # require at least clang 12
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
+        message(FATAL_ERROR "Clang version must be at least 12.0!")
     else()
-        message(STATUS "Document generation failed.")
+        set(AU_COMPILER_IS_CLANG 1)
+    endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    message("MSVC version: " ${CMAKE_CXX_COMPILER_VERSION})
+    # require at least MSVC 19.29
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.29)
+        message(FATAL_ERROR "MSVC version must be at least 19.29!")
+    else()
+        set(AU_COMPILER_IS_MSVC 1)
+    endif()
+
+else()
+    message(WARNING "Unsupported compiler! Compilation has
+    only been tested with above versions.")
+endif()
+
+if( NOT CMAKE_BUILD_TYPE )
+  set(CMAKE_BUILD_TYPE "Release"  CACHE STRING
+      "Default build type: Release" FORCE )
+endif()
+
+if(NOT CMAKE_CXX_CLANG_TIDY)
+  find_program(CLANG_TIDY "clang-tidy")
+  if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
+    if (MSVC)
+      set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY};--extra-arg=-EHsc")
+    else()
+      set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
     endif()
   endif()
-ENDIF()
+endif()
 
-IF (ALCI_BENCH)
-  IF (NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/BENCHMARK)
-    MESSAGE(FATAL_ERROR "BENCHMARKS NOT SUPPORTED")
-  ENDIF()
+include(TestBigEndian)
+test_big_endian(AU_TAGET_TEST_BIG_ENDIAN)
+if(AU_TARGET_TEST_BIG_ENDIAN)
+set(AU_TARGET_IS_BIG_ENDIAN TRUE)
+set(AU_TARGET_IS_LITTLE_ENDIAN FALSE)
+else()
+set(AU_TARGET_IS_BIG_ENDIAN FALSE)
+set(AU_TARGET_IS_LITTLE_ENDIAN TRUE)
+endif()
 
-  ENABLE_TESTING()
-  ADD_SUBDIRECTORY(TEST/BENCHMARK)
-ENDIF()
+include(au_options)
+add_compile_definitions(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+add_compile_definitions(PROJECT_BUILD_DIR="${PROJECT_BINARY_DIR}")
 
-# Add library install path
-IF (BUILD_SHARED_LIBS)
-  INSTALL(TARGETS
-      aoclutils
-      aoclutils_static)
-ELSE()
-  INSTALL(TARGETS
-      aoclutils_static)
-ENDIF()
+if(MSVC)
+  include(au_compiler_msvc)
+else()
+  include(au_compiler_unix)
+endif()
+if(AU_ENABLE_CODE_COVERAGE)
+    add_compile_options(-O0 -fprofile-arcs -ftest-coverage)
+    add_link_options(-lgcov --coverage)
+endif()
+if (AU_BUILD_WITH_ASAN)
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
+endif()
+# Fetch googletest if "testing" is enabled
+if (AU_BUILD_TESTS)
+  enable_testing()
+  include(au_find_gtest)
+  include(au_unit_tests)
+endif()
 
-INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/include/alci
-        TYPE INCLUDE
-        )
+option(INSTALL_GTEST OFF)
 
-# Add library version in file.
-FILE(WRITE ${CMAKE_BINARY_DIR}/version.h ${AOCL_UTILS_RELEASE_VERSION_STRING})
+if (AU_BUILD_EXAMPLES)
+  include(au_examples)
+endif()
+
+include(au_variables)
+include(au_git_hash)
+include(au_functions)
+include(au_helpers)
+
+if(NOT AU_BUILD_SHARED_LIBS AND NOT AU_BUILD_STATIC_LIBS)
+    # nothing to build raise warning and exit
+    message(WARNING "Nothing to build. Please set AU_BUILD_SHARED_LIBS and/or AU_BUILD_STATIC_LIBS to ON")
+    return()
+endif()
+# Config.h generation
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OUTPUT_FILE}" @ONLY)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION_OUTPUT_FILE}" @ONLY)
+
+#include_directories("${AU_CONFIG_DIR}")
+set(AU_INCLUDE_DIRS
+    ${PROJECT_SOURCE_DIR}/SDK/Include
+    ${PROJECT_SOURCE_DIR}/Library/Private
+  ${AU_CONFIG_DIR}
+)
+
+include(au_lib)
+
+au_add_interface(sdk__include
+  PUBLIC
+)
+set_target_properties(sdk__include
+  PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/SDK/Include"
+)
+
+
+add_subdirectory(Library)
+
+if (AU_BUILD_TESTS)
+  add_subdirectory(Tests)
+endif()
+if (AU_BUILD_DOCS)
+  add_subdirectory(docs)
+endif()
+
+if (AU_BUILD_EXAMPLES)
+  add_subdirectory(SDK/Examples)
+endif()
+
+configure_file(
+  ${PROJECT_SOURCE_DIR}/CMake/aocl-utils.pc.in
+  ${PROJECT_BINARY_DIR}/aocl-utils.pc
+  @ONLY
+)
+#
+# Print a banner if verbosity is enabled
+#
+if(AU_CMAKE_VERBOSE AND TRUE)
+  message(STATUS "Project : ${PROJECT_FULL_NAME}")
+  message(STATUS "  Description          : ${AU_DESCRIPTION}")
+  message(STATUS "  Version              : ${AU_VERSION_STRING} (${AU_VERSION_FULL})")
+  message(STATUS "  Build Type           : ${CMAKE_BUILD_TYPE}")
+  if (AU_BUILD_EXAMPLES)
+  message(STATUS "  Examples             : " "Enabled")
+  else()
+  message(STATUS "  Examples             : " "Off")
+  endif()
+
+  if (AU_BUILD_TESTS)
+  message(STATUS "  Tests                : " "Enabled")
+  else()
+  message(STATUS "  Tests                : " "Off")
+  endif()
+
+  if (AU_BUILD_WITH_ASAN)
+  message(STATUS "  ASAN                  : " "Enabled")
+  else()
+  message(STATUS "  ASAN                  : " "Disabled")
+  endif()
+
+  if (AU_BUILD_DOCS)
+  message(STATUS "  Docs                 : " "Enabled")
+  else()
+  message(STATUS "  Docs                 : " "Off")
+  endif()
+  if (AU_ENABLE_ASSERTIONS)
+  message(STATUS "  Assertions           : " "Enabled")
+  else()
+  message(STATUS "  Assertions           : " "Disabled")
+  endif()
+  if (AU_ENABLE_OLD_API)
+  message(STATUS "  Deprecated APIs Warning  : " "Disabled")
+  else()
+  message(STATUS "  Deprecated APIs Warning  : Enabled")
+  endif()
+
+  message(STATUS "  CMAKE_INSTALL_PREFIX : " ${CMAKE_INSTALL_PREFIX})
+  message(STATUS "  CMAKE_GENERATOR      : " ${CMAKE_GENERATOR})
+  message(STATUS "  CMAKE_C_COMPILER_ID  : " ${CMAKE_C_COMPILER_ID})
+  message(STATUS "  CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+endif()
+
+include(au_install)

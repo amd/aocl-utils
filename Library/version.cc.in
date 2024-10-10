@@ -1,0 +1,96 @@
+/*
+ * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+#include "Au/Config.h"
+
+#include <string>
+
+// clang-format off
+#if defined(AU_BUILD_TYPE_RELEASE)
+
+static const std::string au_version_str = "@AU_VERSION_MAJOR@"  + \
+                                      ".@AU_VERSION_MINOR@" + \
+                                      ".@AU_VERSION_PATCH@" ;
+
+#else
+
+static const std::string au_version_str = "@AU_VERSION_STRING@" + "-git-" + \
+                                     "@AU_GIT_HASH@";
+
+#endif
+
+
+static const Uint32 au_version_major = @AU_VERSION_MAJOR@;
+static const Uint32 au_version_minor = @AU_VERSION_MINOR@;
+static const Uint32 au_version_patch = @AU_VERSION_PATCH@;
+
+
+#include "Capi/au/version.h"
+
+AUD_EXTERN_C_BEGIN
+
+/**
+ * @brief Return Version Major number
+ */
+Uint32
+au_get_version_major(void)
+{
+    return au_version_major;
+}
+
+/**
+ * @brief Return Version Minor number
+ */
+Uint32
+au_get_version_minor(void)
+{
+    return au_version_minor;
+}
+
+/**
+ * @brief Return Version Patch level
+ */
+Uint32
+au_get_version_patch(void)
+{
+    return au_version_patch;
+}
+
+/**
+ * @brief returns version of library
+ *
+ */
+const char* const
+au_get_version_str(void)
+{
+    return au_version_str;
+}
+
+AUD_EXTERN_C_END
+
+//clang-format on
