@@ -49,7 +49,16 @@ class ThreadPinning
      *
      * @details        Pin Threads to a specific processor group.
      *
-     * @param[in]      threadList        ThreadIds to pin
+     * Strategy:
+     *  0 - Spread
+     *        The threads are pinned to the available processors in a cache
+     * aware manner.
+     *  1 - Core
+     *        Pin the threads to the physical cores
+     *  2 - Logical
+     *        Processor Pin the threads to the logical processors
+     *
+     * @param[in]      threadList        ThreadIDs to pin
      *
      * @param[in]      pinStrategyIndex  0 - spread , 1 - Core, 2 - Logical
      * Processor
@@ -64,7 +73,25 @@ class ThreadPinning
      *
      * @details        Pin Threads to a specific processor group.
      *
-     * @param[in]      threadList        ThreadIds to pin
+     * Example: the theadList is [0, 1, 2, 3, 4, 5, 6, 7], and the
+     * processPinGroup is [0, 1, 0, 1, 0, 1, 0, 1] The threads will be pinned to
+     * the processor group following the below table
+     *
+     * | Thread List Index | Processor Group Index  |
+     * |-------------------|------------------------|
+     * | 0                 | 0                      |
+     * | 1                 | 1                      |
+     * | 2                 | 0                      |
+     * | 3                 | 1                      |
+     * | 4                 | 0                      |
+     * | 5                 | 1                      |
+     * | 6                 | 0                      |
+     * | 7                 | 1                      |
+     *
+     *
+     * @warning  "threadList" and "processPinGroup" should be of the same size
+     *
+     * @param[in]      threadList        ThreadIDs to pin
      *
      * @param[in]      processPinGroup   Processor Group to pin the threads
      *

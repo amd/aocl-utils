@@ -29,8 +29,8 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-from sphinx.builders.html import StandaloneHTMLBuilder
-#import subprocess, os
+# from sphinx.builders.html import StandaloneHTMLBuilder
+# import subprocess, os
 
 # Doxygen
 #subprocess.call('doxygen Doxyfile.in', shell=True)
@@ -58,10 +58,8 @@ extensions = [
     'sphinx.ext.inheritance_diagram',
     'myst_parser',
     'breathe',
-    'rocm_docs',
-    'rocm_docs.doxygen',
-    'sphinxcontrib.doxylink'
     ]
+# myst_enable_extensions = ["colon_fence"]
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -69,7 +67,7 @@ source_suffix = {
     '.md': 'markdown',
 }
 breathe_show_define_initializer = True
-templates_path = ['_templates']
+templates_path = ['_template']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']
 
 f = open(".sphinx/_toc.yml.in", "w")

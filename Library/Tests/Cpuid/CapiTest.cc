@@ -28,6 +28,7 @@
  */
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/cpuid/cpuid_legacy.h"
 #include "Capi/au/enum.h"
 #include "CpuidTest.hh"
 #include "gtest/gtest.h"

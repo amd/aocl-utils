@@ -19,9 +19,9 @@
   - [List of build options](#list-of-build-options)
   - [List of functionalities provided by each utils modules](#list-of-functionalities-provided-by-each-utils-modules)
     - [au\_core (internal)](#au_core-internal)
-      - [Current API Stack(Core)](#current-api-stackcore)
+      - [Current API Stack(Core)](#current-api-stack-core)
     - [au\_cpuid](#au_cpuid)
-      - [Current API Stack(Cpuid)](#current-api-stackcpuid)
+      - [Current API Stack(Cpuid)](#current-api-stack-cpuid)
     - [aoclutils](#aoclutils)
   - [Integration with other projects](#integration-with-other-projects)
     - [CMAKE](#cmake)
@@ -43,7 +43,7 @@ The project is structured as follows:
 
 ### Dependencies
 
-Refer [supported package matrix document](https://github.amd.com/pages/AOCL/aocl-utils/utils/support_matrix/index.html)
+Refer [supported package matrix document](https://docs.amd.com/r/en-US/63866-AOCL-utils/Supported-package-Matrix)
 (supported_package_matrix.md file)
 
 ### Getting started
@@ -58,7 +58,7 @@ For specific compiler and generator, use the following command:
 
 **Note: Replace the compiler(clang) and generator(Unix Makefiles) with the required one.**
 
-Refer [supported_package_matrix.md file](./supported_package_matrix.md) for the supported compiler and generator.
+Refer [supported_package_matrix.md file](https://docs.amd.com/r/en-US/63866-AOCL-utils/Supported-package-Matrix) for the supported compiler and generator.
 
 #### Checkout the latest code
 
@@ -93,7 +93,7 @@ This command creates
 **Note:**
    1. This command creates lib/lib64 directory for the binaries. To have custom library path, use CMAKE_INSTALL_LIBDIR.
    2. Rightly update the include path and library path in the project to link with the installed libraries. or use LD_LIBRARY_PATH to point to the installed library path.(PATH environment variable in windows)
-   3. Refer to the [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and examples in the Example folder to understand how to link and use the modules.
+   3. Refer to the [API documentation](https://docs.amd.com/r/en-US/63866-AOCL-utils) and examples in the Example folder to understand how to link and use the modules.
 
 **Important:**
 
@@ -182,7 +182,7 @@ AU_BUILD_STATIC_LIBS                    Build static libraries       ON         
 
 The C headers are in the \<installpath\>/include/Capi folder and the C++ headers are in the include/Au folder.
 Deprecated APIs are in the include/alci folder.
-**Note: Refer to [API documentation](https://github.amd.com/pages/AOCL/aocl-utils/index.html) and Examples in Examples folder to understand how to link and use the modules.**
+**Note: Refer to [API documentation](https://docs.amd.com/r/en-US/63866-AOCL-utils/Cpuid-API-Reference) and Examples in Examples folder to understand how to link and use the modules.**
 
 ## Integration with other projects
 

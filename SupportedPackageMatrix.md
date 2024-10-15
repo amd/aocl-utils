@@ -23,7 +23,7 @@ One of the compilers and generators on the platform has to be installed to build
 | Package | Version                        | Notes  |
 | ------- | ------------------------------ | -----  |
 | clang   | 12.0 - 18.0                    |        |
-| aocc    | 4.2(clang-16) and 5.0(clang-17)| Download from <http://aocc.amd.com/>|
+| aocc    | 4.2(clang-16) and 5.0(clang-17)| Download from <https://www.amd.com/en/developer/aocc.html>|
 | gcc     | 8.5 - 13.1                     | 8.5 requires "-lstdc++fs"  to be supplied on commandline.       |
 | cmake   | 3.22 - 3.30                    |        |
 | ninja   | 1.10                           |        |
@@ -76,8 +76,8 @@ The library uses the standard C++ libraries and does not have any external depen
 |     2        |     failing cmake   --build command with python related issues.                    |     Older python not able to find stdlibs                                 |     Compile utils   with -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl -lutil"                                                                                                            |
 |     3        |     Missing   symbol   from aoclutils                                              |     Not able to   find the library(libaoclutils) in the std path          |     Update   LD_LIBRARY_PATH on linux update PATH on windows.                                                                                                                    |
 |     4        |     Missing   symbols and errors related to types and type_traits                  |     unable to   link to libstdc++ automatically on older oses.            |     DCMAKE_CXX_STANDARD_LIBRARIES="-libstdc++"                                                                                                                                   |
-|     5        |                                                                                    |     <   glibc2.34 has libpthread as a separate library.                   |     gcc 10 and   below or if the compiler is linking to glibc version < 2.34 explicitly   link to lpthread while compiling utils.                                                |
-|   6          |    Missing  symbols related to pthreads                                           |     Not able to   link to libpthread automatically on older oses.          |   DCMAKE_CXX_STANDARD_LIBRARIES="-lpthread"                                                                                                                                   |
+|              |                                                                                    |     <   glibc2.34 has libpthread as a separate library.                   |     gcc 10 and   below or if the compiler is linking to glibc version < 2.34 explicitly   link to lpthread while compiling utils.                                                |
+|   5          |    Missing  symbols related to pthreads                                           |     Not able to   link to libpthread automatically on older oses.          |   DCMAKE_CXX_STANDARD_LIBRARIES="-lpthread"                                                                                                                                   |
 
 3. **Testing.**
    1. Testing requires qemu-x86_64 (qemu-user package) to be installed to run.  Make sure that this is installed before running the test. Do a clean build after installation.

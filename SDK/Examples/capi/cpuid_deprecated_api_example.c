@@ -27,6 +27,7 @@
  */
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/cpuid/cpuid_legacy.h"
 #include "Capi/au/enum.h"
 
 #include <stdio.h>
