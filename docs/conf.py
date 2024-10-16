@@ -30,7 +30,12 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 # from sphinx.builders.html import StandaloneHTMLBuilder
-# import subprocess, os
+
+from importlib import metadata as _metadata
+from packaging import version as _version
+
+_rocm_version = _metadata.version('rocm-docs-core')
+_rocm_version_expected = "1.0.0"
 
 # Doxygen
 #subprocess.call('doxygen Doxyfile.in', shell=True)
@@ -67,7 +72,13 @@ source_suffix = {
     '.md': 'markdown',
 }
 breathe_show_define_initializer = True
+
 templates_path = ['_template']
+if(_version.parse(_rocm_version) < _version.parse(_rocm_version_expected)):
+    print("Old version of rocm-docs-core detected, falling back")
+    templates_path = ['_template_fallback']
+
+
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']
 
 f = open(".sphinx/_toc.yml.in", "w")
