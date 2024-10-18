@@ -242,7 +242,7 @@ au_cpuid_has_flags(au_cpu_num_t      cpu_num,
     std::stringstream        ss;
     std::vector<std::string> flag_names(flag_array, flag_array + count);
     ss << flag_names;
-    AUD_ASSERT(flag_names.size() >= 1, "The flags list is empty");
+    AUD_ASSERT(flag_names.size() > 0, "The flags list is empty");
     if (flag_names.size() == 0)
         return false;
 
