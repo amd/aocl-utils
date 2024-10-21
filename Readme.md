@@ -1,6 +1,26 @@
 # AOCL-UTILS
 
-  An effort to factor out common functionality across libraries.
+  AOCL-Utils is an effort to factor out common functionalities across
+libraries. The main features include
+
+- Au_cpuid module
+  - Core details
+  - Flags available/usable
+  - ISA available/usable
+
+- Au_core_module
+  - Thread pinning.
+
+**NOTE:**
+   This library detects only the CPUs of AMD "Zen"
+   architecture, there are no plans to add support for other x86
+   implementations of other CPU vendors. Some of the utilities may fail
+   or behave in an unexpected manner on the predecessors of AMD "Zen"
+   architecture.
+
+   Core module is internal to AOCL-utils to avail the features please
+   link to libaoclutils which is a combined library of all available
+   utils modules.
 
 ## Table of Contents
 
