@@ -363,12 +363,25 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
+     *            |   AOCL 5.0  |  isX86_64v2()                 |
+     *            |:-----------:|:-----------------------------:|
+     *            | Sandybridge | True                          |
+     *            | Broadwell   | True                          |
+     *            | Skylake     | True                          |
+     *            | Bulldozer   | True                          |
+     *            | Zen1        | True                          |
+     *            | Zen2        | True                          |
+     *            | Zen3        | True                          |
+     *            | Zen4        | True                          |
+     *            | Zen5        | True                          |
+     *
      * @param     none
      *
      * @return    true if cpu supports all features above,
      *            false otherwise
      */
     bool isX86_64v2() const;
+
     /**
      * @brief     Checks if processor is x86_64-v3 compliant
      *
@@ -390,12 +403,25 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
+     *            |   AOCL 5.0  |  isX86_64v3()  |
+     *            |:-----------:|:-----------------------------:|
+     *            | Sandybridge | False                         |
+     *            | Broadwell   | True                          |
+     *            | Skylake     | True                          |
+     *            | Bulldozer   | True                          |
+     *            | Zen1        | True                          |
+     *            | Zen2        | True                          |
+     *            | Zen3        | True                          |
+     *            | Zen4        | True                          |
+     *            | Zen5        | True                          |
+     *
      * @param   none
      *
      * @return  true if cpu supports all features above,
      *          false otherwise
      */
     bool isX86_64v3() const;
+
     /**
      * @brief     Checks if processor is x86_64-v4 compliant
      *
@@ -415,6 +441,19 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+     *
+     *
+     *            |   AOCL 5.0  |  isX86_64v4()  |
+     *            |:-----------:|:-----------------------------:|
+     *            | Sandybridge | False                         |
+     *            | Broadwell   | False                         |
+     *            | Skylake     | True                          |
+     *            | Bulldozer   | True                          |
+     *            | Zen1        | True                          |
+     *            | Zen2        | True                          |
+     *            | Zen3        | True                          |
+     *            | Zen4        | True                          |
+     *            | Zen5        | True                          |
      *
      * @param     none
      *

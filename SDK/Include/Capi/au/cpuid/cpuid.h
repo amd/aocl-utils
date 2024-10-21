@@ -231,7 +231,36 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is x86_64v2.
+ * @brief     Checks if processor is x86_64-v2 compliant
+ *
+ * @details   Based on GCC following flags account for x86_64-v2
+ *
+ *            (in addition to x86_64 [sse, sse2])
+ *
+ *            cx16       lahf_lm
+ *            popcnt     sse4_1
+ *            sse4_2     ssse3
+ *
+ *            Output of this API will be same as
+ *            hasFlag(ECpuidFlag::sse)   && hasFlag(ECpuidFlag::sse2)   &&
+ *            hasFlag(ECpuidFlag::cx16)  && hasFlag(ECpuidFlag::lahf_lm)&&
+ *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
+ *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
+ *
+ *            For more info refer to
+ *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+ *
+ *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v2()  |
+ *            |:-----------:|:-----------------------------:|
+ *            | Sandybridge | True                          |
+ *            | Broadwell   | True                          |
+ *            | Skylake     | True                          |
+ *            | Bulldozer   | True                          |
+ *            | Zen1        | True                          |
+ *            | Zen2        | True                          |
+ *            | Zen3        | True                          |
+ *            | Zen4        | True                          |
+ *            | Zen5        | True                          |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -241,7 +270,37 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is x86_64v3.
+ * @brief     Checks if processor is x86_64-v3 compliant
+ *
+ * @details   Based on GCC following flags account for x86_64-v3
+ *
+ *            (in addition to x86_64-v2)
+ *
+ *            avx    avx2    bmi1
+ *            bmi2   f16c    fma
+ *            abm    movbe   xsave
+ *
+ *            Output of this API will be same as        isX86_64v2() &&
+ *            hasFlag(ECpuidFlag::avx)  && hasFlag(ECpuidFlag::avx2) &&
+ *            hasFlag(ECpuidFlag::bmi1) && hasFlag(ECpuidFlag::bmi2) &&
+ *            hasFlag(ECpuidFlag::f16c) && hasFlag(ECpuidFlag::fma)  &&
+ *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
+ *            hasFlag(ECpuidFlag::xsave)
+ *
+ *            For more info refer to
+ *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+ *
+ *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v3()  |
+ *            |:-----------:|:-----------------------------:|
+ *            | Sandybridge | False                         |
+ *            | Broadwell   | True                          |
+ *            | Skylake     | True                          |
+ *            | Bulldozer   | True                          |
+ *            | Zen1        | True                          |
+ *            | Zen2        | True                          |
+ *            | Zen3        | True                          |
+ *            | Zen4        | True                          |
+ *            | Zen5        | True                          |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -251,7 +310,36 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is x86_64v4.
+ * @brief     Checks if processor is x86_64-v4 compliant
+ *
+ * @details   Based on GCC following flags account for x86_64-v4
+ *
+ *            (in addition to x86_64-v2 + x86_64-v3)
+ *
+ *            avx512f   avx512bw  avx512cd
+ *            avx512dq  avx512vl
+ *
+ *            Output of this API will be same as  isX86_64v3() &&
+ *            hasFlag(ECpuidFlag::avx512f)  &&
+ *            hasFlag(ECpuidFlag::avx512bw) &&
+ *            hasFlag(ECpuidFlag::avx512cd) &&
+ *            hasFlag(ECpuidFlag::avx512dq) &&
+ *            hasFlag(ECpuidFlag::avx512vl)
+ *
+ *            For more info refer to
+ *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+ *
+ *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v4()  |
+ *            |:-----------:|:-----------------------------:|
+ *            | Sandybridge | False                         |
+ *            | Broadwell   | False                         |
+ *            | Skylake     | True                          |
+ *            | Bulldozer   | True                          |
+ *            | Zen1        | True                          |
+ *            | Zen2        | True                          |
+ *            | Zen3        | True                          |
+ *            | Zen4        | True                          |
+ *            | Zen5        | True                          |
  *
  * @param[in]      cpu_num   CPU number.
  *
