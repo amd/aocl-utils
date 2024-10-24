@@ -329,7 +329,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Check if vendor is AMD
      *
      * @details   This function will work on all AMD processors.
-     *            |   AOCL 5.0      |  isAMD()            |
+     *            |   AOCL 5.0.1    |  isAMD()            |
      *            |:---------------:|:-------------------:|
      *            |Skylake          | False               |
      *            |Bulldozer        | True                |
@@ -363,7 +363,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
-     *            |   AOCL 5.0  |  isX86_64v2()                 |
+     *            | AOCL 5.0.1  |  isX86_64v2()                 |
      *            |:-----------:|:-----------------------------:|
      *            | Sandybridge | True                          |
      *            | Broadwell   | True                          |
@@ -403,7 +403,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
-     *            |   AOCL 5.0  |  isX86_64v3()  |
+     *            | AOCL 5.0.1  |  isX86_64v3()  |
      *            |:-----------:|:-----------------------------:|
      *            | Sandybridge | False                         |
      *            | Broadwell   | True                          |
@@ -443,7 +443,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
      *
-     *            |   AOCL 5.0  |  isX86_64v4()  |
+     *            |  AOCL 5.0.1 |  isX86_64v4()  |
      *            |:-----------:|:-----------------------------:|
      *            | Sandybridge | False                         |
      *            | Broadwell   | False                         |
@@ -466,7 +466,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Check if vendor is Intel
      *
      * @details        This function will work on all Intel processors.
-     *                 |   AOCL 5.0      |  isIntel()          |
+     *                 |   AOCL 5.0.1    |  isIntel()          |
      *                 |:---------------:|:-------------------:|
      *                 |Skylake          | True                |
      *                 |Bulldozer        | False               |
@@ -560,7 +560,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            Will return Unknown if the microarchitecture is not
      *            supported
      *
-     *            |   AOCL 5.0  |  getUarch()           |
+     *            |  AOCL 5.0.1 |  getUarch()           |
      *            |:-----------:|:---------------------:|
      *            | Skylake     | Unknown               |
      *            | Bulldozer   | Unknown               |
@@ -586,7 +586,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @details   Given a microarchitecture, this function will check if the
      *            CPU microarchitecture is matched with input.
      *
-     *  | AOCL 5.0  | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
+     *  |AOCL 5.0.1 | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
      *  |:---------:|:------------:|:----------------:|:-------------:|:-------------:|:-------------:|:-------------:|
      *  | Skylake   | False        | False            | False         | False         | False         | False         |
      *  | Bulldozer | False        | False            | False         | False         | False         | False         |
@@ -600,7 +600,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *
      *  When given strict as true, it will check for exact match.
      *
-     * | AOCL 5.0  | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
+     * |AOCL 5.0.1 | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
      * |:---------:|:--------------:|:------------------:|:---------------:|:---------------:|:---------------:|:---------------:|
      * | Skylake   | False          | False              | False           | False           | False           | False           |
      * | Bulldozer | False          | False              | False           | False           | False           | False           |

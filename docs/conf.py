@@ -46,7 +46,7 @@ _rocm_version_expected = "1.0.0"
 project = 'AOCL-UTILS'
 copyright = '2024, AMD'
 author = 'AMD'
-release = '5.0'
+release = '5.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
