@@ -92,26 +92,27 @@ set(CORE_SRC_FILES
 )
 
 au_cc_library(core
-PRIVATE
-SOURCES
-      ${CORE_SRC_FILES}
-
-HEADERS
-      Core/ThreadPinningImpl.hh
-USING
- af::sdk::include
+  PRIVATE
+  SOURCES
+    ${CORE_SRC_FILES}
+  HEADERS
+    Core/ThreadPinningImpl.hh
+  # FIXME: "USING" is not used in au_cc_library function.
+  USING
+    au::sdk__include
 )
 
 
 au_module("aoclutils")
 au_cc_library(aoclutils
- PUBLIC
- SOURCES
+  PUBLIC
+  SOURCES
       ${CORE_SRC_FILES}
- HEADERS
+  HEADERS
       Core/ThreadPinningImpl.hh
- USING
- af::sdk::include
+  # FIXME: "USING" is not used in au_cc_library function.
+  USING
+      au::sdk__include
 )
 
 if(AU_BUILD_TESTS)
