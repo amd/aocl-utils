@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,58 +25,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Au/Status.hh"
-#include "Au/Error.hh"
+#pragma once
+
+#include "Au/Au.hh"
 
 namespace Au {
-
-Status
-StatusAlreadyExists(StringView msg)
+/**
+ * @detail
+ * IError is an interface class for all errors, to be used with
+ * ErrorBase class which defines few necessary methods.
+ */
+class IError
 {
-    static auto& err = AlreadyExistsError();
-    return Status{ err, msg };
-}
+  protected:
+    AUD_DEFAULT_CTOR_AND_VIRTUAL_DTOR(IError);
 
-Status
-StatusInternalError(StringView msg)
-{
-    static auto& err = InternalError();
-    return Status{ err, msg };
-}
+  public:
+    virtual String message() const = 0;
+    virtual Uint64 code() const    = 0;
 
-Status
-StatusInvalidArgument(StringView msg)
-{
-    static auto& err = InvalidArgumentError();
-    return Status{ err, msg };
-}
+    bool operator==(const IError& other) { return isEq(*this, other); }
 
-Status
-StatusNotFound(StringView msg)
-{
-    static auto& err = NotFoundError();
-    return Status{ err, msg };
-}
-
-Status
-StatusNotAvailable(StringView msg)
-{
-    static auto& err = NotAvailableError();
-    return Status{ err, msg };
-}
-
-Status
-StatusNotImplemented(StringView msg)
-{
-    static auto& err = NotImplementedError();
-    return Status{ err, msg };
-}
-
-Status
-StatusUnknown(StringView msg)
-{
-    static auto& err = UnknownError();
-    return Status{ err, msg };
-}
+  protected:
+    virtual bool isEq(IError const& lhs, IError const& rhs) const = 0;
+};
 
 } // namespace Au

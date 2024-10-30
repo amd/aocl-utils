@@ -133,14 +133,14 @@ GenericError::message() const
         { ec::eNotImplemented, "Not Implemented" },
     };
 
-    ErrorMapT::const_iterator it = str_map.find(getModuleError());
+    ErrorMapT::const_iterator it = str_map.find(getBaseError());
 
     String s{};
 
     if (it != str_map.end()) {
         s = it->second;
     } else {
-        s = std::string("Unknown Error: ");
+        s = std::string("Unknown Error");
     }
 
     return s;
