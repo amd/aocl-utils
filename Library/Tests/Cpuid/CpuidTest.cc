@@ -176,12 +176,12 @@ TEST(X86Cpuid, CheckCpuNumber)
         X86Cpu cpu2{ m_cpu - 1 };
     }
     checkAffinity(currentMask);
-    // Verify that an exception is thrown when the core number is greater
-    // than the number of phycal cores.
-    if (AU_ENABLE_ASSERTIONS) {
-        auto nthreads = std::thread::hardware_concurrency();
-        EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
-    }
+// Verify that an exception is thrown when the core number is greater
+// than the number of phycal cores.
+#ifdef AU_ENABLE_ASSERTIONS
+    auto nthreads = std::thread::hardware_concurrency();
+    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
+#endif
 }
 
 TEST(X86Cpu, BCTEST)
