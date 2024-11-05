@@ -49,7 +49,7 @@ typedef Uint32 au_cpu_flag_t;
  * @brief          Allows caller to check if the processor vendor is AMD.
  *
  * @details        This function will work on all AMD processors.
- *                 |   AOCL 5.0      |  alci_is_amd()      |
+ *                 |   AOCL 5.0.1    |  alci_is_amd()      |
  *                 |:---------------:|:-------------------:|
  *                 |Skylake          | False               |
  *                 |Bulldozer        | True                |
@@ -101,7 +101,7 @@ alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
  * @brief          Allows caller to check if the processor arch is ZEN.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  alci_arch_is_zen()      |
+ *                 |  AOCL 5.0.1 |  alci_arch_is_zen()      |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -138,7 +138,7 @@ alci_arch_is_zen(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN2.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  alci_arch_is_zen2()     |
+ *                 |  AOCL 5.0.1 |  alci_arch_is_zen2()     |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -176,7 +176,7 @@ alci_arch_is_zen2(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN3.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  alci_arch_is_zen3()     |
+ *                 |  AOCL 5.0.1 |  alci_arch_is_zen3()     |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -214,7 +214,7 @@ alci_arch_is_zen3(au_cpu_num_t cpu_num);
  *
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  alci_arch_is_zen4()     |
+ *                 |  AOCL 5.0.1 |  alci_arch_is_zen4()     |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -251,7 +251,7 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN5.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  alci_arch_is_zen5()     |
+ *                 |  AOCL 5.0.1 |  alci_arch_is_zen5()     |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -260,7 +260,7 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num);
  *                 | Zen5        | True                     |
  *                 | Zen[X>5]    | False                    |
  *
- *                 |   AOCL 4.2  |  alci_arch_is_zen5()     |
+ *                 |  AOCL 4.2   |  alci_arch_is_zen5()     |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |

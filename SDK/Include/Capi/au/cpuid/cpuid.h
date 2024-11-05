@@ -47,7 +47,7 @@ typedef Uint32 au_cpu_flag_t;
  * @brief          Check if the processor vendor is AMD.
  *
  * @details        This function will work on all AMD processors.
- *                 |   AOCL 5.0      |  au_cpuid_is_amd()  |
+ *                 |   AOCL 5.0.1    |  au_cpuid_is_amd()  |
  *                 |:---------------:|:-------------------:|
  *                 |Skylake          | False               |
  *                 |Bulldozer        | True                |
@@ -92,7 +92,7 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  * @brief          Allows caller to check if the processor arch is ZEN1.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zen()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zen()  |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -116,7 +116,7 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZENPLUS.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zenplus()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zenplus()  |
  *                 |:-----------:|:----------------------------:|
  *                 | Skylake     | False                        |
  *                 | Bulldozer   | False                        |
@@ -140,7 +140,7 @@ au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN2.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zen2()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zen2()  |
  *                 |:-----------:|:-------------------------:|
  *                 | Skylake     | False                     |
  *                 | Bulldozer   | False                     |
@@ -165,7 +165,7 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN3.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zen3()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zen3()  |
  *                 |:-----------:|:-------------------------:|
  *                 | Skylake     | False                     |
  *                 | Bulldozer   | False                     |
@@ -188,7 +188,7 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN4.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zen4()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zen4()  |
  *                 |:-----------:|:-------------------------:|
  *                 | Skylake     | False                     |
  *                 | Bulldozer   | False                     |
@@ -211,7 +211,7 @@ au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN5.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.0  |  au_cpuid_arch_is_zen5()  |
+ *                 |  AOCL 5.0.1 |  au_cpuid_arch_is_zen5()  |
  *                 |:-----------:|:------------------------:|
  *                 | Skylake     | False                    |
  *                 | Bulldozer   | False                    |
@@ -250,7 +250,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            For more info refer to
  *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
  *
- *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v2()  |
+ *            | AOCL 5.0.1  |  au_cpuid_arch_is_x86_64v2()  |
  *            |:-----------:|:-----------------------------:|
  *            | Sandybridge | True                          |
  *            | Broadwell   | True                          |
@@ -290,7 +290,7 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            For more info refer to
  *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
  *
- *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v3()  |
+ *            | AOCL 5.0.1  |  au_cpuid_arch_is_x86_64v3()  |
  *            |:-----------:|:-----------------------------:|
  *            | Sandybridge | False                         |
  *            | Broadwell   | True                          |
@@ -329,7 +329,7 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            For more info refer to
  *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
  *
- *            |   AOCL 5.0  |  au_cpuid_arch_is_x86_64v4()  |
+ *            | AOCL 5.0.1  |  au_cpuid_arch_is_x86_64v4()  |
  *            |:-----------:|:-----------------------------:|
  *            | Sandybridge | False                         |
  *            | Broadwell   | False                         |
