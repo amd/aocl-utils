@@ -49,7 +49,13 @@ Timestamp::getTimestamp() const
 {
     auto    now_c = std::chrono::system_clock::to_time_t(m_now);
     std::tm time  = {};
-    localtime_r(&now_c, &time); // Use localtime_r for thread safety
+
+#if defined(_WIN32) || defined(_WIN64)
+    localtime_s(&time, &now_c); // Use localtime_s for thread safety on Windows
+#else
+    localtime_r(&now_c, &time); // Use localtime_r for thread safety on Linux
+#endif
+
     std::ostringstream oss = {};
     oss << std::put_time(&time, "%a %b %d %Y %H:%M:%S");
     return oss.str();
@@ -58,25 +64,46 @@ Timestamp::getTimestamp() const
 Uint64
 Timestamp::getHour() const
 {
-    auto now_c = std::chrono::system_clock::to_time_t(m_now);
-    auto time  = std::localtime(&now_c);
-    return time->tm_hour;
+    auto    now_c = std::chrono::system_clock::to_time_t(m_now);
+    std::tm time  = {};
+
+#if defined(_WIN32) || defined(_WIN64)
+    localtime_s(&time, &now_c); // Use localtime_s for thread safety on Windows
+#else
+    localtime_r(&now_c, &time); // Use localtime_r for thread safety on Linux
+#endif
+
+    return time.tm_hour;
 }
 
 Uint64
 Timestamp::getMinute() const
 {
-    auto now_c = std::chrono::system_clock::to_time_t(m_now);
-    auto time  = std::localtime(&now_c);
-    return time->tm_min;
+    auto    now_c = std::chrono::system_clock::to_time_t(m_now);
+    std::tm time  = {};
+
+#if defined(_WIN32) || defined(_WIN64)
+    localtime_s(&time, &now_c); // Use localtime_s for thread safety on Windows
+#else
+    localtime_r(&now_c, &time); // Use localtime_r for thread safety on Linux
+#endif
+
+    return time.tm_min;
 }
 
 Uint64
 Timestamp::getSecond() const
 {
-    auto now_c = std::chrono::system_clock::to_time_t(m_now);
-    auto time  = std::localtime(&now_c);
-    return time->tm_sec;
+    auto    now_c = std::chrono::system_clock::to_time_t(m_now);
+    std::tm time  = {};
+
+#if defined(_WIN32) || defined(_WIN64)
+    localtime_s(&time, &now_c); // Use localtime_s for thread safety on Windows
+#else
+    localtime_r(&now_c, &time); // Use localtime_r for thread safety on Linux
+#endif
+
+    return time.tm_sec;
 }
 
 Uint64
