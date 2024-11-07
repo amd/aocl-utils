@@ -329,15 +329,15 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Check if vendor is AMD
      *
      * @details   This function will work on all AMD processors.
-     *            |   AOCL 5.0.1    |  isAMD()            |
-     *            |:---------------:|:-------------------:|
-     *            |Skylake          | False               |
-     *            |Bulldozer        | True                |
-     *            |Zen1             | True                |
-     *            |Zen2             | True                |
-     *            |Zen3             | True                |
-     *            |Zen4             | True                |
-     *            |Zen[X>4]         | True                |
+     *            |   AOCL 5.0.1  |  isAMD()  |
+     *            |:-------------:|:---------:|
+     *            |   Skylake     |   False   |
+     *            |  Bulldozer    |   True    |
+     *            |     Zen1      |   True    |
+     *            |     Zen2      |   True    |
+     *            |     Zen3      |   True    |
+     *            |     Zen4      |   True    |
+     *            |    Zen[X>4]   |   True    |
      *
      * @return    true if 'num' was an AMD x86-64, false otherwise
      */
@@ -347,7 +347,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Checks if processor is x86_64-v2 compliant
      *
      * @details   Based on GCC following flags account for x86_64-v2
-     *
      *            (in addition to x86_64 [sse, sse2])
      *
      *            cx16       lahf_lm
@@ -363,17 +362,17 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
-     *            | AOCL 5.0.1  |  isX86_64v2()                 |
-     *            |:-----------:|:-----------------------------:|
-     *            | Sandybridge | True                          |
-     *            | Broadwell   | True                          |
-     *            | Skylake     | True                          |
-     *            | Bulldozer   | True                          |
-     *            | Zen1        | True                          |
-     *            | Zen2        | True                          |
-     *            | Zen3        | True                          |
-     *            | Zen4        | True                          |
-     *            | Zen5        | True                          |
+     *            |   AOCL 5.0.1   |      isX86_64v2()      |
+     *            |:-------------:|:----------------------:|
+     *            |  Sandybridge  |         True           |
+     *            |   Broadwell   |         True           |
+     *            |    Skylake    |         True           |
+     *            |   Bulldozer   |         True           |
+     *            |     Zen1      |         True           |
+     *            |     Zen2      |         True           |
+     *            |     Zen3      |         True           |
+     *            |     Zen4      |         True           |
+     *            |     Zen5      |         True           |
      *
      * @param     none
      *
@@ -386,7 +385,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Checks if processor is x86_64-v3 compliant
      *
      * @details   Based on GCC following flags account for x86_64-v3
-     *
      *            (in addition to x86_64-v2)
      *
      *            avx    avx2    bmi1
@@ -403,17 +401,17 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
-     *            | AOCL 5.0.1  |  isX86_64v3()  |
-     *            |:-----------:|:-----------------------------:|
-     *            | Sandybridge | False                         |
-     *            | Broadwell   | True                          |
-     *            | Skylake     | True                          |
-     *            | Bulldozer   | True                          |
-     *            | Zen1        | True                          |
-     *            | Zen2        | True                          |
-     *            | Zen3        | True                          |
-     *            | Zen4        | True                          |
-     *            | Zen5        | True                          |
+     *            |   AOCL 5.0.1   |      isX86_64v3()      |
+     *            |:--------------:|:----------------------:|
+     *            |  Sandybridge   |         False          |
+     *            |   Broadwell    |         True           |
+     *            |    Skylake     |         True           |
+     *            |   Bulldozer    |         True           |
+     *            |     Zen1       |         True           |
+     *            |     Zen2       |         True           |
+     *            |     Zen3       |         True           |
+     *            |     Zen4       |         True           |
+     *            |     Zen5       |         True           |
      *
      * @param   none
      *
@@ -426,7 +424,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Checks if processor is x86_64-v4 compliant
      *
      * @details   Based on GCC following flags account for x86_64-v4
-     *
      *            (in addition to x86_64-v2 + x86_64-v3)
      *
      *            avx512f   avx512bw  avx512cd
@@ -442,18 +439,17 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            For more info refer to
      *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
-     *
-     *            |  AOCL 5.0.1 |  isX86_64v4()  |
+     *            |  AOCL 5.0.1  |  isX86_64v4()                 |
      *            |:-----------:|:-----------------------------:|
-     *            | Sandybridge | False                         |
-     *            | Broadwell   | False                         |
-     *            | Skylake     | True                          |
-     *            | Bulldozer   | True                          |
-     *            | Zen1        | True                          |
-     *            | Zen2        | True                          |
-     *            | Zen3        | True                          |
-     *            | Zen4        | True                          |
-     *            | Zen5        | True                          |
+     *            | Sandybridge |            False              |
+     *            | Broadwell   |            False              |
+     *            | Skylake     |            True               |
+     *            | Bulldozer   |            True               |
+     *            | Zen1        |            True               |
+     *            | Zen2        |            True               |
+     *            | Zen3        |            True               |
+     *            | Zen4        |            True               |
+     *            | Zen5        |            True               |
      *
      * @param     none
      *
@@ -465,16 +461,16 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     /**
      * @brief     Check if vendor is Intel
      *
-     * @details        This function will work on all Intel processors.
-     *                 |   AOCL 5.0.1    |  isIntel()          |
-     *                 |:---------------:|:-------------------:|
-     *                 |Skylake          | True                |
-     *                 |Bulldozer        | False               |
-     *                 |Zen1             | False               |
-     *                 |Zen2             | False               |
-     *                 |Zen3             | False               |
-     *                 |Zen4             | False               |
-     *                 |Zen[X>4]         | False               |
+     * @details   This function will work on all Intel processors.
+     *            |   AOCL 5.0.1   |  isIntel()  |
+     *            |:--------------:|:-----------:|
+     *            |    Skylake     |    True     |
+     *            |   Bulldozer    |    False    |
+     *            |     Zen1       |    False    |
+     *            |     Zen2       |    False    |
+     *            |     Zen3       |    False    |
+     *            |     Zen4       |    False    |
+     *            |    Zen[X>4]    |    False    |
      *
      * @param     none
      *
@@ -560,17 +556,17 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            Will return Unknown if the microarchitecture is not
      *            supported
      *
-     *            |  AOCL 5.0.1 |  getUarch()           |
-     *            |:-----------:|:---------------------:|
-     *            | Skylake     | Unknown               |
-     *            | Bulldozer   | Unknown               |
-     *            | Zen1        | Zen                   |
-     *            | Zen1+       | ZenPlus               |
-     *            | Zen2        | Zen2                  |
-     *            | Zen3        | Zen3                  |
-     *            | Zen4        | Zen4                  |
-     *            | Zen5        | Zen5                  |
-     *            | Zen[X>5]    | Unknown               |
+     *            |  AOCL 5.0.1  |      getUarch()      |
+     *            |:------------:|:--------------------:|
+     *            |   Skylake    |       Unknown        |
+     *            |  Bulldozer   |       Unknown        |
+     *            |     Zen1     |         Zen          |
+     *            |    Zen1+     |       ZenPlus        |
+     *            |     Zen2     |         Zen2         |
+     *            |     Zen3     |         Zen3         |
+     *            |     Zen4     |         Zen4         |
+     *            |     Zen5     |         Zen5         |
+     *            |   Zen[X>5]   |       Unknown        |
      *
      * @param     none
      *
@@ -581,37 +577,38 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     // clang-format off
     /**
      * @brief     Checks microarchitecture from CPUID instruction and compare
-     * with input Like Zen, Zen2, Zen3 etc.
+     *            with input Like Zen, Zen2, Zen3 etc.
      *
      * @details   Given a microarchitecture, this function will check if the
      *            CPU microarchitecture is matched with input.
      *
-     *  |AOCL 5.0.1 | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
-     *  |:---------:|:------------:|:----------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-     *  | Skylake   | False        | False            | False         | False         | False         | False         |
-     *  | Bulldozer | False        | False            | False         | False         | False         | False         |
-     *  | Zen1      | True         | False            | False         | False         | False         | False         |
-     *  | Zen1+     | True         | True             | False         | False         | False         | False         |
-     *  | Zen2      | True         | True             | True          | False         | False         | False         |
-     *  | Zen3      | True         | True             | True          | True          | False         | False         |
-     *  | Zen4      | True         | True             | True          | True          | True          | False         |
-     *  | Zen5      | True         | True             | True          | True          | True          | True          |
-     *  | Zen[X>5]  | False        | False            | False         | False         | False         | False         |
+     *  | AOCL 5.0.1 | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
+     *  |:----------:|:------------:|:----------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+     *  |  Skylake   |    False     |      False       |     False     |     False     |     False     |     False     |
+     *  | Bulldozer  |    False     |      False       |     False     |     False     |     False     |     False     |
+     *  |   Zen1     |    True      |      False       |     False     |     False     |     False     |     False     |
+     *  |   Zen1+    |    True      |       True       |     False     |     False     |     False     |     False     |
+     *  |   Zen2     |    True      |       True       |      True     |     False     |     False     |     False     |
+     *  |   Zen3     |    True      |       True       |      True     |      True     |     False     |     False     |
+     *  |   Zen4     |    True      |       True       |      True     |      True     |      True     |     False     |
+     *  |   Zen5     |    True      |       True       |      True     |      True     |      True     |      True     |
+     *  |  Zen[X>5]  |    False     |      False       |     False     |     False     |     False     |     False     |
      *
      *  When given strict as true, it will check for exact match.
      *
-     * |AOCL 5.0.1 | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
-     * |:---------:|:--------------:|:------------------:|:---------------:|:---------------:|:---------------:|:---------------:|
-     * | Skylake   | False          | False              | False           | False           | False           | False           |
-     * | Bulldozer | False          | False              | False           | False           | False           | False           |
-     * | Zen1      | True           | False              | False           | False           | False           | False           |
-     * | Zen1+     | False          | True               | False           | False           | False           | False           |
-     * | Zen2      | False          | False              | True            | False           | False           | False           |
-     * | Zen3      | False          | False              | False           | True            | False           | False           |
-     * | Zen4      | False          | False              | False           | False           | True            | False           |
-     * | Zen5      | False          | False              | False           | False           | False           | True            |
-     * | Zen[X>5]  | False          | False              | False           | False           | False           | False           |
+     *  | AOCL 5.0.1 | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
+     *  |:----------:|:--------------:|:------------------:|:---------------:|:---------------:|:---------------:|:---------------:|
+     *  |  Skylake   |      False     |        False       |       False     |       False     |       False     |       False     |
+     *  | Bulldozer  |      False     |        False       |       False     |       False     |       False     |       False     |
+     *  |   Zen1     |      True      |        False       |       False     |       False     |       False     |       False     |
+     *  |   Zen1+    |      False     |         True       |       False     |       False     |       False     |       False     |
+     *  |   Zen2     |      False     |        False       |        True     |       False     |       False     |       False     |
+     *  |   Zen3     |      False     |        False       |       False     |        True     |       False     |       False     |
+     *  |   Zen4     |      False     |        False       |       False     |       False     |        True     |       False     |
+     *  |   Zen5     |      False     |        False       |       False     |       False     |       False     |        True     |
+     *  |  Zen[X>5]  |      False     |        False       |       False     |       False     |       False     |       False     |
      *
+     *  <a href="#cpuid-c-apis"> C++-API Behaviour Summary </a>
      *
      * @param[in] arch   Microarchitecture input to check for.
      * @param[in] strict If true, then exact match is checked.

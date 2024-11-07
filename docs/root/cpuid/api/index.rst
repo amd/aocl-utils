@@ -7,4 +7,5 @@ Cpuid API Reference
     :maxdepth: 2
     :glob:
 
-    *
+    utils_capis.rst
+    utils_cppapis.rst
