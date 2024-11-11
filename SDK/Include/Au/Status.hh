@@ -107,6 +107,7 @@ class Status final
 
         m_code    = ie.code();
         m_message = makeMessage(ie.message(), msg);
+        m_is_ok   = !ie.isError();
         return true;
     }
 
@@ -128,6 +129,7 @@ class Status final
 
         m_code    = s.code();
         m_message = s.message();
+        m_is_ok   = s.ok();
         return true;
     }
 
@@ -145,6 +147,7 @@ class Status final
     }
 
     Uint64 m_code    = {};
+    bool   m_is_ok   = true;
     String m_message = {};
 
     // StringView m_err_message, m_err_specifics;
@@ -178,7 +181,7 @@ Status::operator==(const Status& other) const
 inline bool
 Status::ok() const
 {
-    return m_code == 0;
+    return m_is_ok;
 }
 
 // clang-format off

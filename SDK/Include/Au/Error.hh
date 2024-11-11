@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,10 +38,11 @@ class GenericError final : public ErrorBase
 {
   public:
     GenericError();
-    GenericError(ErrorCodeGeneric ecode);
+    explicit GenericError(ErrorCodeGeneric ecode);
 
     AUD_DEFAULT_DTOR(GenericError);
     virtual String message() const override;
+    virtual bool   isError() const;
 
   protected:
     virtual Uint16 getModuleId() const override { return 0; }
