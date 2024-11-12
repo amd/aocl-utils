@@ -60,6 +60,6 @@
 
 #cmakedefine AU_WARN_DEPRECATION
 // enable assertion
-#cmakedefine01 AU_ENABLE_ASSERTIONS
+#cmakedefine AU_ENABLE_ASSERTIONS
 // clang-format on
 #endif // _AU_CONFIG_H_INCLUDED
