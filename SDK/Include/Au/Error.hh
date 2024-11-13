@@ -42,7 +42,7 @@ class GenericError final : public ErrorBase
 
     AUD_DEFAULT_DTOR(GenericError);
     virtual String message() const override;
-    virtual bool   isError() const;
+    virtual bool   isError() const override;
 
   protected:
     virtual Uint16 getModuleId() const override { return 0; }
