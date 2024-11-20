@@ -35,20 +35,14 @@ au_logger_create()
         return nullptr;
     }
 
-    std::unique_ptr<Au::Logger::ILogger> consoleLogger =
-        Au::Logger::LoggerFactory::createLogger("ConsoleLogger",
-                                                "Main Console");
-    logger->logWriter = std::make_unique<Au::Logger::LogWriter>(consoleLogger);
-
-    logger->logger =
-        std::make_unique<Au::Logger::LogManager>(*(logger->logWriter));
+    logger->logger = std::make_unique<Au::Logger::LogManager>(
+        Au::Logger::LogWriter::getLogWriter());
     // Check if memory allocation is successful
     if (logger->logger == nullptr) {
         delete logger;
         return nullptr;
     }
 
-    logger->logWriter->start();
     return logger;
 }
 
@@ -96,6 +90,7 @@ void
 au_logger_destroy(logger_ctx_t* logger)
 {
     LoggerCtx* loggerCtx = reinterpret_cast<LoggerCtx*>(logger);
+    Au::Logger::LogWriter::getLogWriter()->stop();
     delete loggerCtx;
 }
 

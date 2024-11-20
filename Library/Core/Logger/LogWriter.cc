@@ -29,10 +29,14 @@
 #include "Au/Logger/LogWriter.hh"
 
 #include <iostream>
+#include <mutex>
 
 #define USE_NO_LOCK 0
 
 namespace Au::Logger {
+
+std::shared_ptr<LogWriter> LogWriter::instance = nullptr;
+std::mutex                 LogWriter::instanceMutex;
 
 // Class LogWriter begins
 void
@@ -53,17 +57,44 @@ LogWriter::loggerThread()
     }
 }
 
-LogWriter::LogWriter(std::unique_ptr<ILogger>& logger)
+LogWriter::LogWriter()
     : m_thread{}
-    , m_logger{ std::move(logger) }
+    , m_logger{ std::make_unique<ConsoleLogger>() } // Default to ConsoleLogger
     , m_running{ false }
     , m_queue{}
 {
 }
 
+std::shared_ptr<LogWriter>
+LogWriter::getLogWriter()
+{
+    std::lock_guard<std::mutex> lock(instanceMutex);
+    if (!instance) {
+        instance = std::shared_ptr<LogWriter>(new LogWriter());
+    }
+    if (instance->m_running == false)
+        instance->start();
+    return instance;
+}
+
+void
+LogWriter::setLogger(std::unique_ptr<ILogger> logger)
+{
+    std::lock_guard<std::mutex> lock(instanceMutex);
+    if (instance) {
+        instance->m_logger = std::move(logger);
+    } else {
+        instance           = std::shared_ptr<LogWriter>(new LogWriter());
+        instance->m_logger = std::move(logger);
+    }
+}
+
 void
 LogWriter::start()
 {
+    if (m_running) {
+        return;
+    }
     m_running = true;
     m_thread  = std::thread(&LogWriter::loggerThread, this);
 }
@@ -82,13 +113,15 @@ LogWriter::stop()
     }
 
     m_running = false;
+    m_logger->flush();
     m_thread.join();
+
+    instance.reset();
 }
 
 LogWriter::~LogWriter()
 {
     stop();
-    m_logger->flush();
 }
 
 void

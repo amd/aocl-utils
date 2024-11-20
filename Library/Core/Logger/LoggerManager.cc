@@ -32,8 +32,8 @@ namespace Au::Logger {
 
 thread_local std::vector<Message> LogManager::m_storage;
 
-LogManager::LogManager(LogWriter& logWriter)
-    : m_logWriter{ &logWriter }
+LogManager::LogManager(std::shared_ptr<LogWriter> logWriter)
+    : m_logWriter{ logWriter }
 {
 }
 
@@ -51,4 +51,20 @@ LogManager::flush()
 }
 
 LogManager::~LogManager() {}
+
+LogManager&
+LogManager::operator<<(const Message& msg)
+{
+    log(const_cast<Message&>(msg));
+    return *this;
+}
+
+LogManager&
+LogManager::operator<<(const std::string& msg)
+{
+    Message message(msg);
+    log(message);
+    return *this;
+}
+
 } // namespace Au::Logger

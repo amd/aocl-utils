@@ -40,9 +40,11 @@ main(int argc, char const* argv[])
     std::unique_ptr<ILogger> consoleLogger =
         LoggerFactory::createLogger("ConsoleLogger", "Main Console");
 
-    LogWriter logWriter(consoleLogger); // Create a log writer.
+    // Set the logger to the singleton LogWriter
+    LogWriter::setLogger(std::move(consoleLogger));
 
-    logWriter.start();
+    // Get the singleton instance of LogWriter
+    auto logWriter = LogWriter::getLogWriter();
 
     LogManager logger(logWriter);
 
@@ -52,6 +54,12 @@ main(int argc, char const* argv[])
     }
 
     logger.flush();
+
+    logger << Message("This is a message using operator '<<'");
+    logger << "This is a string message using operator '<<'";
+
+    logger.flush();
+    logWriter->stop(); // Add this line to stop the logger thread
 
     return 0;
 }

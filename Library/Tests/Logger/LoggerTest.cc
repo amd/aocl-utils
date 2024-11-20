@@ -180,7 +180,7 @@ TEST(LoggerTest, LoggerFactoryTest)
     // Create a mockLogger
     std::unique_ptr<MockLogger> mockLogger = std::make_unique<MockLogger>();
 
-#if 0
+#if 1
     // Set the expectations
     for (int i = 0; i < 10; i++) {
         // Mock method to write
@@ -201,12 +201,11 @@ TEST(LoggerTest, LoggerFactoryTest)
     // Mock method to flush
     EXPECT_CALL(*mockLogger.get(), flush()).Times(1);
 
-    auto mockLoggerPointer = std::unique_ptr<ILogger>(mockLogger.release());
+    // Set the mock logger to the singleton LogWriter
+    LogWriter::setLogger(std::move(mockLogger));
 
-    // Create a LogWriter
-    LogWriter logWriter(mockLoggerPointer);
-
-    logWriter.start();
+    // Get the singleton instance of LogWriter
+    auto logWriter = LogWriter::getLogWriter();
 
     std::vector<Message> messageVect = {};
     for (int i = 0; i < 10; i++) {
@@ -218,7 +217,9 @@ TEST(LoggerTest, LoggerFactoryTest)
         }
     }
     // Write messages to logWriter
-    logWriter.log(messageVect);
+    logWriter->log(messageVect);
+
+    logWriter->stop();
 }
 
 TEST(LoggerTest, LoggerClass)
@@ -240,12 +241,11 @@ TEST(LoggerTest, LoggerClass)
     // Mock method to flush
     EXPECT_CALL(*mockLogger.get(), flush()).Times(1);
 
-    auto mockLoggerPointer = std::unique_ptr<ILogger>(mockLogger.release());
+    // Set the mock logger to the singleton LogWriter
+    LogWriter::setLogger(std::move(mockLogger));
 
-    // Create a LogWriter
-    LogWriter logWriter(mockLoggerPointer);
-
-    logWriter.start();
+    // Get the singleton instance of LogWriter
+    auto logWriter = LogWriter::getLogWriter();
 
     // Create a Logger
     LogManager logger(logWriter);
@@ -266,7 +266,7 @@ TEST(LoggerTest, LoggerClass)
     logger.flush();
 
     // Stop the logWriter
-    logWriter.stop();
+    logWriter->stop();
 }
 
 // Gtest main with an argument parser

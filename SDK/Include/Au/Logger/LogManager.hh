@@ -40,16 +40,19 @@ class LogManager
   private:
     // Thread local storage for vector of log messages
     static thread_local std::vector<Message> m_storage;
-    LogWriter*                               m_logWriter = nullptr;
+    std::shared_ptr<LogWriter>               m_logWriter;
 
     // Disable copy constructor and assignment operator
     LogManager(const LogManager&)            = delete;
     LogManager& operator=(const LogManager&) = delete;
 
   public:
-    explicit LogManager(LogWriter& logWriter);
+    explicit LogManager(std::shared_ptr<LogWriter> logWriter);
     void log(Message& msg);
     void flush();
     ~LogManager();
+
+    LogManager& operator<<(const Message& msg);
+    LogManager& operator<<(const std::string& msg);
 };
 } // namespace Au::Logger
