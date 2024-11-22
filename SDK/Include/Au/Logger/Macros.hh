@@ -26,61 +26,37 @@
  *
  */
 
-#include <iostream>
-#include <thread>
-#include <vector>
+#pragma once
 
 #include "Au/Logger/LogManager.hh"
 
-#include "Au/Logger/Macros.hh"
+using Au::Logger::LogManager;
+using Au::Logger::LogWriter;
+using Au::Logger::Message;
+using Au::Logger::Priority;
 
-using namespace Au::Logger;
-
-void
-log_cpp_api()
-{
-    std::unique_ptr<ILogger> consoleLogger =
-        LoggerFactory::createLogger("ConsoleLogger", "Main Console");
-
-    // Set the logger to the singleton LogWriter
-    LogWriter::setLogger(std::move(consoleLogger));
-
-    // Get the singleton instance of LogWriter
-    auto logWriter = LogWriter::getLogWriter();
-
-    LogManager logger(logWriter);
-
-    for (int i = 0; i < 10; ++i) {
-        Message msg("This is a message " + std::to_string(i));
-        logger.log(msg);
+#define AU_LOGGER_LOG(msg, level)                                              \
+    {                                                                          \
+        Priority   priority(Priority::PriorityLevel::level);                   \
+        Message    message(std::string(msg), priority);                        \
+        LogManager logger = LogManager(LogWriter::getLogWriter());             \
+        logger << message;                                                     \
+        logger.flush();                                                        \
+        LogWriter::getLogWriter()->stop();                                     \
     }
 
-    logger.flush();
+#define AU_LOGGER_LOG_INFO(msg) AU_LOGGER_LOG(msg, eInfo)
 
-    logger << Message("This is a message using operator '<<'");
-    logger << "This is a string message using operator '<<'";
+#define AU_LOGGER_LOG_WARN(msg) AU_LOGGER_LOG(msg, eWarning)
 
-    logger.flush();
-    logWriter->stop(); // Add this line to stop the logger thread
-}
+#define AU_LOGGER_LOG_ERROR(msg) AU_LOGGER_LOG(msg, eError)
 
-void
-log_macro()
-{
-    AU_LOGGER_LOG_INFO("This is an info message using macro");
-    AU_LOGGER_LOG_WARN("This is a warning message using macro");
-    AU_LOGGER_LOG_ERROR("This is an error message using macro");
-    AU_LOGGER_LOG_FATAL("This is a fatal message using macro");
-    AU_LOGGER_LOG_PANIC("This is a panic message using macro");
-    AU_LOGGER_LOG_TRACE("This is a trace message using macro");
-    AU_LOGGER_LOG_DEBUG("This is a debug message using macro");
-    AU_LOGGER_LOG_NOTICE("This is a notice message using macro");
-}
+#define AU_LOGGER_LOG_FATAL(msg) AU_LOGGER_LOG(msg, eFatal)
 
-int
-main(int argc, char const* argv[])
-{
-    log_cpp_api();
-    log_macro();
-    return 0;
-}
+#define AU_LOGGER_LOG_PANIC(msg) AU_LOGGER_LOG(msg, ePanic)
+
+#define AU_LOGGER_LOG_TRACE(msg) AU_LOGGER_LOG(msg, eTrace)
+
+#define AU_LOGGER_LOG_DEBUG(msg) AU_LOGGER_LOG(msg, eDebug)
+
+#define AU_LOGGER_LOG_NOTICE(msg) AU_LOGGER_LOG(msg, eNotice)

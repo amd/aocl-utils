@@ -26,61 +26,26 @@
  *
  */
 
-#include <iostream>
-#include <thread>
-#include <vector>
+#ifndef __AU_LOGGER_MACROS_H__
+#define __AU_LOGGER_MACROS_H__
 
-#include "Au/Logger/LogManager.hh"
+#include "Capi/au/logger/logger.h"
 
-#include "Au/Logger/Macros.hh"
-
-using namespace Au::Logger;
-
-void
-log_cpp_api()
-{
-    std::unique_ptr<ILogger> consoleLogger =
-        LoggerFactory::createLogger("ConsoleLogger", "Main Console");
-
-    // Set the logger to the singleton LogWriter
-    LogWriter::setLogger(std::move(consoleLogger));
-
-    // Get the singleton instance of LogWriter
-    auto logWriter = LogWriter::getLogWriter();
-
-    LogManager logger(logWriter);
-
-    for (int i = 0; i < 10; ++i) {
-        Message msg("This is a message " + std::to_string(i));
-        logger.log(msg);
+// Helper macro for logging
+#define AUD_LOG(level, msg)                                                    \
+    {                                                                          \
+        logger_ctx_t* logger = au_logger_create();                             \
+        au_logger_log(logger, msg, level);                                     \
+        au_logger_flush(logger);                                               \
+        au_logger_destroy(logger);                                             \
     }
 
-    logger.flush();
+// Macros for logging
+#define AUD_LOG_ERROR(msg) AUD_LOG(AUD_LOG_LEVEL_ERROR, msg)
+#define AUD_LOG_INFO(msg)  AUD_LOG(AUD_LOG_LEVEL_INFO, msg)
+#define AUD_LOG_WARN(msg)  AUD_LOG(AUD_LOG_LEVEL_WARN, msg)
+#define AUD_LOG_DEBUG(msg) AUD_LOG(AUD_LOG_LEVEL_DEBUG, msg)
+#define AUD_LOG_TRACE(msg) AUD_LOG(AUD_LOG_LEVEL_TRACE, msg)
+#define AUD_LOG_FATAL(msg) AUD_LOG(AUD_LOG_LEVEL_FATAL, msg)
 
-    logger << Message("This is a message using operator '<<'");
-    logger << "This is a string message using operator '<<'";
-
-    logger.flush();
-    logWriter->stop(); // Add this line to stop the logger thread
-}
-
-void
-log_macro()
-{
-    AU_LOGGER_LOG_INFO("This is an info message using macro");
-    AU_LOGGER_LOG_WARN("This is a warning message using macro");
-    AU_LOGGER_LOG_ERROR("This is an error message using macro");
-    AU_LOGGER_LOG_FATAL("This is a fatal message using macro");
-    AU_LOGGER_LOG_PANIC("This is a panic message using macro");
-    AU_LOGGER_LOG_TRACE("This is a trace message using macro");
-    AU_LOGGER_LOG_DEBUG("This is a debug message using macro");
-    AU_LOGGER_LOG_NOTICE("This is a notice message using macro");
-}
-
-int
-main(int argc, char const* argv[])
-{
-    log_cpp_api();
-    log_macro();
-    return 0;
-}
+#endif /* __AU_LOGGER_MACROS_H__ */

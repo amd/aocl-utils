@@ -174,7 +174,7 @@ Priority::Priority(PriorityLevel level)
 String
 Priority::toStr() const
 {
-    auto map = getMap();
+    auto map = Priority::getMap();
     return map->at(this->m_level);
 }
 

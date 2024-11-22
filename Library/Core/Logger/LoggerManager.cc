@@ -50,7 +50,10 @@ LogManager::flush()
     m_storage.clear();
 }
 
-LogManager::~LogManager() {}
+LogManager::~LogManager()
+{
+    flush();
+}
 
 LogManager&
 LogManager::operator<<(const Message& msg)

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-#include "Capi/au/logger.h"
+#include "Capi/au/logger/logger.h"
 #include "Au/Logger/LogManager.hh"
 #include "Au/Logger/LoggerCtx.hh"
 
@@ -29,21 +29,21 @@ AUD_EXTERN_C_BEGIN
 logger_ctx_t*
 au_logger_create()
 {
-    LoggerCtx* logger = new LoggerCtx();
+    LoggerCtx* loggerCtx = new LoggerCtx();
     // Check if memory allocation is successful
-    if (logger == nullptr) {
+    if (loggerCtx == nullptr) {
         return nullptr;
     }
 
-    logger->logger = std::make_unique<Au::Logger::LogManager>(
+    loggerCtx->logger = std::make_unique<Au::Logger::LogManager>(
         Au::Logger::LogWriter::getLogWriter());
     // Check if memory allocation is successful
-    if (logger->logger == nullptr) {
-        delete logger;
+    if (loggerCtx->logger == nullptr) {
+        delete loggerCtx;
         return nullptr;
     }
 
-    return logger;
+    return loggerCtx;
 }
 
 void

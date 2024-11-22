@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef __AU_LOGGER_H__
-#define __AU_LOGGER_H__
+#ifndef __AU_LOGGER_LOGGER_H__
+#define __AU_LOGGER_LOGGER_H__
 
 #include "Au/Config.h"
 #include "Au/Defs.hh"
@@ -80,4 +80,4 @@ au_logger_destroy(logger_ctx_t* logger);
 
 AUD_EXTERN_C_END
 
-#endif // __AU_LOGGER_H__
+#endif // __AU_LOGGER_LOGGER_H__

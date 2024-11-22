@@ -20,14 +20,14 @@
  * THE SOFTWARE.
  */
 
-#include "Capi/au/logger.h"
+#include "Capi/au/logger/logger.h"
+#include "Capi/au/logger/macros.h"
 
-int
-main(int argc, char const* argv[])
+void
+log_capi()
 {
     logger_ctx_t* logger = au_logger_create();
     au_logger_log(logger, "Hello From Logger", AUD_LOG_LEVEL_INFO);
-    au_logger_log(logger, "This is default message", AUD_LOG_LEVEL_INFO);
     au_logger_log(logger, "This is trace message", AUD_LOG_LEVEL_TRACE);
     au_logger_log(logger, "This is debug message", AUD_LOG_LEVEL_DEBUG);
     au_logger_log(logger, "This is info message", AUD_LOG_LEVEL_INFO);
@@ -36,5 +36,22 @@ main(int argc, char const* argv[])
     au_logger_log(logger, "This is fatal message", AUD_LOG_LEVEL_FATAL);
     au_logger_flush(logger);
     au_logger_destroy(logger);
+}
+
+void
+log_macro()
+{
+    AUD_LOG_INFO("This is info message from macro");
+    AUD_LOG_ERROR("This is error message from macro");
+    AUD_LOG_WARN("This is warn message from macro");
+    AUD_LOG_DEBUG("This is debug message from macro");
+    AUD_LOG_TRACE("This is trace message from macro");
+}
+
+int
+main(int argc, char const* argv[])
+{
+    log_capi();
+    log_macro();
     return 0;
 }
