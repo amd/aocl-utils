@@ -27,13 +27,11 @@
 cmake_minimum_required(VERSION 3.20...3.27)
 
 project(cpuid_example_c)
-set_source_files_properties(cpuid_example.c PROPERTIES LANGUAGE CXX)
 au_add_application(cpuid_example_c
 				SOURCES cpuid_example.c
                 LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 
-set_source_files_properties(cpuid_deprecated_api_example.c PROPERTIES LANGUAGE CXX)
 au_add_application(cpuid_deprecated_api_example_c
 				SOURCES cpuid_deprecated_api_example.c
 				LIBS ${AU_LIBS}
@@ -44,13 +42,11 @@ if (NOT WIN32)
 				SOURCES thread_pinning_example_linux.c
 				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
-set_source_files_properties(thread_pinning_example_linux.c PROPERTIES LANGUAGE CXX)
 else()
 	au_add_application(thread_pinning_example_c
 				SOURCES thread_pinning_example_windows.c
 				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
-    set_source_files_properties(thread_pinning_example_windows.c PROPERTIES LANGUAGE CXX)
 endif()
 
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
