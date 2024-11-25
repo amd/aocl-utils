@@ -26,7 +26,7 @@
 #
 
 # We use the GoogleTest module if it is available (only in CMake 3.9+)
-cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 
 # CMake extensions include directory
 set(CMAKE_MODULE_PATH
