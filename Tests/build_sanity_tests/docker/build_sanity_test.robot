@@ -55,22 +55,6 @@ Run Compiler And CMake Test
 
 ***Test Cases***
 
-Gcc-9 CMake-3.22
-    [Tags]    gcc-9    cmake-3.22
-    gcc-9    g++-9    3.22
-
-Gcc-9 CMake-3.23
-    [Tags]    gcc-9    cmake-3.23
-    gcc-9    g++-9    3.23
-
-Gcc-9 CMake-3.24
-    [Tags]    gcc-9    cmake-3.24
-    gcc-9    g++-9    3.24
-
-Gcc-9 CMake-3.25
-    [Tags]    gcc-9    cmake-3.25
-    gcc-9    g++-9    3.25
-
 Gcc-9 CMake-3.26
     [Tags]    gcc-9    cmake-3.26
     gcc-9    g++-9    3.26
@@ -91,21 +75,9 @@ Gcc-9 CMake-3.30
     [Tags]    gcc-9    cmake-3.30
     gcc-9    g++-9    3.30
 
-Gcc-10 CMake-3.22
-    [Tags]    gcc-10    cmake-3.22
-    gcc-10    g++-10    3.22
-
-Gcc-10 CMake-3.23
-    [Tags]    gcc-10    cmake-3.23
-    gcc-10    g++-10    3.23
-
-Gcc-10 CMake-3.24
-    [Tags]    gcc-10    cmake-3.24
-    gcc-10    g++-10    3.24
-
-Gcc-10 CMake-3.25
-    [Tags]    gcc-10    cmake-3.25
-    gcc-10    g++-10    3.25
+Gcc-9 CMake-3.31
+    [Tags]    gcc-9    cmake-3.31
+    gcc-9    g++-9    3.31
 
 Gcc-10 CMake-3.26
     [Tags]    gcc-10    cmake-3.26
@@ -127,21 +99,9 @@ Gcc-10 CMake-3.30
     [Tags]    gcc-10    cmake-3.30
     gcc-10    g++-10    3.30
 
-Gcc-11 CMake-3.22
-    [Tags]    gcc-11    cmake-3.22
-    gcc-11    g++-11    3.22
-
-Gcc-11 CMake-3.23
-    [Tags]    gcc-11    cmake-3.23
-    gcc-11    g++-11    3.23
-
-Gcc-11 CMake-3.24
-    [Tags]    gcc-11    cmake-3.24
-    gcc-11    g++-11    3.24
-
-Gcc-11 CMake-3.25
-    [Tags]    gcc-11    cmake-3.25
-    gcc-11    g++-11    3.25
+Gcc-10 CMake-3.31
+    [Tags]    gcc-10    cmake-3.31
+    gcc-10    g++-10    3.31
 
 Gcc-11 CMake-3.26
     [Tags]    gcc-11    cmake-3.26
@@ -163,21 +123,9 @@ Gcc-11 CMake-3.30
     [Tags]    gcc-11    cmake-3.30
     gcc-11    g++-11    3.30
 
-Gcc-12 CMake-3.22
-    [Tags]    gcc-12    cmake-3.22
-    gcc-12    g++-12    3.22
-
-Gcc-12 CMake-3.23
-    [Tags]    gcc-12    cmake-3.23
-    gcc-12    g++-12    3.23
-
-Gcc-12 CMake-3.24
-    [Tags]    gcc-12    cmake-3.24
-    gcc-12    g++-12    3.24
-
-Gcc-12 CMake-3.25
-    [Tags]    gcc-12    cmake-3.25
-    gcc-12    g++-12    3.25
+Gcc-11 CMake-3.31
+    [Tags]    gcc-11    cmake-3.31
+    gcc-11    g++-11    3.31
 
 Gcc-12 CMake-3.26
     [Tags]    gcc-12    cmake-3.26
@@ -199,21 +147,9 @@ Gcc-12 CMake-3.30
     [Tags]    gcc-12    cmake-3.30
     gcc-12    g++-12    3.30
 
-Gcc-13 CMake-3.22
-    [Tags]    gcc-13    cmake-3.22
-    gcc-13    g++-13    3.22
-
-Gcc-13 CMake-3.23
-    [Tags]    gcc-13    cmake-3.23
-    gcc-13    g++-13    3.23
-
-Gcc-13 CMake-3.24
-    [Tags]    gcc-13    cmake-3.24
-    gcc-13    g++-13    3.24
-
-Gcc-13 CMake-3.25
-    [Tags]    gcc-13    cmake-3.25
-    gcc-13    g++-13    3.25
+Gcc-12 CMake-3.31
+    [Tags]    gcc-12    cmake-3.31
+    gcc-12    g++-12    3.31
 
 Gcc-13 CMake-3.26
     [Tags]    gcc-13    cmake-3.26
@@ -235,21 +171,9 @@ Gcc-13 CMake-3.30
     [Tags]    gcc-13    cmake-3.30
     gcc-13    g++-13    3.30
 
-Gcc-14 CMake-3.22
-    [Tags]    gcc-14    cmake-3.22
-    gcc-14    g++-14    3.22
-
-Gcc-14 CMake-3.23
-    [Tags]    gcc-14    cmake-3.23
-    gcc-14    g++-14    3.23
-
-Gcc-14 CMake-3.24
-    [Tags]    gcc-14    cmake-3.24
-    gcc-14    g++-14    3.24
-
-Gcc-14 CMake-3.25
-    [Tags]    gcc-14    cmake-3.25
-    gcc-14    g++-14    3.25
+Gcc-13 CMake-3.31
+    [Tags]    gcc-13    cmake-3.31
+    gcc-13    g++-13    3.31
 
 Gcc-14 CMake-3.26
     [Tags]    gcc-14    cmake-3.26
@@ -270,21 +194,10 @@ Gcc-14 CMake-3.29
 Gcc-14 CMake-3.30
     [Tags]    gcc-14    cmake-3.30
     gcc-14    g++-14    3.30
-Clang-14 CMake-3.22
-    [Tags]    clang-14    cmake-3.22
-    clang-14    clang++-14    3.22
 
-Clang-14 CMake-3.23
-    [Tags]    clang-14    cmake-3.23
-    clang-14    clang++-14    3.23
-
-Clang-14 CMake-3.24
-    [Tags]    clang-14    cmake-3.24
-    clang-14    clang++-14    3.24
-
-Clang-14 CMake-3.25
-    [Tags]    clang-14    cmake-3.25
-    clang-14    clang++-14    3.25
+Gcc-14 CMake-3.31
+    [Tags]    gcc-14    cmake-3.31
+    gcc-14    g++-14    3.31
 
 Clang-14 CMake-3.26
     [Tags]    clang-14    cmake-3.26
@@ -306,21 +219,9 @@ Clang-14 CMake-3.30
     [Tags]    clang-14    cmake-3.30
     clang-14    clang++-14    3.30
 
-Clang-15 CMake-3.22
-    [Tags]    clang-15    cmake-3.22
-    clang-15    clang++-15    3.22
-
-Clang-15 CMake-3.23
-    [Tags]    clang-15    cmake-3.23
-    clang-15    clang++-15    3.23
-
-Clang-15 CMake-3.24
-    [Tags]    clang-15    cmake-3.24
-    clang-15    clang++-15    3.24
-
-Clang-15 CMake-3.25
-    [Tags]    clang-15    cmake-3.25
-    clang-15    clang++-15    3.25
+Clang-14 CMake-3.31
+    [Tags]    clang-14    cmake-3.31
+    clang-14    clang++-14    3.31
 
 Clang-15 CMake-3.26
     [Tags]    clang-15    cmake-3.26
@@ -342,21 +243,9 @@ Clang-15 CMake-3.30
     [Tags]    clang-15    cmake-3.30
     clang-15    clang++-15    3.30
 
-Clang-16 CMake-3.22
-    [Tags]    clang-16    cmake-3.22
-    clang-16    clang++-16    3.22
-
-Clang-16 CMake-3.23
-    [Tags]    clang-16    cmake-3.23
-    clang-16    clang++-16    3.23
-
-Clang-16 CMake-3.24
-    [Tags]    clang-16    cmake-3.24
-    clang-16    clang++-16    3.24
-
-Clang-16 CMake-3.25
-    [Tags]    clang-16    cmake-3.25
-    clang-16    clang++-16    3.25
+Clang-15 CMake-3.31
+    [Tags]    clang-15    cmake-3.31
+    clang-15    clang++-15    3.31
 
 Clang-16 CMake-3.26
     [Tags]    clang-16    cmake-3.26
@@ -378,21 +267,9 @@ Clang-16 CMake-3.30
     [Tags]    clang-16    cmake-3.30
     clang-16    clang++-16    3.30
 
-Clang-17 CMake-3.22
-    [Tags]    clang-17    cmake-3.22
-    clang-17    clang++-17    3.22
-
-Clang-17 CMake-3.23
-    [Tags]    clang-17    cmake-3.23
-    clang-17    clang++-17    3.23
-
-Clang-17 CMake-3.24
-    [Tags]    clang-17    cmake-3.24
-    clang-17    clang++-17    3.24
-
-Clang-17 CMake-3.25
-    [Tags]    clang-17    cmake-3.25
-    clang-17    clang++-17    3.25
+Clang-16 CMake-3.31
+    [Tags]    clang-16    cmake-3.31
+    clang-16    clang++-16    3.31
 
 Clang-17 CMake-3.26
     [Tags]    clang-17    cmake-3.26
@@ -413,3 +290,7 @@ Clang-17 CMake-3.29
 Clang-17 CMake-3.30
     [Tags]    clang-17    cmake-3.30
     clang-17    clang++-17    3.30
+
+Clang-17 CMake-3.31
+    [Tags]    clang-17    cmake-3.31
+    clang-17    clang++-17    3.31
