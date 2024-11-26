@@ -165,3 +165,5 @@ au_cc_test(CpuidTest
 #         #HEADERS DynamicLoader.hh
 #         DEPENDS     _module_lib
 # )
+
+add_subdirectory(Status)
