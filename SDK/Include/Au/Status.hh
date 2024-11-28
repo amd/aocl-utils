@@ -47,12 +47,14 @@ class Status final
   public:
     explicit Status(IError const& ie)
         : m_code{ ie.code() }
+        , m_is_ok{ !ie.isError() }
         , m_message{ ie.message() }
     {
     }
 
     explicit Status(IError&& ie)
         : m_code{ ie.code() }
+        , m_is_ok{ !ie.isError() }
         , m_message{ ie.message() }
     {
     }
@@ -61,6 +63,7 @@ class Status final
         : Status{ ie }
     {
         m_message = makeMessage(ie.message(), msg);
+        m_is_ok   = !ie.isError();
     }
 
     AUD_DEFAULT_CTOR_AND_DTOR(Status);
