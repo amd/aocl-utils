@@ -23,14 +23,14 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-SET(INTEGER_SOURCES "Integer.cc" "IntegerError.cc" "IntegerStatus.cc" "capi/integer_capi.cc")
+SET(CALCULATOR_SOURCES "Calculator.cc" "CalculatorError.cc" "CalculatorStatus.cc" "capi/calculator_capi.cc")
 SET(INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/../Include" "${CMAKE_SOURCE_DIR}/SDK/Include"
               "${CMAKE_BINARY_DIR}/generated" "${CMAKE_CURRENT_SOURCE_DIR}/include"
    )
-SET(AU_MODULE "status_integer")
+SET(AU_MODULE "status_calculator")
 
 # FIXME: Cleanup au_cc_library and move to it
 # Using add_library instead of au_cc_library because it has some complications in the current code
-add_library(integer STATIC ${INTEGER_SOURCES})
-target_link_libraries(integer PRIVATE au::aoclutils)
-target_include_directories(integer PUBLIC ${INCLUDES})
+add_library(calculator STATIC ${CALCULATOR_SOURCES})
+target_link_libraries(calculator PRIVATE au::aoclutils)
+target_include_directories(calculator PUBLIC ${INCLUDES})

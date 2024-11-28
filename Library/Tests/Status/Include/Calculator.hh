@@ -23,52 +23,55 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
  */
 
 #pragma once
-
+#include "CalculatorStatus.hh"
+#include <Au/Au.hh>
 #include <Au/Error.hh>
-#include <cstdint>
-#include <string>
+#include <Au/Status.hh>
+#include <Au/Types.hh>
+#include <vector>
 
 namespace Au::Testing::Status {
 
-using ErrorCodeGeneric = uint16_t;
+using Au::Int64;
+using Au::Status;
 
-using Au::ErrorBase;
-using Au::IError;
-
-class IntegerError final : public ErrorBase
+class Calculator
 {
+  private:
+    Int64 m_value = 0;
+
   public:
-    IntegerError();
-    explicit IntegerError(ErrorCodeGeneric ecode);
+    explicit Calculator(Int64 value = 0);
 
-    AUD_DEFAULT_DTOR(IntegerError);
-    virtual std::string message() const override;
-    virtual bool        isError() const override;
+    Status div(std::vector<Calculator>& b, Calculator& result);
+    Status div(Calculator& b, Calculator& result);
 
-  protected:
-    virtual uint16_t getModuleId() const override { return 0; }
+    Status mult(Calculator& b, Calculator& result);
+
+    Status add(Calculator& b, Calculator& result);
+
+    Status sub(Calculator& b, Calculator& result);
+
+    Int64 getInt();
+
+    bool operator==(const Calculator& a);
+    bool operator==(const int& a);
+
+    Calculator& operator=(const Calculator& a);
+
+    Calculator operator/(Calculator& a);
+
+    Calculator operator+(Calculator& a);
+
+    Calculator operator-(Calculator& a);
+
+    Calculator operator*(Calculator& a);
+
+    ~Calculator();
 };
-
-/*
- * Easy to use creators
- * usage:
- * Status my_func()
- * {
- *      return Status{Aborted("")};
- * }
- */
-// clang-format off
-IError const& Aborted();
-IError const& AlreadyExistsError();
-IError const& InternalError();
-IError const& InvalidArgumentError();
-IError const& NotFoundError();
-IError const& NotAvailableError();
-IError const& NotImplementedError();
-IError const& UnknownError();
-IError const& NoError();
 
 } // namespace Au::Testing::Status

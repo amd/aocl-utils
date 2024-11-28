@@ -23,24 +23,24 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-au_cc_test(IntegerStatus
-        SOURCES  "IntegerStatus.cc"
+au_cc_test(CalculatorStatus
+        SOURCES  "CalculatorStatus.cc"
         DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         HEADERS
         ${CMAKE_SOURCE_DIR}/Library/Tests/Status/Include
         DEPENDS
         au::aoclutils
-        integer
+        calculator
         #au_provider
 )
 
-au_cc_test(IntegerStatusCapi
-        SOURCES  "IntegerStatusCapi.cc"
+au_cc_test(CalculatorStatusCapi
+        SOURCES  "CalculatorStatusCapi.cc"
         DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         HEADERS
         ${CMAKE_SOURCE_DIR}/Library/Tests/Status/Include
         DEPENDS
         au::aoclutils
-        integer
+        calculator
         #au_provider
 )

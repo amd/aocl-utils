@@ -26,83 +26,83 @@
  *
  */
 
-#include "Integer.hh"
+#include "Calculator.hh"
 #include <gtest/gtest.h>
 
 using namespace Au::Testing::Status;
 
 // Sample test case
-TEST(IntegerTest, TestAdd)
+TEST(CalculatorTest, TestAdd)
 {
-    Integer a(10);
-    Integer b(20);
-    Status  s = a.add(b, a);
+    Calculator a(10);
+    Calculator b(20);
+    Status     s = a.add(b, a);
     EXPECT_EQ(a.getInt(), 30);
 }
 
-TEST(IntegerTest, TestAddOverflow)
+TEST(CalculatorTest, TestAddOverflow)
 {
-    Integer a(INT64_MAX);
-    Integer b(1);
-    Integer result;
-    Status  s = a.add(b, result);
+    Calculator a(INT64_MAX);
+    Calculator b(1);
+    Calculator result;
+    Status     s = a.add(b, result);
     EXPECT_TRUE(s.ok() == false);
     EXPECT_EQ(s.message(), "Internal Math Error: Addition overflow");
 }
 
-TEST(IntegerTest, TestSub)
+TEST(CalculatorTest, TestSub)
 {
-    Integer a(20);
-    Integer b(10);
-    Integer result;
-    Status  s = a.sub(b, result);
+    Calculator a(20);
+    Calculator b(10);
+    Calculator result;
+    Status     s = a.sub(b, result);
     EXPECT_EQ(result.getInt(), 10);
 }
 
-TEST(IntegerTest, TestSubOverflow)
+TEST(CalculatorTest, TestSubOverflow)
 {
-    Integer a(INT64_MIN);
-    Integer b(1);
-    Integer result;
-    Status  s = a.sub(b, result);
+    Calculator a(INT64_MIN);
+    Calculator b(1);
+    Calculator result;
+    Status     s = a.sub(b, result);
     EXPECT_TRUE(s.ok() == false);
     EXPECT_EQ(s.message(), "Internal Math Error: Subtraction overflow");
 }
 
-TEST(IntegerTest, TestDiv)
+TEST(CalculatorTest, TestDiv)
 {
-    Integer a(20);
-    Integer b(10);
-    Integer result;
-    Status  s = a.div(b, result);
+    Calculator a(20);
+    Calculator b(10);
+    Calculator result;
+    Status     s = a.div(b, result);
     EXPECT_EQ(result.getInt(), 2);
 }
 
-TEST(IntegerTest, TestDivByZero)
+TEST(CalculatorTest, TestDivByZero)
 {
-    Integer a(20);
-    Integer b(0);
-    Integer result;
-    Status  s = a.div(b, result);
+    Calculator a(20);
+    Calculator b(0);
+    Calculator result;
+    Status     s = a.div(b, result);
     EXPECT_TRUE(s.ok() == false);
     EXPECT_EQ(s.message(), "Argument Out of Scope: Division by zero");
 }
 
-TEST(IntegerTest, TestMult)
+TEST(CalculatorTest, TestMult)
 {
-    Integer a(20);
-    Integer b(10);
-    Integer result;
-    Status  s = a.mult(b, result);
+    Calculator a(20);
+    Calculator b(10);
+    Calculator result;
+    Status     s = a.mult(b, result);
     EXPECT_EQ(result.getInt(), 200);
 }
 
-TEST(IntegerTest, TestMultOverflow)
+TEST(CalculatorTest, TestMultOverflow)
 {
-    Integer a(INT64_MAX);
-    Integer b(2);
-    Integer result;
-    Status  s = a.mult(b, result);
+    Calculator a(INT64_MAX);
+    Calculator b(2);
+    Calculator result;
+    Status     s = a.mult(b, result);
     EXPECT_TRUE(s.ok() == false);
     EXPECT_EQ(s.message(), "Internal Math Error: Multiplication overflow");
 }

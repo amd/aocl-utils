@@ -23,43 +23,52 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
  */
 
 #pragma once
 
-#include "IntegerError.hh"
-#include <Au/Au.hh>
 #include <Au/Error.hh>
-#include <Au/Status.hh>
+#include <cstdint>
+#include <string>
 
 namespace Au::Testing::Status {
 
-using Au::Status;
-using Au::StringView;
+using ErrorCodeGeneric = uint16_t;
 
-Status
-StatusOk();
+using Au::ErrorBase;
+using Au::IError;
 
-Status
-StatusAlreadyExists(StringView msg);
+class CalculatorError final : public ErrorBase
+{
+  public:
+    CalculatorError();
+    explicit CalculatorError(ErrorCodeGeneric ecode);
 
-Status
-StatusInternalError(StringView msg);
+    AUD_DEFAULT_DTOR(CalculatorError);
+    virtual std::string message() const override;
+    virtual bool        isError() const override;
 
-Status
-StatusInvalidArgument(StringView msg);
+  protected:
+    virtual uint16_t getModuleId() const override { return 0; }
+};
 
-Status
-StatusNotFound(StringView msg);
-
-Status
-StatusNotAvailable(StringView msg);
-
-Status
-StatusNotImplemented(StringView msg);
-
-Status
-StatusUnknown(StringView msg);
+/*
+ * Easy to use creators
+ * usage:
+ * Status my_func()
+ * {
+ *      return Status{Aborted("")};
+ * }
+ */
+// clang-format off
+IError const& Aborted();
+IError const& AlreadyExistsError();
+IError const& InternalError();
+IError const& InvalidArgumentError();
+IError const& NotFoundError();
+IError const& NotAvailableError();
+IError const& NotImplementedError();
+IError const& UnknownError();
+IError const& NoError();
 
 } // namespace Au::Testing::Status

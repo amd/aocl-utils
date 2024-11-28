@@ -26,7 +26,7 @@
  *
  */
 
-#include "IntegerStatus.hh"
+#include "CalculatorStatus.hh"
 
 namespace Au::Testing::Status {
 

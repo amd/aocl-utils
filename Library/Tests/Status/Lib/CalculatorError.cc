@@ -26,7 +26,7 @@
  *
  */
 
-#include "IntegerError.hh"
+#include "CalculatorError.hh"
 
 using namespace Au::Testing::Status;
 
@@ -43,7 +43,7 @@ using Au::ErrorCodeGeneric;
  * application one makes more sense than other.
  * Application developers are encouraged to use them accordingly.
  */
-enum IntegerErrorCode : ErrorCodeGeneric
+enum CalculatorErrorCode : ErrorCodeGeneric
 {
     /* ErrorCode:eOk
      *
@@ -108,22 +108,22 @@ enum IntegerErrorCode : ErrorCodeGeneric
     eMaxDontUse = 128,
 };
 
-IntegerError::IntegerError()
-    : IntegerError{ IntegerErrorCode::eOk }
+CalculatorError::CalculatorError()
+    : CalculatorError{ CalculatorErrorCode::eOk }
 {
 }
 
-IntegerError::IntegerError(ErrorCodeGeneric ecode)
+CalculatorError::CalculatorError(ErrorCodeGeneric ecode)
     : ErrorBase{}
 {
     m_error.field.base_error = ecode;
 }
 
 std::string
-IntegerError::message() const
+CalculatorError::message() const
 {
 
-    using ec        = IntegerErrorCode;
+    using ec        = CalculatorErrorCode;
     using ErrorMapT = std::unordered_map<uint16_t, std::string>;
 
     static const ErrorMapT str_map = {
@@ -150,71 +150,71 @@ IntegerError::message() const
 }
 
 bool
-IntegerError::isError() const
+CalculatorError::isError() const
 {
-    return getBaseError() != IntegerErrorCode::eOk;
+    return getBaseError() != CalculatorErrorCode::eOk;
 }
 
 IError const&
 Aborted()
 {
-    static IntegerError gr{ IntegerErrorCode::eInternal };
+    static CalculatorError gr{ CalculatorErrorCode::eInternal };
     return gr;
 }
 
 IError const&
 NoError()
 {
-    static IntegerError gr{ IntegerErrorCode::eOk };
+    static CalculatorError gr{ CalculatorErrorCode::eOk };
     return gr;
 }
 
 IError const&
 AlreadyExistsError()
 {
-    static IntegerError gr{ IntegerErrorCode::eExists };
+    static CalculatorError gr{ CalculatorErrorCode::eExists };
     return gr;
 }
 
 IError const&
 InternalError()
 {
-    static IntegerError gr{ IntegerErrorCode::eInternal };
+    static CalculatorError gr{ CalculatorErrorCode::eInternal };
     return gr;
 }
 
 IError const&
 InvalidArgumentError()
 {
-    static IntegerError gr{ IntegerErrorCode::eInvalidArgument };
+    static CalculatorError gr{ CalculatorErrorCode::eInvalidArgument };
     return gr;
 }
 
 IError const&
 NotFoundError()
 {
-    static IntegerError gr{ IntegerErrorCode::eNotFound };
+    static CalculatorError gr{ CalculatorErrorCode::eNotFound };
     return gr;
 }
 
 IError const&
 NotAvailableError()
 {
-    static IntegerError gr{ IntegerErrorCode::eNotAvailable };
+    static CalculatorError gr{ CalculatorErrorCode::eNotAvailable };
     return gr;
 }
 
 IError const&
 NotImplementedError()
 {
-    static IntegerError gr{ IntegerErrorCode::eNotImplemented };
+    static CalculatorError gr{ CalculatorErrorCode::eNotImplemented };
     return gr;
 }
 
 IError const&
 UnknownError()
 {
-    static IntegerError gr{ IntegerErrorCode::eUnknown };
+    static CalculatorError gr{ CalculatorErrorCode::eUnknown };
     return gr;
 }
 

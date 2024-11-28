@@ -26,18 +26,18 @@
  *
  */
 
-#include "Integer.hh"
+#include "Calculator.hh"
 #include <iostream>
 
 namespace Au::Testing::Status {
 
-Integer::Integer(Int64 value)
+Calculator::Calculator(Int64 value)
     : m_value(value)
 {
 }
 
 Status
-Integer::div(std::vector<Integer>& b, Integer& result)
+Calculator::div(std::vector<Calculator>& b, Calculator& result)
 {
     Status s = StatusOk();
     if (b.size() == 0) {
@@ -56,7 +56,7 @@ Integer::div(std::vector<Integer>& b, Integer& result)
 }
 
 Status
-Integer::div(Integer& b, Integer& result)
+Calculator::div(Calculator& b, Calculator& result)
 {
     Status s = StatusOk();
     if (b == 0) {
@@ -68,7 +68,7 @@ Integer::div(Integer& b, Integer& result)
 }
 
 Status
-Integer::mult(Integer& b, Integer& result)
+Calculator::mult(Calculator& b, Calculator& result)
 {
     Status s       = StatusOk();
     result.m_value = m_value * b.m_value;
@@ -80,7 +80,7 @@ Integer::mult(Integer& b, Integer& result)
 }
 
 Status
-Integer::add(Integer& b, Integer& result)
+Calculator::add(Calculator& b, Calculator& result)
 {
     Status s       = StatusOk();
     result.m_value = m_value + b.m_value;
@@ -92,7 +92,7 @@ Integer::add(Integer& b, Integer& result)
 }
 
 Status
-Integer::sub(Integer& b, Integer& result)
+Calculator::sub(Calculator& b, Calculator& result)
 {
     Status s       = StatusOk();
     result.m_value = m_value - b.m_value;
@@ -104,75 +104,75 @@ Integer::sub(Integer& b, Integer& result)
 }
 
 Int64
-Integer::getInt()
+Calculator::getInt()
 {
     return m_value;
 }
 
 bool
-Integer::operator==(const Integer& a)
+Calculator::operator==(const Calculator& a)
 {
     return m_value == a.m_value;
 }
 
 bool
-Integer::operator==(const int& a)
+Calculator::operator==(const int& a)
 {
     return m_value == a;
 }
 
-Integer&
-Integer::operator=(const Integer& a)
+Calculator&
+Calculator::operator=(const Calculator& a)
 {
     m_value = a.m_value;
     return *this;
 }
 
-Integer
-Integer::operator/(Integer& a)
+Calculator
+Calculator::operator/(Calculator& a)
 {
-    Integer result;
-    Status  s = div(a, result);
+    Calculator result;
+    Status     s = div(a, result);
     if (!s.ok()) {
         throw std::runtime_error(s.message());
     }
     return result;
 }
 
-Integer
-Integer::operator+(Integer& a)
+Calculator
+Calculator::operator+(Calculator& a)
 {
-    Integer result;
-    Status  s = add(a, result);
+    Calculator result;
+    Status     s = add(a, result);
     if (!s.ok()) {
         throw std::runtime_error(s.message());
     }
     return result;
 }
 
-Integer
-Integer::operator-(Integer& a)
+Calculator
+Calculator::operator-(Calculator& a)
 {
-    Integer result;
-    Status  s = sub(a, result);
+    Calculator result;
+    Status     s = sub(a, result);
     if (!s.ok()) {
         throw std::runtime_error(s.message());
     }
     return result;
 }
 
-Integer
-Integer::operator*(Integer& a)
+Calculator
+Calculator::operator*(Calculator& a)
 {
-    Integer result;
-    Status  s = mult(a, result);
+    Calculator result;
+    Status     s = mult(a, result);
     if (!s.ok()) {
         throw std::runtime_error(s.message());
     }
     return result;
 }
 
-Integer::~Integer()
+Calculator::~Calculator()
 {
     m_value = 0;
 }

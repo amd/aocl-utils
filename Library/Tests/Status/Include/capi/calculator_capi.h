@@ -26,15 +26,15 @@
  *
  */
 
-#ifndef __INTEGER_CAPI_H__
-#define __INTEGER_CAPI_H__
+#ifndef __CALCULATOR_CAPI_H__
+#define __CALCULATOR_CAPI_H__
 
 #include <stdint.h>
 
 #ifndef __cplusplus
 typedef struct Status Status;
 #else
-#include "Integer.hh"
+#include "Calculator.hh"
 #endif
 
 #ifdef __cplusplus
@@ -44,36 +44,44 @@ extern "C"
 
     using namespace Au::Testing::Status;
 
-    typedef void* integer;
+    typedef void* calculator;
     typedef void* status;
 
-    integer au_testing_integer_create(Int64 value);
+    calculator au_testing_calculator_create(Int64 value);
 
-    void au_testing_integer_destroy(integer integer);
+    void au_testing_calculator_destroy(calculator calculator);
 
-    Int64 au_testing_integer_get_int(integer integer);
+    Int64 au_testing_calculator_get_int(calculator calculator);
 
-    status au_testing_integer_add(integer a, integer b, integer result);
+    status au_testing_calculator_add(calculator a,
+                                     calculator b,
+                                     calculator result);
 
-    status au_testing_integer_sub(integer a, integer b, integer result);
+    status au_testing_calculator_sub(calculator a,
+                                     calculator b,
+                                     calculator result);
 
-    status au_testing_integer_div(integer a, integer b, integer result);
+    status au_testing_calculator_div(calculator a,
+                                     calculator b,
+                                     calculator result);
 
-    status au_testing_integer_mult(integer a, integer b, integer result);
+    status au_testing_calculator_mult(calculator a,
+                                      calculator b,
+                                      calculator result);
 
-    status au_testing_integer_equal(integer a, integer b);
+    status au_testing_calculator_equal(calculator a, calculator b);
 
-    status au_testing_integer_equal_int(integer a, Int64 b);
+    status au_testing_calculator_equal_int(calculator a, Int64 b);
 
-    status au_testing_integer_assign(integer a, integer b);
+    status au_testing_calculator_assign(calculator a, calculator b);
 
-    integer au_testing_integer_div_op(integer a, integer b);
+    calculator au_testing_calculator_div_op(calculator a, calculator b);
 
-    integer au_testing_integer_add_op(integer a, integer b);
+    calculator au_testing_calculator_add_op(calculator a, calculator b);
 
-    integer au_testing_integer_sub_op(integer a, integer b);
+    calculator au_testing_calculator_sub_op(calculator a, calculator b);
 
-    integer au_testing_integer_mult_op(integer a, integer b);
+    calculator au_testing_calculator_mult_op(calculator a, calculator b);
 
     bool au_testing_status_is_error(status status);
 
@@ -85,4 +93,4 @@ extern "C"
 }
 #endif
 
-#endif // __INTEGER_CAPI_H__
+#endif // __CALCULATOR_CAPI_H__

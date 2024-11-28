@@ -27,51 +27,39 @@
  */
 
 #pragma once
-#include "IntegerStatus.hh"
+
+#include "CalculatorError.hh"
 #include <Au/Au.hh>
 #include <Au/Error.hh>
 #include <Au/Status.hh>
-#include <Au/Types.hh>
-#include <vector>
 
 namespace Au::Testing::Status {
 
-using Au::Int64;
 using Au::Status;
+using Au::StringView;
 
-class Integer
-{
-  private:
-    Int64 m_value = 0;
+Status
+StatusOk();
 
-  public:
-    explicit Integer(Int64 value = 0);
+Status
+StatusAlreadyExists(StringView msg);
 
-    Status div(std::vector<Integer>& b, Integer& result);
-    Status div(Integer& b, Integer& result);
+Status
+StatusInternalError(StringView msg);
 
-    Status mult(Integer& b, Integer& result);
+Status
+StatusInvalidArgument(StringView msg);
 
-    Status add(Integer& b, Integer& result);
+Status
+StatusNotFound(StringView msg);
 
-    Status sub(Integer& b, Integer& result);
+Status
+StatusNotAvailable(StringView msg);
 
-    Int64 getInt();
+Status
+StatusNotImplemented(StringView msg);
 
-    bool operator==(const Integer& a);
-    bool operator==(const int& a);
-
-    Integer& operator=(const Integer& a);
-
-    Integer operator/(Integer& a);
-
-    Integer operator+(Integer& a);
-
-    Integer operator-(Integer& a);
-
-    Integer operator*(Integer& a);
-
-    ~Integer();
-};
+Status
+StatusUnknown(StringView msg);
 
 } // namespace Au::Testing::Status
