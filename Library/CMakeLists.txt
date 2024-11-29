@@ -62,7 +62,18 @@ set(CAPI_SRC_FILES
     Capi/environ.cc
     Capi/threadpinning.cc
     Capi/logger.cc
-        )
+)
+
+set(RNG_SRC_FILES
+    Core/Rng/SystemRng.cc
+    Core/Rng/HardwareRng.cc
+)
+
+set_source_files_properties(
+  Core/Rng/HardwareRng.cc
+  PROPERTIES
+    COMPILE_FLAGS "-mrdrnd"
+)
 
 set(AVX2_FILES
   Base64/transform_avx2.cc
@@ -90,6 +101,7 @@ set(CORE_SRC_FILES
   #${MEMORY_SRC_FILES}
   #  ${MESSAGE_SRC_FILES}
   #  ${EVENT_SRC_FILES}
+  ${RNG_SRC_FILES}
   ${CAPI_SRC_FILES}
   #${AVX2_FILES}
 )
