@@ -139,6 +139,8 @@ class X86Cpu::Impl
 
     bool hasFlag(EFlag const& ef) const;
 
+    bool isZenFamily() const;
+
     EUarch     getUarch() const;
     bool       isUarch(EUarch uarch, bool strict = false) const;
     VendorInfo getVendorInfo() const;

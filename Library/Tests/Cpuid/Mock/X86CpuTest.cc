@@ -108,6 +108,9 @@ TEST_P(MockX86Cpu, MockX86CpuTest)
 
     std::cout << "Checking Uarch" << std::endl;
     results.push_back(cpu.isUarch(uarch));
+
+    std::cout << "Checking Zen Family" << std::endl;
+    results.push_back(cpu.isZenFamily());
     EXPECT_EQ(results, expectedResults);
     EXPECT_EQ(cpu.getUarch(), uarch);
 }

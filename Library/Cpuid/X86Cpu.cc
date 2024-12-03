@@ -160,6 +160,13 @@ X86Cpu::isUarch(EUarch uarch, bool strict) const
 {
     return pImpl()->isUarch(uarch, strict);
 }
+
+bool
+X86Cpu::isZenFamily() const
+{
+    return pImpl()->isUarch(EUarch::Zen);
+}
+
 VendorInfo
 X86Cpu::getVendorInfo() const
 {
