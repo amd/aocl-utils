@@ -29,6 +29,7 @@
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Assert.hh"
 #include "Au/Cpuid/X86Cpu.hh"
+#include "Au/Memory/BufferView.hh"
 
 #include "Capi/au/cpuid/cpuid.h"
 #include "Capi/au/macros.h"
@@ -235,6 +236,79 @@ au_cpuid_has_flag(au_cpu_num_t      cpu_num,
         result[index++] = cpu.hasFlag(cpuid_flag);
     }
     return result;
+}
+
+AUD_API_EXPORT
+bool
+au_cpuid_has_flags_all(au_cpu_num_t      cpu_num,
+                       const char* const flag_array[],
+                       int               count)
+{
+    AUD_ASSERT(count > 0, "No flags to check");
+    if (count == 0)
+        return false;
+
+    std::stringstream        ss;
+    std::vector<std::string> flag_names(flag_array, flag_array + count);
+    ss << flag_names;
+    AUD_ASSERT(flag_names.size() > 0, "The flags list is empty");
+    if (flag_names.size() == 0)
+        return false;
+
+    X86Cpu     cpu{ cpu_num };
+    String     token;
+    ECpuidFlag flags[256]; // Fixed size buffer for flags
+    size_t     flagCount = 0;
+
+    while (std::getline(ss, token, ':')) {
+        au_cpu_flag_t flag = stoi(token);
+        AUD_ASSERT(flag > static_cast<Uint32>(ECpuidFlag::Min)
+                       && flag < static_cast<Uint32>(ECpuidFlag::Max),
+                   "Flag not supported");
+        if (flag < static_cast<Uint32>(ECpuidFlag::Min)
+            || flag > static_cast<Uint32>(ECpuidFlag::Max))
+            continue;
+        flags[flagCount++] = static_cast<ECpuidFlag>(flag);
+    }
+    return cpu.hasFlags(Au::Memory::BufferView<ECpuidFlag>(flags, flagCount),
+                        Au::HasFlagsMode::All);
+}
+
+// FIXME: This function might have to be deprecated in the future.
+AUD_API_EXPORT
+bool
+au_cpuid_has_flags_any(au_cpu_num_t      cpu_num,
+                       const char* const flag_array[],
+                       int               count)
+{
+    AUD_ASSERT(count > 0, "No flags to check");
+    if (count == 0)
+        return false;
+
+    std::stringstream        ss;
+    std::vector<std::string> flag_names(flag_array, flag_array + count);
+    ss << flag_names;
+    AUD_ASSERT(flag_names.size() > 0, "The flags list is empty");
+    if (flag_names.size() == 0)
+        return false;
+
+    X86Cpu     cpu{ cpu_num };
+    String     token;
+    ECpuidFlag flags[256]; // Fixed size buffer for flags
+    size_t     flagCount = 0;
+
+    while (std::getline(ss, token, ':')) {
+        au_cpu_flag_t flag = stoi(token);
+        AUD_ASSERT(flag > static_cast<Uint32>(ECpuidFlag::Min)
+                       && flag < static_cast<Uint32>(ECpuidFlag::Max),
+                   "Flag not supported");
+        if (flag < static_cast<Uint32>(ECpuidFlag::Min)
+            || flag > static_cast<Uint32>(ECpuidFlag::Max))
+            continue;
+        flags[flagCount++] = static_cast<ECpuidFlag>(flag);
+    }
+    return cpu.hasFlags(Au::Memory::BufferView<ECpuidFlag>(flags, flagCount),
+                        Au::HasFlagsMode::Any);
 }
 
 AUD_API_EXPORT

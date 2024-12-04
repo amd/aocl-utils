@@ -74,6 +74,25 @@ class BufferView final : public BufferBase<T>
         return arr[idx];
     }
 
+    T* begin() { return reinterpret_cast<T*>(BufferBase<T>::data()); }
+
+    const T* begin() const
+    {
+        return reinterpret_cast<const T*>(BufferBase<T>::data());
+    }
+
+    T* end()
+    {
+        return reinterpret_cast<T*>(BufferBase<T>::data())
+               + BufferBase<T>::size();
+    }
+
+    const T* end() const
+    {
+        return reinterpret_cast<const T*>(BufferBase<T>::data())
+               + BufferBase<T>::size();
+    }
+
     // Disable all heap allocations
     void* operator new(std::size_t)   = delete;
     void* operator new[](std::size_t) = delete;
@@ -85,5 +104,4 @@ class BufferView final : public BufferBase<T>
     // size_t      m_size;
     // const size_t m_allocated_size; // whatever we got from user
 };
-
 } // namespace Au::Memory
