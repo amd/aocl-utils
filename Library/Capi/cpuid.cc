@@ -189,6 +189,14 @@ au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num)
 }
 
 AUD_API_EXPORT
+bool
+au_cpuid_arch_is_zen_family(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isZenFamily();
+}
+
+AUD_API_EXPORT
 bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],

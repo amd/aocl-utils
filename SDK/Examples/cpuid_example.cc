@@ -74,6 +74,13 @@ display_isa_info()
     } else {
         std::cout << "CPU does not support x86-64v2 or higher ISA" << std::endl;
     }
+
+    if (cpu.isZenFamily()) {
+        std::cout << "CPU belongs to Zen family" << std::endl;
+    } else {
+        std::cout << "CPU does not belongs to Zen family" << std::endl;
+    }
+
     std::cout << "\nCpu Feature Identification..." << std::endl;
     // clang-format off
     std::cout << "TSC_ADJUST : " << (cpu.hasFlag(ECpuidFlag::tsc_adjust) ? "yes" : "no") << std::endl;

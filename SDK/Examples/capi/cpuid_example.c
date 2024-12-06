@@ -97,6 +97,13 @@ display_isa_info()
     } else {
         printf("CPU does not support x86-64v2 or higher ISA\n");
     }
+
+    if (au_cpuid_arch_is_zen_family(core_num)) {
+        printf("CPU belongs to the Zen family\n");
+    } else {
+        printf("CPU does not belong to the Zen family\n");
+    }
+
     printf("\nCpu Feature Identification...\n");
     const char* const flags_array[] = {
         "tsc_adjust", "avx", "avxvnni", "avx2", "avx512f"

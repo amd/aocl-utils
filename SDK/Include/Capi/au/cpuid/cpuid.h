@@ -358,6 +358,32 @@ AUD_API_EXPORT bool
 au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
 
 /**
+ * @brief          Allows caller to check if the processor arch is part of the
+ * Zen family.
+ *
+ * @details        This function is meant for Zen based processors.
+ *                 |   AOCL 5.0.1   |  au_cpuid_arch_is_zen_family()  |
+ *                 |:--------------:|:-------------------------------:|
+ *                 |    Skylake     |              False              |
+ *                 |   Bulldozer    |              False              |
+ *                 |      Zen1      |              True               |
+ *                 |     Zen1+      |              True               |
+ *                 |      Zen2      |              True               |
+ *                 |      Zen3      |              True               |
+ *                 |      Zen4      |              True               |
+ *                 |      Zen5      |              True               |
+ *
+ *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
+ *  will result in thread migration to the selected core.
+ *
+ * @param[in]      cpu_num   Any valid core number starting from 0.
+ *
+ * @return         Boolean, true if processor is part of the Zen family.
+ */
+AUD_API_EXPORT bool
+au_cpuid_arch_is_zen_family(au_cpu_num_t cpu_num);
+
+/**
  * @brief          Allows caller to check if the flags are available.
  *
  * @details        List of supported flags: sse3, pclmulqdq, dtes64, monitor,

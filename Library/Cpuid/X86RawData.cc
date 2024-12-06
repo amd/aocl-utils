@@ -319,6 +319,15 @@ X86Cpu::Impl::hasFlag(EFlag const& eflag) const
     return m_avail_flags.at(eflag) && m_usable_flags.at(eflag);
 }
 
+bool
+X86Cpu::Impl::isZenFamily() const
+{
+    // Make sure we are dealing with AMD
+    if (m_vendor_info.m_mfg != EVendor::Amd)
+        return false;
+    return m_vendor_info.m_family >= EFamily::Zen;
+}
+
 EUarch
 X86Cpu::Impl::getUarch() const
 {

@@ -619,6 +619,28 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     // clang-format on
 
     /**
+     * @brief     Check if the CPU is Zen family
+     * @details   This function will check if the CPU is Zen family.
+     *            Zen family includes Zen, ZenPlus, Zen2, Zen3, Zen4, Zen5
+     *            microarchitectures.
+     *            |   AOCL 5.0.1  |  isZenFamily()  |
+     *            |:-------------:|:---------------:|
+     *            |   Skylake     |     False       |
+     *            |  Bulldozer    |     False       |
+     *            |     Zen1      |     True        |
+     *            |     Zen1+     |     True        |
+     *            |     Zen2      |     True        |
+     *            |     Zen3      |     True        |
+     *            |     Zen4      |     True        |
+     *            |     Zen5      |     True        |
+     *            |   Zen[X>5]    |     True        |
+     * @return    true if CPU is Zen family, false otherwise
+     * @note      This function will return true for Zen family processors
+     *            only.
+     */
+    bool isZenFamily() const;
+
+    /**
      * @brief     Get the VendorInfo object
      *
      * @details   This function will return the VendorInfo object which contains
