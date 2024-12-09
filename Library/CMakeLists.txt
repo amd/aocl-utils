@@ -34,9 +34,11 @@ else()
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
 
-set(LOGGER_SRC_FILES
-    Logger.cc
-    LoggerFactory.cc
+SET(LOGGER_SRC_FILES "Core/Logger/LogWriter.cc"
+                     "Core/Logger/Logger.cc"
+                     "Core/Logger/LoggerManager.cc"
+                     "Core/Logger/Message.cc"
+                     "Core/Logger/Queue.cc"
 )
 
 set(BASE64_SRC_FILES
@@ -59,6 +61,7 @@ set(CAPI_SRC_FILES
     #Capi/base64.cc
     Capi/environ.cc
     Capi/threadpinning.cc
+    Capi/logger.cc
         )
 
 set(AVX2_FILES
@@ -83,7 +86,7 @@ set(CORE_SRC_FILES
   Core/ThreadPinning.cc
   #Core/DynamicLoader.cc
   #${BASE64_SRC_FILES}
-  #  ${LOGGER_SRC_FILES}
+  ${LOGGER_SRC_FILES}
   #${MEMORY_SRC_FILES}
   #  ${MESSAGE_SRC_FILES}
   #  ${EVENT_SRC_FILES}

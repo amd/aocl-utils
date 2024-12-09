@@ -1,8 +1,8 @@
 ---
 Checks:          '-*,-readability-identifier-length, clang-diagnostic-*,-clang-diagnostic-unused-value,clang-analyzer-*,-*,bugprone-*,performance-*,readability-*,-readability-magic-numbers,-readability-braces-around-statements,-readability-inconsistent-declaration-parameter-name,-readability-named-parameter'
   #HeaderFilterRegex: ''
-WarningsAsErrors: '*'
-AnalyzeTemporaryDtors: false
+# WarningsAsErrors: '*'
+# AnalyzeTemporaryDtors: false
 WarningsAsErrors: ''
 FormatStyle:     file
 User:            chrjacob

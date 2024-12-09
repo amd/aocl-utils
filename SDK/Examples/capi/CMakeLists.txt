@@ -37,6 +37,12 @@ au_add_application(cpuid_deprecated_api_example_c
 				LIBS ${AU_LIBS}
                 INCLUDES ${AU_INCLUDE_DIRS})
 
+set_source_files_properties(logger_demo.c PROPERTIES LANGUAGE CXX)
+au_add_application(logger_demo_c
+                SOURCES logger_demo.c
+                LIBS ${AU_LIBS}
+                INCLUDES ${AU_INCLUDE_DIRS})
+
 if (NOT WIN32)
 	au_add_application(thread_pinning_example_c
 				SOURCES thread_pinning_example_linux.c
@@ -53,10 +59,12 @@ if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(WIN32)
         add_dependencies(cpuid_example_c libaoclutils_shared au_cpuid_shared)
         add_dependencies(cpuid_deprecated_api_example_c libaoclutils_shared au_cpuid_shared)
+        add_dependencies(logger_demo_c libaoclutils_shared au_cpuid_shared)
         add_dependencies(thread_pinning_example_c libaoclutils_shared au_internal_core_shared)
     else()
         add_dependencies(cpuid_example_c aoclutils_shared au_cpuid_shared)
         add_dependencies(cpuid_deprecated_api_example_c aoclutils_shared au_cpuid_shared)
+        add_dependencies(logger_demo_c aoclutils_shared au_cpuid_shared)
         add_dependencies(thread_pinning_example_c aoclutils_shared au_internal_core_shared)
     endif()
 endif()
