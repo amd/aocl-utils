@@ -123,7 +123,7 @@ class CpuidUtils
      * \param[in]  ResponseT    The CPUID Register Data.
      * @return The EVendor [AMD, Intel or Other]
      */
-    EVendor getMfgInfo(ResponseT const& regs);
+    static EVendor getMfgInfo(ResponseT const& regs);
     /**
      * \brief       Get Family ID from given 32-bit input value.
      *
@@ -137,7 +137,7 @@ class CpuidUtils
      * Eg: Zen, ZenPlus and zen2 has same family ID. even if the CPU belongs to
      * the Zen2 family, it returns Zen2 the function return Zen
      */
-    EFamily getFamily(Uint32 var);
+    static EFamily getFamily(Uint32 var);
     /**
      * \brief       Get Model number from given input value.
      *
@@ -148,7 +148,7 @@ class CpuidUtils
      *
      * \return      Returns Model number value.
      */
-    Uint16 getModel(Uint32 var);
+    static Uint16 getModel(Uint32 var);
     /**
      * \brief       Get Stepping ID from given input value.
      *
@@ -161,7 +161,7 @@ class CpuidUtils
      *
      * \return      Returns Stepping ID value.
      */
-    Uint16 getStepping(Uint32 var);
+    static Uint16 getStepping(Uint32 var);
     /**
      * @details Issues the cpuid instruction using EAX/ECX gets response and
      * checks a flag in appropriate register
@@ -172,8 +172,8 @@ class CpuidUtils
      *
      * @return true if cpu has flag, false otherwise
      */
-    bool hasFlag(ResponseT const& expected, ResponseT const& actual);
-    void updateCacheView(CacheView& cView);
-    void updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp);
+    static bool hasFlag(ResponseT const& expected, ResponseT const& actual);
+    void        updateCacheView(CacheView& cView);
+    static void updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp);
 };
 } // namespace Au

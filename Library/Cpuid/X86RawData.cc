@@ -148,7 +148,7 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
     {{0x0000000d,0,0}, {0x00000002}, EFlag::xsavec},
     {{0x0000000d,0,0}, {0x00000004}, EFlag::xgetbv1},
     {{0x0000000d,0,0}, {0,0,0x00000008}, EFlag::xsaves},
-#if 0
+#if defined(KEEP_UNUSED_CODE)
 /* FIXME : do we need it  on host ?? */
     {{0x40000001}, {.eax = 0x00000001}, EFlag::kvmclock},
     {{0x40000001}, {.eax = 0x00000002}, EFlag::kvm_nopiodelay},
@@ -229,18 +229,18 @@ X86Cpu::Impl::update()
     std::map<RequestT, ResponseT> rawCpuid;
 
     /* manufacturer details */
-    auto resp                = at(RequestT{ 0x0000'0001, 0, 0, 0 });
-    m_vendor_info.m_mfg      = m_cutils->getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
-    m_vendor_info.m_family   = m_cutils->getFamily(resp.eax);
-    m_vendor_info.m_model    = m_cutils->getModel(resp.eax);
-    m_vendor_info.m_stepping = m_cutils->getStepping(resp.eax);
+    auto resp              = at(RequestT{ 0x0000'0001, 0, 0, 0 });
+    m_vendor_info.m_mfg    = CpuidUtils::getMfgInfo(at(RequestT{ 0, 0, 0, 0 }));
+    m_vendor_info.m_family = CpuidUtils::getFamily(resp.eax);
+    m_vendor_info.m_model  = CpuidUtils::getModel(resp.eax);
+    m_vendor_info.m_stepping = CpuidUtils::getStepping(resp.eax);
     setUarch();
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
             rawCpuid.insert(std::make_pair(req, at(req)));
         }
-        updateflag(flg, m_cutils->hasFlag(expected, rawCpuid[req]));
+        updateflag(flg, CpuidUtils::hasFlag(expected, rawCpuid[req]));
     }
 
     /*
@@ -356,7 +356,7 @@ X86Cpu::Impl::setUsableFlag(EFlag const& eflag, bool res)
     m_usable_flags[eflag] = res;
 }
 
-#if 0
+#if defined(KEEP_UNUSED_CODE)
 void
 X86Cpu::Impl::apply(RequestT& regs)
 {
