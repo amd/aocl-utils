@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,27 +27,19 @@
 
 #pragma once
 
-#include "Au/Au.hh"
+#include "Au/Config.h"
 
+#ifdef AU_ENABLE_ASSERTIONS
+#include "Au/AssertImpl.hh"
+#else
 namespace Au {
-/**
- * @detail
- * IError is an interface class for all errors, to be used with
- * ErrorBase class which defines few necessary methods.
- */
-class IError
-{
-  protected:
-    AUD_DEFAULT_CTOR_AND_VIRTUAL_DTOR(IError);
+// Here we define the macros to nothing
+#define AUD_ASSERT(cond, msg)                                                  \
+    {                                                                          \
+    }
 
-  public:
-    virtual String message() const = 0;
-    virtual Uint64 code() const    = 0;
-
-    bool operator==(const IError& other) { return isEq(*this, other); }
-
-  protected:
-    virtual bool isEq(IError const& lhs, IError const& rhs) const = 0;
-};
-
+#define AUD_ASSERT_NOT_IMPLEMENTED()                                           \
+    {                                                                          \
+    }
 } // namespace Au
+#endif

@@ -26,8 +26,10 @@
  *
  */
 
-#include "Au/Cpuid/Cpuid.hh"
+#include <cstring>
+
 #include "Au/Assert.hh"
+#include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/X86Cpu.hh"
 #include "Au/Memory/BufferView.hh"
 
