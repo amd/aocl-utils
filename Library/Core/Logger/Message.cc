@@ -56,7 +56,7 @@ Timestamp::getTimestamp() const
     localtime_r(&now_c, &time); // Use localtime_r for thread safety on Linux
 #endif
 
-    std::ostringstream oss = {};
+    std::ostringstream oss{};
     oss << std::put_time(&time, "%a %b %d %Y %H:%M:%S");
     return oss.str();
 }
