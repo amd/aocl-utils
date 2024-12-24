@@ -1,0 +1,31 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "project-vars",
+            "hidden": true,
+            "cacheVariables": {
+                "AU_PROJECT_NAME": "AOCL-Utils",
+                "AU_PROJECT_DESCRIPTION": "AOCL-Utils is an effort to factor out common functionalities across libraries.",
+                "AU_VENDOR_URL": "https://www.amd.com/en/developer/aocl.html",
+                "AU_VENDOR_NAME": "AMD",
+                "AU_VENDOR_CONTACT": "AOCL <aocl@amd.com>",
+                "AU_PROJ_PREFIX": "AU",
+                "AU_CXX_STANDARD": "17",
+                "AU_GTEST_TAG": "release-1.12.1"
+            }
+        },
+        {
+            "name": "project-options",
+            "hidden": true,
+            "cacheVariables": {
+                "AU_CMAKE_VERBOSE": "ON",
+                "AU_BUILD_DOCS": "OFF",
+                "AU_BUILD_TESTS": "ON",
+                "AU_BUILD_EXAMPLES": "ON",
+                "AU_ENABLE_ASSERTIONS": "OFF",
+                "AU_BUILD_WITH_ASAN": "OFF"
+            }
+        }
+    ]
+}
