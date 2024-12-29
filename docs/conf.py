@@ -34,7 +34,14 @@
 from importlib import metadata as _metadata
 from packaging import version as _version
 
-_rocm_version = _metadata.version('rocm-docs-core')
+try:
+    _rocm_version = _metadata.version('rocm-docs-core')
+except _metadata.PackageNotFoundError as e:
+    _rocm_version = None
+    print("Please install rocm-docs-core package!")
+    print("pip install rocm-docs-core")
+    raise e
+
 _rocm_version_expected = "1.0.0"
 
 # Doxygen
@@ -73,10 +80,11 @@ source_suffix = {
 }
 breathe_show_define_initializer = True
 
-templates_path = ['_template']
-if(_version.parse(_rocm_version) < _version.parse(_rocm_version_expected)):
+if _rocm_version is None or _version.parse(_rocm_version) < _version.parse(_rocm_version_expected):
     print("Old version of rocm-docs-core detected, falling back")
     templates_path = ['_template_fallback']
+else:
+    templates_path = ['_template']
 
 
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']

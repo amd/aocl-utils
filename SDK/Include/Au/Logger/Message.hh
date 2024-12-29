@@ -42,6 +42,11 @@ using Au::String;
 namespace Au::Logger {
 
 // Class to create a timestamp
+/**
+ * @class Timestamp
+ * @brief Represents a time point and provides convenience methods for
+ * extracting time components.
+ */
 class Timestamp
 {
   private:
@@ -49,6 +54,10 @@ class Timestamp
 
   public:
     Timestamp();
+    /**
+     * @brief Returns a formatted timestamp string.
+     * @return Timestamp in "HH:MM:SS.milli" format.
+     */
     String getTimestamp() const;
     Uint64 getHour() const;
     Uint64 getMinute() const;
@@ -59,6 +68,12 @@ class Timestamp
 };
 
 // Class to keep the priority of the log message
+/**
+ * @class Priority
+ * @brief Indicates the severity level of a log message.
+ *
+ * Use PriorityLevel to distinguish between various log severities.
+ */
 class Priority
 {
 
@@ -98,18 +113,47 @@ class Priority
 };
 
 // Class for message.
+/**
+ * @class Message
+ * @brief Encapsulates a log message with content, priority, and timestamp.
+ */
 class Message
 {
   private:
-    String    m_msg;
-    Priority  m_priority;
-    Timestamp m_timestamp;
+    String    m_msg;       ///< Log message
+    Priority  m_priority;  ///< Priority of the message
+    Timestamp m_timestamp; ///< Timestamp of the message
 
   public:
+    /**
+     * @brief Constructor for Message.
+     * @param msg Log message.
+     */
     explicit Message(const String& msg);
+
+    /**
+     * @brief Constructor for Message with priority.
+     * @param msg Log message.
+     * @param priority Priority of the message.
+     */
     explicit Message(const String& msg, Priority& priority);
-    String    getMsg() const;
-    Priority  getPriority() const;
+
+    /**
+     * @brief Get the log message.
+     * @return Log message.
+     */
+    String getMsg() const;
+
+    /**
+     * @brief Get the priority of the message.
+     * @return Priority of the message.
+     */
+    Priority getPriority() const;
+
+    /**
+     * @brief Get the timestamp of the message.
+     * @return Timestamp of the message.
+     */
     Timestamp getTimestamp() const;
 };
 } // namespace Au::Logger

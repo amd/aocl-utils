@@ -1,6 +1,7 @@
 # C++-API Behaviour Summary
 
 ## Behaviour of `X86Cpu.isUarch`
+
 X86Cpu.isUarch supports two arguments.
 - EUarch - Micro Architecture {Zen, ZenPlus, Zen2, Zen3, Zen4, Zen5}
 - strict - Bool {True/False}
