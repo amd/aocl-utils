@@ -33,7 +33,10 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
   # Add the default path
   ${CMAKE_MODULE_PATH}
-  )
+)
+
+# Define AU variables before we do anything else
+include(au_variables)
 
 # Export to CMakePresets.json, which is used by various IDE,
 # easy integration on any IDE using LSP (Language Server Protocol)
@@ -52,19 +55,22 @@ if(AU_VERSION_SUFFIX)
    set(AU_VERSION_STRING "${AU_VERSION_STRING}.${AU_VERSION_SUFFIX}${AU_VERSION_SUFFIX_EXTRA}")
 endif()
 
-
-set(PACKAGE           "libau")
-set(PACKAGE_NAME      "au")
-set(PACKAGE_STRING    "${PACKAGE_NAME} ${AU_VERSION_STRING}")
-set(PACKAGE_TARNAME   "${PACKAGE_NAME}-${AU_VERSION_STRING}")
-set(PACKAGE_BUGREPORT "aocl@amd.com")
-set(PACKAGE_URL       "https://developer.amd.com/aocl/")
-set(PACKAGE_VERSION   "${AU_VERSION_STRING}")
+set(PACKAGE            "libau")
+set(PACKAGE_NAME       "au")
+set(PACKAGE_STRING     "${PACKAGE_NAME} ${AU_VERSION_STRING}")
+set(PACKAGE_TARNAME    "${PACKAGE_NAME}-${AU_VERSION_STRING}")
+set(PACKAGE_BUGREPORT  ${AU_VENDOR_CONTACT})
+set(PACKAGE_URL        ${AU_VENDOR_URL})
+set(PACKAGE_VERSION    "${AU_VERSION_STRING}")
 
 set(PROJECT_FULL_NAME "AOCL Utilities Library")
-set(PROJECT_NAME "AOCL Library")
+set(PROJECT_NAME      ${AU_PROJECT_NAME})
 message("version " ${AU_VERSION_STRING})
 project(${PACKAGE_NAME} VERSION ${AU_VERSION_STRING} LANGUAGES CXX C ASM)
+
+# Declare project dependant variables
+include(au_project)
+
 #
 # Set language features
 # Require C++-20
@@ -175,7 +181,6 @@ if (AU_BUILD_EXAMPLES)
   include(au_examples)
 endif()
 
-include(au_variables)
 include(au_git_hash)
 include(au_functions)
 include(au_helpers)
@@ -190,13 +195,6 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/config.h.in" "${AU_CONFIG_OU
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Library/version.cc.in" "${AU_VERSION_OUTPUT_FILE}" @ONLY)
 
-#include_directories("${AU_CONFIG_DIR}")
-set(AU_INCLUDE_DIRS
-    ${PROJECT_SOURCE_DIR}/SDK/Include
-    ${PROJECT_SOURCE_DIR}/Library/Private
-  ${AU_CONFIG_DIR}
-)
-
 include(au_lib)
 
 au_add_interface(sdk__include
@@ -206,7 +204,6 @@ set_target_properties(sdk__include
   PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/SDK/Include"
 )
-
 
 add_subdirectory(Library)
 
@@ -230,8 +227,8 @@ configure_file(
 # Print a banner if verbosity is enabled
 #
 if(AU_CMAKE_VERBOSE AND TRUE)
-  message(STATUS "Project : ${PROJECT_FULL_NAME}")
-  message(STATUS "  Description          : ${AU_DESCRIPTION}")
+  message(STATUS "Project                : ${PROJECT_FULL_NAME}")
+  message(STATUS "  Description          : ${AU_PROJECT_DESCRIPTION}")
   message(STATUS "  Version              : ${AU_VERSION_STRING} (${AU_VERSION_FULL})")
   message(STATUS "  Build Type           : ${CMAKE_BUILD_TYPE}")
   if (AU_BUILD_EXAMPLES)
