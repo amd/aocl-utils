@@ -151,6 +151,27 @@ X86Cpu::hasFlag(ECpuidFlag const& eflag) const
     return pImpl()->hasFlag(eflag);
 }
 
+bool
+X86Cpu::hasFlags(Au::Memory::BufferView<ECpuidFlag> const& eflags,
+                 HasFlagsMode const&                       mode) const
+{
+    switch (mode) {
+        case HasFlagsMode::Classic:
+        case HasFlagsMode::All:
+            for (auto flag : eflags)
+                if (!hasFlag(flag))
+                    return false;
+            return true;
+        case HasFlagsMode::Any:
+            for (auto flag : eflags)
+                if (hasFlag(flag))
+                    return true;
+            return false;
+        default:
+            return false;
+    }
+}
+
 EUarch
 X86Cpu::getUarch() const
 {

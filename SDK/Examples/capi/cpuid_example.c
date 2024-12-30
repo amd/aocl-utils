@@ -108,11 +108,29 @@ display_isa_info()
     const char* const flags_array[] = {
         "tsc_adjust", "avx", "avxvnni", "avx2", "avx512f"
     };
-    bool result = au_cpuid_has_flags(core_num, flags_array, 5);
+    int flags_array_size = sizeof(flags_array) / sizeof(flags_array[0]);
+    printf("Flags being checked: ");
+    for (int i = 0; i < flags_array_size; i++) {
+        printf(
+            "%s%s", flags_array[i], (i < flags_array_size - 1) ? ", " : "\n");
+    }
+    bool result = au_cpuid_has_flags(core_num, flags_array, flags_array_size);
     printf("Checking for TSC_ADJUST, AVX, AVXVNNI, AVX2, AVX512...\n");
     printf("%s\n",
            (result ? "All are present"
                    : "One or more of the flags are not present"));
+
+    result = au_cpuid_has_flags_all(core_num, flags_array, flags_array_size);
+    printf("Checking for all flags...\n");
+    printf("%s\n",
+           (result ? "All are present"
+                   : "One or more of the flags are not present"));
+
+    result = au_cpuid_has_flags_any(core_num, flags_array, flags_array_size);
+    printf("Checking for any flags...\n");
+    printf("%s\n",
+           (result ? "One or more of the flags are present"
+                   : "None of the flags are present"));
 }
 
 int

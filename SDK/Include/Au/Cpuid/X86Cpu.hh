@@ -35,6 +35,7 @@
 #include "Au/Cpuid/Cpuid.hh"
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Interface/Cpuid/ICpu.hh"
+#include "Au/Memory/BufferView.hh"
 
 #include <map>
 #include <memory>
@@ -100,6 +101,13 @@ enum class EUarch : Uint16
     Zen4,
     Zen5,
     Max = Zen5,
+};
+
+enum class HasFlagsMode
+{
+    Classic,
+    All,
+    Any,
 };
 
 /**
@@ -508,6 +516,73 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            flags, false otherwise
      */
     bool hasFlag(ECpuidFlag const& eflag) const;
+
+    /**
+     * @brief     Check if the flag is suppored by the CPU ideintified by num.
+     *            This function is used to check any of the flags are available.
+     *
+     * @details        List of supported flags: sse3, pclmulqdq, dtes64,
+     * monitor, dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm,
+     * pcid, dca, sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline, aes,
+     * xsave, osxsave, avx, f16c, rdrand, hypervisor, fpu, vme, de, pse, tsc,
+     * msr, pae, mce, cx8, apic, sep, mtrr, pge, mca, cmov, pat, pse36, pn,
+     * clflush, ds, acpi, mmx, fxsr, sse, sse2, ss, ht, tm, ia64, pbe, arat,
+     * fsgsbase, tsc_adjust, bmi1, hle, avx2, smep, bmi2, erms, invpcid, rtm,
+     * mpx, avx512f, avx512dq, rdseed, adx, smap, avx512ifma, pcommit,
+     * clflushopt, clwb, avx512pf, avx512er, avx512cd, sha_ni, avx512bw,
+     * avx512vl, avx512vbmi, umip, pku, ospke, avx512_vpopcntdq, la57, rdpid,
+     * avx512_4vnniw, avx512_4fmaps, avx512_bf16, avxvnni, xsaveopt, xsavec,
+     * xgetbv1, xsaves, lahf_lm, cmp_legacy, svm, extapic, cr8legacy, abm,
+     * sse4a, misalignsse, _3dnowprefetch, osvw, ibs, xop, skinit, wdt, lwp,
+     * fma4, tce, nodeid_msr, tbm, topoext, perfctr_core, perfctr_nb, syscall,
+     * nxxd, mmxext, fxsr_opt, pdpe1gb, rdtscp, lmi64, _3dnowext, _3dnow,
+     * invtsc, npt, lbrv, svm_lock, nrip_save, tsc_scale, vmcb_clean,
+     * flushbyasid, decodeassists, pause_filter, pfthreshold, xstore, xstore_en,
+     * xcrypt, xcrypt_en, ace2, ace2_en, phe, phe_en, pmm, pmm_en, vaes,
+     * vpclmulqdq, avx512_vnni, avx512_bitalg, avx512vbmi2, movdiri, movdir64b,
+     * avx512_vpintersect, x2avic
+     *
+     * @param[in] eflags    List of ECpuidFlag that needs to be checked
+     *
+     * @return    true if any eflags are present in the availableflags and
+     *            usable
+     *
+     */
+    bool hasFlags(Au::Memory::BufferView<ECpuidFlag> const& eflags,
+                  HasFlagsMode const& mode = HasFlagsMode::Any) const;
+
+    /**
+     * @brief     Check if the flag is suppored by the CPU ideintified by num.
+     *           This function is used to check all of the flags are available.
+     *
+     * @details        List of supported flags: sse3, pclmulqdq, dtes64,
+     * monitor, dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm,
+     * pcid, dca, sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline, aes,
+     * xsave, osxsave, avx, f16c, rdrand, hypervisor, fpu, vme, de, pse, tsc,
+     * msr, pae, mce, cx8, apic, sep, mtrr, pge, mca, cmov, pat, pse36, pn,
+     * clflush, ds, acpi, mmx, fxsr, sse, sse2, ss, ht, tm, ia64, pbe, arat,
+     * fsgsbase, tsc_adjust, bmi1, hle, avx2, smep, bmi2, erms, invpcid, rtm,
+     * mpx, avx512f, avx512dq, rdseed, adx, smap, avx512ifma, pcommit,
+     * clflushopt, clwb, avx512pf, avx512er, avx512cd, sha_ni, avx512bw,
+     * avx512vl, avx512vbmi, umip, pku, ospke, avx512_vpopcntdq, la57, rdpid,
+     * avx512_4vnniw, avx512_4fmaps, avx512_bf16, avxvnni, xsaveopt, xsavec,
+     * xgetbv1, xsaves, lahf_lm, cmp_legacy, svm, extapic, cr8legacy, abm,
+     * sse4a, misalignsse, _3dnowprefetch, osvw, ibs, xop, skinit, wdt, lwp,
+     * fma4, tce, nodeid_msr, tbm, topoext, perfctr_core, perfctr_nb, syscall,
+     * nxxd, mmxext, fxsr_opt, pdpe1gb, rdtscp, lmi64, _3dnowext, _3dnow,
+     * invtsc, npt, lbrv, svm_lock, nrip_save, tsc_scale, vmcb_clean,
+     * flushbyasid, decodeassists, pause_filter, pfthreshold, xstore, xstore_en,
+     * xcrypt, xcrypt_en, ace2, ace2_en, phe, phe_en, pmm, pmm_en, vaes,
+     * vpclmulqdq, avx512_vnni, avx512_bitalg, avx512vbmi2, movdiri, movdir64b,
+     * avx512_vpintersect, x2avic
+     *
+     * @param[in] eflags    List of ECpuidFlag that needs to be checked
+     *
+     * @return    true if all eflags are present in the availableflags and
+     *            usable
+     *
+     */
+    bool hasAllFlags(Au::Memory::BufferView<ECpuidFlag> const& eflags) const;
 
     /**
      * @brief     Check if the flag is suppored by the CPU ideintified by num.
