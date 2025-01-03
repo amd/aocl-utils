@@ -21,5 +21,6 @@ Table of Contents
     root/utils/support_matrix/supported_package_version
     root/cpuid/api/index
     root/cpuid/testing/utils_testplan
+    root/logger/api/index
     root/threadpinning/api/index
     root/threadpinning/testing/tp_testplan

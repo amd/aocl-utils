@@ -32,27 +32,58 @@
 
 namespace Au::Logger {
 
-// Logger uses thread local storage to store log messages temporarily
-// Once logger is done with storing messages, user can call flush to commit
-// messages
+/**
+ * @class LogManager
+ * @brief Manages buffered logging workflows and forwards them to a LogWriter.
+ */
 class LogManager
 {
   private:
-    // Thread local storage for vector of log messages
-    static thread_local std::vector<Message> m_storage;
-    std::shared_ptr<LogWriter>               m_logWriter;
+    static thread_local std::vector<Message>
+        m_storage; ///< Thread local storage for log messages
+    std::shared_ptr<LogWriter> m_logWriter; ///< Shared pointer to LogWriter
 
     // Disable copy constructor and assignment operator
     LogManager(const LogManager&)            = delete;
     LogManager& operator=(const LogManager&) = delete;
 
   public:
+    /**
+     * @brief Creates a LogManager and associates it with a given LogWriter.
+     * @param logWriter Shared pointer to the LogWriter instance.
+     */
     explicit LogManager(std::shared_ptr<LogWriter> logWriter);
+
+    /**
+     * @brief Appends a single message to the thread-local storage.
+     * @param msg The message to log.
+     */
     void log(Message& msg);
+
+    /**
+     * @brief Flushes the thread-local messages to the LogWriter.
+     */
     void flush();
+
+    /**
+     * @brief Destructor for LogManager.
+     */
     ~LogManager();
 
+    /**
+     * @brief Operator << appends a single Message to the current thread's
+     * buffer.
+     * @param msg The message to log.
+     * @return Reference to this LogManager.
+     */
     LogManager& operator<<(const Message& msg);
+
+    /**
+     * @brief Operator << appends a string as a Message to the current thread's
+     * buffer.
+     * @param msg String to be logged.
+     * @return Reference to this LogManager.
+     */
     LogManager& operator<<(const std::string& msg);
 };
 } // namespace Au::Logger

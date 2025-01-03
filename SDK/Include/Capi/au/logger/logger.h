@@ -31,6 +31,12 @@
 
 AUD_EXTERN_C_BEGIN
 
+/**
+ * @enum log_level_t
+ * @brief Defines available severity levels for C-API logging.
+ *
+ * The higher the level, the more severe the event.
+ */
 typedef enum
 {
     AUD_LOG_LEVEL_TRACE,
@@ -42,38 +48,35 @@ typedef enum
 } log_level_t;
 
 /**
- * @brief          Create a logger context.
+ * @brief Creates a new logger context for the C-API.
  *
- * @return         Logger context.
+ * @return A pointer to the newly allocated logger context.
  */
 AUD_API_EXPORT logger_ctx_t*
 au_logger_create();
 
 /**
- * @brief          Log a message.
- * @param[in]      logger          Logger context.
- * @param[in]      message         Message to log.
- * @param[in]      level           Log level.
+ * @brief Logs a message at the specified log level.
  *
- * @return void
+ * @param[in] logger  Pointer to the logger context.
+ * @param[in] message Null-terminated string message.
+ * @param[in] level   Desired log severity level.
  */
 AUD_API_EXPORT void
 au_logger_log(logger_ctx_t* logger, const char* message, log_level_t level);
 
 /**
- * @brief          Flush the logger.
- * @param[in]      logger          Logger context.
+ * @brief Forces any buffered messages to be flushed.
  *
- * @return void
+ * @param[in] logger  Pointer to the logger context.
  */
 AUD_API_EXPORT void
 au_logger_flush(logger_ctx_t* logger);
 
 /**
- * @brief          Destroy the logger.
- * @param[in]      logger          Logger context.
+ * @brief Destroys the logger context and releases its resources.
  *
- * @return void
+ * @param[in] logger  Pointer to the logger context.
  */
 AUD_API_EXPORT void
 au_logger_destroy(logger_ctx_t* logger);

@@ -33,21 +33,56 @@
  * @brief ISink class - Writes the message to the output
  */
 namespace Au::Logger {
+
+/**
+ * @class ILogger
+ * @brief Abstract interface for all logger types.
+ *
+ * Derived classes must implement write() and flush().
+ */
 class ILogger
 {
   public:
-    virtual void   write(const Message& msg)               = 0;
-    virtual void   flush()                                 = 0;
-    virtual void   setLoggerName(const String& loggerName) = 0;
-    virtual String getLoggerName() const                   = 0;
-    virtual String getLoggerType() const                   = 0;
-    virtual ~ILogger()                                     = default;
+    /**
+     * @brief Writes a log message to the output.
+     * @param msg The log message.
+     */
+    virtual void write(const Message& msg) = 0;
+
+    /**
+     * @brief Flush the output.
+     */
+    virtual void flush() = 0;
+
+    /**
+     * @brief Set the logger name.
+     * @param loggerName Name of the logger.
+     */
+    virtual void setLoggerName(const String& loggerName) = 0;
+
+    /**
+     * @brief Get the logger name.
+     * @return Logger name.
+     */
+    virtual String getLoggerName() const = 0;
+
+    /**
+     * @brief Get the logger type.
+     * @return Logger type.
+     */
+    virtual String getLoggerType() const = 0;
+
+    virtual ~ILogger() = default;
 };
 
+/**
+ * @class GenericLogger
+ * @brief Base logger class providing a default implementation of ILogger.
+ */
 class GenericLogger : public ILogger
 {
   protected:
-    String m_loggerName{};
+    String m_loggerName{}; ///< Logger name
 
   public:
     virtual void   write(const Message& msg) override;
@@ -59,7 +94,8 @@ class GenericLogger : public ILogger
 };
 
 /**
- * @brief ConsoleLogger class - Writes the message to the console
+ * @class ConsoleLogger
+ * @brief Outputs log messages to the console (stdout).
  */
 class ConsoleLogger : public GenericLogger
 {
@@ -70,6 +106,10 @@ class ConsoleLogger : public GenericLogger
     ~ConsoleLogger() override = default;
 };
 
+/**
+ * @class DummyLogger
+ * @brief A no-op logger for testing or disabling logging.
+ */
 class DummyLogger : public GenericLogger
 {
   public:
@@ -80,15 +120,20 @@ class DummyLogger : public GenericLogger
 };
 
 /**
- * @brief FileSink class - Writes the message to the file
+ * @class FileLogger
+ * @brief Writes log messages to a designated file.
  */
 class FileLogger : public GenericLogger
 {
   private:
-    String m_filename;
-    FILE*  m_file;
+    String m_filename; ///< Filename to write logs
+    FILE*  m_file;     ///< File pointer
 
   public:
+    /**
+     * @brief Constructor for FileLogger.
+     * @param filename The file to which logs should be written.
+     */
     explicit FileLogger(const String& filename);
 
     // Disable copy constructor and assignment operator
@@ -102,16 +147,33 @@ class FileLogger : public GenericLogger
     ~FileLogger() override;
 };
 
-// TODO: Implement NetworkSink class
-
 /**
- * @brief LoggerFactory class - Factory class to create the logger
+ * @class LoggerFactory
+ * @brief Provides methods to create and configure logger instances.
+ *
+ * Currently supported logger types for the @ref createLogger() method:
+ * - "ConsoleLogger": Logs to console.
+ * - "DummyLogger": Disables logging (no-op).
+ * - "FileLogger": Logs to a file, specify filename as loggerName argument.
  */
 class LoggerFactory
 {
   public:
+    /**
+     * @brief Create a logger.
+     * @param loggerType Type of the logger (e.g., "ConsoleLogger",
+     * "DummyLogger", "FileLogger").
+     * @param loggerName Logger name or filename, depending on the logger type.
+     * @return Unique pointer to ILogger instance or nullptr if invalid
+     * loggerType.
+     */
     static std::unique_ptr<ILogger> createLogger(const String& loggerType,
                                                  const String& loggerName);
+
+    /**
+     * @brief Validate the logger type.
+     * @param loggerType Type of the logger.
+     */
     static void validateLoggerType(const String& loggerType);
 };
 } // namespace Au::Logger
