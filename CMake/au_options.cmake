@@ -42,6 +42,10 @@ option(AU_BUILD_STATIC_LIBS "Build static libraries" ON)
 option(AU_BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(AU_CMAKE_VERBOSE "Set cmake verbosity" OFF)
 
+# Sub options for docs
+# Doxygen generate graphs and enable code browsing
+option(AU_DOXYGEN_FULL "Generate Doxygen documentation with all features" OFF)
+
 # Define the processor type
 string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" upper_CMAKE_SYSTEM_PROCESSOR)
 cmake_dependent_option(AU_CPU_ARCH_X86 "" OFF "${upper_CMAKE_SYSTEM_PROCESSOR} MATCHES ^x86" ON)

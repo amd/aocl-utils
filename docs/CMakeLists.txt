@@ -31,6 +31,12 @@ find_package(Sphinx)
 find_package(Doxygen REQUIRED)
 find_package(Sphinx REQUIRED)
 
+# Doxygen generate graphs and enable code browsing
+if(AU_DOXYGEN_FULL)
+  set(AU_DOXYGEN_FULL "YES")
+else()
+  set(AU_DOXYGEN_FULL "NO")
+endif()
 
 set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR})
 set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
