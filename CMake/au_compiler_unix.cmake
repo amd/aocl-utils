@@ -25,6 +25,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+# Force cmake to use custom prefix map for source files
+add_compile_options(-fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.)
+
 set(AU_CXX_FLAGS_COMMON "-Wall -Wextra" "-fno-rtti" "-fno-exceptions")
 set(AU_CXX_FLAGS_DEBUG
         "-Wsuggest-final-types"
