@@ -5,6 +5,5 @@ Cpuid TestPlan
 
 .. toctree::
     :maxdepth: 2
-    :glob:
 
-    *
+    utils_testplan.rst

@@ -5,6 +5,6 @@ ThreadPinning API Reference
 
 .. toctree::
     :maxdepth: 2
-    :glob:
 
-    *
+    tp_capis.rst
+    tp_cppapis.rst
