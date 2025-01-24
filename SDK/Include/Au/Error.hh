@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,17 +34,45 @@ namespace Au {
 
 using ErrorCodeGeneric = Uint16;
 
+/**
+ * @class GenericError
+ * @brief Implements generic error handling functionality
+ * @details Provides basic error codes and messages for common error scenarios
+ */
 class GenericError final : public ErrorBase
 {
   public:
+    /**
+     * @brief Default constructor that initializes with no error (OK state)
+     */
     GenericError();
+
+    /**
+     * @brief Constructs GenericError with a specific error code
+     * @param ecode The error code to initialize with
+     */
     explicit GenericError(ErrorCodeGeneric ecode);
 
     AUD_DEFAULT_DTOR(GenericError);
+
+    /**
+     * @brief Get the human-readable error message
+     * @return String containing the error message
+     * @see GenericError.cc for the actual message strings
+     */
     virtual String message() const override;
-    virtual bool   isError() const override;
+
+    /**
+     * @brief Check if this represents an error condition
+     * @return true if this represents an error, false if OK
+     */
+    virtual bool isError() const override;
 
   protected:
+    /**
+     * @brief Get the module identifier for generic errors
+     * @return Always returns 0 for generic errors
+     */
     virtual Uint16 getModuleId() const override { return 0; }
 };
 
@@ -57,14 +85,68 @@ class GenericError final : public ErrorBase
  * }
  */
 // clang-format off
+
+/**
+ * @brief Returns an Error object signifying an operation was aborted
+ * @return Reference to an ErrorBase-derived object representing aborted state
+ * @see GenericError.cc for the actual error message
+ */
 IError const& Aborted();
+
+/**
+ * @brief Returns an Error object signifying that a resource already exists
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& AlreadyExistsError();
+
+/**
+ * @brief Returns an Error object signifying an internal error
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& InternalError();
+
+/**
+ * @brief Returns an Error object for invalid arguments
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& InvalidArgumentError();
+
+/**
+ * @brief Returns an Error object signifying a resource was not found
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& NotFoundError();
+
+/**
+ * @brief Returns an Error object for an unavailable resource or functionality
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& NotAvailableError();
+
+/**
+ * @brief Returns an Error object indicating a feature is not implemented
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& NotImplementedError();
+
+/**
+ * @brief Returns an Error object signifying an unknown error
+ * @return Reference to an ErrorBase-derived object representing this error
+ * @see GenericError.cc for the actual error message
+ */
 IError const& UnknownError();
+
+/**
+ * @brief Returns an Error object representing success (no error)
+ * @return Reference to an ErrorBase-derived object representing success
+ * @see GenericError.cc for the actual error message
+ */
 IError const& NoError();
 
 } // namespace Au

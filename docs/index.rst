@@ -22,5 +22,6 @@ Table of Contents
     root/cpuid/api/index
     root/cpuid/testing/utils_testplan
     root/logger/api/index
+    root/status/api/index
     root/threadpinning/api/index
     root/threadpinning/testing/tp_testplan
