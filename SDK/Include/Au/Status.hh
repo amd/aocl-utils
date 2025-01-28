@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,6 +45,11 @@ namespace Au {
 class Status final
 {
   public:
+    /**
+     * @brief Constructs a new Status object from an existing IError reference
+     *
+     * @param ie Reference to an error or success state
+     */
     explicit Status(IError const& ie)
         : m_code{ ie.code() }
         , m_is_ok{ !ie.isError() }
@@ -52,6 +57,11 @@ class Status final
     {
     }
 
+    /**
+     * @brief Constructs a new Status object from an IError rvalue reference
+     *
+     * @param ie Rvalue reference to an error or success state
+     */
     explicit Status(IError&& ie)
         : m_code{ ie.code() }
         , m_is_ok{ !ie.isError() }
@@ -59,6 +69,13 @@ class Status final
     {
     }
 
+    /**
+     * @brief Constructs a new Status object from an IError reference with extra
+     * text
+     *
+     * @param ie Reference to an error or success state
+     * @param msg Additional message appended to the error description
+     */
     explicit Status(IError const& ie, StringView msg)
         : Status{ ie }
     {
@@ -69,39 +86,46 @@ class Status final
     AUD_DEFAULT_CTOR_AND_DTOR(Status);
     AUD_DEFAULT_COPY_AND_ASSIGNMENT(Status);
 
+    /**
+     * @brief Checks if two Status objects have the same error code.
+     *
+     * @param other Another Status to compare with
+     * @return true if codes match, false otherwise
+     */
     bool operator==(const Status& other) const;
+
+    /**
+     * @brief Checks if two Status objects do not have the same error code.
+     *
+     * @param other Another Status to compare with
+     * @return true if codes differ, false otherwise
+     */
     bool operator!=(const Status& other) const;
 
-    // Status::ok()
-    // All is Well !!! if m_error is eOk or eNone
+    /**
+     * @brief Indicates if the Status is error-free (ok).
+     *
+     * @return true if no error is present, false otherwise
+     */
     AUD_MUST_USE_RETURN bool ok() const;
     String                   message() const { return m_message; }
 
     /**
-     * @name code()
+     * @brief Returns encoded error code
      *
-     * @detail
-     * Returns encoded error code
-     *
-     * @params
-     * n/a
-     *
-     * @result          Uint64          encoded error code
+     * @return Uint64 encoded error code
      */
     Uint64 code() const { return m_code; }
 
     /**
-     * @name update()
+     * @brief Update the error code and message only if there was no error
+     * earlier
      *
-     * @detail
-     * Update the error code and message only if there was no error earlier;
-     * this is done to presever the very first error that happens
+     * @details This is done to preserve the very first error that happens
      *
-     * @param[in]       ie      IError interface from any component
-     * @param[in]       msg     Additional message to be added to the error
-     * message
-     *
-     * @return          boolean Indication if the update was successful
+     * @param ie IError interface from any component
+     * @param msg Additional message to be added to the error message
+     * @return true if the update was successful, false otherwise
      */
     bool update(IError& ie, const String& msg)
     {
@@ -115,15 +139,13 @@ class Status final
     }
 
     /**
-     * @name update()
+     * @brief Update the error code and message only if there was no error
+     * earlier
      *
-     * @detail
-     * Update the error code and message only if there was no error earlier;
-     * this is done to presever the very first error that happens
+     * @details This is done to preserve the very first error that happens
      *
-     * @param[in]       s      New Status to be updated
-     *
-     * @return          boolean Indication if the update was successful
+     * @param s New Status to be updated
+     * @return true if the update was successful, false otherwise
      */
     bool update(const Status& s)
     {
@@ -160,6 +182,9 @@ class Status final
  * @brief StatusOk()
  * Useful function when returning from a function
  *
+ * @return Status  Status object with no error
+ *
+ * @example
  * Status some_function(some_arg_t arg)
  * {
  *    // .. do something important ..
@@ -200,13 +225,62 @@ AUD_MUST_USE_RETURN bool IsNotAvailable(const Status& status);
 AUD_MUST_USE_RETURN bool IsNotImplemented(const Status& status);
 AUD_MUST_USE_RETURN bool IsUnknown(const Status& status);
 
-
+/**
+ * @brief Creates a Status indicating an "already exists" error.
+ * @details This is useful when a resource is being created that already exists.
+ *
+ * @param msg String describing the specifics.
+ * @return A Status with "already exists" error.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusAlreadyExists(StringView msg);
+
+/**
+ * @brief Creates a Status indicating an "internal error".
+ * @param msg Descriptive message appended to the internal error.
+ * @return A Status with "internal error".
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusInternalError(StringView msg);
+
+/**
+ * @brief Creates a Status indicating an "invalid argument" error.
+ * @param msg Explanation of why the argument is invalid.
+ * @return A Status with "invalid argument" error.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusInvalidArgument(StringView msg);
+
+/**
+ * @brief Creates a Status indicating a "not found" error.
+ * @param msg Additional details about the missing resource.
+ * @return A Status with "not found" error.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusNotFound(StringView msg);
+
+/**
+ * @brief Creates a Status indicating a "not available" error.
+ * @param msg Explanation of what is unavailable.
+ * @return A Status with "not available" error.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusNotAvailable(StringView msg);
+
+/**
+ * @brief Creates a Status indicating a "not implemented" error.
+ * @param msg Additional descriptive text.
+ * @return A Status with "not implemented" error.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusNotImplemented(StringView msg);
+
+/**
+ * @brief Creates a Status indicating an "unknown" error.
+ * @param msg Supplemental message describing the unknown error.
+ * @return A Status with an "unknown" error code.
+ * @note Refer to GenericError.cc for the actual error string.
+ */
 Status StatusUnknown(StringView msg);
 // clang-format on
 

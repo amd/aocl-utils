@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
 
 namespace Au {
 /**
- * @detail
+ * @details
  * IError is an interface class for all errors, to be used with
  * ErrorBase class which defines few necessary methods.
  */
