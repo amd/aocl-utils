@@ -5,6 +5,5 @@ ThreadPinning TestPlan
 
 .. toctree::
     :maxdepth: 2
-    :glob:
 
-    *
+    tp_testplan.rst
