@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,6 +66,25 @@
             os << flags[value] << ":";                                         \
         }                                                                      \
         return os;                                                             \
+    }                                                                          \
+    inline uint64_t name##fromString(const std::string& str)                   \
+    {                                                                          \
+        std::string       s = #__VA_ARGS__;                                    \
+        std::stringstream ss(s);                                               \
+        std::string       token;                                               \
+        uint64_t          index = 1; /** Start after Min */                    \
+        while (std::getline(ss, token, ',')) {                                 \
+            /**  Remove any leading whitespace */                              \
+            size_t start = token.find_first_not_of(" ");                       \
+            if (start != std::string::npos) {                                  \
+                token = token.substr(start);                                   \
+            }                                                                  \
+            if (token == str) {                                                \
+                return index;                                                  \
+            }                                                                  \
+            index++;                                                           \
+        }                                                                      \
+        return -1; /**  Return Max if not found */                             \
     }                                                                          \
     inline std::string name##toString(Uint64 value)                            \
     {                                                                          \
