@@ -28,6 +28,7 @@
 
 #include "CpuidTest.hh"
 #include "Au/Cpuid/Enum.hh"
+#include "CpuidTestEnum.hh"
 
 #include <cstdlib>
 #include <fstream>
