@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,51 +41,111 @@
 #include <memory>
 #include <sstream>
 
-#define AUD_DEFINE_ENUM(name, type, ...)                                       \
-    enum class name : type                                                     \
-    {                                                                          \
-        Min,                                                                   \
-        __VA_ARGS__,                                                           \
-        Max,                                                                   \
-    };                                                                         \
-    inline std::stringstream& operator<<(std::stringstream&  os,               \
-                                         std::vector<String> values)           \
-    {                                                                          \
-        String                   str = #__VA_ARGS__;                           \
-        std::map<String, Uint64> flags;                                        \
-        Uint64                   flagsCounter = 1;                             \
-        std::stringstream        ss(str);                                      \
-        String                   token;                                        \
-        std::getline(ss, token, ',');                                          \
-        flags[token] = flagsCounter++;                                         \
-        while (std::getline(ss, token, ',')) {                                 \
-            token        = token.substr(1, token.length() - 1);                \
-            flags[token] = flagsCounter++;                                     \
-        }                                                                      \
-        for (auto value : values) {                                            \
-            os << flags[value] << ":";                                         \
-        }                                                                      \
-        return os;                                                             \
-    }                                                                          \
-    inline std::string name##toString(Uint64 value)                            \
-    {                                                                          \
-        String            str = #__VA_ARGS__;                                  \
-        std::stringstream ss(str);                                             \
-        Uint64            current = 1;                                         \
-        String            token;                                               \
-                                                                               \
-        if (value == 0) {                                                      \
-            /* 0th value does not exist */                                     \
-            return "UNDEF";                                                    \
-        }                                                                      \
-        while (std::getline(ss, token, ',')) {                                 \
-            if (current == value) {                                            \
-                break;                                                         \
-            }                                                                  \
-            current++;                                                         \
-        }                                                                      \
-        token = token.substr(1, token.length() - 1);                           \
-        return token;                                                          \
+#define AUD_DEFINE_ENUM(name, type, ...)                                           \
+    enum class name : type                                                         \
+    {                                                                              \
+        Min,                                                                       \
+        __VA_ARGS__,                                                               \
+        Max,                                                                       \
+    };                                                                             \
+    inline std::stringstream& operator<<(std::stringstream&  os,                   \
+                                         std::vector<String> values)               \
+    {                                                                              \
+        String                   str = #__VA_ARGS__;                               \
+        std::map<String, Uint64> flags;                                            \
+        Uint64                   flagsCounter = 1;                                 \
+        std::stringstream        ss(str);                                          \
+        String                   token;                                            \
+        const size_t             maxEnumSize =                                     \
+            static_cast<size_t>(name::Max) - 1; /* Maximum enum size */            \
+                                                                                   \
+        size_t enumCount = 0;                                                      \
+                                                                                   \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
+            token        = (enumCount == 0) ? token                                \
+                                            : token.substr(1, token.length() - 1); \
+            flags[token] = flagsCounter++;                                         \
+            enumCount++;                                                           \
+        }                                                                          \
+                                                                                   \
+        for (const auto& value : values) {                                         \
+            if (flags.find(value) != flags.end()) {                                \
+                os << flags[value] << ":";                                         \
+            }                                                                      \
+        }                                                                          \
+        return os;                                                                 \
+    }                                                                              \
+    inline uint64_t name##fromString(const std::string& str)                       \
+    {                                                                              \
+        std::string       s = #__VA_ARGS__;                                        \
+        std::stringstream ss(s);                                                   \
+        std::string       token;                                                   \
+        uint64_t          index       = 1;                                         \
+        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;        \
+        size_t            enumCount   = 0;                                         \
+        std::string       input       = str;                                       \
+                                                                                   \
+        /* First trim whitespace characters */                                     \
+        auto trim = [](std::string& s) {                                           \
+            auto start = s.find_first_not_of(" \t\n\r\f\v\n");                     \
+            if (start == std::string::npos) {                                      \
+                s.clear();                                                         \
+                return;                                                            \
+            }                                                                      \
+            auto end = s.find_last_not_of(" \t\n\r\f\v\n");                        \
+            s        = s.substr(start, end - start + 1);                           \
+        };                                                                         \
+                                                                                   \
+        trim(input);                                                               \
+                                                                                   \
+        /* Handle empty or whitespace-only string */                               \
+        if (input.empty()) {                                                       \
+            return -1;                                                             \
+        }                                                                          \
+                                                                                   \
+        /* Validate input - must contain only alphanumeric and _ chars */          \
+        for (char c : input) {                                                     \
+            if (!std::isalnum(c) && c != '_') {                                    \
+                return -1;                                                         \
+            }                                                                      \
+        }                                                                          \
+                                                                                   \
+        /* Process enum values */                                                  \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
+            trim(token);                                                           \
+            if (token == input) {                                                  \
+                return index;                                                      \
+            }                                                                      \
+            index++;                                                               \
+            enumCount++;                                                           \
+        }                                                                          \
+        return -1;                                                                 \
+    }                                                                              \
+    inline std::string name##toString(Uint64 value)                                \
+    {                                                                              \
+        String            str = #__VA_ARGS__;                                      \
+        std::stringstream ss(str);                                                 \
+        Uint64            current = 1;                                             \
+        String            token;                                                   \
+        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;        \
+        size_t            enumCount   = 0;                                         \
+                                                                                   \
+        if (value == 0) {                                                          \
+            return "UNDEF";                                                        \
+        }                                                                          \
+                                                                                   \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
+            if (current == value) {                                                \
+                if (enumCount == 0) {                                              \
+                    return token;                                                  \
+                }                                                                  \
+                token = token.substr(1, token.length() - 1);                       \
+                return token;                                                      \
+            }                                                                      \
+            current++;                                                             \
+            enumCount++;                                                           \
+        }                                                                          \
+        return "UNDEF";                                                            \
     }
 
 namespace Au {
