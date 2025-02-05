@@ -2,7 +2,7 @@
 
 ## Behaviour of `au_cpuid_arch_is_*` API
 
-| AOCL 5.0.1 | au_cpuid_arch_is_zen / alci_arch_is_zen | au_cpuid_arch_is_zenplus | au_cpuid_arch_is_zen2 / alci_arch_is_zen2 | au_cpuid_arch_is_zen3 / alci_arch_is_zen3 | au_cpuid_arch_is_zen4 / alci_arch_is_zen4 | au_cpuid_arch_is_zen5 / alci_arch_is_zen5 |
+| AOCL 5.1   | au_cpuid_arch_is_zen / alci_arch_is_zen | au_cpuid_arch_is_zenplus | au_cpuid_arch_is_zen2 / alci_arch_is_zen2 | au_cpuid_arch_is_zen3 / alci_arch_is_zen3 | au_cpuid_arch_is_zen4 / alci_arch_is_zen4 | au_cpuid_arch_is_zen5 / alci_arch_is_zen5 |
 | :--------: | :-------------------------------------: | :----------------------: | :---------------------------------------: | :---------------------------------------: | :---------------------------------------: | :---------------------------------------: |
 |  Skylake   |                  False                  |          False           |                   False                   |                   False                   |                   False                   |                   False                   |
 | Bulldozer  |                  False                  |          False           |                   False                   |                   False                   |                   False                   |                   False                   |

@@ -1,26 +1,26 @@
 # AOCL-UTILS
 
-  AOCL-Utils is an effort to factor out common functionalities across
-libraries. The main features include
+AOCL-Utils is an effort to extract common functionalities across
+libraries. Its main features include:
 
-- Au_cpuid module
+- Au_cpuid
   - Core details
-  - Flags available/usable
-  - ISA available/usable
+  - Available flags
+  - Usable ISA
 
 - Au_core_module
-  - Thread pinning.
+  - Thread pinning
+  - Status
+  - Logger
+  - RNG
 
 **NOTE:**
-   This library detects only the CPUs of AMD "Zen"
-   architecture, there are no plans to add support for other x86
-   implementations of other CPU vendors. Some of the utilities may fail
-   or behave in an unexpected manner on the predecessors of AMD "Zen"
-   architecture.
+This library detects only AMD "Zen" CPUs. There are no plans to support other x86
+implementations. Some utilities may fail or behave unexpectedly on older AMD
+architectures.
 
-   Core module is internal to AOCL-utils to avail the features please
-   link to libaoclutils which is a combined library of all available
-   utils modules.
+Core module is internal to AOCL-Utils. To use its features, link to libaoclutils, which
+combines all available utility modules.
 
 ## Table of Contents
 
@@ -59,6 +59,8 @@ The project is structured as follows:
 
 - `Tools`: The necessary tools to work with the project.
 
+- `scripts`: Utility scripts to work with the project.
+
 ## BUILD AND INSTALL
 
 ### Dependencies
@@ -68,17 +70,14 @@ Refer [supported package matrix document](https://docs.amd.com/r/en-US/63866-AOC
 
 ### Getting started
 
-Same commands can be used on both Linux and Windows. The only difference is the environment setup. The default compiler and generator used will be  the platform defaults.
+The same commands apply to both Linux and Windows. Only the environment setup differs.
+The default compiler and generator are the platform defaults.
 
-For specific compiler and generator, use the following command:
-
+For a specific compiler and generator:
 ```console
-    cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G "Unix Makefiles" ..
+cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G "Unix Makefiles" ..
 ```
-
-**Note: Replace the compiler(clang) and generator(Unix Makefiles) with the required one.**
-
-Refer [supported_package_matrix.md file](https://docs.amd.com/r/en-US/63866-AOCL-utils/Supported-package-Matrix) for the supported compiler and generator.
+**Note:** Replace clang with the chosen compiler and "Unix Makefiles" with the chosen generator.
 
 #### Checkout the latest code
 
@@ -104,35 +103,32 @@ Refer [supported_package_matrix.md file](https://docs.amd.com/r/en-US/63866-AOCL
 ```console
     cmake --install default --config release
 ```
+This command places:
 
-This command creates
+1. Header files in `<Install Path>/include`
+2. Static and dynamic libraries for au_core and au_cpuid
 
-1. The necessary header files in the \<Install Path\>/includefolder
-2. static and dynamic library files corresponding to modules core(au_core) and cpuid(au_cpuid)
-    Link with these libraries based on the functionality required.
 **Note:**
    1. This command creates lib/lib64 directory for the binaries. To have custom library path, use CMAKE_INSTALL_LIBDIR.
    2. Rightly update the include path and library path in the project to link with the installed libraries. or use LD_LIBRARY_PATH to point to the installed library path.(PATH environment variable in windows)
    3. Refer to the [API documentation](https://docs.amd.com/r/en-US/63866-AOCL-utils) and examples in the Example folder to understand how to link and use the modules.
 
 **Important:**
-
-```console
-    1. Most of the CPUID APIs(Along with the headers) from 4.2 release is deprecated and will be removed in the future release. Refer to the API documentation for the new APIs.
-    2. The old APIs can be enabled using AU_ENABLE_OLD_API=ON during build, otherwise utils build will throw deprecated warnings.
-    3. The aoclutils module is a combination of au_core and au_cpuid modules.
-    4. The aoclutils module is the default module to be used for all the functionalities.
-```
+1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
+   removed in a future release. See the API documentation for the newer APIs.
+2. Old APIs can be enabled with `AU_ENABLE_OLD_API=ON` during the build, otherwise deprecated
+   warnings will be shown.
+3. The aoclutils module combines au_core and au_cpuid.
+4. The aoclutils module is the default module for all functionalities.
 
 ## Testing
 
-Build with AU_BUILD_TESTS=ON to run the tests.
-
+Build with `AU_BUILD_TESTS=ON` to enable tests:
 ```console
-    ctest -C release
+ctest -C Release
 ```
-
-qemu-x86_64 is a dependency for running tests. Install it using the following command:
+QEMU (`qemu-x86_64`) is required for running tests on Linux distributions. On Windows, tests
+are disabled because QEMU-user is unavailable there.
 
 ```console
     sudo apt-get install qemu-user # For Ubuntu
@@ -142,11 +138,10 @@ qemu-x86_64 is a dependency for running tests. Install it using the following co
 
 ## Examples
 
-Build with AU_BUILD_EXAMPLES=ON to run the examples.
-
+Build with `AU_BUILD_EXAMPLES=ON` to enable examples:
 ```console
-    cmake -B default -DAU_BUILD_EXAMPLES=ON
-    cmake --build default --config release -j
+cmake -B build -DAU_BUILD_EXAMPLES=ON -G Ninja
+cmake --build build --config Release
 ```
 
 The binaries are in the default/release folder. Refer to the SDK/Examples folder Readme.md for details on out of tree compilation.
@@ -154,24 +149,29 @@ The binaries are in the default/release folder. Refer to the SDK/Examples folder
 ## List of build options
 
 ```console
-Build FLags                             Description                  Default         Alternate Values
---------------------------------------------------------------------------------------------------
-AU_BUILD_DOCS                           Generate Docs during build   OFF            ON
-AU_BUILD_EXAMPLES                       Build examples               OFF            ON
-AU_BUILD_TESTS                          Build tests                  OFF            ON
-AU_BUILD_TYPE                           Build type                   Release        Debug, Developer
-AU_ENABLE_OLD_API                       Enable OLD alci_* APIs       OFF            ON                  Use to avoid deprecation warnings
-AU_BUILD_SHARED_LIBS                    Build shared  libraries      ON             OFF
-AU_BUILD_STATIC_LIBS                    Build static libraries       ON             OFF
+Build Flags                              Description                  Default   Alternate
+----------------------------------------------------------------------------------------
+AU_BUILD_DOCS                            Generate Docs during build   OFF       ON
+AU_BUILD_EXAMPLES                        Build examples               OFF       ON
+AU_BUILD_TESTS                           Build tests                  OFF       ON
+AU_BUILD_TYPE                            Build type                   Release   Debug, Developer
+AU_ENABLE_OLD_API                        Enable OLD alci_* APIs       OFF       ON
+AU_BUILD_SHARED_LIBS                     Build shared libraries       ON        OFF
+AU_BUILD_STATIC_LIBS                     Build static libraries       ON        OFF
+AU_BUILD_WITH_ASAN                       Enable ASAN options          OFF       ON
+AU_BUILD_WITH_TSAN                       Enable TSAN options          OFF       ON
+AU_BUILD_WITH_MEMSAN                     Enable MEMSAN options        OFF       ON
 ```
 
 ## List of functionalities provided by each utils modules
 
 ### au_core (internal)
 
-| Functionality | Headerfiles(C)   | Headerfiles(C++) |
-| ------------- | --------------   | ---------------- |
-| thread pinning| ThreadPinning.hh | threadpinning.h |
+| Functionality  | Headerfiles(C)            | Headerfiles(C++)       |
+| -------------- | ------------------------- | ---------------------- |
+| thread pinning | Capi/au/threadpinning.h   | Au/ThreadPinning.hh    |
+| status         |                           | Au/Status.hh           |
+| logger         | Capi/au/logger.h          | Au/Logger/Logger.hh    |
 
 #### Current API Stack(Core)
 
@@ -181,11 +181,11 @@ AU_BUILD_STATIC_LIBS                    Build static libraries       ON         
 
 ### au_cpuid
 
-| Functionality | Headerfiles(C)   | Headerfiles(C++) |
-| ------------- | --------------   | ---------------- |
-| cpu architecture detection | cpuid.h | X86Cpu.hh |
-| cpuid feature flag detection | cpuid.h | X86Cpu.hh |
-|  Deprecated APIs | arch.h |  cpu.hh |
+| Functionality                | Headerfiles(C)        | Headerfiles(C++)         |
+|------------------------------|-----------------------|--------------------------|
+| cpu architecture detection   | Capi/au/cpuid.h       | Au/Cpuid/X86Cpu.hh       |
+| cpuid feature flag detection | Capi/au/cpuid.h       | Au/Cpuid/X86Cpu.hh       |
+| Deprecated APIs              | Bcl/alci/arch.h       | Bcl/alci/cxx/cpu.hh      |
 
 #### Current API Stack(Cpuid)
 
