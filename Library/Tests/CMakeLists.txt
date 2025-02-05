@@ -25,15 +25,39 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-set(BASE_TEST_FILES
-    #DynamicLoaderTest.cc
-    ErrorTest.cc
+set(BASE_TEST_FILES "")
+
+# Only add Status tests if feature is enabled
+if(au_core_Status)
+    list(APPEND BASE_TEST_FILES
+        ErrorTest.cc
+        StatusTest.cc
+        StatusOrTest.cc
+    )
+endif()
+
+# Always include these core tests
+list(APPEND BASE_TEST_FILES
     EnvTest.cc
-    StatusTest.cc
-    StatusOrTest.cc
-    #BitOpsTest.cc
     BitMapTest.cc
 )
+
+# Only add ThreadPinning tests if feature is enabled
+if(au_core_ThreadPinning)
+    set(THREAD_PINNING_TEST_FILES
+        ThreadPinning/ThreadPinningTest.cc
+        ThreadPinning/ThreadPinningCapiTest.cc
+        ThreadPinning/ThreadPinningMockTest.cc
+    )
+endif()
+
+# Only add Logger tests if feature is enabled
+if(au_core_Logger)
+    set(LOGGER_TEST_FILES
+        Logger/LoggerTest.cc
+        Logger/MessageTest.cc
+    )
+endif()
 
 set(MEMORY_TEST_FILES
     #Memory/LocalBufferTest.cc
@@ -49,17 +73,6 @@ set(CPUID_TEST_FILES
 )
 
 set(OTHER_TEST_FILES
-)
-
-set(THREAD_PINNING_TEST_FILES
-    ThreadPinning/ThreadPinningTest.cc
-    ThreadPinning/ThreadPinningCapiTest.cc
-    ThreadPinning/ThreadPinningMockTest.cc
-)
-
-set(LOGGER_TEST_FILES
-    Logger/LoggerTest.cc
-    Logger/MessageTest.cc
 )
 
 set(ALL_TEST_FILES
@@ -152,15 +165,17 @@ endif()
 #        au::base64
 #)
 
-au_cc_test(CpuidTest
-  SOURCES
-  ${CPUID_TEST_FILES}
-  HEADERS Mock/MockTest.hh QemuTest.hh
-  DEPENDS
-  au::cpuid
-  EXTLIBRARY
-  Python3
-)
+if(au_cpuid_cpuid)
+    au_cc_test(CpuidTest
+    SOURCES
+    ${CPUID_TEST_FILES}
+    HEADERS Mock/MockTest.hh QemuTest.hh
+    DEPENDS
+    au::cpuid
+    EXTLIBRARY
+    Python3
+    )
+endif()
 ##########
 # Dynamic Loader Tests
 ##########
@@ -173,4 +188,6 @@ au_cc_test(CpuidTest
 #         DEPENDS     _module_lib
 # )
 
-add_subdirectory(Status)
+if(au_core_Status)
+    add_subdirectory(Status)
+endif()
