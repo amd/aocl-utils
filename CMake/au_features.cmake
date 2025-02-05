@@ -25,16 +25,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-# Declare the beginning of a new namespace.
-#
-# As a rule of thumb, every CMakeLists.txt should be a different module, named
-# after the directory that contains it, and this function should appear at the
-# top of each CMakeLists script. Multiple directories can be part of the same
-# module as long as target names do not collide.
-#
-
 # Option to specify which features to enable
-option(UTILS_ENABLE_FEATURES "Specify modules and features to enable" "")
+option(AU_ENABLE_FEATURES "Specify modules and features to enable" "")
 
 # Define known modules and their features
 set(KNOWN_MODULES
@@ -99,8 +91,8 @@ function(enable_feature module feature)
     # Enable the feature in all scopes
     set(${module}_${feature} TRUE PARENT_SCOPE)
     set(${module}_${feature} TRUE)  # Also set in current scope
-    message("SET ${module}_${feature} TRUE in enable_feature")
-    message(STATUS "Enabled ${module}::${feature}")
+    # message("SET ${module}_${feature} TRUE in enable_feature")
+    # message(STATUS "Enabled ${module}::${feature}")
 endfunction()
 
 function(parse_features feature_string)
@@ -148,31 +140,31 @@ foreach(module ${KNOWN_MODULES})
 endforeach()
 
 # Process features and set variables
-if(UTILS_ENABLE_FEATURES)
-    message(STATUS "Using specified features: ${UTILS_ENABLE_FEATURES}")
+if(AU_ENABLE_FEATURES)
+    message(STATUS "Using specified features: ${AU_ENABLE_FEATURES}")
 else()
-    set(UTILS_ENABLE_FEATURES "${ALL_FEATURES}")
+    set(AU_ENABLE_FEATURES "${ALL_FEATURES}")
     message(STATUS "No features explicitly specified. Enabling all features: ${ALL_FEATURES}")
 endif()
 
 # Ensure required features are included
 foreach(req_feature ${REQUIRED_MODULES_AND_FEATURES})
-    if(NOT "${UTILS_ENABLE_FEATURES}" MATCHES "${req_feature}")
-        set(UTILS_ENABLE_FEATURES "${UTILS_ENABLE_FEATURES},${req_feature}")
+    if(NOT "${AU_ENABLE_FEATURES}" MATCHES "${req_feature}")
+        set(AU_ENABLE_FEATURES "${AU_ENABLE_FEATURES},${req_feature}")
         message(STATUS "Adding required feature: ${req_feature}")
     endif()
 endforeach()
 
 # Process features
-parse_features(${UTILS_ENABLE_FEATURES})
+parse_features(${AU_ENABLE_FEATURES})
 
-# Ensure all features are set in current scope
-foreach(module ${KNOWN_MODULES})
-    foreach(feature ${${module}_FEATURES})
-        if(${module}_${feature})
-            message("Feature ${module}_${feature} is enabled")
-        else()
-            message("Feature ${module}_${feature} is not enabled")
-        endif()
-    endforeach()
-endforeach()
+# # Ensure all features are set in current scope
+# foreach(module ${KNOWN_MODULES})
+#     foreach(feature ${${module}_FEATURES})
+#         if(${module}_${feature})
+#             message("Feature ${module}_${feature} is enabled")
+#         else()
+#             message("Feature ${module}_${feature} is not enabled")
+#         endif()
+#     endforeach()
+# endforeach()
