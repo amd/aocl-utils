@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -37,6 +37,9 @@ set(CMAKE_MODULE_PATH
 
 # Define AU variables before we do anything else
 include(au_variables)
+
+# Parse and define features
+include(au_features)
 
 # Export to CMakePresets.json, which is used by various IDE,
 # easy integration on any IDE using LSP (Language Server Protocol)
