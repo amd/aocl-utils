@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -68,7 +68,7 @@ enum class EUModel : Uint8 // NOLINT
     Milan     = MAKE_MODEL(0x1, 0x0), /* 1 */
     Chagall   = MAKE_MODEL(0x8, 0x0), /* 08 */
     Vermeer   = MAKE_MODEL(0x1, 0x2), /* 33 */
-    Rembrandt = MAKE_MODEL(0x0, 0x4), /* 64 */
+    Rembrandt = MAKE_MODEL(0x4, 0x4), /* 68 */
     Cezanne   = MAKE_MODEL(0x0, 0x5), /* 80 */
 
     /* Zen4 19H*/
