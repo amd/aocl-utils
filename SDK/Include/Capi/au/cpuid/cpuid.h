@@ -258,9 +258,6 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
  *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
  *
- *            For more info refer to
- *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
- *
  *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v2()  |
  *            |:--------------:|:-----------------------------:|
  *            |  Sandybridge   |            True               |
@@ -297,9 +294,6 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
  *            hasFlag(ECpuidFlag::xsave)
  *
- *            For more info refer to
- *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
- *
  *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v3()  |
  *            |:--------------:|:-----------------------------:|
  *            |  Sandybridge   |            False              |
@@ -334,9 +328,6 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::avx512cd) &&
  *            hasFlag(ECpuidFlag::avx512dq) &&
  *            hasFlag(ECpuidFlag::avx512vl)
- *
- *            For more info refer to
- *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
  *
  *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v4()  |
  *            |:--------------:|:-----------------------------:|
