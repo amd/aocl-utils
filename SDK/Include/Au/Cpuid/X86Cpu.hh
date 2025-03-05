@@ -427,9 +427,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
      *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
      *
-     *            For more info refer to
-     *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
-     *
      *            |    AOCL 5.1    |      isX86_64v2()      |
      *            |:-------------:|:----------------------:|
      *            |  Sandybridge  |         True           |
@@ -466,9 +463,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
      *            hasFlag(ECpuidFlag::xsave)
      *
-     *            For more info refer to
-     *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
-     *
      *            |    AOCL 5.1    |      isX86_64v3()      |
      *            |:--------------:|:----------------------:|
      *            |  Sandybridge   |         False          |
@@ -503,9 +497,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::avx512cd) &&
      *            hasFlag(ECpuidFlag::avx512dq) &&
      *            hasFlag(ECpuidFlag::avx512vl)
-     *
-     *            For more info refer to
-     *            https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
      *
      *            |   AOCL 5.1   |  isX86_64v4()                 |
      *            |:-----------:|:-----------------------------:|
