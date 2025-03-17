@@ -2,5 +2,5 @@
 
 Introduction
 =======
-.. include:: ../../../../Readme.md
+.. include:: ../../../Readme.md
    :parser: myst_parser.sphinx_

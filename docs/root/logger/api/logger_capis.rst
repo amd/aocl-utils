@@ -1,4 +1,4 @@
-.. _api_c:
+.. _api_c_logger:
 
 Logger C-APIs
 =============

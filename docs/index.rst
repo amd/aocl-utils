@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 
-AOCL-UTILS's documentation!
+AOCL UTILS Documentation
 ======================================
 
 .. toctree::

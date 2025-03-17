@@ -2,5 +2,5 @@
 
 Thread Pinning API Test Plan
 ============================
-.. include:: ../../../../Library/Tests/ThreadPinning/ThreadPinningUnitTestPlan.md
+.. include:: ../../../testplan/Library/Tests/Cpuid/CpuidUnitTestPlan.md
    :parser: myst_parser.sphinx_

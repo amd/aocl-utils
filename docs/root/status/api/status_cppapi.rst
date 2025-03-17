@@ -1,4 +1,4 @@
-.. _api_cpp:
+.. _api_cpp_status:
 
 Status C++-APIs
 ===============
@@ -43,7 +43,7 @@ Class Status
 ..    :members-only:
 
 Class GenericError
------------------
+------------------
 .. doxygenclass:: Au::GenericError
    :project: aoclutils
    :members-only:

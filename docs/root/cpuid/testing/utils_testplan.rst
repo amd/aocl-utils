@@ -2,5 +2,5 @@
 
 Cpuid Apis TestPlan
 ===================
-.. include:: ../../../../Library/Tests/Cpuid/CpuidUnitTestPlan.md
+.. include:: ../../../testplan/Library/Tests/Cpuid/CpuidUnitTestPlan.md
    :parser: myst_parser.sphinx_

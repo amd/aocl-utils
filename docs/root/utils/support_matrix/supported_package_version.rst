@@ -2,5 +2,5 @@
 
 Supported Package Matrix
 ===========
-.. include:: ../../../../SupportedPackageMatrix.md
+.. include:: ../../../SupportedPackageMatrix.md
    :parser: myst_parser.sphinx_
