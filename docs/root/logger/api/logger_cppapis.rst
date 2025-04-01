@@ -1,4 +1,4 @@
-.. _api_cpp:
+.. _logger_api_cpp:
 
 Logger C++-APIs
 ===============
