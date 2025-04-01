@@ -5,7 +5,7 @@
 
 
 AOCL-Utils
-======================================
+===========
 
 .. toctree::
    :maxdepth: 2
@@ -13,7 +13,7 @@ AOCL-Utils
 
 
 Table of Contents
-^^^^^^^^^^^^^^^^^
+------------------
 .. toctree::
     :maxdepth: 2
 
@@ -51,7 +51,7 @@ Core module is internal to AOCL-Utils. To use its features, link to libaoclutils
 combines all available utility modules.
 
 Project Structure
-----------------
+--------------------
 
 The project is structured as follows:
 
@@ -66,7 +66,7 @@ The project is structured as follows:
 - **scripts**: Utility scripts to work with the project.
 
 Important Notes
---------------
+----------------
 
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
    removed in a future release. See the API documentation for the newer APIs.
