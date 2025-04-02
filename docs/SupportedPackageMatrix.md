@@ -8,27 +8,6 @@ One of the compilers and generators on the platform must be installed to build t
 
 **Note:** Other versions may or may not work.
 
-## Windows
-
-| Package      | Version         | Notes                        |
-|--------------|-----------------|------------------------------|
-| clang        | 12.0 - 18.0     | Pass -A x64 during configure |
-| msvc         | 2019 and 2022   |                              |
-| cmake        | 3.22 - 3.31     |                              |
-| ninja        | >=1.10          |                              |
-| visualstudio | 2019 and 2022   |                              |
-
-## Linux
-
-| Package     | Version                           | Notes                                                       |
-| ----------- | --------------------------------- | ----------------------------------------------------------- |
-| clang       | 12.0 - 18.0                       |                                                             |
-| aocc        | 4.2(clang-16) and 5.1(clang-17)   | Download from <https://www.amd.com/en/developer/aocc.html> |
-| gcc         | 8.5 - 14.2                        | For 8.5, add "-lstdc++fs" manually.                         |
-| cmake       | 3.22 - 3.31                       |                                                             |
-| ninja       | >=1.10                            |                                                             |
-| clang-tidy  | 12.0 - 18.1.8                     |                                                             |
-
 ### Standard Libraries
 
 The library uses the standard C++ libraries and does not have any external dependencies. The library is tested with the following standard libraries:

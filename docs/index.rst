@@ -8,14 +8,9 @@ AOCL-Utils
 ===========
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
-Table of Contents
-------------------
-.. toctree::
     :maxdepth: 2
+    :numbered:
+    :caption: Table of Contents:
 
     introduction
     root/cpuid/api/index
@@ -25,8 +20,7 @@ Table of Contents
 
 .. _introduction:
 
-Introduction
---------------
+**Introduction**
 
 AOCL-Utils is an effort to extract common functionalities across
 libraries. Its main features include:
@@ -42,7 +36,7 @@ libraries. Its main features include:
   - Logger
   - RNG
 
-**NOTE:**
+*NOTE:*
 This library detects only AMD "Zen" CPUs. There are no plans to support other x86
 implementations. Some utilities may fail or behave unexpectedly on older AMD
 architectures.
@@ -50,23 +44,21 @@ architectures.
 Core module is internal to AOCL-Utils. To use its features, link to libaoclutils, which
 combines all available utility modules.
 
-Project Structure
---------------------
+**Project Structure**
 
 The project is structured as follows:
 
-- **Library**: This directory contains the source code for the project.
+- `Library`: This directory contains the source code for the project.
 
-- **SDK**: The release folder.
+- `SDK`: The release folder.
 
-- **Tests**: This directory contains the necessary unit tests for the project.
+- `Tests`: This directory contains the necessary unit tests for the project.
 
-- **Tools**: The necessary tools to work with the project.
+- `Tools`: The necessary tools to work with the project.
 
-- **scripts**: Utility scripts to work with the project.
+- `scripts`: Utility scripts to work with the project.
 
-Important Notes
-----------------
+**Important Notes**
 
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
    removed in a future release. See the API documentation for the newer APIs.
