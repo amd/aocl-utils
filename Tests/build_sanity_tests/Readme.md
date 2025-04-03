@@ -9,7 +9,7 @@ with make and ninja generators on ubuntu24.04. base docker image using robot fra
 
 - Windows support.
 - RHEL support.
-- Aocc support.
+- AOCC support.
 
 ## Steps to run the build sanity test
 
