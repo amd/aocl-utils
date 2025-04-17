@@ -187,7 +187,7 @@ X86Cpu::isUarch(EUarch uarch, bool strict) const
 bool
 X86Cpu::isZenFamily() const
 {
-    return pImpl()->isUarch(EUarch::Zen);
+    return pImpl()->isZenFamily();
 }
 
 VendorInfo
