@@ -269,6 +269,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -305,6 +306,7 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -340,6 +342,7 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            |      Zen3      |            True               |
  *            |      Zen4      |            True               |
  *            |      Zen5      |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -363,6 +366,7 @@ au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
  *                 |      Zen3      |              True               |
  *                 |      Zen4      |              True               |
  *                 |      Zen5      |              True               |
+ *                 |   Zen[X>5]     |              True               |
  *
  *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
  *  will result in thread migration to the selected core.

@@ -438,6 +438,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |     Zen3      |         True           |
      *            |     Zen4      |         True           |
      *            |     Zen5      |         True           |
+     *            |   Zen[X>5]     |         True           |
      *
      * @param     none
      *
@@ -474,6 +475,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |     Zen3       |         True           |
      *            |     Zen4       |         True           |
      *            |     Zen5       |         True           |
+     *            |   Zen[X>5]     |         True           |
      *
      * @param   none
      *
@@ -509,6 +511,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            | Zen3        |            True               |
      *            | Zen4        |            True               |
      *            | Zen5        |            True               |
+     *            | Zen[X>5]    |            True               |
      *
      * @param     none
      *
