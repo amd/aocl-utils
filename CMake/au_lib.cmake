@@ -80,8 +80,8 @@ function(au_add_interface NAME)
     ${ARGN}
   )
   if (NOT DEFINED AU_MODULE)
-	  #message(FATAL_ERROR "af module name not defined")
-	  set(AU_MODULE af)
+	  #message(FATAL_ERROR "au module name not defined")
+	  set(AU_MODULE au)
   endif()
 
   au_normalize_name(${NAME} __new_name)
@@ -113,8 +113,8 @@ endfunction(au_add_interface)
 #
 # The corresponding build target is named au_<MODULE>_<NAME> if PUBLIC is
 # specified, or au_internal_<MODULE>_<NAME> otherwise. An alias is also defined
-# for use in CMake scripts, in the form af::<MODULE>::<NAME> or
-# af::internal::<MODULE>::<NAME>
+# for use in CMake scripts, in the form au::<MODULE>::<NAME> or
+# au::internal::<MODULE>::<NAME>
 #
 function(au_cc_library NAME)
   set(fPrefix cclib)
@@ -123,7 +123,7 @@ function(au_cc_library NAME)
   set(fMultiArgs SOURCES;HEADERS;DEPENDS;USING)
 
   if (NOT DEFINED AU_MODULE)
-    message(FATAL_ERROR "af module name not defined")
+    message(FATAL_ERROR "au module name not defined")
   endif()
 
   cmake_parse_arguments(
@@ -184,7 +184,7 @@ function(au_cc_library NAME)
         )
     endif()
     if(${AU_BUILD_SHARED_LIBS})
-        #target_link_libraries(af::all PUBLIC ${__target_name})
+        #target_link_libraries(au::all PUBLIC ${__target_name})
         add_library(${__target_name}_shared SHARED "")
         target_sources(${__target_name}_shared
 	        PRIVATE
@@ -215,6 +215,7 @@ function(au_cc_library NAME)
                 RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+                INCLUDES DESTINATION ${AU_INSTALL_INCLUDE_DIR}
         )
         endif()
         if(${AU_BUILD_SHARED_LIBS})
@@ -222,6 +223,7 @@ function(au_cc_library NAME)
                   RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
                   LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                   ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+                  INCLUDES DESTINATION ${AU_INSTALL_INCLUDE_DIR}
           )
         endif()
     else()

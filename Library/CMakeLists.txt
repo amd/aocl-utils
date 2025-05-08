@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -34,15 +34,27 @@ else()
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
 
-set(LOGGER_SRC_FILES
-    Logger.cc
-    LoggerFactory.cc
+SET(LOGGER_SRC_FILES "Core/Logger/LogWriter.cc"
+                     "Core/Logger/Logger.cc"
+                     "Core/Logger/LoggerManager.cc"
+                     "Core/Logger/Message.cc"
+                     "Core/Logger/Queue.cc"
+                     # CAPIs
+                     "Capi/logger.cc"
+)
+
+SET(THREAD_PINNING_SRC_FILES "Core/ThreadPinning.cc"
+                             "Core/ThreadPinningImpl.cc"
+                             # CAPIs
+                             "Capi/threadpinning.cc"
 )
 
 set(BASE64_SRC_FILES
     Base64/Base64.cc
     Base64/Base64Encoder.cc
     Base64/Base64Decoder.cc
+    # CAPIs
+    #Capi/base64.cc
 )
 
 set(MEMORY_SRC_FILES
@@ -55,11 +67,16 @@ set(MESSAGE_SRC_FILES
 set(EVENT_SRC_FILES
 )
 
-set(CAPI_SRC_FILES
-    #Capi/base64.cc
-    Capi/environ.cc
-    Capi/threadpinning.cc
-        )
+set(RNG_SRC_FILES
+    Core/Rng/SystemRng.cc
+    Core/Rng/HardwareRng.cc
+)
+
+set_source_files_properties(
+  Core/Rng/HardwareRng.cc
+  PROPERTIES
+    COMPILE_FLAGS "-mrdrnd"
+)
 
 set(AVX2_FILES
   Base64/transform_avx2.cc
@@ -79,51 +96,87 @@ set(CORE_SRC_FILES
   Core/StatusOr.cc
   Core/Environ.cc
   Core/BitMap.cc
-  Core/ThreadPinningImpl.cc
-  Core/ThreadPinning.cc
   #Core/DynamicLoader.cc
-  #${BASE64_SRC_FILES}
-  #  ${LOGGER_SRC_FILES}
-  #${MEMORY_SRC_FILES}
-  #  ${MESSAGE_SRC_FILES}
-  #  ${EVENT_SRC_FILES}
-  ${CAPI_SRC_FILES}
-  #${AVX2_FILES}
+  # CAPIS
+  Capi/environ.cc
 )
 
+# Initialize empty source lists
+set(UTILS_SRC_FILES "")
+
+# Add core Status files
+if(au_core_Status)
+    list(APPEND UTILS_SRC_FILES
+        Core/Status.cc
+        Core/GenericError.cc
+        Core/SourceLocation.cc
+        Core/StatusOr.cc
+    )
+endif()
+
+# Add ThreadPinning if enabled
+if(au_core_ThreadPinning)
+    list(APPEND UTILS_SRC_FILES
+        ${THREAD_PINNING_SRC_FILES}
+    )
+endif()
+
+# Add Logger if enabled
+if(au_core_Logger)
+    list(APPEND UTILS_SRC_FILES
+        ${LOGGER_SRC_FILES}
+    )
+endif()
+
+# Add RNG if enabled
+if(au_core_RNG)
+    list(APPEND UTILS_SRC_FILES
+        ${RNG_SRC_FILES}
+    )
+endif()
+
+# Always include these core files
+list(APPEND UTILS_SRC_FILES
+    Core/Environ.cc
+    Core/BitMap.cc
+    Capi/environ.cc
+)
+
+# Build core library
 au_cc_library(core
-PRIVATE
-SOURCES
-      ${CORE_SRC_FILES}
-
-HEADERS
-      Core/ThreadPinningImpl.hh
-USING
- af::sdk::include
+    PRIVATE
+    SOURCES
+        ${UTILS_SRC_FILES}
+    HEADERS
+        Core/ThreadPinningImpl.hh
+    USING
+        au::sdk__include
 )
 
-
+# Build aoclutils library
 au_module("aoclutils")
 au_cc_library(aoclutils
- PUBLIC
- SOURCES
-      ${CORE_SRC_FILES}
- HEADERS
-      Core/ThreadPinningImpl.hh
- USING
- af::sdk::include
+    PUBLIC
+    SOURCES
+        ${UTILS_SRC_FILES}
+    HEADERS
+        Core/ThreadPinningImpl.hh
+    USING
+        au::sdk__include
 )
+
+# Only add enabled submodules
+set(AU_SUBMODULE_DIRS "")
+
+# Check if CPUID is enabled
+if(au_cpuid_cpuid)
+    list(APPEND AU_SUBMODULE_DIRS "Cpuid")
+endif()
 
 if(AU_BUILD_TESTS)
     add_subdirectory(Tests)
 endif()
 
-set(AU_SUBMODULE_DIRS
-  Cpuid
-  #Base64
-  #Provider
-)
-
 foreach(__moddir ${AU_SUBMODULE_DIRS})
-  add_subdirectory(${__moddir})
+    add_subdirectory(${__moddir})
 endforeach()

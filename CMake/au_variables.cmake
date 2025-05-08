@@ -25,49 +25,41 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-include(GNUInstallDirs)
-
 if(AU_CMAKE_VERBOSE)
   message(STATUS "Configuring...")
 endif()
 
-
-
-# Figure out where to put the Config.h
-# Input for this is config.h.in in ${PROJECT_SOURCE_DIR}/Library
-if (NOT DEFINED AU_CONFIG_DIR)
-  set(AU_CONFIG_DIR "${PROJECT_BINARY_DIR}/generated")
+# Propagation from presets
+if(NOT DEFINED AU_PROJECT_NAME)
+  set(AU_PROJECT_NAME "AOCL-Utils" CACHE STRING "Name of the Project")
 endif()
 
-if (NOT DEFINED AU_VERSION_OUTPUT_FILE)
-  set(AU_VERSION_OUTPUT_FILE ${AU_CONFIG_DIR}/version.cc)
+if(NOT DEFINED AU_PROJECT_DESCRIPTION)
+  set(AU_PROJECT_DESCRIPTION "AOCL Utility Library" CACHE STRING "Description of the Project")
 endif()
 
+# Vendor information
+if(NOT DEFINED AU_VENDOR_URL)
+  set(AU_VENDOR_URL "https://www.amd.com/en/developer/aocl.html" CACHE STRING "URL of the Vendor")
+endif()
 
-if (NOT DEFINED AU_CONFIG_OUTPUT_FILE)
-  set(AU_CONFIG_OUTPUT_FILE ${AU_CONFIG_DIR}/Au/Config.h)
+if(NOT DEFINED AU_VENDOR_NAME)
+  set(AU_VENDOR_NAME "Advanced Micro Devices, Inc." CACHE STRING "Name of the Vendor")
+endif()
+
+if(NOT DEFINED AU_VENDOR_CONTACT)
+  set(AU_VENDOR_CONTACT "AOCL <aocl@amd.com>" CACHE STRING "Contact information of the Vendor")
 endif()
 
 if (NOT DEFINED AU_CXX_STANDARD)
-  set(AU_CXX_STANDARD 17)
+  set(AU_CXX_STANDARD 17 CACHE INTERNAL "C++ standard version for internal use")
+endif()
+
+if(NOT DEFINED AU_GTEST_TAG)
+  set(AU_GTEST_TAG "release-1.12.1" CACHE STRING "Tag for Google Test")
 endif()
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
 
-
-set(AU_INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
-set(AU_INSTALL_BIN_DIR   "${CMAKE_INSTALL_BINDIR}")
-set(AU_INSTALL_TEST_DIR   "${CMAKE_INSTALL_DIR}/tests")
-set(AU_INSTALL_LIB_DIR   "${CMAKE_INSTALL_LIBDIR}")
-set(AU_INSTALL_ARCHIVE_DIR   "${CMAKE_INSTALL_LIBDIR}")
-set(AU_INSTALL_FRAMEWORK_DIR "${CMAKE_INSTALL_LIBDIR}")
-set(AU_INSTALL_CMAKE_CONFIG_DIR "${CMAKE_INSTALL_LIBDIR}/CMake")
 set(AU_INSTALL_CMAKE_CONFIG_NAME "aocl-utils-config.cmake")
-set(AU_INSTALL_ADDITIONAL_FILES_DIR "${CMAKE_INSTALL_DATADIR}/aocl-utils")
-#set(AU_INSTALL_TARGETS "")
 set(AU_INSTALL_EXPORT_NAME aocl_utils)
-
-if(WIN32)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-endif()

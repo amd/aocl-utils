@@ -29,8 +29,20 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-from sphinx.builders.html import StandaloneHTMLBuilder
-#import subprocess, os
+# from sphinx.builders.html import StandaloneHTMLBuilder
+
+from importlib import metadata as _metadata
+from packaging import version as _version
+
+try:
+    _rocm_version = _metadata.version('rocm-docs-core')
+except _metadata.PackageNotFoundError as e:
+    _rocm_version = None
+    print("Please install rocm-docs-core package!")
+    print("pip install rocm-docs-core")
+    raise e
+
+_rocm_version_expected = "1.0.0"
 
 # Doxygen
 #subprocess.call('doxygen Doxyfile.in', shell=True)
@@ -41,7 +53,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 project = 'AOCL-UTILS'
 copyright = '2024, AMD'
 author = 'AMD'
-release = '5.0'
+release = '5.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -58,10 +70,8 @@ extensions = [
     'sphinx.ext.inheritance_diagram',
     'myst_parser',
     'breathe',
-    'rocm_docs',
-    'rocm_docs.doxygen',
-    'sphinxcontrib.doxylink'
     ]
+# myst_enable_extensions = ["colon_fence"]
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -69,7 +79,14 @@ source_suffix = {
     '.md': 'markdown',
 }
 breathe_show_define_initializer = True
-templates_path = ['_templates']
+
+if _rocm_version is None or _version.parse(_rocm_version) < _version.parse(_rocm_version_expected):
+    print("Old version of rocm-docs-core detected, falling back")
+    templates_path = ['_template_fallback']
+else:
+    templates_path = ['_template']
+
+
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']
 
 f = open(".sphinx/_toc.yml.in", "w")

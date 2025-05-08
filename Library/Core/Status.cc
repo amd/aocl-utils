@@ -25,8 +25,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Au/Error.hh"
 #include "Au/Status.hh"
+#include "Au/Error.hh"
 
 namespace Au {
 

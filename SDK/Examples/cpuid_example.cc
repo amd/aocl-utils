@@ -28,6 +28,7 @@
 
 #include "Au/Cpuid/CacheInfo.hh"
 #include "Au/Cpuid/X86Cpu.hh"
+#include "Au/Memory/BufferView.hh"
 
 #include <iostream>
 
@@ -74,6 +75,39 @@ display_isa_info()
     } else {
         std::cout << "CPU does not support x86-64v2 or higher ISA" << std::endl;
     }
+
+    if (cpu.isZenFamily()) {
+        std::cout << "CPU belongs to Zen family" << std::endl;
+    } else {
+        std::cout << "CPU does not belongs to Zen family" << std::endl;
+    }
+
+    ECpuidFlag   flags[]    = { ECpuidFlag::tsc_adjust,
+                                ECpuidFlag::avx,
+                                ECpuidFlag::avxvnni,
+                                ECpuidFlag::avx2,
+                                ECpuidFlag::avx512f };
+    const size_t flags_size = sizeof(flags) / sizeof(flags[0]);
+    Au::Memory::BufferView<ECpuidFlag> flags_view{ flags, flags_size };
+
+    std::cout << std::endl << "Flags selected" << std::endl;
+    // Print selected flags
+    for (auto flag : flags_view) {
+        std::cout << "Flag : " << ECpuidFlagtoString(static_cast<Uint32>(flag))
+                  << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Cpu Flag Group Check..." << std::endl;
+    std::cout << "Has all flags : "
+              << (cpu.hasFlags(flags_view, Au::HasFlagsMode::All) ? "yes"
+                                                                  : "no")
+              << std::endl;
+    std::cout << "Has any flag  : "
+              << (cpu.hasFlags(flags_view, Au::HasFlagsMode::Any) ? "yes"
+                                                                  : "no")
+              << std::endl;
+
     std::cout << "\nCpu Feature Identification..." << std::endl;
     // clang-format off
     std::cout << "TSC_ADJUST : " << (cpu.hasFlag(ECpuidFlag::tsc_adjust) ? "yes" : "no") << std::endl;

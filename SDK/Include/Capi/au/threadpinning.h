@@ -43,6 +43,26 @@ typedef HANDLE pthread_t;
 
 /**
  * @brief          Pin threads to the processor group using pinStrateg::CORE.
+ *
+ * @details        This function will pin the threads to the processor physical
+ * cores. In machines with SMT on the cores will have an SMT sibling. This
+ * function will make sure that the threads are pinned to the physical cores,
+ * not the SMT sibling.
+ *
+ * Example: Let threadList be [0, 1, 2, 3, 4, 5, 6, 7].
+ * The machine is a dual core with SMT enabled. The physical cores are [0, 1].
+ * The threads will be pinned to the physical core following the below table
+ * | Thread List Index | Physical Core Index |
+ * |-------------------|----------------------|
+ * | 0                 | 0                    |
+ * | 1                 | 1                    |
+ * | 2                 | 0                    |
+ * | 3                 | 1                    |
+ * | 4                 | 0                    |
+ * | 5                 | 1                    |
+ * | 6                 | 0                    |
+ * | 7                 | 1                    |
+ *
  * @param[in]      threadList      List of threads to pin.
  * @param[in]      threadListSize  Number of threads in the list.
  *
@@ -54,6 +74,27 @@ au_pin_threads_core(pthread_t* threadList, size_t threadListSize);
 
 /**
  * @brief          Pin threads to the processor group using pinStrateg::LOGICAL.
+ *
+ * @details        This function will pin the threads to the processor logical
+ * cores. In machines with SMT on the cores will have an SMT sibling. this
+ * function will make sure that the threads are pinned to the logical cores
+ * which can be an SMT sibling, not the physical core.
+ *
+ * Example: Let threadList be [0, 1, 2, 3, 4, 5, 6, 7].
+ * The machine is a dual core with SMT enabled. The logical cores are [0, 1, 2,
+ * 3]. The threads will be pinned to the logical core following the below table
+ * | Thread List Index | Logical Core Index |
+ * |-------------------|--------------------|
+ * | 0                 | 0                  |
+ * | 1                 | 1                  |
+ * | 2                 | 2                  |
+ * | 3                 | 3                  |
+ * | 4                 | 0                  |
+ * | 5                 | 1                  |
+ * | 6                 | 2                  |
+ * | 7                 | 3                  |
+ *
+ *
  * @param[in]      threadList      List of threads to pin.
  * @param[in]      threadListSize  Number of threads in the list.
  *
@@ -65,6 +106,14 @@ au_pin_threads_logical(pthread_t* threadList, size_t threadListSize);
 
 /**
  * @brief          Pin threads to the processor group using pinStrateg::SPREAD.
+ *
+ * @details        This function will pin the threads to different cache groups
+ * to enhance performance by distributing threads across different cache groups,
+ * thereby minimizing contention for shared resources.
+ *
+ * Pinning threads to logical cores will be done automatically by the library
+ * depending on the cache group.
+ *
  * @param[in]      threadList      List of threads to pin.
  * @param[in]      threadListSize  Number of threads in the list.
  *
@@ -77,6 +126,20 @@ au_pin_threads_spread(pthread_t* threadList, size_t threadListSize);
 /**
  * @brief          Pin threads to the processor group using custom affinity
  * vector.
+ *
+ * @details        This function will set the affinity of the threads to
+ * given affinity vector. The affinity vector is a list of logical cores numbers
+ * starting from 0. The threads will be pinned to the logical cores in the
+ * affinity vector.
+ *
+ * Example: the affinity vector is [0, 1, 2, 3, 4, 5, 6, 7] and the thread list
+ * is [0, 1, 2, 3, 4, 5, 6, 7]. The thread at index 0 in the thread list will
+ * be pinned to the logical core at index 0 in the affinity vector, the thread
+ * at index 1 in the thread list will be pinned to the logical core at index 1
+ * in the affinity vector, and so on.
+ *
+ * @warning        "threadList" and "affinityVector" should be of the same size.
+ *
  * @param[in]      threadList      List of threads to pin.
  * @param[in]      threadListSize  Number of threads in the list.
  * @param[in]      affinityVector  Custom affinity vector.

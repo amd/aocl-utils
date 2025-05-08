@@ -58,15 +58,14 @@ TEST_P(MockCpuidUtil, CpuidUtilsTest)
     auto reqRespData                 = Configure();
 
     std::cout << "Mocking " << cpuType << std::endl;
-    EXPECT_EQ(mockCpuidUtils.getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
+    EXPECT_EQ(CpuidUtils::getMfgInfo(reqRespData[RequestT{ 0, 0, 0, 0 }]),
               (expectedResults.m_mfg));
-    EXPECT_EQ(mockCpuidUtils.getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+    EXPECT_EQ(CpuidUtils::getFamily(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
               (expectedResults.m_family));
-    EXPECT_EQ(mockCpuidUtils.getModel(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+    EXPECT_EQ(CpuidUtils::getModel(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
               expectedResults.m_model);
-    EXPECT_EQ(
-        mockCpuidUtils.getStepping(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
-        expectedResults.m_stepping);
+    EXPECT_EQ(CpuidUtils::getStepping(reqRespData[RequestT{ 1, 0, 0, 0 }].eax),
+              expectedResults.m_stepping);
 }
 
 } // namespace

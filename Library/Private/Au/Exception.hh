@@ -53,7 +53,7 @@ struct Exception : public std::exception
     {
     }
 
-    Exception(const SourceLocation& where)
+    explicit Exception(const SourceLocation& where)
         : Exception(where, "", 0)
     {
     }

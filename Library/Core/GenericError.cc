@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -133,17 +133,23 @@ GenericError::message() const
         { ec::eNotImplemented, "Not Implemented" },
     };
 
-    ErrorMapT::const_iterator it = str_map.find(getModuleError());
+    ErrorMapT::const_iterator it = str_map.find(getBaseError());
 
     String s{};
 
     if (it != str_map.end()) {
         s = it->second;
     } else {
-        s = std::string("Unknown Error: ");
+        s = std::string("Unknown Error");
     }
 
     return s;
+}
+
+bool
+GenericError::isError() const
+{
+    return getBaseError() != ErrorCode::eOk;
 }
 
 IError const&

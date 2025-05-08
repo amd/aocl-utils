@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -27,40 +27,66 @@
 cmake_minimum_required(VERSION 3.20...3.27)
 
 project(cpuid_example_c)
-set_source_files_properties(cpuid_example.c PROPERTIES LANGUAGE CXX)
-au_add_application(cpuid_example_c
-				SOURCES cpuid_example.c
-                LIBS ${AU_LIBS}
-                INCLUDES ${AU_INCLUDE_DIRS})
 
-set_source_files_properties(cpuid_deprecated_api_example.c PROPERTIES LANGUAGE CXX)
-au_add_application(cpuid_deprecated_api_example_c
-				SOURCES cpuid_deprecated_api_example.c
-				LIBS ${AU_LIBS}
-                INCLUDES ${AU_INCLUDE_DIRS})
+# Only build CPUID examples if feature is enabled
+if(au_cpuid_cpuid)
+    au_add_application(cpuid_example_c
+                    SOURCES cpuid_example.c
+                    LIBS ${AU_LIBS}
+                    INCLUDES ${AU_INCLUDE_DIRS})
 
-if (NOT WIN32)
-	au_add_application(thread_pinning_example_c
-				SOURCES thread_pinning_example_linux.c
-				LIBS ${AU_LIBS}
-                INCLUDES ${AU_INCLUDE_DIRS})
-set_source_files_properties(thread_pinning_example_linux.c PROPERTIES LANGUAGE CXX)
-else()
-	au_add_application(thread_pinning_example_c
-				SOURCES thread_pinning_example_windows.c
-				LIBS ${AU_LIBS}
-                INCLUDES ${AU_INCLUDE_DIRS})
-    set_source_files_properties(thread_pinning_example_windows.c PROPERTIES LANGUAGE CXX)
+    au_add_application(cpuid_deprecated_api_example_c
+                    SOURCES cpuid_deprecated_api_example.c
+                    LIBS ${AU_LIBS}
+                    INCLUDES ${AU_INCLUDE_DIRS})
+endif()
+
+# Only build Logger examples if feature is enabled
+if(au_core_Logger)
+    set_source_files_properties(logger_demo.c PROPERTIES LANGUAGE CXX)
+    au_add_application(logger_demo_c
+                    SOURCES logger_demo.c
+                    LIBS ${AU_LIBS}
+                    INCLUDES ${AU_INCLUDE_DIRS})
+endif()
+
+# Only build ThreadPinning examples if feature is enabled
+if(au_core_ThreadPinning)
+    if (NOT WIN32)
+        au_add_application(thread_pinning_example_c
+                    SOURCES thread_pinning_example_linux.c
+                    LIBS ${AU_LIBS}
+                    INCLUDES ${AU_INCLUDE_DIRS})
+    else()
+        au_add_application(thread_pinning_example_c
+                    SOURCES thread_pinning_example_windows.c
+                    LIBS ${AU_LIBS}
+                    INCLUDES ${AU_INCLUDE_DIRS})
+    endif()
 endif()
 
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(WIN32)
-        add_dependencies(cpuid_example_c libaoclutils_shared au_cpuid_shared)
-        add_dependencies(cpuid_deprecated_api_example_c libaoclutils_shared au_cpuid_shared)
-        add_dependencies(thread_pinning_example_c libaoclutils_shared au_internal_core_shared)
+        if(au_cpuid_cpuid)
+            add_dependencies(cpuid_example_c libaoclutils_shared au_cpuid_shared)
+            add_dependencies(cpuid_deprecated_api_example_c libaoclutils_shared au_cpuid_shared)
+        endif()
+        if(au_core_Logger)
+            add_dependencies(logger_demo_c libaoclutils_shared)
+        endif()
+        if(au_core_ThreadPinning)
+            add_dependencies(thread_pinning_example_c libaoclutils_shared)
+        endif()
     else()
-        add_dependencies(cpuid_example_c aoclutils_shared au_cpuid_shared)
-        add_dependencies(cpuid_deprecated_api_example_c aoclutils_shared au_cpuid_shared)
-        add_dependencies(thread_pinning_example_c aoclutils_shared au_internal_core_shared)
+        if(au_cpuid_cpuid)
+            add_dependencies(cpuid_example_c aoclutils_shared au_cpuid_shared)
+            add_dependencies(cpuid_deprecated_api_example_c aoclutils_shared au_cpuid_shared)
+        endif()
+        if(au_core_Logger)
+            add_dependencies(logger_demo_c aoclutils_shared)
+        endif()
+        if(au_core_ThreadPinning)
+            add_dependencies(thread_pinning_example_c aoclutils_shared)
+        endif()
     endif()
 endif()

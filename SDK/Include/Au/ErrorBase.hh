@@ -87,6 +87,7 @@ class ErrorBase : public IError
 
     void   setModuleError(Uint16 error) { m_error.field.module_error = error; }
     Uint16 getModuleError() const { return m_error.field.module_error; }
+    Uint16 getBaseError() const { return m_error.field.base_error; }
 
     /**
      * @brief Getter function for module id

@@ -4,6 +4,5 @@ Supported package Matrix
 =======================
 .. toctree::
     :maxdepth: 2
-    :glob:
 
-    *
+    supported_package_version.rst

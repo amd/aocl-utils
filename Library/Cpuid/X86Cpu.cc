@@ -65,18 +65,20 @@ X86Cpu::X86Cpu(CpuNumT num)
     if (num != AU_CURRENT_CPU_NUM) { // In the default behaviour, the cpuid is
                                      // quried on the current cpu.
 #ifdef __linux__
-        cpu_set_t newMask, currentMask, testMask;
+        cpu_set_t currentMask;
+        cpu_set_t newMask;
+        cpu_set_t testMask;
         auto      tid = gettid();
         int result    = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
 
         AUD_ASSERT(result == 0, "Failed to get thread affinity.");
-        if (result)
-            std::cout << "Failed to get thread affinity" << std::endl;
+        if (result > 0)
+            std::cout << "Failed to get thread affinity\n";
         CPU_ZERO(&newMask);
         CPU_SET(num, &newMask);
         result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
-        if (result)
-            std::cout << "Failed to set thread affinity" << std::endl;
+        if (result > 0)
+            std::cout << "Failed to set thread affinity\n";
         AUD_ASSERT(result == 0, "Failed to set thread affinity.");
         sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
 
@@ -89,8 +91,8 @@ X86Cpu::X86Cpu(CpuNumT num)
 #ifdef __linux__
         result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
         AUD_ASSERT(result == 0, "Failed to set thread affinity.");
-        if (result)
-            std::cout << "Failed to set thread affinity" << std::endl;
+        if (result > 0)
+            std::cout << "Failed to set thread affinity\n";
 #else
         auto newMask = SetThreadAffinityMask(&threadId, currentMask);
 #endif
@@ -149,6 +151,27 @@ X86Cpu::hasFlag(ECpuidFlag const& eflag) const
     return pImpl()->hasFlag(eflag);
 }
 
+bool
+X86Cpu::hasFlags(Au::Memory::BufferView<ECpuidFlag> const& eflags,
+                 HasFlagsMode const&                       mode) const
+{
+    switch (mode) {
+        case HasFlagsMode::Classic:
+        case HasFlagsMode::All:
+            for (auto flag : eflags)
+                if (!hasFlag(flag))
+                    return false;
+            return true;
+        case HasFlagsMode::Any:
+            for (auto flag : eflags)
+                if (hasFlag(flag))
+                    return true;
+            return false;
+        default:
+            return false;
+    }
+}
+
 EUarch
 X86Cpu::getUarch() const
 {
@@ -160,6 +183,13 @@ X86Cpu::isUarch(EUarch uarch, bool strict) const
 {
     return pImpl()->isUarch(uarch, strict);
 }
+
+bool
+X86Cpu::isZenFamily() const
+{
+    return pImpl()->isUarch(EUarch::Zen);
+}
+
 VendorInfo
 X86Cpu::getVendorInfo() const
 {

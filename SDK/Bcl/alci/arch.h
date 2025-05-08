@@ -30,5 +30,6 @@
 #define __ARCH_H__
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/cpuid/cpuid_legacy.h"
 
 #endif /* __ARCH_H__ */

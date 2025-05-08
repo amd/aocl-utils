@@ -28,6 +28,7 @@
  */
 
 #include "Capi/au/cpuid/cpuid.h"
+#include "Capi/au/cpuid/cpuid_legacy.h"
 #include "Capi/au/enum.h"
 #include "CpuidTest.hh"
 #include "gtest/gtest.h"
@@ -76,18 +77,18 @@ TEST(CapiX86Cpuid, DISABLED_hasFlagNegative)
 TEST(CapiX86Cpuid, hasFlags)
 {
     String testflag;
-    if (AU_ENABLE_ASSERTIONS) {
-        std::vector<char*> testFlags = { testflag.data() };
-        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
-        // update testflag to have an invalid flag
-        testflag.assign("Test");
-        testFlags = { testflag.data() };
-        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
-        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 0));
-        testflag.assign("avx512f");
-        testFlags.push_back(testflag.data());
-        EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 2));
-    }
+#ifdef AU_ENABLE_ASSERTIONS
+    std::vector<char*> testFlags = { testflag.data() };
+    EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
+    // update testflag to have an invalid flag
+    testflag.assign("Test");
+    testFlags = { testflag.data() };
+    EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 1));
+    EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 0));
+    testflag.assign("avx512f");
+    testFlags.push_back(testflag.data());
+    EXPECT_ANY_THROW(au_cpuid_has_flags(0, testFlags.data(), 2));
+#endif
 }
 
 TEST(CapiX86Cpuid, DISABLED_isUarch)
