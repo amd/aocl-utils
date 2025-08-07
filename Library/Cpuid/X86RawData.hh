@@ -72,13 +72,12 @@ enum class EUModel : Uint8 // NOLINT
     Cezanne   = MAKE_MODEL(0x0, 0x5), /* 80 */
 
     /* Zen4 19H*/
-    Genoa       = MAKE_MODEL(0x1, 0x1), /* 17 */
-    Stormpeak   = MAKE_MODEL(0x8, 0x1), /* 24 */
-    Warhol      = MAKE_MODEL(0x1, 0x2), /* 33 */
-    Raphael     = MAKE_MODEL(0x1, 0x6), /* 97 */
-    Pheonix1    = MAKE_MODEL(0x5, 0x6), /* 116 */
-    Pheonix2    = MAKE_MODEL(0x5, 0x7), /* 117 */
-    Phenixpoint = MAKE_MODEL(0x5, 0x7), /* 117 */
+    Genoa        = MAKE_MODEL(0x1, 0x1), /* 17 */
+    Stormpeak    = MAKE_MODEL(0x8, 0x1), /* 24 */
+    Warhol       = MAKE_MODEL(0x1, 0x2), /* 33 */
+    Raphael      = MAKE_MODEL(0x1, 0x6), /* 97 */
+    Phoenix1     = MAKE_MODEL(0x5, 0x6), /* 116 */
+    Phoenixpoint = MAKE_MODEL(0x5, 0x7), /* 117 */
 
     /* Zen5 - Wikipedia */
 
@@ -270,8 +269,8 @@ class X86Cpu::Impl
                 case *EUModel::Genoa:
                 case *EUModel::Stormpeak:
                 case *EUModel::Raphael:
-                case *EUModel::Pheonix1:
-                case *EUModel::Phenixpoint:
+                case *EUModel::Phoenix1:
+                case *EUModel::Phoenixpoint:
                     m_vendor_info.m_uarch = EUarch::Zen4;
                     break;
             }
