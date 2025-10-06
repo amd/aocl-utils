@@ -26,15 +26,17 @@
  *
  */
 
+#include "Au/Config.h"
 #include "X86RawData.hh"
 #include <thread>
-#ifdef __linux__
+#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
+#include <sched.h>
 #include <unistd.h>
 #if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
 #include <sys/syscall.h>
 #define gettid() syscall(SYS_gettid)
 #endif
-#else
+#elif defined(AU_TARGET_OS_IS_WINDOWS)
 #include <Windows.h>
 #include <direct.h>
 #include <io.h>
@@ -64,7 +66,7 @@ X86Cpu::X86Cpu(CpuNumT num)
         num = AU_CURRENT_CPU_NUM;    // fallback to default behaviour
     if (num != AU_CURRENT_CPU_NUM) { // In the default behaviour, the cpuid is
                                      // quried on the current cpu.
-#ifdef __linux__
+#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
         cpu_set_t currentMask;
         cpu_set_t newMask;
         cpu_set_t testMask;
@@ -82,18 +84,18 @@ X86Cpu::X86Cpu(CpuNumT num)
         AUD_ASSERT(result == 0, "Failed to set thread affinity.");
         sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
 
-#else
+#elif defined(AU_TARGET_OS_IS_WINDOWS)
         DWORD threadId    = GetCurrentThreadId();
         auto  mask        = (static_cast<DWORD_PTR>(1) << num);
         auto  currentMask = SetThreadAffinityMask(&threadId, mask);
 #endif
         pImpl()->update();
-#ifdef __linux__
+#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
         result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
         AUD_ASSERT(result == 0, "Failed to set thread affinity.");
         if (result > 0)
             std::cout << "Failed to set thread affinity\n";
-#else
+#elif defined(AU_TARGET_OS_IS_WINDOWS)
         auto newMask = SetThreadAffinityMask(&threadId, currentMask);
 #endif
     } else {
