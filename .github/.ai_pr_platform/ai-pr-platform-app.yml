@@ -12,10 +12,10 @@ assistantDefaults:
 teams:
   - name: csg
     branches:
-      - amd-main
+	  - amd-main
 	  - AOCL-*-RC
 	  
-    assistants:
+	assistants:
       - type: PRSummary
         enabled: true
       - type: CodingStandard
