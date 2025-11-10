@@ -1,6 +1,7 @@
 error_notifications:
   recipients:
     - dl.CSG_AIEnablement@amd.com
+
 assistantDefaults:
   skip_draft: false
   label_exclusions: []
@@ -9,13 +10,14 @@ assistantDefaults:
   filtered_ticket_ids: []
   skip_comment_from_pr_author: false
   post_info_reply_comment: true
+
 teams:
   - name: csg
     branches:
-	  - amd-main
-	  - AOCL-*-RC
-	  
-	assistants:
+      - amd-main
+      - AOCL-*-RC
+      
+    assistants:
       - type: PRSummary
         enabled: true
       - type: CodingStandard
@@ -34,4 +36,3 @@ teams:
         enabled: true
       - type: CodePortingHistorical
         enabled: true
-		
