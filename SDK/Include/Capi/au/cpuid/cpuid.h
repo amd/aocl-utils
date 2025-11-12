@@ -39,7 +39,13 @@
 AUD_EXTERN_C_BEGIN
 
 #if !defined(au_cpu_num_t)
+/**
+ * @brief CPU number type
+ */
 typedef Uint32 au_cpu_num_t;
+/**
+ * @brief CPU flag type
+ */
 typedef Uint32 au_cpu_flag_t;
 #endif
 
