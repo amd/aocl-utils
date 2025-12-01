@@ -85,8 +85,9 @@ alci_is_amd(au_cpu_num_t cpu_num);
  *                 instead.**
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[out]     arr       Vendor info array
- *                           [VendorID\nFamilyID\nModelID\nSteppingID\nUarchID]
+ * @param[out]     arr Vendor info array containing newline-separated
+ *                           values: VendorID, FamilyID, ModelID, SteppingID,
+ * UarchID
  * @param[in]      size      Size of Vendor info array in bytes.
  *
  * @return         Boolean, true if success.
@@ -318,6 +319,7 @@ alci_arch_is_zen5(au_cpu_num_t cpu_num);
  *
  * @warning        **This api is deprecated. Use au_cpuid_has_flag instead.**
  *
+ * @param          cpu_num  Any valid core number starting from 0.
  * @param          flag   CPU feature flag.
  *
  * @return         1/true if feature is available.

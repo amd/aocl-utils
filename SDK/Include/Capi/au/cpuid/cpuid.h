@@ -85,8 +85,8 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num);
  *  will result in thread migration to the selected core.
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[out]     vend_info Vendor info array
- * [VendorID\nFamilyID\nModelID\nSteppingID\nUarchID]
+ * @param[out]     vend_info Vendor info array containing newline-separated
+ * values: VendorID, FamilyID, ModelID, SteppingID, UarchID
  * @param[in]      size      Size of Vendor info array in bytes.
  *
  * @return         None
