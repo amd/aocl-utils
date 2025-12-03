@@ -76,7 +76,7 @@ enum class EUModel : Uint8 // NOLINT
     Stormpeak    = MAKE_MODEL(0x8, 0x1), /* 24 */
     Warhol       = MAKE_MODEL(0x1, 0x2), /* 33 */
     Raphael      = MAKE_MODEL(0x1, 0x6), /* 97 */
-    Phoenix1     = MAKE_MODEL(0x5, 0x6), /* 116 */
+    Phoenix1     = MAKE_MODEL(0x4, 0x7), /* 116 */
     Phoenixpoint = MAKE_MODEL(0x5, 0x7), /* 117 */
 
     /* Zen5 - Wikipedia */
