@@ -38,10 +38,12 @@
 
 AUD_EXTERN_C_BEGIN
 
+/** @cond INTERNAL */
 #if !defined(au_cpu_num_t)
 typedef Uint32 au_cpu_num_t;
 typedef Uint32 au_cpu_flag_t;
 #endif
+/** @endcond */
 
 /**
  * @brief          Allows caller to check if the processor vendor is AMD.
