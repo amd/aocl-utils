@@ -215,6 +215,8 @@ class X86Cpu::Impl
      *
      * This implementation follows GCC's approach using model number ranges
      * for detecting the microarchitecture within each family.
+     * When model numbers don't match known ranges, feature flags are used
+     * as a fallback detection mechanism (matching GCC's get_amd_cpu).
      */
     void setUarch()
     {
@@ -231,8 +233,13 @@ class X86Cpu::Impl
                     // Mendocino
                     m_vendor_info.m_uarch = EUarch::Zen2;
                 } else {
-                    // Models 0x20-0x2f - default to Zen
-                    m_vendor_info.m_uarch = EUarch::Zen;
+                    // Models 0x20-0x2f - use feature flag fallback (GCC style)
+                    // CLWB is present on Zen2+, absent on Zen1
+                    if (m_avail_flags[EFlag::clwb]) {
+                        m_vendor_info.m_uarch = EUarch::Zen2;
+                    } else {
+                        m_vendor_info.m_uarch = EUarch::Zen;
+                    }
                 }
                 break;
 
@@ -245,18 +252,31 @@ class X86Cpu::Impl
                     // Zen4 - Genoa, Raphael, Phoenix
                     m_vendor_info.m_uarch = EUarch::Zen4;
                 } else {
-                    // Unknown 0x19 models - default to Zen3
-                    m_vendor_info.m_uarch = EUarch::Zen3;
+                    // Unknown 0x19 models - use feature flag fallback (GCC
+                    // style) AVX512F is present on Zen4, absent on Zen3
+                    if (m_avail_flags[EFlag::avx512f]) {
+                        m_vendor_info.m_uarch = EUarch::Zen4;
+                    } else if (m_avail_flags[EFlag::vaes]) {
+                        m_vendor_info.m_uarch = EUarch::Zen3;
+                    } else {
+                        m_vendor_info.m_uarch = EUarch::Zen3;
+                    }
                 }
                 break;
 
             case EFamily::Zen5: // Family 0x1A (Zen5)
-                if (model <= 0x77 || (model >= 0xd0 && model <= 0xd7)) {
+                if (model <= 0x4f || (model >= 0x60 && model <= 0x77)
+                    || (model >= 0xd0 && model <= 0xd7)) {
                     // Zen5 - Turin, Granite Ridge, Strix Point
                     m_vendor_info.m_uarch = EUarch::Zen5;
                 } else {
-                    // Default to Zen5 for unknown 0x1A models
-                    m_vendor_info.m_uarch = EUarch::Zen5;
+                    // Unknown 0x1A models - use feature flag fallback (GCC
+                    // style) AVX512_VPINTERSECT is present on Zen5
+                    if (m_avail_flags[EFlag::avx512_vpintersect]) {
+                        m_vendor_info.m_uarch = EUarch::Zen5;
+                    } else {
+                        m_vendor_info.m_uarch = EUarch::Zen5;
+                    }
                 }
                 break;
 

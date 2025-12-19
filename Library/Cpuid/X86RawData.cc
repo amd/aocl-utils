@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -234,7 +234,6 @@ X86Cpu::Impl::update()
     m_vendor_info.m_family = CpuidUtils::getFamily(resp.eax);
     m_vendor_info.m_model  = CpuidUtils::getModel(resp.eax);
     m_vendor_info.m_stepping = CpuidUtils::getStepping(resp.eax);
-    setUarch();
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
@@ -242,6 +241,7 @@ X86Cpu::Impl::update()
         }
         updateflag(flg, CpuidUtils::hasFlag(expected, rawCpuid[req]));
     }
+    setUarch();
 
     /*
      * Globally disable some
