@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,6 +56,7 @@ using namespace Au;
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true, isZenFamily=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
+    { "EPYC-Turin-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
     { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
     { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
@@ -67,6 +68,11 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "EPYC-v2",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "EPYC-v3",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "EPYC-v4",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    // Feature flag fallback tests (unknown model numbers using flag-based detection)
+    { "Mock-Zen17-Model25-CLWB",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Mock-Zen17-Model25-NoCLWB", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Mock-Zen19-ModelB5-AVX512", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Mock-Zen19-ModelB5-VAES",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "Opteron_G1-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
     { "Opteron_G2-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
     { "Opteron_G3-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
@@ -77,6 +83,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Denverton-v1",      { !isAmd, isIntel,  isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown },
     { "Conroe-v1",         { !isAmd, isIntel,  !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown },
    // { "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  isX86_64v4,  flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown }
+    { "MockFutureArch-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
 };
 // clang-format on
 /**
@@ -87,6 +94,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
  */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
+    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x20, 0x0 } } },
     { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x0 } } },
     { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
     { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
@@ -98,6 +106,11 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
     { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
     { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
+    // Feature flag fallback tests (unknown model numbers using flag-based detection)
+    { "Mock-Zen17-Model25-CLWB",   { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-NoCLWB", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
+    { "Mock-Zen19-ModelB5-AVX512", { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-VAES",   { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
     { "Opteron_G1-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G2-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G3-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x02, 0x3 } } },
@@ -108,6 +121,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Denverton-v1",      { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x5F, 0x1 } } },
     { "Conroe-v1",         { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x0F, 0x3 } } },
     { "Skylake-Server-v1", { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x55, 0x4 } } },
+    { "MockFutureArch-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
     // clang-format on
 };
 
@@ -121,7 +135,7 @@ class MockCpuidUtils : public CpuidUtils
         : CpuidUtils()
     {
     }
-    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)) {};
+    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)){};
 };
 
 /**

@@ -98,18 +98,21 @@ TEST(CapiX86Cpuid, DISABLED_isUarch)
     // verify the uarch passed from the qemu testcase.
     if (uarch == EUarch::Zen) {
         EXPECT_TRUE(au_cpuid_arch_is_zen(0));
-        EXPECT_FALSE(au_cpuid_arch_is_zenplus(0));
-        EXPECT_FALSE(au_cpuid_arch_is_zen2(0));
-        EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
-        EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
-        EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
-    } else if (uarch == EUarch::ZenPlus) {
-        EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        // ZenPlus is disabled - API returns same as Zen for backward
+        // compatibility
         EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
         EXPECT_FALSE(au_cpuid_arch_is_zen2(0));
         EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
         EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
         EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
+        // ZenPlus is disabled in the enum, so commenting out this test case
+        // } else if (uarch == EUarch::ZenPlus) {
+        //     EXPECT_TRUE(au_cpuid_arch_is_zen(0));
+        //     EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
+        //     EXPECT_FALSE(au_cpuid_arch_is_zen2(0));
+        //     EXPECT_FALSE(au_cpuid_arch_is_zen3(0));
+        //     EXPECT_FALSE(au_cpuid_arch_is_zen4(0));
+        //     EXPECT_FALSE(au_cpuid_arch_is_zen5(0));
     } else if (uarch == EUarch::Zen2) {
         EXPECT_TRUE(au_cpuid_arch_is_zen(0));
         EXPECT_TRUE(au_cpuid_arch_is_zenplus(0));
