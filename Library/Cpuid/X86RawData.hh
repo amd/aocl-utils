@@ -237,6 +237,9 @@ class X86Cpu::Impl
                     // CLWB is present on Zen2+, absent on Zen1
                     if (m_avail_flags[EFlag::clwb]) {
                         m_vendor_info.m_uarch = EUarch::Zen2;
+                    } else if (m_avail_flags[EFlag::clzero]) {
+                        // CLZERO is present on Zen1+
+                        m_vendor_info.m_uarch = EUarch::Zen;
                     } else {
                         m_vendor_info.m_uarch = EUarch::Zen;
                     }
@@ -265,6 +268,7 @@ class X86Cpu::Impl
                 break;
 
             case EFamily::Zen5: // Family 0x1A (Zen5)
+                // TODO: Add Zen6 detection when model ranges are known
                 if (model <= 0x4f || (model >= 0x60 && model <= 0x77)
                     || (model >= 0xd0 && model <= 0xd7)) {
                     // Zen5 - Turin, Granite Ridge, Strix Point

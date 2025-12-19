@@ -220,6 +220,9 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
 
     {{0x00000007, 0, 1}, { 0x00000020}, EFlag::avx512_bf16},
     {{0x00000007, 0, 1}, { 0x00000010}, EFlag::avxvnni},
+
+    /* CLZERO - CPUID leaf 0x80000008 EBX bit 0 */
+    {{0x80000008}, {0, 0x00000001}, EFlag::clzero},
 }};
 // clang-format on
 
