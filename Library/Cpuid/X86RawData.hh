@@ -211,74 +211,58 @@ class X86Cpu::Impl
     }
     /**
      * @brief Update the microarchitecture of CPU in the m_vendor_info structure
-     * based on the Family model and stepping values
+     * based on the Family model and stepping values.
+     *
+     * This implementation follows GCC's approach using model number ranges
+     * for detecting the microarchitecture within each family.
      */
     void setUarch()
     {
-        /**
-         * As m_vendor_info.m_family will only hold the minimum
-         * value of the family @see getFamily() ID. Eg: Zen, ZenPlus and zen2
-         * has same family ID. Even if the CPU belongs to the Zen2 family, it
-         * holds EFamily::Zen hence if checks can look only for the smallest
-         * family ID in the group and rest can be skipped.
-         */
-        if (m_vendor_info.m_family == EFamily::Zen) {
-            switch (m_vendor_info.m_model) {
-                case *EUModel::Naples:
-                case *EUModel::Ravenridge:
+        Uint16 model = m_vendor_info.m_model;
+
+        switch (m_vendor_info.m_family) {
+            case EFamily::Zen: // Family 0x17 (Zen, Zen+, Zen2)
+                if (model <= 0x1f) {
+                    // Zen1 - Naples, Whitehaven, Summit Ridge, Snowy Owl,
+                    // Ravenridge
                     m_vendor_info.m_uarch = EUarch::Zen;
-                    break;
-                    // case *EUModel::Bandedkestrel:
-                case *EUModel::Picasso:
-                    if (m_vendor_info.m_stepping == 1)
-                        m_vendor_info.m_uarch = EUarch::ZenPlus;
-                    else
-                        m_vendor_info.m_uarch = EUarch::Zen;
-                    break;
-                case *EUModel::Pinnacleridge:
-                    m_vendor_info.m_uarch = EUarch::ZenPlus;
-                    break;
-                case *EUModel::Rome:
-                case *EUModel::Castlepeakpro:
-                case *EUModel::Renoir:
-                case *EUModel::Matisse:
-                case *EUModel::Vangogh:
-                case *EUModel::Mendocino:
+                } else if (model >= 0x30) {
+                    // Zen2 - Rome, Castle Peak, Renoir, Matisse, Vangogh,
+                    // Mendocino
                     m_vendor_info.m_uarch = EUarch::Zen2;
-                    break;
-            }
+                } else {
+                    // Models 0x20-0x2f - default to Zen
+                    m_vendor_info.m_uarch = EUarch::Zen;
+                }
+                break;
 
-        } else if (m_vendor_info.m_family == EFamily::Zen3) {
-
-            switch (m_vendor_info.m_model) {
-                case *EUModel::Milan:
-                case *EUModel::Chagall:
+            case EFamily::Zen3: // Family 0x19 (Zen3, Zen4)
+                if (model <= 0x0f) {
+                    // Zen3 - Milan
                     m_vendor_info.m_uarch = EUarch::Zen3;
-                    break;
-                // case *EUModel::Vermeer:
-                case *EUModel::Warhol:
-                    if (m_vendor_info.m_stepping == 2)
-                        m_vendor_info.m_uarch = EUarch::Zen4;
-                    else
-                        m_vendor_info.m_uarch = EUarch::Zen3;
-                    break;
-                case *EUModel::Rembrandt:
-                case *EUModel::Cezanne:
-                    m_vendor_info.m_uarch = EUarch::Zen3;
-                    break;
-                case *EUModel::Genoa:
-                case *EUModel::Stormpeak:
-                case *EUModel::Raphael:
-                case *EUModel::Phoenix1:
-                case *EUModel::Phoenixpoint:
+                } else if ((model >= 0x10 && model <= 0x1f)
+                           || (model >= 0x60 && model <= 0xaf)) {
+                    // Zen4 - Genoa, Raphael, Phoenix
                     m_vendor_info.m_uarch = EUarch::Zen4;
-                    break;
-            }
-        } else if (m_vendor_info.m_family == EFamily::Zen5) {
-            m_vendor_info.m_uarch = EUarch::Zen5;
-        } else {
+                } else {
+                    // Unknown 0x19 models - default to Zen3
+                    m_vendor_info.m_uarch = EUarch::Zen3;
+                }
+                break;
 
-            m_vendor_info.m_uarch = EUarch::Unknown;
+            case EFamily::Zen5: // Family 0x1A (Zen5)
+                if (model <= 0x77 || (model >= 0xd0 && model <= 0xd7)) {
+                    // Zen5 - Turin, Granite Ridge, Strix Point
+                    m_vendor_info.m_uarch = EUarch::Zen5;
+                } else {
+                    // Default to Zen5 for unknown 0x1A models
+                    m_vendor_info.m_uarch = EUarch::Zen5;
+                }
+                break;
+
+            default:
+                m_vendor_info.m_uarch = EUarch::Unknown;
+                break;
         }
     }
     /*
