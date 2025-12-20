@@ -220,6 +220,12 @@ class X86Cpu::Impl
      */
     void setUarch()
     {
+        // Only set microarchitecture for AMD CPUs
+        if (m_vendor_info.m_mfg != EVendor::Amd) {
+            m_vendor_info.m_uarch = EUarch::Unknown;
+            return;
+        }
+
         Uint16 model = m_vendor_info.m_model;
 
         switch (m_vendor_info.m_family) {
@@ -295,10 +301,11 @@ class X86Cpu::Impl
                 break;
         }
 
-        if (m_vendor_info.m_uarch == EUarch::Unknown
-            && m_vendor_info.m_family > EFamily::Max) {
+        // Fallback for future AMD families beyond current Max
+        if ((m_vendor_info.m_uarch == EUarch::Unknown)
+            && (m_vendor_info.m_family > EFamily::Max)) {
             // Assuming Family increases each generation, set to Zen5 for future
-            // families
+            // AMD families (vendor check is done at the start of this function)
             m_vendor_info.m_uarch = EUarch::Zen5;
         }
     }
