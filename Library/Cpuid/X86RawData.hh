@@ -269,6 +269,10 @@ class X86Cpu::Impl
 
             case EFamily::Zen5: // Family 0x1A (Zen5)
                 // TODO: Add Zen6 detection when model ranges are known
+
+                // FIXME: Enable the below code when Zen6 model ranges are
+                // known, for now we return 0x1A as Zen5
+                /*
                 if (model <= 0x4f || (model >= 0x60 && model <= 0x77)
                     || (model >= 0xd0 && model <= 0xd7)) {
                     // Zen5 - Turin, Granite Ridge, Strix Point
@@ -282,11 +286,20 @@ class X86Cpu::Impl
                         m_vendor_info.m_uarch = EUarch::Zen5;
                     }
                 }
+                */
+                m_vendor_info.m_uarch = EUarch::Zen5;
                 break;
 
             default:
                 m_vendor_info.m_uarch = EUarch::Unknown;
                 break;
+        }
+
+        if (m_vendor_info.m_uarch == EUarch::Unknown
+            && m_vendor_info.m_family > EFamily::Max) {
+            // Assuming Family increases each generation, set to Zen5 for future
+            // families
+            m_vendor_info.m_uarch = EUarch::Zen5;
         }
     }
     /*
