@@ -104,7 +104,7 @@ bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
-    return cpu.isUarch(EUarch::ZenPlus);
+    return cpu.isUarch(EUarch::Zen);
 }
 
 AUD_API_EXPORT
