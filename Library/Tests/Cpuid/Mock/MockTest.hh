@@ -56,8 +56,23 @@ using namespace Au;
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true, isZenFamily=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
-    { "EPYC-Turin-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
-    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "EPYC-Turin-Dense-v2", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "EPYC-Turin-Dense-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "EPYC-Turin-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    // Zen5 client/mobile/desktop models (Family 0x1A)
+    { "Shimada-Peak-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Point-v1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Point-v2",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Halo-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Halo-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Gorgon-Point-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Granite-Ridge-v1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Grado-v1",          { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Fire-Range-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Krackan-Point-v1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Krackan-Point-v2",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Sarlak-v1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
     { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "EPYC-Rome-v1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
@@ -97,8 +112,23 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
  */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
-    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x20, 0x0 } } },
-    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x0 } } },
+    { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x10, 0x0 } } },
+    { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
+    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x02, 0x0 } } },
+    // Zen5 client/mobile/desktop models (Family 0x1A)
+    { "Shimada-Peak-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x08, 0x0 } } },
+    { "Strix-Point-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x24, 0x0 } } },
+    { "Strix-Point-v2",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x30, 0x0 } } },
+    { "Strix-Halo-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x38, 0x0 } } },
+    { "Strix-Halo-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x70, 0x0 } } },
+    { "Gorgon-Point-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x40, 0x0 } } },
+    { "Granite-Ridge-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
+    { "Grado-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
+    { "Fire-Range-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x48, 0x0 } } },
+    { "Krackan-Point-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x60, 0x0 } } },
+    { "Krackan-Point-v2",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x68, 0x0 } } },
+    { "Sarlak-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x77, 0x0 } } },
+    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x1 } } },
     { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
     { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
     { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
