@@ -340,6 +340,9 @@ X86Cpu::Impl::getUarch() const
 bool
 X86Cpu::Impl::isUarch(EUarch uarch, bool strict) const
 {
+    // FIXME: Temporary workaround until Zen+ is fully supported
+    if (uarch == EUarch::ZenPlus)
+        uarch = EUarch::Zen;
     if (uarch < EUarch::Unknown || uarch > EUarch::Max)
         return false;
     if (strict)

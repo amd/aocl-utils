@@ -117,18 +117,30 @@ TEST(X86Cpuid, DISABLED_isUarch)
     EXPECT_TRUE(cpu.isUarch(uarch));
 
     // Verify isUarch returns False for any microarchitecure higher than the
-    // current one
-    uarch = static_cast<EUarch>(static_cast<int>(uarch) + 1);
-    EXPECT_FALSE(cpu.isUarch(uarch));
+    // current one.
+    // Note: ZenPlus is treated as Zen in isUarch(), so we need to skip over it
+    // when testing for a "higher" architecture.
+    auto higher_uarch = static_cast<EUarch>(static_cast<int>(uarch) + 1);
+    if (higher_uarch == EUarch::ZenPlus) {
+        higher_uarch = static_cast<EUarch>(static_cast<int>(higher_uarch) + 1);
+    }
+    EXPECT_FALSE(cpu.isUarch(higher_uarch));
 
     // Verify isUarch returns True for any microarchitecure lower than the
     // current one.
-    uarch = static_cast<EUarch>(static_cast<int>(uarch) - 2);
-    EXPECT_TRUE(cpu.isUarch(uarch));
+    auto lower_uarch = static_cast<EUarch>(static_cast<int>(uarch) - 1);
+    // Skip over ZenPlus since it's treated as Zen
+    if (lower_uarch == EUarch::ZenPlus) {
+        lower_uarch = static_cast<EUarch>(static_cast<int>(lower_uarch) - 1);
+    }
+    // Only test if we have a valid lower uarch (not Unknown or below)
+    if (lower_uarch > EUarch::Unknown) {
+        EXPECT_TRUE(cpu.isUarch(lower_uarch));
+        // Verify isUarch returns false for any microarchitecure lower than the
+        // current one in strict mode
+        EXPECT_FALSE(cpu.isUarch(lower_uarch, true));
+    }
 
-    // Verify isUarch returns false for any microarchitecure lower than the
-    // current one in strict mode
-    EXPECT_FALSE(cpu.isUarch(uarch, true));
     writeToFile<EUarch>("UarchResult.txt", { cpu.getUarch() });
 }
 

@@ -155,8 +155,7 @@ enum class EUarch : Uint16
 {
     Unknown = 0,
     Zen,
-    /* Disabling ZenPlus for now */
-    // ZenPlus,
+    ZenPlus,
     Zen2,
     Zen3,
     Zen4,
