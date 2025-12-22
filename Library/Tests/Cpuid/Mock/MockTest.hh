@@ -252,10 +252,10 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Raven-V2",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x20, 0x0 } } },
 
     // Feature flag fallback tests (unknown model numbers using flag-based detection)
-    { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Zen2,     0x25, 0x0 } } },
     { "Mock-Zen17-Model25-NoCLWB",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
     { "Mock-Zen17-Model25-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
-    { "Mock-Zen19-ModelB5-AVX512",  { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-AVX512",  { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xB5, 0x0 } } },
     { "Mock-Zen19-ModelB5-VAES",    { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
     { "Mock-Zen19-ModelB5-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
     { "Opteron_G1-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
