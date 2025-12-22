@@ -129,6 +129,15 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Picasso-V1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "Colfax-V1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "Pinnacle-Ridge-V1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+
+    // Zen client/desktop models (Family 0x17)
+    { "Summit-Ridge-V1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Whitehaven-V1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Snowy-Owl-V1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Great-Horned-Owl-V1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Raven-V1",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Banded-Kestrel-V1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Raven-V2",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     
     // Feature flag fallback tests (unknown model numbers using flag-based detection)
     { "Mock-Zen17-Model25-CLWB",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
@@ -232,6 +241,15 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Picasso-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
     { "Colfax-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
     { "Pinnacle-Ridge-V1", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
+
+    // Zen client/desktop models (Family 0x17)
+    { "Summit-Ridge-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Whitehaven-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Snowy-Owl-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Great-Horned-Owl-V1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
+    { "Raven-V1",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
+    { "Banded-Kestrel-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
+    { "Raven-V2",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x20, 0x0 } } },
 
     // Feature flag fallback tests (unknown model numbers using flag-based detection)
     { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
