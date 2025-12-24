@@ -49,11 +49,11 @@ typedef Uint32 au_cpu_flag_t;
  * @brief          Allows caller to check if the processor vendor is AMD.
  *
  * @details        This function will work on all AMD processors.
- *                 |    AOCL 5.1     |    alci_is_amd()    |
+ *                 |    AOCL 5.2     |    alci_is_amd()    |
  *                 |:---------------:|:-------------------:|
  *                 |    Skylake      |       False         |
  *                 |   Bulldozer     |       True          |
- *                 |      Zen1       |       True          |
+ *                 |     Zen1/1+     |       True          |
  *                 |      Zen2       |       True          |
  *                 |      Zen3       |       True          |
  *                 |      Zen4       |       True          |
@@ -102,22 +102,20 @@ alci_cpu_get_vendor(au_cpu_num_t cpu_num, char* arr, size_t size);
  * @brief          Allows caller to check if the processor arch is ZEN.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  alci_arch_is_zen()     |
+ *                 |   AOCL 5.2   |  alci_arch_is_zen()     |
  *                 |:------------:|:-----------------------:|
  *                 |   Skylake    |         False           |
  *                 |  Bulldozer   |         False           |
- *                 |     Zen1     |         True            |
- *                 |     Zen1+    |         True            |
+ *                 |    Zen1/1+   |         True            |
  *                 |     Zen2     |         True            |
  *                 |   Zen[3,4,5] |         True            |
- *                 |   Zen[X>5]   |         False           |
+ *                 |   Zen[X>5]   |         True            |
  *
  *                 |   AOCL 4.2   |  alci_arch_is_zen()     |
  *                 |:------------:|:-----------------------:|
  *                 |   Skylake    |         False           |
  *                 |  Bulldozer   |         False           |
- *                 |     Zen1     |         True            |
- *                 |     Zen1+    |         True            |
+ *                 |    Zen1/1+   |         True            |
  *                 |     Zen2     |         False           |
  *                 |     Zen3     |         False           |
  *                 |    Zen[X>3]  |         False           |
@@ -141,22 +139,20 @@ alci_arch_is_zen(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN2.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  alci_arch_is_zen2()     |
+ *                 |   AOCL 5.2   |  alci_arch_is_zen2()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
- *                 |     Zen1     |         False            |
- *                 |    Zen1+     |         False            |
+ *                 |    Zen1/1+   |         False            |
  *                 |     Zen2     |         True             |
  *                 |  Zen[3,4,5]  |         True             |
- *                 |   Zen[X>5]   |         False            |
+ *                 |   Zen[X>5]   |         True             |
  *
  *                 |   AOCL 4.2   |  alci_arch_is_zen2()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
- *                 |     Zen1     |         False            |
- *                 |    Zen1+     |         False            |
+ *                 |     Zen1/1+     |         False            |
  *                 |     Zen2     |         True             |
  *                 |     Zen3     |         False            |
  *                 |   Zen[X>3]   |         False            |
@@ -181,20 +177,20 @@ alci_arch_is_zen2(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN3.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  alci_arch_is_zen3()     |
+ *                 |   AOCL 5.2   |  alci_arch_is_zen3()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
- *                 |   Zen1/1+    |         False            |
- *                 |    Zen2      |         False            |
+ *                 |    Zen1/1+   |         False            |
+ *                 |     Zen2     |         False            |
  *                 |  Zen[3,4,5]  |         True             |
- *                 |   Zen[X>5]   |         False            |
+ *                 |   Zen[X>5]   |         True             |
  *
  *                 |   AOCL 4.2   |  alci_arch_is_zen3()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
- *                 |   Zen1/1+    |         False            |
+ *                 |    Zen1/1+   |         False            |
  *                 |     Zen2     |         False            |
  *                 |     Zen3     |         True             |
  *                 |     Zen4     |         False            |
@@ -221,14 +217,14 @@ alci_arch_is_zen3(au_cpu_num_t cpu_num);
  *
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  alci_arch_is_zen4()     |
+ *                 |   AOCL 5.2   |  alci_arch_is_zen4()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
  *                 |   Zen[X<3]   |         False            |
  *                 |     Zen3     |         False            |
  *                 |   Zen[4,5]   |         True             |
- *                 |   Zen[X>5]   |         False            |
+ *                 |   Zen[X>5]   |         True             |
  *
  *                 |   AOCL 4.2   |  alci_arch_is_zen4()     |
  *                 |:------------:|:------------------------:|
@@ -237,8 +233,8 @@ alci_arch_is_zen3(au_cpu_num_t cpu_num);
  *                 |   Zen[X<3]   |         False            |
  *                 |     Zen3     |         False            |
  *                 |     Zen4     |         True             |
- *                 |     Zen5     |         False            |
- *                 |   Zen[X>5]   |         False            |
+ *                 |     Zen5     |         True             |
+ *                 |   Zen[X>5]   |         True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -260,23 +256,14 @@ alci_arch_is_zen4(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN5.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  alci_arch_is_zen5()     |
+ *                 |   AOCL 5.2   |  alci_arch_is_zen5()     |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
  *                 |   Zen[X<4]   |         False            |
  *                 |     Zen4     |         False            |
  *                 |     Zen5     |         True             |
- *                 |   Zen[X>5]   |         False            |
- *
- *                 |   AOCL 4.2   |  alci_arch_is_zen5()     |
- *                 |:------------:|:------------------------:|
- *                 |   Skylake    |         False            |
- *                 |  Bulldozer   |         False            |
- *                 |   Zen[X<4]   |         False            |
- *                 |     Zen4     |         False            |
- *                 |     Zen5     |         True             |
- *                 |   Zen[X>5]   |         False            |
+ *                 |   Zen[X>5]   |         True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *

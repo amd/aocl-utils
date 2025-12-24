@@ -402,7 +402,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |:-------------:|:---------:|
      *            |   Skylake     |   False   |
      *            |  Bulldozer    |   True    |
-     *            |     Zen1      |   True    |
+     *            |     Zen1/1+   |   True    |
      *            |     Zen2      |   True    |
      *            |     Zen3      |   True    |
      *            |     Zen4      |   True    |
@@ -434,12 +434,12 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |   Broadwell   |         True           |
      *            |    Skylake    |         True           |
      *            |   Bulldozer   |         True           |
-     *            |     Zen1      |         True           |
+     *            |     Zen1/1+   |         True           |
      *            |     Zen2      |         True           |
      *            |     Zen3      |         True           |
      *            |     Zen4      |         True           |
      *            |     Zen5      |         True           |
-     *            |   Zen[X>5]     |         True           |
+     *            |   Zen[X>5]    |         True           |
      *
      * @param     none
      *
@@ -471,7 +471,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |   Broadwell    |         True           |
      *            |    Skylake     |         True           |
      *            |   Bulldozer    |         True           |
-     *            |     Zen1       |         True           |
+     *            |     Zen1/1+    |         True           |
      *            |     Zen2       |         True           |
      *            |     Zen3       |         True           |
      *            |     Zen4       |         True           |
@@ -507,7 +507,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            | Broadwell   |            False              |
      *            | Skylake     |            True               |
      *            | Bulldozer   |            True               |
-     *            | Zen1        |            True               |
+     *            | Zen1/1+     |            True               |
      *            | Zen2        |            True               |
      *            | Zen3        |            True               |
      *            | Zen4        |            True               |
@@ -529,7 +529,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |:--------------:|:-----------:|
      *            |    Skylake     |    True     |
      *            |   Bulldozer    |    False    |
-     *            |     Zen1       |    False    |
+     *            |     Zen1/1+    |    False    |
      *            |     Zen2       |    False    |
      *            |     Zen3       |    False    |
      *            |     Zen4       |    False    |
@@ -690,7 +690,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |:------------:|:--------------------:|
      *            |   Skylake    |       Unknown        |
      *            |  Bulldozer   |       Unknown        |
-     *            |     Zen1     |         Zen          |
+     *            |     Zen1/1+  |         Zen          |
      *            |     Zen2     |         Zen2         |
      *            |     Zen3     |         Zen3         |
      *            |     Zen4     |         Zen4         |
@@ -715,7 +715,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *  |:----------:|:------------:|:-------------:|:-------------:|:-------------:|:-------------:|
      *  |  Skylake   |    False     |     False     |     False     |     False     |     False     |
      *  | Bulldozer  |    False     |     False     |     False     |     False     |     False     |
-     *  |   Zen1     |    True      |     False     |     False     |     False     |     False     |
+     *  |   Zen1/1+  |    True      |     False     |     False     |     False     |     False     |
      *  |   Zen2     |    True      |      True     |     False     |     False     |     False     |
      *  |   Zen3     |    True      |      True     |      True     |     False     |     False     |
      *  |   Zen4     |    True      |      True     |      True     |      True     |     False     |
@@ -728,7 +728,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *  |:----------:|:--------------:|:---------------:|:---------------:|:---------------:|:---------------:|
      *  |  Skylake   |      False     |       False     |       False     |       False     |       False     |
      *  | Bulldozer  |      False     |       False     |       False     |       False     |       False     |
-     *  |   Zen1     |      True      |       False     |       False     |       False     |       False     |
+     *  |   Zen1/1+  |      True      |       False     |       False     |       False     |       False     |
      *  |   Zen2     |      False     |        True     |       False     |       False     |       False     |
      *  |   Zen3     |      False     |       False     |        True     |       False     |       False     |
      *  |   Zen4     |      False     |       False     |       False     |        True     |       False     |
@@ -754,7 +754,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |:-------------:|:---------------:|
      *            |   Skylake     |     False       |
      *            |  Bulldozer    |     False       |
-     *            |     Zen1      |     True        |
+     *            |     Zen1/1+   |     True        |
      *            |     Zen2      |     True        |
      *            |     Zen3      |     True        |
      *            |     Zen4      |     True        |
