@@ -152,7 +152,7 @@ alci_arch_is_zen(au_cpu_num_t cpu_num);
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |         False            |
  *                 |  Bulldozer   |         False            |
- *                 |     Zen1/1+     |         False            |
+ *                 |    Zen1/1+   |         False            |
  *                 |     Zen2     |         True             |
  *                 |     Zen3     |         False            |
  *                 |   Zen[X>3]   |         False            |
