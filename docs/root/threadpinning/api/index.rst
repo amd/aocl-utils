@@ -1,7 +1,7 @@
-.. _api:
+.. _threadpinning_api:
 
 ThreadPinning API Reference
-===================
+==========================
 
 .. toctree::
     :maxdepth: 2

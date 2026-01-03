@@ -8,7 +8,7 @@ X86Cpu.isUarch supports two arguments.
 
 With strict argument set to "False" which is the default behaviour.
 
-| AOCL 5.0.1 | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
+| AOCL 5.1   | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
 | :--------: | :----------: | :--------------: | :-----------: | :-----------: | :-----------: | :-----------: |
 |  Skylake   |    False     |      False       |     False     |     False     |     False     |     False     |
 | Bulldozer  |    False     |      False       |     False     |     False     |     False     |     False     |
@@ -22,7 +22,7 @@ With strict argument set to "False" which is the default behaviour.
 
 With strict argument set to "True".
 
-| AOCL 5.0.1 | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
+| AOCL 5.1   | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
 | :--------: | :------------: | :----------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 |  Skylake   |     False      |       False        |      False      |      False      |      False      |      False      |
 | Bulldozer  |     False      |       False        |      False      |      False      |      False      |      False      |
@@ -33,6 +33,20 @@ With strict argument set to "True".
 |    Zen4    |     False      |       False        |      False      |      False      |      True       |      False      |
 |    Zen5    |     False      |       False        |      False      |      False      |      False      |      True       |
 |  Zen[X>5]  |     False      |       False        |      False      |      False      |      False      |      False      |
+
+There is one additional API `isZenFamily` which detects if the CPU is based on Zen architecture.
+
+|  AOCL 5.1  | isZenFamily |
+| :--------: | :---------: |
+|  Skylake   |    False    |
+| Bulldozer  |    False    |
+|    Zen1    |     True    |
+|   Zen1+    |     True    |
+|    Zen2    |     True    |
+|    Zen3    |     True    |
+|    Zen4    |     True    |
+|    Zen5    |     True    |
+|  Zen[X>5]  |     True    |
 
 ## Behaviour of `Cpu.isUarch` API for AOCL 4.2
 

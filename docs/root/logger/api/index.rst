@@ -1,7 +1,7 @@
-.. _api:
+.. _logger_api:
 
 Logger API Reference
-===================
+====================
 
 .. toctree::
     :maxdepth: 2

@@ -355,7 +355,8 @@ AUD_DEFINE_ENUM(ECpuidFlag,
                 movdiri,
                 movdir64b,
                 avx512_vpintersect,
-                x2avic)
+                x2avic,
+                clzero)
 
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {
@@ -397,7 +398,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Check if vendor is AMD
      *
      * @details   This function will work on all AMD processors.
-     *            |    AOCL 5.1   |  isAMD()  |
+     *            |    AOCL 5.2   |  isAMD()  |
      *            |:-------------:|:---------:|
      *            |   Skylake     |   False   |
      *            |  Bulldozer    |   True    |
@@ -427,7 +428,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
      *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
      *
-     *            |    AOCL 5.1    |      isX86_64v2()      |
+     *            |    AOCL 5.2    |      isX86_64v2()      |
      *            |:-------------:|:----------------------:|
      *            |  Sandybridge  |         True           |
      *            |   Broadwell   |         True           |
@@ -438,6 +439,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |     Zen3      |         True           |
      *            |     Zen4      |         True           |
      *            |     Zen5      |         True           |
+     *            |   Zen[X>5]     |         True           |
      *
      * @param     none
      *
@@ -463,7 +465,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
      *            hasFlag(ECpuidFlag::xsave)
      *
-     *            |    AOCL 5.1    |      isX86_64v3()      |
+     *            |    AOCL 5.2    |      isX86_64v3()      |
      *            |:--------------:|:----------------------:|
      *            |  Sandybridge   |         False          |
      *            |   Broadwell    |         True           |
@@ -474,6 +476,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            |     Zen3       |         True           |
      *            |     Zen4       |         True           |
      *            |     Zen5       |         True           |
+     *            |   Zen[X>5]     |         True           |
      *
      * @param   none
      *
@@ -498,7 +501,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            hasFlag(ECpuidFlag::avx512dq) &&
      *            hasFlag(ECpuidFlag::avx512vl)
      *
-     *            |   AOCL 5.1   |  isX86_64v4()                 |
+     *            |   AOCL 5.2   |  isX86_64v4()                 |
      *            |:-----------:|:-----------------------------:|
      *            | Sandybridge |            False              |
      *            | Broadwell   |            False              |
@@ -509,6 +512,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      *            | Zen3        |            True               |
      *            | Zen4        |            True               |
      *            | Zen5        |            True               |
+     *            | Zen[X>5]    |            True               |
      *
      * @param     none
      *
@@ -521,7 +525,7 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Check if vendor is Intel
      *
      * @details   This function will work on all Intel processors.
-     *            |    AOCL 5.1    |  isIntel()  |
+     *            |    AOCL 5.2    |  isIntel()  |
      *            |:--------------:|:-----------:|
      *            |    Skylake     |    True     |
      *            |   Bulldozer    |    False    |
@@ -677,22 +681,21 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @brief     Get microarchitecture of CPU from CPUID instruction.
      *
      * @details   The microarchitecture of the CPU can be
-     *            Zen, ZenPlus, Zen2, Zen3, Zen4, Zen5
+     *            Zen, Zen2, Zen3, Zen4, Zen5
      *
      *            Will return Unknown if the microarchitecture is not
-     *            supported
+     *            supported (non-AMD CPUs)
      *
-     *            |   AOCL 5.1   |      getUarch()      |
+     *            |   AOCL 5.2   |      getUarch()      |
      *            |:------------:|:--------------------:|
      *            |   Skylake    |       Unknown        |
      *            |  Bulldozer   |       Unknown        |
      *            |     Zen1     |         Zen          |
-     *            |    Zen1+     |       ZenPlus        |
      *            |     Zen2     |         Zen2         |
      *            |     Zen3     |         Zen3         |
      *            |     Zen4     |         Zen4         |
      *            |     Zen5     |         Zen5         |
-     *            |   Zen[X>5]   |       Unknown        |
+     *            |   Zen[X>5]   |         Zen5         |
      *
      * @param     none
      *
@@ -708,31 +711,29 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
      * @details   Given a microarchitecture, this function will check if the
      *            CPU microarchitecture is matched with input.
      *
-     *  |  AOCL 5.1  | isUarch(Zen) | isUarch(ZenPlus) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
-     *  |:----------:|:------------:|:----------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-     *  |  Skylake   |    False     |      False       |     False     |     False     |     False     |     False     |
-     *  | Bulldozer  |    False     |      False       |     False     |     False     |     False     |     False     |
-     *  |   Zen1     |    True      |      False       |     False     |     False     |     False     |     False     |
-     *  |   Zen1+    |    True      |       True       |     False     |     False     |     False     |     False     |
-     *  |   Zen2     |    True      |       True       |      True     |     False     |     False     |     False     |
-     *  |   Zen3     |    True      |       True       |      True     |      True     |     False     |     False     |
-     *  |   Zen4     |    True      |       True       |      True     |      True     |      True     |     False     |
-     *  |   Zen5     |    True      |       True       |      True     |      True     |      True     |      True     |
-     *  |  Zen[X>5]  |    False     |      False       |     False     |     False     |     False     |     False     |
+     *  |  AOCL 5.2  | isUarch(Zen) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) |
+     *  |:----------:|:------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+     *  |  Skylake   |    False     |     False     |     False     |     False     |     False     |
+     *  | Bulldozer  |    False     |     False     |     False     |     False     |     False     |
+     *  |   Zen1     |    True      |     False     |     False     |     False     |     False     |
+     *  |   Zen2     |    True      |      True     |     False     |     False     |     False     |
+     *  |   Zen3     |    True      |      True     |      True     |     False     |     False     |
+     *  |   Zen4     |    True      |      True     |      True     |      True     |     False     |
+     *  |   Zen5     |    True      |      True     |      True     |      True     |      True     |
+     *  |  Zen[X>5]  |    True      |      True     |      True     |      True     |      True     |
      *
      *  When given strict as true, it will check for exact match.
      *
-     *  |  AOCL 5.1  | isUarch(Zen,1) | isUarch(ZenPlus,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
-     *  |:----------:|:--------------:|:------------------:|:---------------:|:---------------:|:---------------:|:---------------:|
-     *  |  Skylake   |      False     |        False       |       False     |       False     |       False     |       False     |
-     *  | Bulldozer  |      False     |        False       |       False     |       False     |       False     |       False     |
-     *  |   Zen1     |      True      |        False       |       False     |       False     |       False     |       False     |
-     *  |   Zen1+    |      False     |         True       |       False     |       False     |       False     |       False     |
-     *  |   Zen2     |      False     |        False       |        True     |       False     |       False     |       False     |
-     *  |   Zen3     |      False     |        False       |       False     |        True     |       False     |       False     |
-     *  |   Zen4     |      False     |        False       |       False     |       False     |        True     |       False     |
-     *  |   Zen5     |      False     |        False       |       False     |       False     |       False     |        True     |
-     *  |  Zen[X>5]  |      False     |        False       |       False     |       False     |       False     |       False     |
+     *  |  AOCL 5.2  | isUarch(Zen,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) |
+     *  |:----------:|:--------------:|:---------------:|:---------------:|:---------------:|:---------------:|
+     *  |  Skylake   |      False     |       False     |       False     |       False     |       False     |
+     *  | Bulldozer  |      False     |       False     |       False     |       False     |       False     |
+     *  |   Zen1     |      True      |       False     |       False     |       False     |       False     |
+     *  |   Zen2     |      False     |        True     |       False     |       False     |       False     |
+     *  |   Zen3     |      False     |       False     |        True     |       False     |       False     |
+     *  |   Zen4     |      False     |       False     |       False     |        True     |       False     |
+     *  |   Zen5     |      False     |       False     |       False     |       False     |        True     |
+     *  |  Zen[X>5]  |      False     |       False     |       False     |       False     |        True     |
      *
      *  <a href="#cpuid-c-apis"> C++-API Behaviour Summary </a>
      *
@@ -747,14 +748,13 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     /**
      * @brief     Check if the CPU is Zen family
      * @details   This function will check if the CPU is Zen family.
-     *            Zen family includes Zen, ZenPlus, Zen2, Zen3, Zen4, Zen5
+     *            Zen family includes Zen, Zen2, Zen3, Zen4, Zen5
      *            microarchitectures.
-     *            |    AOCL 5.1   |  isZenFamily()  |
+     *            |    AOCL 5.2   |  isZenFamily()  |
      *            |:-------------:|:---------------:|
      *            |   Skylake     |     False       |
      *            |  Bulldozer    |     False       |
      *            |     Zen1      |     True        |
-     *            |     Zen1+     |     True        |
      *            |     Zen2      |     True        |
      *            |     Zen3      |     True        |
      *            |     Zen4      |     True        |
@@ -804,8 +804,14 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
   private:
     class Impl;
-    const Impl*           pImpl() const { return m_pimpl.get(); }
-    Impl*                 pImpl() { return m_pimpl.get(); }
+    const Impl* pImpl() const
+    {
+        return m_pimpl.get();
+    }
+    Impl* pImpl()
+    {
+        return m_pimpl.get();
+    }
     std::unique_ptr<Impl> m_pimpl;
 };
 

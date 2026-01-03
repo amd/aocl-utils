@@ -1,4 +1,4 @@
-.. _api_cpp:
+.. _cpuid_api_cpp:
 
 Cpuid C++-APIs
 ==============

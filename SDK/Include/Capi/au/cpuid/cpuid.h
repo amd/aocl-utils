@@ -47,7 +47,7 @@ typedef Uint32 au_cpu_flag_t;
  * @brief          Check if the processor vendor is AMD.
  *
  * @details        This function will work on all AMD processors.
- *                 |    AOCL 5.1    |  au_cpuid_is_amd()  |
+ *                 |    AOCL 5.2    |  au_cpuid_is_amd()  |
  *                 |:--------------:|:-------------------:|
  *                 |    Skylake     |        False        |
  *                 |   Bulldozer    |        True         |
@@ -92,15 +92,14 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  * @brief          Allows caller to check if the processor arch is ZEN1.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.1    |  au_cpuid_arch_is_zen()  |
+ *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen()  |
  *                 |:--------------:|:------------------------:|
  *                 |    Skylake     |          False           |
  *                 |   Bulldozer    |          False           |
  *                 |      Zen1      |          True            |
- *                 |     Zen1+      |          True            |
  *                 |      Zen2      |          True            |
  *                 |   Zen[3,4,5]   |          True            |
- *                 |   Zen[X>5]     |          False           |
+ *                 |   Zen[X>5]     |          True            |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -118,15 +117,17 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZENPLUS.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.1    |  au_cpuid_arch_is_zenplus()  |
+ *                 NOTE: ZenPlus enum is disabled, this API now returns
+ *                 same result as au_cpuid_arch_is_zen() for backward
+ *                 compatibility.
+ *                 |    AOCL 5.2    |  au_cpuid_arch_is_zenplus()  |
  *                 |:--------------:|:----------------------------:|
  *                 |    Skylake     |           False              |
  *                 |   Bulldozer    |           False              |
- *                 |      Zen1      |           False              |
- *                 |     Zen1+      |           True               |
+ *                 |      Zen1      |           True               |
  *                 |      Zen2      |           True               |
  *                 |   Zen[3,4,5]   |           True               |
- *                 |   Zen[X>5]     |           False              |
+ *                 |   Zen[X>5]     |           True               |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -135,7 +136,7 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
  *
- * @return         Boolean, true if processor is Zen1+ architecture.
+ * @return         Boolean, true if processor is Zen1 or higher architecture.
  */
 AUD_API_EXPORT bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
@@ -144,15 +145,14 @@ au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN2.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.1    |  au_cpuid_arch_is_zen2()  |
+ *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen2()  |
  *                 |:--------------:|:-------------------------:|
  *                 |    Skylake     |          False            |
  *                 |   Bulldozer    |          False            |
  *                 |      Zen1      |          False            |
- *                 |     Zen1+      |          False            |
  *                 |      Zen2      |          True             |
  *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          False            |
+ *                 |   Zen[X>5]     |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -171,14 +171,14 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN3.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.1    |  au_cpuid_arch_is_zen3()  |
+ *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen3()  |
  *                 |:--------------:|:-------------------------:|
  *                 |    Skylake     |          False            |
  *                 |   Bulldozer    |          False            |
- *                 |   Zen1/1+      |          False            |
- *                 |     Zen2       |          False            |
+ *                 |      Zen1      |          False            |
+ *                 |      Zen2      |          False            |
  *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          False            |
+ *                 |   Zen[X>5]     |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -196,14 +196,14 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN4.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  au_cpuid_arch_is_zen4()  |
+ *                 |   AOCL 5.2   |  au_cpuid_arch_is_zen4()  |
  *                 |:-----------:|:-------------------------:|
  *                 |   Skylake   |          False            |
  *                 |  Bulldozer  |          False            |
  *                 |   Zen[X<3]  |          False            |
  *                 |    Zen3     |          False            |
  *                 |   Zen[4,5]  |          True             |
- *                 |   Zen[X>5]  |          False            |
+ *                 |   Zen[X>5]  |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -221,14 +221,14 @@ au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
  * @brief          Allows caller to check if the processor arch is ZEN5.
  *
  * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.1   |  au_cpuid_arch_is_zen5()  |
+ *                 |   AOCL 5.2   |  au_cpuid_arch_is_zen5()  |
  *                 |:------------:|:------------------------:|
  *                 |   Skylake    |          False           |
  *                 |  Bulldozer   |          False           |
  *                 |   Zen[X<4]   |          False           |
  *                 |    Zen4      |          False           |
  *                 |    Zen5      |          True            |
- *                 |   Zen[X>5]   |          False           |
+ *                 |   Zen[X>5]   |          True            |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -258,7 +258,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
  *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
  *
- *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v2()  |
+ *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v2()  |
  *            |:--------------:|:-----------------------------:|
  *            |  Sandybridge   |            True               |
  *            |   Broadwell    |            True               |
@@ -269,6 +269,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -294,7 +295,7 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
  *            hasFlag(ECpuidFlag::xsave)
  *
- *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v3()  |
+ *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v3()  |
  *            |:--------------:|:-----------------------------:|
  *            |  Sandybridge   |            False              |
  *            |   Broadwell    |            True               |
@@ -305,6 +306,7 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -329,7 +331,7 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            hasFlag(ECpuidFlag::avx512dq) &&
  *            hasFlag(ECpuidFlag::avx512vl)
  *
- *            |    AOCL 5.1    |  au_cpuid_arch_is_x86_64v4()  |
+ *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v4()  |
  *            |:--------------:|:-----------------------------:|
  *            |   Sandybridge  |            False              |
  *            |    Broadwell   |            False              |
@@ -340,6 +342,7 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            |      Zen3      |            True               |
  *            |      Zen4      |            True               |
  *            |      Zen5      |            True               |
+ *            |   Zen[X>5]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -353,16 +356,16 @@ au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
  * Zen family.
  *
  * @details        This function is meant for Zen based processors.
- *                 |    AOCL 5.1    |  au_cpuid_arch_is_zen_family()  |
+ *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen_family()  |
  *                 |:--------------:|:-------------------------------:|
  *                 |    Skylake     |              False              |
  *                 |   Bulldozer    |              False              |
  *                 |      Zen1      |              True               |
- *                 |     Zen1+      |              True               |
  *                 |      Zen2      |              True               |
  *                 |      Zen3      |              True               |
  *                 |      Zen4      |              True               |
  *                 |      Zen5      |              True               |
+ *                 |   Zen[X>5]     |              True               |
  *
  *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
  *  will result in thread migration to the selected core.

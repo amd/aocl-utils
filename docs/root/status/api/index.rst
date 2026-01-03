@@ -1,7 +1,7 @@
-.. _api:
+.. _status_api:
 
 Status API Reference
-===================
+====================
 
 .. toctree::
     :maxdepth: 2

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -220,6 +220,9 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
 
     {{0x00000007, 0, 1}, { 0x00000020}, EFlag::avx512_bf16},
     {{0x00000007, 0, 1}, { 0x00000010}, EFlag::avxvnni},
+
+    /* CLZERO - CPUID leaf 0x80000008 EBX bit 0 */
+    {{0x80000008}, {0, 0x00000001}, EFlag::clzero},
 }};
 // clang-format on
 
@@ -234,7 +237,6 @@ X86Cpu::Impl::update()
     m_vendor_info.m_family = CpuidUtils::getFamily(resp.eax);
     m_vendor_info.m_model  = CpuidUtils::getModel(resp.eax);
     m_vendor_info.m_stepping = CpuidUtils::getStepping(resp.eax);
-    setUarch();
     for (const auto& query : CPUID_MAP) {
         const auto& [req, expected, flg] = query;
         if (rawCpuid.find(req) == rawCpuid.end()) {
@@ -242,6 +244,7 @@ X86Cpu::Impl::update()
         }
         updateflag(flg, CpuidUtils::hasFlag(expected, rawCpuid[req]));
     }
+    setUarch();
 
     /*
      * Globally disable some
@@ -337,6 +340,9 @@ X86Cpu::Impl::getUarch() const
 bool
 X86Cpu::Impl::isUarch(EUarch uarch, bool strict) const
 {
+    // FIXME: Temporary workaround until Zen+ is fully supported
+    if (uarch == EUarch::ZenPlus)
+        uarch = EUarch::Zen;
     if (uarch < EUarch::Unknown || uarch > EUarch::Max)
         return false;
     if (strict)

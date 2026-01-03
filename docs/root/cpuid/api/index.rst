@@ -1,4 +1,4 @@
-.. _api:
+.. _cpuid_api:
 
 Cpuid API Reference
 ===================

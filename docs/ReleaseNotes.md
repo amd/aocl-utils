@@ -1,6 +1,6 @@
 Copyright (C) 2024 Advanced Micro Devices, Inc. All rights reserved.
 
-# AOCL-Utils 5.1.0 Release Notes:
+# AOCL-Utils 5.0.1 Release Notes:
 
 AOCL-Utils provides a uniform interface to all the AOCL libraries to access the CPU features for AMD CPUs. This library provides the following features:
 
@@ -11,7 +11,7 @@ AOCL-Utils provides a uniform interface to all the AOCL libraries to access the 
 
 AOCL-Utils is designed for integration with the other AOCL libraries. Each project has it’s own mechanism to identify CPU and provide necessary features such as Dynamic Dispatch. The main purpose of this library is to provide a centralized mechanism to update/validate and provide information to the users.
 
-# Highlights of AOCL-Utils 5.1.0:
+# Highlights of AOCL-Utils 5.0.1:
 
 * CMake: Added Linux Presets
 * Use of MultiThreaded Library in Windows.

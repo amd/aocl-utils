@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,17 +56,96 @@ using namespace Au;
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true, isZenFamily=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
-    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    // Zen5 server models (Family 0x1A)
+    { "EPYC-Turin-Dense-v2", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "EPYC-Turin-Dense-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "EPYC-Turin-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+
+    // Zen5 client/mobile/desktop models (Family 0x1A)
+    { "Shimada-Peak-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Point-v1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Point-v2",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Halo-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Strix-Halo-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Gorgon-Point-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Granite-Ridge-v1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Grado-v1",          { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Fire-Range-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Krackan-Point-v1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Krackan-Point-v2",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    { "Sarlak-v1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
+    
+    // Zen4 server models (Family 0x19)
+    { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Storm-Peak-V1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+
+    // Zen4 client/desktop/server models (Family 0x19)
+    { "Dragon-Range-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Raphael-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Phoenix-v1",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Phoenix-v2",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Phoenix2-v1",       { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Phoenix2-v2",       { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Ryzen-MI300C-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Ryzen-MI300A-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Bergamo-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Stones-Dense-v1",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Siena-v1",          { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
     { "EPYC-Milan-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "EPYC-Milan-v2",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+
+    // Zen3 client/desktop models (Family 0x19)
+    { "Genesis-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Chagall-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Vermeer-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Vermeer-v2",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Trento-v1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Rembrandt-v1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Rembrandt-v2",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Cezanne-v1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "EPYC-Rome-v1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
     { "EPYC-Rome-v2",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
     { "EPYC-Rome-v3",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
     { "EPYC-Rome-v4",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+
+    // Zen2 client/desktop models (Family 0x17)
+    { "Castle-Peak-V1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Project-X-V1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Cardinal-V1",       { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Grey-Hawk-V1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Renoir-V1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Lucienne-V1",       { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Matisse-V1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Van-Gogh-V1",       { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Mero-V1",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Mendocino-V1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+
     { "EPYC-v1",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "EPYC-v2",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "EPYC-v3",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "EPYC-v4",           { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+
+    // Zen+ client models (Family 0x17)
+    { "Picasso-V1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Colfax-V1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Pinnacle-Ridge-V1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+
+    // Zen client/desktop models (Family 0x17)
+    { "Summit-Ridge-V1",      { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Whitehaven-V1",        { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Snowy-Owl-V1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Great-Horned-Owl-V1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Raven-V1",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Banded-Kestrel-V1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Raven-V2",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    
+    // Feature flag fallback tests (unknown model numbers using flag-based detection)
+    { "Mock-Zen17-Model25-CLWB",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
+    { "Mock-Zen17-Model25-NoCLWB", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Mock-Zen17-Model25-NoFlags",{ isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
+    { "Mock-Zen19-ModelB5-AVX512", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
+    { "Mock-Zen19-ModelB5-VAES",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
+    { "Mock-Zen19-ModelB5-NoFlags",{ isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen3 },
     { "Opteron_G1-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
     { "Opteron_G2-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
     { "Opteron_G3-v1",     { isAmd,  !isIntel, !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily}, EUarch::Unknown },
@@ -77,6 +156,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Denverton-v1",      { !isAmd, isIntel,  isX86_64v2,  !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown },
     { "Conroe-v1",         { !isAmd, isIntel,  !isX86_64v2, !isX86_64v3, !isX86_64v4, flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown },
    // { "Skylake-Server-v1", { !isAmd, isIntel,  isX86_64v2,  isX86_64v3,  isX86_64v4,  flagPresent, flagAbsent, isUarch, !isZenFamily }, EUarch::Unknown }
+    { "MockFutureArch-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
 };
 // clang-format on
 /**
@@ -87,17 +167,97 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
  */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
-    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x0 } } },
-    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
-    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1 } } },
+    { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x10, 0x0 } } },
+    { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
+    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x02, 0x0 } } },
+
+    // Zen5 client/mobile/desktop models (Family 0x1A)
+    { "Shimada-Peak-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x08, 0x0 } } },
+    { "Strix-Point-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x24, 0x0 } } },
+    { "Strix-Point-v2",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x30, 0x0 } } },
+    { "Strix-Halo-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x38, 0x0 } } },
+    { "Strix-Halo-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x70, 0x0 } } },
+    { "Gorgon-Point-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x40, 0x0 } } },
+    { "Granite-Ridge-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
+    { "Grado-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
+    { "Fire-Range-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x48, 0x0 } } },
+    { "Krackan-Point-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x60, 0x0 } } },
+    { "Krackan-Point-v2",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x68, 0x0 } } },
+    { "Sarlak-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x77, 0x0 } } },
+    
+    // Zen4 client/desktop/server models (Family 0x19)
+    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x1 } } },
+    { "Storm-Peak-V1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x18, 0x0 } } },
+    { "Dragon-Range-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x61, 0x0 } } },
+    { "Raphael-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x61, 0x0 } } },
+    { "Phoenix-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x74, 0x0 } } },
+    { "Phoenix-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x75, 0x0 } } },
+    { "Phoenix2-v1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x78, 0x0 } } },
+    { "Phoenix2-v2",       { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x7c, 0x0 } } },
+    { "Ryzen-MI300C-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x80, 0x0 } } },
+    { "Ryzen-MI300A-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x90, 0x0 } } },
+    { "Bergamo-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
+    { "Stones-Dense-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
+    { "Siena-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
+    
+    // Zen3 server models (Family 0x19)
+    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x1 } } },
+    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x2 } } },
+
+    // Zen3 client/desktop models (Family 0x19)
+    { "Genesis-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x00, 0x0 } } },
+    { "Chagall-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x08, 0x0 } } },
+    { "Vermeer-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x21, 0x0 } } },
+    { "Vermeer-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x21, 0x2 } } },
+    { "Trento-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x31, 0x1 } } },
+    { "Rembrandt-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x40, 0x0 } } },
+    { "Rembrandt-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x44, 0x1 } } },
+    { "Cezanne-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x50, 0x0 } } },
+
+    // Zen2 server models (Family 0x17)
     { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
     { "EPYC-Rome-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
     { "EPYC-Rome-v3",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
     { "EPYC-Rome-v4",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
-    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
-    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
-    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
-    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2 } } },
+
+    // Zen2 client/desktop models (Family 0x17)
+    { "Castle-Peak-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
+    { "Project-X-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x84, 0x0 } } },
+    { "Cardinal-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x47, 0x0 } } },
+    { "Grey-Hawk-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x60, 0x0 } } },
+    { "Renoir-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x60, 0x0 } } },
+    { "Lucienne-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x68, 0x0 } } },
+    { "Matisse-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x71, 0x0 } } },
+    { "Van-Gogh-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x90, 0x0 } } },
+    { "Mero-V1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x98, 0x0 } } },
+    { "Mendocino-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0xa0, 0x0 } } },
+
+    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
+    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
+    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
+    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
+
+    // Zen+ client models (Family 0x17)
+    { "Picasso-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
+    { "Colfax-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
+    { "Pinnacle-Ridge-V1", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
+
+    // Zen client/desktop models (Family 0x17)
+    { "Summit-Ridge-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Whitehaven-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Snowy-Owl-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
+    { "Great-Horned-Owl-V1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
+    { "Raven-V1",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
+    { "Banded-Kestrel-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
+    { "Raven-V2",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x20, 0x0 } } },
+
+    // Feature flag fallback tests (unknown model numbers using flag-based detection)
+    { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Zen2,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-NoCLWB",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
+    { "Mock-Zen19-ModelB5-AVX512",  { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-VAES",    { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
     { "Opteron_G1-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G2-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G3-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x02, 0x3 } } },
@@ -108,6 +268,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Denverton-v1",      { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x5F, 0x1 } } },
     { "Conroe-v1",         { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x0F, 0x3 } } },
     { "Skylake-Server-v1", { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x55, 0x4 } } },
+    { "MockFutureArch-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
     // clang-format on
 };
 
@@ -121,7 +282,7 @@ class MockCpuidUtils : public CpuidUtils
         : CpuidUtils()
     {
     }
-    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)) {};
+    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)){};
 };
 
 /**

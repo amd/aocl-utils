@@ -73,6 +73,17 @@ extensions = [
     ]
 # myst_enable_extensions = ["colon_fence"]
 
+# Enable numbering of figures, tables, code-blocks and sections
+numfig = True
+numfig_format = {
+    'section': '%s',
+    'figure': 'Figure %s',
+    'table': 'Table %s',
+    'code-block': 'Listing %s',
+}
+# Depth of section numbering
+numfig_secnum_depth = 3
+
 source_suffix = {
     '.rst': 'restructuredtext',
     '.txt': 'markdown',
