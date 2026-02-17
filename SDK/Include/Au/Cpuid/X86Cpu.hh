@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -160,7 +160,8 @@ enum class EUarch : Uint16
     Zen3,
     Zen4,
     Zen5,
-    Max = Zen5,
+    Zen6,
+    Max = Zen6,
 };
 
 enum class HasFlagsMode
@@ -356,7 +357,14 @@ AUD_DEFINE_ENUM(ECpuidFlag,
                 movdir64b,
                 avx512_vpintersect,
                 x2avic,
-                clzero)
+                clzero,
+                avx512_bmm,
+                avx512_fp16,
+                avx_ifma,
+                avx_vnni_int8,
+                avx_ne_convert,
+                avx_vnni_int16,
+                avx10)
 
 class AUD_API_EXPORT X86Cpu final : public CpuInfo
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -273,27 +273,28 @@ class X86Cpu::Impl
                 }
                 break;
 
-            case EFamily::Zen5: // Family 0x1A (Zen5)
-                // TODO: Add Zen6 detection when model ranges are known
-
-                // FIXME: Enable the below code when Zen6 model ranges are
-                // known, for now we return 0x1A as Zen5
-                /*
+            case EFamily::Zen5: // Family 0x1A (Zen5/Zen6)
                 if (model <= 0x4f || (model >= 0x60 && model <= 0x77)
                     || (model >= 0xd0 && model <= 0xd7)) {
                     // Zen5 - Turin, Granite Ridge, Strix Point
                     m_vendor_info.m_uarch = EUarch::Zen5;
+                } else if ((model >= 0x50 && model <= 0x5f)
+                           || (model >= 0x80 && model <= 0xcf)
+                           || (model >= 0xd8 && model <= 0xe7)) {
+                    // Zen6 - model ranges per GCC get_amd_cpu
+                    m_vendor_info.m_uarch = EUarch::Zen6;
                 } else {
                     // Unknown 0x1A models - use feature flag fallback (GCC
                     // style) AVX512_VPINTERSECT is present on Zen5
                     if (m_avail_flags[EFlag::avx512_vpintersect]) {
                         m_vendor_info.m_uarch = EUarch::Zen5;
+                    } else if (m_avail_flags[EFlag::avx512_bmm]) {
+                        // AVX512_BMM is present on Zen6
+                        m_vendor_info.m_uarch = EUarch::Zen6;
                     } else {
                         m_vendor_info.m_uarch = EUarch::Zen5;
                     }
                 }
-                */
-                m_vendor_info.m_uarch = EUarch::Zen5;
                 break;
 
             default:
@@ -304,9 +305,9 @@ class X86Cpu::Impl
         // Fallback for future AMD families beyond current Max
         if ((m_vendor_info.m_uarch == EUarch::Unknown)
             && (m_vendor_info.m_family > EFamily::Max)) {
-            // Assuming Family increases each generation, set to Zen5 for future
+            // Assuming Family increases each generation, set to Zen6 for future
             // AMD families (vendor check is done at the start of this function)
-            m_vendor_info.m_uarch = EUarch::Zen5;
+            m_vendor_info.m_uarch = EUarch::Zen6;
         }
     }
     /*

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -220,9 +220,23 @@ static const std::array<QueryT, *EFlag::Max> CPUID_MAP = {{
 
     {{0x00000007, 0, 1}, { 0x00000020}, EFlag::avx512_bf16},
     {{0x00000007, 0, 1}, { 0x00000010}, EFlag::avxvnni},
+    /* AVX512_FP16 - CPUID leaf 0x00000007 subleaf 0 EDX bit 23 */
+    {{0x00000007}, {0, 0, 0, 0x00800000}, EFlag::avx512_fp16},
+    /* AVX_IFMA - CPUID leaf 0x00000007 subleaf 1 EAX bit 23 */
+    {{0x00000007, 0, 1}, { 0x00800000}, EFlag::avx_ifma},
+    /* AVX_VNNI_INT8 - CPUID leaf 0x00000007 subleaf 1 EDX bit 4 */
+    {{0x00000007, 0, 1}, {0, 0, 0, 0x00000010}, EFlag::avx_vnni_int8},
+    /* AVX_NE_CONVERT - CPUID leaf 0x00000007 subleaf 1 EDX bit 5 */
+    {{0x00000007, 0, 1}, {0, 0, 0, 0x00000020}, EFlag::avx_ne_convert},
+    /* AVX_VNNI_INT16 - CPUID leaf 0x00000007 subleaf 1 EDX bit 10 */
+    {{0x00000007, 0, 1}, {0, 0, 0, 0x00000400}, EFlag::avx_vnni_int16},
+    /* AVX10 - CPUID leaf 0x00000007 subleaf 1 EDX bit 19 */
+    {{0x00000007, 0, 1}, {0, 0, 0, 0x00080000}, EFlag::avx10},
 
     /* CLZERO - CPUID leaf 0x80000008 EBX bit 0 */
     {{0x80000008}, {0, 0x00000001}, EFlag::clzero},
+    /* AVX512_BMM - CPUID leaf 0x80000021 EAX bit 23 */
+    {{0x80000021}, {0x00800000}, EFlag::avx512_bmm},
 }};
 // clang-format on
 

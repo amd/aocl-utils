@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -198,6 +198,41 @@ using Uarch = EUarch;
 #undef ALC_E_FLAG_AVX512VPINTERSECT
 #endif
 #define ALC_E_FLAG_AVX512VPINTERSECT ECpuidFlag::avx512_vpintersect
+
+#ifdef ALC_E_FLAG_AVX512_BMM
+#undef ALC_E_FLAG_AVX512_BMM
+#endif
+#define ALC_E_FLAG_AVX512_BMM ECpuidFlag::avx512_bmm
+
+#ifdef ALC_E_FLAG_AVX512_FP16
+#undef ALC_E_FLAG_AVX512_FP16
+#endif
+#define ALC_E_FLAG_AVX512_FP16 ECpuidFlag::avx512_fp16
+
+#ifdef ALC_E_FLAG_AVX_IFMA
+#undef ALC_E_FLAG_AVX_IFMA
+#endif
+#define ALC_E_FLAG_AVX_IFMA ECpuidFlag::avx_ifma
+
+#ifdef ALC_E_FLAG_AVX_VNNI_INT8
+#undef ALC_E_FLAG_AVX_VNNI_INT8
+#endif
+#define ALC_E_FLAG_AVX_VNNI_INT8 ECpuidFlag::avx_vnni_int8
+
+#ifdef ALC_E_FLAG_AVX_NE_CONVERT
+#undef ALC_E_FLAG_AVX_NE_CONVERT
+#endif
+#define ALC_E_FLAG_AVX_NE_CONVERT ECpuidFlag::avx_ne_convert
+
+#ifdef ALC_E_FLAG_AVX_VNNI_INT16
+#undef ALC_E_FLAG_AVX_VNNI_INT16
+#endif
+#define ALC_E_FLAG_AVX_VNNI_INT16 ECpuidFlag::avx_vnni_int16
+
+#ifdef ALC_E_FLAG_AVX10
+#undef ALC_E_FLAG_AVX10
+#endif
+#define ALC_E_FLAG_AVX10 ECpuidFlag::avx10
 
 #ifdef ALC_E_FLAG_X2AVIC
 #undef ALC_E_FLAG_X2AVIC

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,8 +42,8 @@ class MockX86Cpu
     void SetUp() override
     {
         // The number of times __raw_cpuid expected to in the code flow.
-        // 13 calls: 12 original leaves + clzero (0x80000008)
-        auto callCount = 13;
+        // 14 calls: 12 original leaves + clzero (0x80000008) + avx512_bmm (0x80000021)
+        auto callCount = 14;
         EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(callCount);
     }
 };
