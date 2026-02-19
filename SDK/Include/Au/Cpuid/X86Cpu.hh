@@ -816,14 +816,8 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
   private:
     class Impl;
-    const Impl* pImpl() const
-    {
-        return m_pimpl.get();
-    }
-    Impl* pImpl()
-    {
-        return m_pimpl.get();
-    }
+    const Impl*           pImpl() const { return m_pimpl.get(); }
+    Impl*                 pImpl() { return m_pimpl.get(); }
     std::unique_ptr<Impl> m_pimpl;
 };
 

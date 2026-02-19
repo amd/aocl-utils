@@ -33,9 +33,9 @@
 #include <cstdlib>
 
 #if defined(WIN32) || defined(_WINDOWS)
-    auto homeEnv = "USERPROFILE";
+auto homeEnv = "USERPROFILE";
 #else
-    auto homeEnv = "HOME";
+auto homeEnv = "HOME";
 #endif
 
 namespace {

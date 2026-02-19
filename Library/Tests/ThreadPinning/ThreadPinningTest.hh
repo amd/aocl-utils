@@ -50,7 +50,7 @@ class PinThreadsTest : public ::testing::Test
         , tp()
         , num_threads(0)
         , strategy(pinStrategy::SPREAD)
-        , threads(){};
+        , threads() {};
 
     std::vector<pthread_t> thread_ids;
     ThreadPinning          tp;

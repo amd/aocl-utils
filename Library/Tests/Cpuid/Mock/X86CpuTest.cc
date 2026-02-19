@@ -42,7 +42,8 @@ class MockX86Cpu
     void SetUp() override
     {
         // The number of times __raw_cpuid expected to in the code flow.
-        // 14 calls: 12 original leaves + clzero (0x80000008) + avx512_bmm (0x80000021)
+        // 14 calls: 12 original leaves + clzero (0x80000008) + avx512_bmm
+        // (0x80000021)
         auto callCount = 14;
         EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_)).Times(callCount);
     }

@@ -163,7 +163,7 @@ void
 Environ::_set(String const& key, String const& val)
 {
     AUD_ASSERT(key.length() != 0, "Key is empty");
-    //AUD_ASSERT(val.length() != 0, "Value of key/val pair is empty");
+    // AUD_ASSERT(val.length() != 0, "Value of key/val pair is empty");
 
     std::lock_guard<std::mutex> lock(m_lock);
     m_environ[key] = val;

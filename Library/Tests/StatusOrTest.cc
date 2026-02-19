@@ -94,21 +94,19 @@ TEST(StatusOr, WithQualifierStar)
 // Operator arrow with qualifiers
 TEST(StatusOr, WithQualifierArrow)
 {
-    static_assert(
-        std::is_same<
-            const int*,
-            decltype(std::declval<const StatusOr<int>&>().operator->())>(),
-        "invalid qualifiers");
+    static_assert(std::is_same<const int*,
+                               decltype(std::declval<const StatusOr<int>&>()
+                                            .operator->())>(),
+                  "invalid qualifiers");
     static_assert(
         std::is_same<int*,
                      decltype(std::declval<StatusOr<int>&>().operator->())>(),
         "invalid qualifier");
 
-    static_assert(
-        std::is_same<
-            const int*,
-            decltype(std::declval<const StatusOr<int>&&>().operator->())>(),
-        "invalid qualifier");
+    static_assert(std::is_same<const int*,
+                               decltype(std::declval<const StatusOr<int>&&>()
+                                            .operator->())>(),
+                  "invalid qualifier");
 
     static_assert(
         std::is_same<int*,
