@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -165,6 +165,14 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
 {
     X86Cpu cpu{ cpu_num };
     return cpu.isUarch(EUarch::Zen5);
+}
+
+AUD_API_EXPORT
+bool
+au_cpuid_arch_is_zen6(au_cpu_num_t cpu_num)
+{
+    X86Cpu cpu{ cpu_num };
+    return cpu.isUarch(EUarch::Zen6);
 }
 
 AUD_API_EXPORT

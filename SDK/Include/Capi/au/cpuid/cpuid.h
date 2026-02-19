@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -247,6 +247,31 @@ au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
  */
 AUD_API_EXPORT bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
+
+/**
+ * @brief          Allows caller to check if the processor arch is ZEN6.
+ *
+ * @details        This function is only meant for Zen based processors.
+ *                 |   AOCL 5.2   |  au_cpuid_arch_is_zen6()  |
+ *                 |:------------:|:------------------------:|
+ *                 |   Skylake    |          False           |
+ *                 |  Bulldozer   |          False           |
+ *                 |   Zen[X<5]   |          False           |
+ *                 |    Zen5      |          False           |
+ *                 |    Zen6      |          True            |
+ *                 |   Zen[X>6]   |          True            |
+ *
+ *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
+ *
+ *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
+ * will result in thread migration to the selected core.
+ *
+ * @param[in]      cpu_num   Any valid core number starting from 0.
+ *
+ * @return         Boolean, true if processor is Zen6 architecture.
+ */
+AUD_API_EXPORT bool
+au_cpuid_arch_is_zen6(au_cpu_num_t cpu_num);
 
 /**
  * @brief     Checks if processor is x86_64-v2 compliant
