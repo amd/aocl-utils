@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,6 +56,9 @@ using namespace Au;
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true, isZenFamily=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
+    // Zen6 server models (Family 0x1A)
+    { "Venice-v1",          { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen6 },
+
     // Zen5 server models (Family 0x1A)
     { "EPYC-Turin-Dense-v2", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
     { "EPYC-Turin-Dense-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
@@ -74,7 +77,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Krackan-Point-v1",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
     { "Krackan-Point-v2",  { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
     { "Sarlak-v1",         { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
-    
+
     // Zen4 server models (Family 0x19)
     { "EPYC-Genoa-v1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
     { "Storm-Peak-V1",     { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen4 },
@@ -138,7 +141,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "Raven-V1",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "Banded-Kestrel-V1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
     { "Raven-V2",             { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
-    
+
     // Feature flag fallback tests (unknown model numbers using flag-based detection)
     { "Mock-Zen17-Model25-CLWB",   { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen2 },
     { "Mock-Zen17-Model25-NoCLWB", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen },
@@ -167,6 +170,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
  */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
+    { "Venice-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x50, 0x0 } } },
     { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x10, 0x0 } } },
     { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
     { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x02, 0x0 } } },
@@ -184,7 +188,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Krackan-Point-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x60, 0x0 } } },
     { "Krackan-Point-v2",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x68, 0x0 } } },
     { "Sarlak-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x77, 0x0 } } },
-    
+
     // Zen4 client/desktop/server models (Family 0x19)
     { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x1 } } },
     { "Storm-Peak-V1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x18, 0x0 } } },
@@ -199,7 +203,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Bergamo-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
     { "Stones-Dense-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
     { "Siena-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
-    
+
     // Zen3 server models (Family 0x19)
     { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x1 } } },
     { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x2 } } },
@@ -282,7 +286,7 @@ class MockCpuidUtils : public CpuidUtils
         : CpuidUtils()
     {
     }
-    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)){};
+    MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)) {};
 };
 
 /**
