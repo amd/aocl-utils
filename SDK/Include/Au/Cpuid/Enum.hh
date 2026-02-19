@@ -47,12 +47,18 @@ using Uarch = EUarch;
 #define eZen3  Zen3
 #define eZen4  Zen4
 #define eZen5  Zen5
+#define eZen6  Zen6
 #define eOther Unknown
 
 #ifdef ALC_E_FLAG_SSSE3
 #undef ALC_E_FLAG_SSSE3
 #endif
 #define ALC_E_FLAG_SSSE3 ECpuidFlag::sse3
+
+#ifdef ALC_E_FLAG_TSX
+#undef ALC_E_FLAG_TSX
+#endif
+#define ALC_E_FLAG_TSX ECpuidFlag::rtm
 
 #ifdef ALC_E_FLAG_AES
 #undef ALC_E_FLAG_AES
@@ -153,6 +159,11 @@ using Uarch = EUarch;
 #undef ALC_E_FLAG_AVX512_VPOPCNTDQ
 #endif
 #define ALC_E_FLAG_AVX512_VPOPCNTDQ ECpuidFlag::avx512_vpopcntdq
+
+#ifdef ALC_E_FLAG_CLZERO
+#undef ALC_E_FLAG_CLZERO
+#endif
+#define ALC_E_FLAG_CLZERO ECpuidFlag::clzero
 
 #ifdef ALC_E_FLAG_AVXVNNI
 #undef ALC_E_FLAG_AVXVNNI
