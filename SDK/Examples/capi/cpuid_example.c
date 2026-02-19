@@ -70,7 +70,9 @@ display_isa_info()
 {
     int core_num = 0;
     printf("\nGetting ISA information for core 0\n");
-    if (au_cpuid_arch_is_zen5(core_num)) {
+    if (au_cpuid_arch_is_zen6(core_num)) {
+        printf("CPU supports zen6 ISA\n");
+    } else if (au_cpuid_arch_is_zen5(core_num)) {
         printf("CPU supports zen5 ISA\n");
     } else if (au_cpuid_arch_is_zen4(core_num)) {
         printf("CPU supports zen4 ISA\n");

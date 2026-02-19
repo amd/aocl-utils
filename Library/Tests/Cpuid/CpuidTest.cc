@@ -222,6 +222,8 @@ TEST(X86Cpu, BCTEST)
               << (core.isUarch(Uarch::eZen4) ? "YES" : "NO") << "\n";
     std::cout << "isUarchZen5      : "
               << (core.isUarch(Uarch::eZen5) ? "YES" : "NO") << "\n";
+    std::cout << "isUarchZen6      : "
+              << (core.isUarch(Uarch::eZen6) ? "YES" : "NO") << "\n";
 
     std::cout << "Features supported:\n-------------------\n";
     std::cout << "AVX support   : "

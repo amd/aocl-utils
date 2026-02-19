@@ -173,7 +173,9 @@ TEST(CapiX86Cpuid, BCTEST)
         printf("Unknown CPU detected...\n");
     }
     printf("\nGetting ISA information for core 0\n");
-    if (alci_arch_is_zen5(core_num)) {
+    if (au_cpuid_arch_is_zen6(core_num)) {
+        printf("CPU supports zen6 ISA\n");
+    } else if (alci_arch_is_zen5(core_num)) {
         printf("CPU supports zen5 ISA\n");
     } else if (alci_arch_is_zen4(core_num)) {
         printf("CPU supports zen4 ISA\n");
@@ -203,7 +205,9 @@ TEST(CapiX86Cpuid, BCTEST)
         printf("Unknown CPU detected...\n");
     }
     printf("\nGetting ISA information for core 0\n");
-    if (alcpu_arch_is_zen5()) {
+    if (au_cpuid_arch_is_zen6(0)) {
+        printf("CPU supports zen6 ISA\n");
+    } else if (alcpu_arch_is_zen5()) {
         printf("CPU supports zen5 ISA\n");
     } else if (alcpu_arch_is_zen4()) {
         printf("CPU supports zen4 ISA\n");
