@@ -56,6 +56,7 @@ simnowdata
 * `au_cpuid_arch_is_zen3`
 * `au_cpuid_arch_is_zen4`
 * `au_cpuid_arch_is_zen5`
+* `au_cpuid_arch_is_zen6`
 
 For all AMD CPU modules provided by QEMU and below Intel CPUs:
 

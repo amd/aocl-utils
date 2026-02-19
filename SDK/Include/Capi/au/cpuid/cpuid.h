@@ -104,8 +104,8 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  *                 |   Bulldozer    |          False           |
  *                 |     Zen1/1+    |          True            |
  *                 |      Zen2      |          True            |
- *                 |   Zen[3,4,5]   |          True            |
- *                 |   Zen[X>5]     |          True            |
+ *                 |   Zen[3,4,5,6]   |          True            |
+ *                 |   Zen[X>6]     |          True            |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -132,8 +132,8 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  *                 |   Bulldozer    |           False              |
  *                 |     Zen1/1+    |           True               |
  *                 |      Zen2      |           True               |
- *                 |   Zen[3,4,5]   |           True               |
- *                 |   Zen[X>5]     |           True               |
+ *                 |   Zen[3,4,5,6]   |           True               |
+ *                 |   Zen[X>6]     |           True               |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -157,8 +157,8 @@ au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
  *                 |   Bulldozer    |          False            |
  *                 |     Zen1/1+    |          False            |
  *                 |      Zen2      |          True             |
- *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          True             |
+ *                 |   Zen[3,4,5,6]   |          True             |
+ *                 |   Zen[X>6]     |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -183,8 +183,8 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
  *                 |   Bulldozer    |          False            |
  *                 |     Zen1/1+    |          False            |
  *                 |      Zen2      |          False            |
- *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          True             |
+ *                 |   Zen[3,4,5,6]   |          True             |
+ *                 |   Zen[X>6]     |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -208,8 +208,8 @@ au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
  *                 |  Bulldozer  |          False            |
  *                 |   Zen[X<3]  |          False            |
  *                 |    Zen3     |          False            |
- *                 |   Zen[4,5]  |          True             |
- *                 |   Zen[X>5]  |          True             |
+ *                 |   Zen[4,5,6]  |          True             |
+ *                 |   Zen[X>6]  |          True             |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -234,7 +234,8 @@ au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
  *                 |   Zen[X<4]   |          False           |
  *                 |    Zen4      |          False           |
  *                 |    Zen5      |          True            |
- *                 |   Zen[X>5]   |          True            |
+ *                 |    Zen6      |          True            |
+ *                 |   Zen[X>6]   |          True            |
  *
  *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
  *
@@ -300,7 +301,8 @@ au_cpuid_arch_is_zen6(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
- *            |   Zen[X>5]     |            True               |
+ *            |     Zen6       |            True               |
+ *            |   Zen[X>6]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -337,7 +339,8 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
  *            |     Zen5       |            True               |
- *            |   Zen[X>5]     |            True               |
+ *            |     Zen6       |            True               |
+ *            |   Zen[X>6]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -373,7 +376,8 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            |      Zen3      |            True               |
  *            |      Zen4      |            True               |
  *            |      Zen5      |            True               |
- *            |   Zen[X>5]     |            True               |
+ *            |      Zen6      |            True               |
+ *            |   Zen[X>6]     |            True               |
  *
  * @param[in]      cpu_num   CPU number.
  *
@@ -396,7 +400,8 @@ au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
  *                 |      Zen3      |              True               |
  *                 |      Zen4      |              True               |
  *                 |      Zen5      |              True               |
- *                 |   Zen[X>5]     |              True               |
+ *                 |      Zen6      |              True               |
+ *                 |   Zen[X>6]     |              True               |
  *
  *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
  *  will result in thread migration to the selected core.
