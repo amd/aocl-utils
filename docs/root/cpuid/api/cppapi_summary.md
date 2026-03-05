@@ -3,7 +3,6 @@
 ## Behaviour of `X86Cpu.isUarch`
 
 X86Cpu.isUarch supports two arguments.
-- EUarch - Micro Architecture {Zen, Zen2, Zen3, Zen4, Zen5}
 - EUarch - Micro Architecture {Zen, Zen2, Zen3, Zen4, Zen5, Zen6}
 - strict - Bool {True/False}
 
