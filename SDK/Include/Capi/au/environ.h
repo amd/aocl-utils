@@ -39,7 +39,7 @@ AUD_EXTERN_C_BEGIN
 /**
  * @brief Initialize environment from applications's "const char * envp[]"
  *
- * @param[in]  Pointer to array of strings (null-terminated)
+ * @param[in]  envp  Pointer to array of strings (null-terminated)
  *
  * @return None
  */

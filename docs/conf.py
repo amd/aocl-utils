@@ -121,4 +121,4 @@ breathe_default_project = "aoclutils"
 breathe_default_members = ('members', 'undoc-members')
 myst_title_to_header = True
 myst_heading_anchors = 3
-suppress_warnings = ["myst.header", "myst.xref_missing"]
+suppress_warnings = ["myst.header", "myst.xref_missing", "autosectionlabel.*", "toc.not_included"]

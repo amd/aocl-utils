@@ -39,7 +39,13 @@
 AUD_EXTERN_C_BEGIN
 
 #if !defined(au_cpu_num_t)
+/**
+ * @brief CPU number type
+ */
 typedef Uint32 au_cpu_num_t;
+/**
+ * @brief CPU flag type
+ */
 typedef Uint32 au_cpu_flag_t;
 #endif
 
@@ -51,7 +57,7 @@ typedef Uint32 au_cpu_flag_t;
  *                 |:--------------:|:-------------------:|
  *                 |    Skylake     |        False        |
  *                 |   Bulldozer    |        True         |
- *                 |      Zen1      |        True         |
+ *                 |     Zen1/1+    |        True         |
  *                 |      Zen2      |        True         |
  *                 |      Zen3      |        True         |
  *                 |      Zen4      |        True         |
@@ -79,8 +85,8 @@ au_cpuid_is_amd(au_cpu_num_t cpu_num);
  *  will result in thread migration to the selected core.
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[out]     vend_info Vendor info array
- * [VendorID\nFamilyID\nModelID\nSteppingID\nUarchID]
+ * @param[out]     vend_info Vendor info array containing newline-separated
+ * values: VendorID, FamilyID, ModelID, SteppingID, UarchID
  * @param[in]      size      Size of Vendor info array in bytes.
  *
  * @return         None
@@ -89,14 +95,14 @@ AUD_API_EXPORT void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZEN1.
+ * @brief          Allows caller to check if the processor arch is Zen1/1+.
  *
  * @details        This function is only meant for Zen based processors.
  *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen()  |
  *                 |:--------------:|:------------------------:|
  *                 |    Skylake     |          False           |
  *                 |   Bulldozer    |          False           |
- *                 |      Zen1      |          True            |
+ *                 |     Zen1/1+    |          True            |
  *                 |      Zen2      |          True            |
  *                 |   Zen[3,4,5]   |          True            |
  *                 |   Zen[X>5]     |          True            |
@@ -108,7 +114,7 @@ au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
  *
- * @return         Boolean, true if processor is Zen1 architecture.
+ * @return         Boolean, true if processor is Zen1/1+ architecture.
  */
 AUD_API_EXPORT bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
@@ -124,7 +130,7 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  *                 |:--------------:|:----------------------------:|
  *                 |    Skylake     |           False              |
  *                 |   Bulldozer    |           False              |
- *                 |      Zen1      |           True               |
+ *                 |     Zen1/1+    |           True               |
  *                 |      Zen2      |           True               |
  *                 |   Zen[3,4,5]   |           True               |
  *                 |   Zen[X>5]     |           True               |
@@ -136,7 +142,7 @@ au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
  *
  * @param[in]      cpu_num   Any valid core number starting from 0.
  *
- * @return         Boolean, true if processor is Zen1 or higher architecture.
+ * @return         Boolean, true if processor is Zen1/1+ or higher architecture.
  */
 AUD_API_EXPORT bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
@@ -149,7 +155,7 @@ au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
  *                 |:--------------:|:-------------------------:|
  *                 |    Skylake     |          False            |
  *                 |   Bulldozer    |          False            |
- *                 |      Zen1      |          False            |
+ *                 |     Zen1/1+    |          False            |
  *                 |      Zen2      |          True             |
  *                 |   Zen[3,4,5]   |          True             |
  *                 |   Zen[X>5]     |          True             |
@@ -175,7 +181,7 @@ au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
  *                 |:--------------:|:-------------------------:|
  *                 |    Skylake     |          False            |
  *                 |   Bulldozer    |          False            |
- *                 |      Zen1      |          False            |
+ *                 |     Zen1/1+    |          False            |
  *                 |      Zen2      |          False            |
  *                 |   Zen[3,4,5]   |          True             |
  *                 |   Zen[X>5]     |          True             |
@@ -264,7 +270,7 @@ au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
  *            |   Broadwell    |            True               |
  *            |    Skylake     |            True               |
  *            |   Bulldozer    |            True               |
- *            |     Zen1       |            True               |
+ *            |    Zen1/1+     |            True               |
  *            |     Zen2       |            True               |
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
@@ -301,7 +307,7 @@ au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
  *            |   Broadwell    |            True               |
  *            |    Skylake     |            True               |
  *            |   Bulldozer    |            True               |
- *            |     Zen1       |            True               |
+ *            |    Zen1/1+     |            True               |
  *            |     Zen2       |            True               |
  *            |     Zen3       |            True               |
  *            |     Zen4       |            True               |
@@ -337,7 +343,7 @@ au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
  *            |    Broadwell   |            False              |
  *            |     Skylake    |            True               |
  *            |    Bulldozer   |            True               |
- *            |      Zen1      |            True               |
+ *            |     Zen1/1+    |            True               |
  *            |      Zen2      |            True               |
  *            |      Zen3      |            True               |
  *            |      Zen4      |            True               |
@@ -360,7 +366,7 @@ au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
  *                 |:--------------:|:-------------------------------:|
  *                 |    Skylake     |              False              |
  *                 |   Bulldozer    |              False              |
- *                 |      Zen1      |              True               |
+ *                 |     Zen1/1+    |              True               |
  *                 |      Zen2      |              True               |
  *                 |      Zen3      |              True               |
  *                 |      Zen4      |              True               |

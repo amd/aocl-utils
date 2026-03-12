@@ -54,31 +54,25 @@ typedef enum
 } au_cpu_cache_type_t;
 
 /**
- * @brief
+ * @brief Get CPU cache size information
  *
- * @param
- *
- * @return
+ * @return Error code indicating success or failure
  **/
 au_error_t
 au_cpu_cache_get_size();
 
 /**
- * @brief
+ * @brief Get CPU cache way/associativity information
  *
- * @param
- *
- * @return
+ * @return Error code indicating success or failure
  **/
 au_error_t
 au_cpu_cache_get_way();
 
 /**
- * @brief
+ * @brief Get CPU cache lane information
  *
- * @param
- *
- * @return
+ * @return Error code indicating success or failure
  **/
 au_error_t
 au_cpu_cache_get_lane();

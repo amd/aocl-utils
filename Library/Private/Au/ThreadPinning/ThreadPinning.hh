@@ -20,15 +20,21 @@
  * THE SOFTWARE.
  */
 #pragma once
+#include "Au/Config.h"
 #include <algorithm>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <thread>
 #include <vector>
 
-#ifdef __linux__
+#if defined(AU_TARGET_OS_IS_LINUX)
 #include "Au/ThreadPinning/Linux/CpuTopology.hh"
-#else
+#ifndef __CYGWIN__
+#include <pthread.h>
+#include <sched.h>
+#endif
+#elif defined(AU_TARGET_OS_IS_WINDOWS)
 #include "Au/ThreadPinning/Windows/CpuTopology.hh"
 #include <windows.h>
 #endif
@@ -381,17 +387,21 @@ class AffinityVector
         getCacheAffinityMap(procVect.size(), cacheMap);
 
         for (auto& cache : cacheMap) {
-            if (cpuInfo.cacheMap.size() != 0){
+            if (cpuInfo.cacheMap.size() != 0) {
                 auto             processorMap = cpuInfo.cacheMap[cache.first];
                 std::vector<int> coreList;
                 coreMapToCoreList(processorMap, coreList);
 
                 int              threadCount = cache.second.size();
                 std::vector<int> procVectPerCache(threadCount);
-                createVector(
-                    procVectPerCache, 0, threadCount - 1, 0, coreList.size() - 1);
+                createVector(procVectPerCache,
+                             0,
+                             threadCount - 1,
+                             0,
+                             coreList.size() - 1);
                 if (procVectPerCache.size() != 0 && coreList.size() != 0)
-                    updateprocVect(procVect, procVectPerCache, coreList, cache.second);
+                    updateprocVect(
+                        procVect, procVectPerCache, coreList, cache.second);
             }
         }
     }
@@ -493,12 +503,12 @@ class AffinityVector
             // Pin the thread to the processor
             AUD_ASSERT(processorList[i] < std::thread::hardware_concurrency(),
                        "Invalid processor Id");
-#ifdef __linux__
+#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
             CPU_SET(processorList[i], &cpuset);
             pthread_setaffinity_np(threadList[i], sizeof(cpu_set_t), &cpuset);
-#else
+#elif defined(AU_TARGET_OS_IS_WINDOWS)
             GROUP_AFFINITY groupAffinity;
             ZeroMemory(&groupAffinity, sizeof(GROUP_AFFINITY));
             // calculate the group and mask from the processor number and
@@ -523,9 +533,9 @@ class AffinityVector
                 std::cout << "SetThreadGroupAffinity Failed\n";
             }
 #endif
-        std::cout << "Thread " << threadList[i] << " is pinned to processor "
-                  << processorList[i] << std::endl;
-
+            std::cout << "Thread " << threadList[i]
+                      << " is pinned to processor " << processorList[i]
+                      << std::endl;
         }
     }
 };

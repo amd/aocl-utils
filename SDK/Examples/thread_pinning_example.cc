@@ -20,14 +20,15 @@
  * THE SOFTWARE.
  */
 
+#include "Au/Config.h"
 #include "Au/ThreadPinning.hh"
 #include <iostream>
 #include <thread>
 #include <vector>
 
-#ifdef _WIN32
+#ifdef AU_TARGET_OS_IS_WINDOWS
 #include <windows.h>
-#else
+#elif defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
 #include <pthread.h>
 #include <sched.h>
 #endif
@@ -45,7 +46,7 @@ printThreadId(int id)
 void
 checkThreadAffinity(std::thread& thread)
 {
-#ifdef _WIN32
+#ifdef AU_TARGET_OS_IS_WINDOWS
     // Get the native handle of the thread
     HANDLE handle = (HANDLE)thread.native_handle();
 
@@ -58,7 +59,7 @@ checkThreadAffinity(std::thread& thread)
     } else {
         std::cout << "groupAffinity.mask" << groupAffinity.Mask << std::endl;
     }
-#else
+#elif defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
     // Get the native handle of the thread
     pthread_t handle = thread.native_handle();
     // Create a CPU set and get the current affinity
@@ -71,6 +72,11 @@ checkThreadAffinity(std::thread& thread)
     } else {
         std::cout << " affinity mask: " << cpuset.__bits[0] << std::endl;
     }
+#else
+    // Cygwin/MSYS2 - thread affinity not supported
+    std::cout << "Thread affinity check not supported on this platform"
+              << std::endl;
+    (void)thread; // Suppress unused parameter warning
 #endif
 }
 
