@@ -410,7 +410,7 @@ class SimNowDecoder:
                                       Colors.YELLOW))
 
             return True
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, ValueError) as e:
             print(colorize(f"Error reading file: {e}", Colors.RED, Colors.BOLD))
             return False
 
