@@ -10,7 +10,6 @@ Usage:
     python scripts/decode_simnow.py -f ./Library/Tests/Cpuid/Mock/simnowdata/EPYC-Genoa-v1/EPYC-Genoa-v1
 
 Author: AOCL-Utils Team
-Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
 """
 
 import argparse
@@ -313,13 +312,9 @@ CPUID_FLAGS: List[FlagDefinition] = [
 ]
 
 
-# Family and Model mappings for microarchitecture detection
-FAMILY_NAMES = {
-    0x17: "Zen/Zen+/Zen2",
-    0x19: "Zen3/Zen4",
-    0x1A: "Zen5/Zen6",
-}
-
+# Family and Model mappings for microarchitecture detection.
+# UARCH_DETECTION carries the human-readable family description as
+# `name`; a separate FAMILY_NAMES table would just be a stale duplicate.
 UARCH_DETECTION = {
     # Family 0x17 (Zen, Zen+, Zen2)
     0x17: {
@@ -415,19 +410,23 @@ class SimNowDecoder:
             return False
 
     def get_cpuid(self, leaf: int, subleaf: int = 0) -> Optional[Tuple[int, int, int, int]]:
-        """Get CPUID output for a given leaf and subleaf."""
-        # Fast path: SimNow rows are typically emitted with EBX_in=EDX_in=0,
-        # so a direct dict lookup catches the common case in O(1).
+        """Get CPUID output for a given (leaf, subleaf).
+
+        Returns None if no row matches the requested subleaf - we
+        deliberately do NOT fall through to a row with a different
+        subleaf, because that would silently misclassify subleaf-1
+        flags as subleaf-0 (e.g. CPUID.(0x7,1) bits read out of
+        CPUID.(0x7,0)).
+        """
+        # Fast path: SimNow rows are typically emitted with
+        # EBX_in=EDX_in=0, so a direct dict lookup is O(1).
         direct = self.cpuid_data.get((leaf, 0, subleaf, 0))
         if direct is not None:
             return direct
-        # Fall back to a scan for rows that carry non-zero EBX_in/EDX_in,
-        # then for any row matching the leaf with a different subleaf.
+        # Fall back to a scan for rows that carry non-zero EBX_in/EDX_in
+        # but still match the requested (leaf, subleaf).
         for key, value in self.cpuid_data.items():
             if key[0] == leaf and key[2] == subleaf:
-                return value
-        for key, value in self.cpuid_data.items():
-            if key[0] == leaf:
                 return value
         return None
 

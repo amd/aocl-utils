@@ -28,7 +28,6 @@ import ctypes.util
 import mmap
 import os
 import platform
-import struct
 import sys
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -158,7 +157,10 @@ class CpuidExecutor:
             0xc3,                           # ret
         ])
 
-        # Allocate executable memory.
+        # Allocate writable memory, copy shellcode, then flip to RX via
+        # mprotect. Avoids holding a writable+executable (RWX) mapping,
+        # which W^X-enforcing systems (PaX/grsec, recent SELinux profiles,
+        # macOS hardened runtime) will outright reject.
         # MAP_ANONYMOUS exists on Linux; macOS / *BSDs spell it MAP_ANON.
         if hasattr(mmap, 'MAP_ANONYMOUS'):
             anon_flag = mmap.MAP_ANONYMOUS
@@ -171,20 +173,32 @@ class CpuidExecutor:
         self._code_buffer = mmap.mmap(
             -1,  # anonymous mapping
             self._code_size,
-            prot=mmap.PROT_READ | mmap.PROT_WRITE | mmap.PROT_EXEC,
+            prot=mmap.PROT_READ | mmap.PROT_WRITE,
             flags=mmap.MAP_PRIVATE | anon_flag
         )
 
-        # Copy shellcode to executable memory
+        # Copy shellcode while the page is still writable.
         self._code_buffer.write(shellcode_x64)
         self._code_buffer.seek(0)
 
-        # Create ctypes function pointer
-        # Define function type: void cpuid(uint32_t* input, uint32_t* output)
-        CPUID_FUNC = ctypes.CFUNCTYPE(None, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_uint32))
-
-        # Get address of the executable buffer
+        # Get address of the buffer (needed for both mprotect and ctypes).
         buf_addr = ctypes.addressof(ctypes.c_char.from_buffer(self._code_buffer))
+
+        # Flip the page to read+execute via libc mprotect.
+        libc_path = ctypes.util.find_library("c")
+        if libc_path is None:
+            raise RuntimeError("Could not locate libc for mprotect()")
+        libc = ctypes.CDLL(libc_path, use_errno=True)
+        libc.mprotect.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int]
+        libc.mprotect.restype = ctypes.c_int
+        if libc.mprotect(buf_addr, self._code_size,
+                         mmap.PROT_READ | mmap.PROT_EXEC) != 0:
+            err = ctypes.get_errno()
+            raise OSError(err, f"mprotect(RX) failed: {os.strerror(err)}")
+
+        # Create ctypes function pointer.
+        # void cpuid(uint32_t* input, uint32_t* output)
+        CPUID_FUNC = ctypes.CFUNCTYPE(None, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_uint32))
         self._cpuid_func = CPUID_FUNC(buf_addr)
 
     def _setup_windows_method(self):
@@ -369,9 +383,15 @@ class SimNowGenerator:
         """
         try:
             if as_directory:
-                # Create directory and put file inside with same name as directory
-                output_dir = output_path
-                dir_name = os.path.basename(output_path)
+                # Create directory and put file inside with same name as
+                # directory. Normalize first so a trailing slash
+                # (e.g. "./out/") doesn't strip the basename.
+                output_dir = os.path.normpath(output_path)
+                dir_name = os.path.basename(output_dir)
+                if not dir_name:
+                    raise ValueError(
+                        f"--output path must name a directory, got: {output_path!r}"
+                    )
                 actual_file_path = os.path.join(output_dir, dir_name)
 
                 if not os.path.exists(output_dir):
