@@ -10,8 +10,16 @@ Usage:
     python scripts/generate_simnow.py -o ./output_cpuid_data
     python scripts/generate_simnow.py -o ./Library/Tests/Cpuid/Mock/simnowdata/MyMachine/MyMachine
 
+Security note:
+    The Linux/macOS path allocates an executable mmap region (PROT_EXEC) and
+    the Windows path uses VirtualAlloc with PAGE_EXECUTE_READWRITE so that
+    a small piece of x86-64 machine code (CPUID + 4 register stores + RET)
+    can be invoked via ctypes. This is required to read raw CPUID without
+    a kernel module. Run only in trusted developer environments; some
+    hardened systems (W^X enforcement, SELinux, exec-mem guards) will block
+    the executable mapping.
+
 Author: AOCL-Utils Team
-Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
 """
 
 import argparse
@@ -19,10 +27,16 @@ import ctypes
 import ctypes.util
 import mmap
 import os
+import platform
 import struct
 import sys
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
+
+# Number of additional characters that ANSI escape sequences add to a
+# colorized key label (one wrapping pair: "\033[33m" + "\033[0m" = 4 + 8 = 12).
+# Used to compensate the format-spec width when aligning colorized columns.
+_ANSI_KEY_PADDING = 12
 
 # ANSI Color codes for terminal output
 class Colors:
@@ -83,6 +97,15 @@ class CpuidExecutor:
 
     def _setup_cpuid(self):
         """Set up the CPUID execution method."""
+        # The shellcode in both _setup_mmap_method and _setup_windows_method is
+        # x86-64 only. Refuse early on any other architecture so we don't
+        # SIGILL or, worse, silently emit zero-filled CPUID dumps.
+        machine = platform.machine().lower()
+        if machine not in ('x86_64', 'amd64'):
+            raise RuntimeError(
+                f"generate_simnow.py only supports x86_64/AMD64; got '{machine}'"
+            )
+
         # Try different methods in order of preference
 
         # Method 1: Use ctypes with inline assembly via mmap (Linux/macOS)
@@ -103,9 +126,13 @@ class CpuidExecutor:
             except Exception as e:
                 print(colorize(f"Warning: Windows method failed: {e}", Colors.YELLOW))
 
-        # Method 3: Fallback - try to read from /proc/cpuinfo or similar
-        self._method = 'fallback'
-        print(colorize("Warning: Using fallback method - limited CPUID data", Colors.YELLOW))
+        # No working method - bail out instead of silently producing a
+        # zero-filled SimNow file that the mock harness would accept as
+        # legitimate CPU data.
+        raise RuntimeError(
+            "Could not establish a working CPUID execution method on this "
+            "platform (sys.platform=" + sys.platform + ")."
+        )
 
     def _setup_mmap_method(self):
         """Set up CPUID execution using mmap for executable memory."""
@@ -131,13 +158,21 @@ class CpuidExecutor:
             0xc3,                           # ret
         ])
 
-        # Allocate executable memory
+        # Allocate executable memory.
+        # MAP_ANONYMOUS exists on Linux; macOS / *BSDs spell it MAP_ANON.
+        if hasattr(mmap, 'MAP_ANONYMOUS'):
+            anon_flag = mmap.MAP_ANONYMOUS
+        elif hasattr(mmap, 'MAP_ANON'):
+            anon_flag = mmap.MAP_ANON
+        else:
+            raise RuntimeError("Anonymous mmap not supported on this platform")
+
         self._code_size = len(shellcode_x64)
         self._code_buffer = mmap.mmap(
             -1,  # anonymous mapping
             self._code_size,
             prot=mmap.PROT_READ | mmap.PROT_WRITE | mmap.PROT_EXEC,
-            flags=mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS
+            flags=mmap.MAP_PRIVATE | anon_flag
         )
 
         # Copy shellcode to executable memory
@@ -204,9 +239,6 @@ class CpuidExecutor:
         Returns:
             CpuidResult with EAX, EBX, ECX, EDX values
         """
-        if self._method == 'fallback':
-            return self._fallback_cpuid(leaf, subleaf)
-
         # Create input/output arrays
         input_arr = (ctypes.c_uint32 * 2)(leaf, subleaf)
         output_arr = (ctypes.c_uint32 * 4)(0, 0, 0, 0)
@@ -221,20 +253,23 @@ class CpuidExecutor:
             edx=output_arr[3]
         )
 
-    def _fallback_cpuid(self, leaf: int, subleaf: int) -> CpuidResult:
-        """Fallback method using /proc/cpuinfo or similar."""
-        # Return zeros for unsupported method
-        return CpuidResult(eax=0, ebx=0, ecx=0, edx=0)
-
     def __del__(self):
-        """Clean up allocated memory."""
-        if hasattr(self, '_code_buffer') and self._code_buffer:
-            if sys.platform == 'win32':
-                kernel32 = ctypes.windll.kernel32
-                MEM_RELEASE = 0x8000
-                kernel32.VirtualFree(self._code_buffer, 0, MEM_RELEASE)
-            else:
-                self._code_buffer.close()
+        """Clean up allocated memory.
+
+        Guarded against partially-initialised instances: if _setup_cpuid
+        raises before _method or _code_buffer exists (e.g. unsupported
+        architecture), the destructor must not itself raise AttributeError.
+        """
+        if not hasattr(self, '_method'):
+            return
+        if not getattr(self, '_code_buffer', None):
+            return
+        if sys.platform == 'win32':
+            kernel32 = ctypes.windll.kernel32
+            MEM_RELEASE = 0x8000
+            kernel32.VirtualFree(self._code_buffer, 0, MEM_RELEASE)
+        else:
+            self._code_buffer.close()
 
 
 class SimNowGenerator:
@@ -389,7 +424,7 @@ class SimNowGenerator:
             CPUID_FLAGS = decode_module.CPUID_FLAGS
         except Exception as e:
             print(colorize(f"Warning: Could not import flag definitions: {e}", Colors.YELLOW))
-            return False
+            return False, []
 
         present_flags = []
         absent_flags = []
@@ -399,9 +434,9 @@ class SimNowGenerator:
             if key in self.cpuid_data:
                 result = self.cpuid_data[key]
 
-                # Get the appropriate register value
-                reg_map = {'eax': 'eax', 'ebx': 'ebx', 'ecx': 'ecx', 'edx': 'edx'}
-                reg_value = getattr(result, reg_map[flag_def.register])
+                # CpuidResult fields are named eax/ebx/ecx/edx, matching the
+                # register name in flag_def.register exactly.
+                reg_value = getattr(result, flag_def.register)
 
                 # Check if flag is set
                 if reg_value & flag_def.bit_mask:
@@ -458,7 +493,7 @@ def print_section(title: str, width: int = 80):
 def print_key_value(key: str, value: str, key_width: int = 20):
     """Print a key-value pair."""
     key_str = colorize(f"  {key}:", Colors.YELLOW)
-    print(f"{key_str:<{key_width + 12}} {value}")
+    print(f"{key_str:<{key_width + _ANSI_KEY_PADDING}} {value}")
 
 
 def main():

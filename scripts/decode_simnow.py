@@ -416,11 +416,16 @@ class SimNowDecoder:
 
     def get_cpuid(self, leaf: int, subleaf: int = 0) -> Optional[Tuple[int, int, int, int]]:
         """Get CPUID output for a given leaf and subleaf."""
-        # Try exact match first
+        # Fast path: SimNow rows are typically emitted with EBX_in=EDX_in=0,
+        # so a direct dict lookup catches the common case in O(1).
+        direct = self.cpuid_data.get((leaf, 0, subleaf, 0))
+        if direct is not None:
+            return direct
+        # Fall back to a scan for rows that carry non-zero EBX_in/EDX_in,
+        # then for any row matching the leaf with a different subleaf.
         for key, value in self.cpuid_data.items():
             if key[0] == leaf and key[2] == subleaf:
                 return value
-        # Try with subleaf = 0 if not found
         for key, value in self.cpuid_data.items():
             if key[0] == leaf:
                 return value
@@ -558,10 +563,14 @@ def print_section(title: str, width: int = 80):
           colorize("─" * (width - len(title) - 5), Colors.BRIGHT_BLACK))
 
 
+_ANSI_KEY_PADDING = 12  # Compensates the format-spec width for invisible
+                        # ANSI escape sequences wrapping the colorized key.
+
+
 def print_key_value(key: str, value: str, key_width: int = 20):
     """Print a key-value pair."""
     key_str = colorize(f"  {key}:", Colors.YELLOW)
-    print(f"{key_str:<{key_width + 12}} {value}")
+    print(f"{key_str:<{key_width + _ANSI_KEY_PADDING}} {value}")
 
 
 def print_flags_grid(flags: List[str], present: bool, columns: int = 6):
