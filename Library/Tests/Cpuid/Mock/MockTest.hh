@@ -58,6 +58,7 @@ auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
     // Zen6 server models (Family 0x1A)
     { "Venice-v1",          { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen6 },
+    { "Venice-Dense-v1",    { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen6 },
 
     // Zen5 server models (Family 0x1A)
     { "EPYC-Turin-Dense-v2", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
@@ -171,6 +172,7 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Venice-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x50, 0x0 } } },
+    { "Venice-Dense-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x51, 0x0 } } },
     { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x10, 0x0 } } },
     { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
     { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x02, 0x0 } } },
