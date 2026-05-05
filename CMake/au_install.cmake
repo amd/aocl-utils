@@ -76,7 +76,7 @@ function(au_install_package_config)
 
     # Install the export targets file
     install(EXPORT ${AU_INSTALL_EXPORT_NAME}
-        FILE ${AU_INSTALL_CMAKE_CONFIG_NAME}
+        FILE ${AU_INSTALL_CMAKE_TARGETS_FILE_NAME}
         NAMESPACE AoclUtils::
         DESTINATION "${AU_INSTALL_CMAKE_CONFIG_DIR}"
     )

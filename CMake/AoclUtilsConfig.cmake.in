@@ -61,17 +61,25 @@ find_dependency(Threads REQUIRED)
 get_filename_component(AoclUtils_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
 # Include the targets file which defines the actual targets
-if(NOT TARGET AoclUtils::aoclutils)
+if(NOT TARGET AoclUtils::aoclutils AND NOT TARGET AoclUtils::aoclutils_shared)
     include("${AoclUtils_CMAKE_DIR}/AoclUtilsTargets.cmake")
 endif()
 
-# Set up legacy variables for compatibility and create expected aliases
+# Set up legacy variables for compatibility and create expected aliases.
+# Handle both static-only, shared-only, and combined builds.
 if(TARGET AoclUtils::aoclutils)
     get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::aoclutils INTERFACE_INCLUDE_DIRECTORIES)
     set(AoclUtils_LIBRARIES AoclUtils::aoclutils)
     set(AoclUtils_STATIC_LIBRARY AoclUtils::aoclutils)
     if(NOT TARGET AoclUtils::aocl-utils)
         add_library(AoclUtils::aocl-utils ALIAS AoclUtils::aoclutils)
+    endif()
+elseif(TARGET AoclUtils::aoclutils_shared)
+    # Shared-only build: provide canonical alias from the shared target
+    get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::aoclutils_shared INTERFACE_INCLUDE_DIRECTORIES)
+    set(AoclUtils_LIBRARIES AoclUtils::aoclutils_shared)
+    if(NOT TARGET AoclUtils::aocl-utils)
+        add_library(AoclUtils::aocl-utils ALIAS AoclUtils::aoclutils_shared)
     endif()
 endif()
 
@@ -82,19 +90,19 @@ if(TARGET AoclUtils::aoclutils_shared)
     endif()
 endif()
 
-# Check available components/targets
+# Check available components/targets — check both static and shared variants
 set(_aoclUtils_available_components "")
-if(TARGET AoclUtils::aoclutils)
+if(TARGET AoclUtils::aoclutils OR TARGET AoclUtils::aoclutils_shared)
     list(APPEND _aoclUtils_available_components "aocl-utils")
 endif()
-if(TARGET AoclUtils::au_cpuid)
+if(TARGET AoclUtils::au_cpuid OR TARGET AoclUtils::au_cpuid_shared)
     list(APPEND _aoclUtils_available_components "au_cpuid")
 endif()
 
 # Handle component-specific requests
 if(AoclUtils_FIND_COMPONENTS)
     foreach(_comp ${AoclUtils_FIND_COMPONENTS})
-        if(NOT TARGET AoclUtils::${_comp})
+        if(NOT TARGET AoclUtils::${_comp} AND NOT TARGET AoclUtils::${_comp}_shared)
             if(AoclUtils_FIND_REQUIRED_${_comp})
                 set(AoclUtils_FOUND False)
                 set(AoclUtils_NOT_FOUND_MESSAGE "Required component ${_comp} not found")
