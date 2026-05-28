@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -38,8 +38,35 @@ option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
 option(AU_BUILD_WITH_TSAN "Enable TSAN Options on build" OFF)
 option(AU_BUILD_WITH_MEMSAN "Enable MEMSAN Options on build" OFF)
 option(AU_ENABLE_CODE_COVERAGE "Enable Code coverage on build" OFF)
-option(AU_BUILD_STATIC_LIBS "Build static libraries" ON)
-option(AU_BUILD_SHARED_LIBS "Build shared libraries" ON)
+# Default the stock CMake BUILD_SHARED_LIBS switch to ON so this project
+# behaves canonically: callers using the standard CMake idiom get a shared
+# library by default, while -DBUILD_SHARED_LIBS=OFF cleanly disables it.
+# Declaring it via option() also types the cache entry (avoids the
+# :UNINITIALIZED label) and is a no-op if a parent project or the user
+# already set it on the command line.
+option(BUILD_SHARED_LIBS "Build shared libraries by default" ON)
+
+# AOCL policy: the static library is built by default. Users may still opt
+# out explicitly with -DAU_BUILD_STATIC_LIBS=OFF.
+option(AU_BUILD_STATIC_LIBS "Build static libraries (AOCL policy: default ON)" ON)
+
+# AU_BUILD_SHARED_LIBS follows BUILD_SHARED_LIBS, so toggling the standard
+# switch also toggles the shared library build here. AU_BUILD_SHARED_LIBS
+# can still be set explicitly to override that default per build.
+option(AU_BUILD_SHARED_LIBS "Build shared libraries" ${BUILD_SHARED_LIBS})
+
+# Catch the contradictory combination explicitly. Without this check the
+# value the user passed on -D wins silently (option() is a no-op when the
+# cache entry already exists) and the build behaves opposite to what the
+# canonical BUILD_SHARED_LIBS switch implied.
+if(NOT BUILD_SHARED_LIBS AND AU_BUILD_SHARED_LIBS)
+    message(FATAL_ERROR
+        "Conflicting options: BUILD_SHARED_LIBS=OFF disables shared library "
+        "builds, but AU_BUILD_SHARED_LIBS=ON requests one. Re-run cmake with "
+        "-DBUILD_SHARED_LIBS=ON to build the shared library, or drop "
+        "-DAU_BUILD_SHARED_LIBS=ON to honor BUILD_SHARED_LIBS=OFF.")
+endif()
+
 option(AU_CMAKE_VERBOSE "Set cmake verbosity" OFF)
 
 # Sub options for docs
@@ -97,6 +124,3 @@ elseif(AU_BUILD_TYPE_DEBUG)
 elseif(AU_BUILD_TYPE_RELWITHDEBINFO)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PROJECT_BINARY_DIR}/RelWithDebInfo)
 endif()
-
-
-option(AU_BUILD_SHARED_LIBS "Build shared libraries" OFF)
