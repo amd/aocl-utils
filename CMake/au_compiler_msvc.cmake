@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -36,11 +36,14 @@ set(AU_CXX_FLAGS_RELEASE "-O3" "-Wno-unused")
 list(APPEND CXX_FLAGS_DEBUG "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_DEBUG}")
 list(APPEND CXX_FLAGS_RELEASE "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_RELEASE}")
 
-if(BUILD_SHARED_LIBS)
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-else()
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
+# CRT (/MT vs /MD) is set per-target in au_lib.cmake so that the STATIC and
+# SHARED libraries produced in the same configure step get the correct runtime
+# independently: STATIC -> /MT (self-contained, no DLL dependency by default),
+# SHARED -> /MD (must share the CRT/heap with the consumer to avoid the
+# split-heap class of bugs). Do not set CMAKE_MSVC_RUNTIME_LIBRARY globally
+# here: a global setting forces both target shapes onto the same CRT and
+# silently produces either a broken DLL or a static lib that drags the
+# CRT-DLL dependency into every consumer.
 
 # Note that CMAKE_REQUIRED_FLAGS must be a string, not a list
 #set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=${CXX_STD}")
