@@ -50,22 +50,15 @@ option(BUILD_SHARED_LIBS "Build shared libraries by default" ON)
 # out explicitly with -DAU_BUILD_STATIC_LIBS=OFF.
 option(AU_BUILD_STATIC_LIBS "Build static libraries (AOCL policy: default ON)" ON)
 
-# AU_BUILD_SHARED_LIBS follows BUILD_SHARED_LIBS, so toggling the standard
-# switch also toggles the shared library build here. AU_BUILD_SHARED_LIBS
-# can still be set explicitly to override that default per build.
-option(AU_BUILD_SHARED_LIBS "Build shared libraries" ${BUILD_SHARED_LIBS})
-
-# Catch the contradictory combination explicitly. Without this check the
-# value the user passed on -D wins silently (option() is a no-op when the
-# cache entry already exists) and the build behaves opposite to what the
-# canonical BUILD_SHARED_LIBS switch implied.
-if(NOT BUILD_SHARED_LIBS AND AU_BUILD_SHARED_LIBS)
-    message(FATAL_ERROR
-        "Conflicting options: BUILD_SHARED_LIBS=OFF disables shared library "
-        "builds, but AU_BUILD_SHARED_LIBS=ON requests one. Re-run cmake with "
-        "-DBUILD_SHARED_LIBS=ON to build the shared library, or drop "
-        "-DAU_BUILD_SHARED_LIBS=ON to honor BUILD_SHARED_LIBS=OFF.")
-endif()
+# AU_BUILD_SHARED_LIBS always tracks BUILD_SHARED_LIBS. Force-sync via the
+# cache so the project-specific name remains a single source of truth for
+# downstream cmake code (au_lib.cmake) without diverging from the canonical
+# switch. This also handles the reconfigure case where the user toggles
+# BUILD_SHARED_LIBS in an existing build dir whose AU_BUILD_SHARED_LIBS was
+# cached from a previous run -- BUILD_SHARED_LIBS wins, no manual cache
+# fix-up needed.
+set(AU_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}
+    CACHE BOOL "Build shared libraries (mirrors BUILD_SHARED_LIBS)" FORCE)
 
 option(AU_CMAKE_VERBOSE "Set cmake verbosity" OFF)
 
