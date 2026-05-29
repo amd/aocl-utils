@@ -181,9 +181,6 @@ function(au_cc_library NAME)
 	        CXX_STANDARD_REQUIRED true
 	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
             OUTPUT_NAME ${output_name}
-            # Static lib: /MT (self-contained CRT, no DLL dependency).
-            # Consumers that need /MD can override per-target.
-            MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
         )
     endif()
     if(${AU_BUILD_SHARED_LIBS})
@@ -203,9 +200,6 @@ function(au_cc_library NAME)
 	        CXX_STANDARD_REQUIRED true
 	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
             OUTPUT_NAME ${__target_name}
-            # Shared lib: /MD (DLL must share CRT/heap with consumer; an
-            # embedded /MT CRT splits the heap and corrupts cross-DLL frees).
-            MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
     endif()
   else()

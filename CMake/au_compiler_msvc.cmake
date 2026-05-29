@@ -36,14 +36,20 @@ set(AU_CXX_FLAGS_RELEASE "-O3" "-Wno-unused")
 list(APPEND CXX_FLAGS_DEBUG "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_DEBUG}")
 list(APPEND CXX_FLAGS_RELEASE "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_RELEASE}")
 
-# CRT (/MT vs /MD) is set per-target in au_lib.cmake so that the STATIC and
-# SHARED libraries produced in the same configure step get the correct runtime
-# independently: STATIC -> /MT (self-contained, no DLL dependency by default),
-# SHARED -> /MD (must share the CRT/heap with the consumer to avoid the
-# split-heap class of bugs). Do not set CMAKE_MSVC_RUNTIME_LIBRARY globally
-# here: a global setting forces both target shapes onto the same CRT and
-# silently produces either a broken DLL or a static lib that drags the
-# CRT-DLL dependency into every consumer.
+# Project-wide MSVC CRT selection, keyed off the canonical BUILD_SHARED_LIBS
+# switch (which au_options.cmake declares with a default of ON). Setting this
+# globally ensures the library targets AND every test/example consumer get
+# the same CRT, avoiding the "RuntimeLibrary mismatch" link failures the CI
+# caught when this was set per-target while tests inherited the CMake
+# default of /MD. With BUILD_SHARED_LIBS=ON everything uses /MD (so consumers
+# like aocl-crypto built with /MD can link cleanly). With BUILD_SHARED_LIBS
+# =OFF, AU_BUILD_SHARED_LIBS is forced OFF too (only the static lib is built)
+# and everything uses /MT for a self-contained build.
+if(BUILD_SHARED_LIBS)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 # Note that CMAKE_REQUIRED_FLAGS must be a string, not a list
 #set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=${CXX_STD}")
