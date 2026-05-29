@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,18 @@ FetchContent_Declare(gtest
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG ${AU_GTEST_TAG}
 )
+
+# Force googletest and googlemock to build as static libraries even when this
+# project's BUILD_SHARED_LIBS is ON. With BUILD_SHARED_LIBS=ON propagating in
+# the gtest subdir, gmock builds as a DLL but its internal globals (Mutex,
+# ThreadLocal<Sequence*>) are not __declspec(dllexport)'d and link with
+# undefined-symbol errors in any test EXE that uses gmock (LoggerTest,
+# CpuidTest). Save the outer value, force OFF for the fetch, restore after.
+set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
+set(BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(gtest)
+set(BUILD_SHARED_LIBS "${_au_save_build_shared_libs}")
+unset(_au_save_build_shared_libs)
 
 #
 # On Windows: Prevent overriding the parent project's compiler/linker settings
