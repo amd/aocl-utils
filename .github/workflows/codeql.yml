@@ -55,6 +55,8 @@ jobs:
           cp -r "$GITHUB_WORKSPACE/lib-confscript/release/aocl_month/common" .
           cp "$GITHUB_WORKSPACE/lib-confscript/release/aocl_month/AOCL-Utils_Build.sh" .
           export GCC_PATH=/usr/bin
+           # Ensure real cmake from /usr/bin takes precedence over broken Python wrapper in ~/.local/bin
+           export PATH="/usr/bin:$(printf '%s' "$PATH" | tr ':' '\n' | { grep -v -x -F "$HOME/.local/bin" || true; } | paste -sd ':' -)"
           bash AOCL-Utils_Build.sh gcc
 
       - name: Perform CodeQL Analysis
