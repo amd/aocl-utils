@@ -48,8 +48,12 @@ jobs:
         shell: bash
         run: |
           git -c advice.detachedHead=false clone --quiet -b amd-staging git@github.com:AMD-AOCL/lib-confscript.git lib-confscript --single-branch --depth 1
-          cp -r ./lib-confscript/release/aocl_month/common .
-          cp ./lib-confscript/release/aocl_month/AOCL-Utils_Build.sh .
+          # Move to parent dir so $PWD/aocl-utils points to the checked-out repo
+          cd "$GITHUB_WORKSPACE/.."
+          rm -rf common
+          rm -f AOCL-Utils_Build.sh
+          cp -r "$GITHUB_WORKSPACE/lib-confscript/release/aocl_month/common" .
+          cp "$GITHUB_WORKSPACE/lib-confscript/release/aocl_month/AOCL-Utils_Build.sh" .
           export GCC_PATH=/usr/bin
           bash AOCL-Utils_Build.sh gcc
 
