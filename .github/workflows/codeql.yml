@@ -1,0 +1,59 @@
+name: "CodeQL Advanced"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "amd-main" ]
+  pull_request:
+    branches: [ "amd-main" ]
+  schedule:
+    - cron: '42 19 * * 5'
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: amd_linux
+    permissions:
+      # required for all workflows
+      security-events: write
+      # required to fetch internal or private CodeQL packs
+      packages: read
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: c-cpp
+            build-mode: manual
+          - language: python
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix['build-mode'] }}
+          queries: security-and-quality
+      # Build
+      - name: Build
+        if: matrix['build-mode'] == 'manual'
+        shell: bash
+        run: |
+          git -c advice.detachedHead=false clone --quiet -b amd-staging git@github.com:AMD-AOCL/lib-confscript.git lib-confscript --single-branch --depth 1
+          cp -r ./lib-confscript/release/aocl_month/common .
+          cp ./lib-confscript/release/aocl_month/AOCL-Utils_Build.sh .
+          export GCC_PATH=/usr/bin
+          bash AOCL-Utils_Build.sh gcc
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
