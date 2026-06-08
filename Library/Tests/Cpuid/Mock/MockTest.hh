@@ -35,6 +35,8 @@
 #include <vector>
 
 #include "Au/Cpuid/X86Cpu.hh"
+#include "Au/Misc.hh"
+#include "../CpuidTest.hh"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -278,6 +280,39 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     // clang-format on
 };
 
+// ---------------------------------------------------------------------------
+// Helper: build a vector of ECpuidFlag from a FlagsT/FlagsF text file
+// ---------------------------------------------------------------------------
+inline std::vector<ECpuidFlag>
+loadFlagVector(const String& cpuType, const String& flagFile)
+{
+    String srcDir     = PROJECT_SOURCE_DIR;
+    String simnowData = "/Library/Tests/Cpuid/Mock/simnowdata/";
+    String absPath    = srcDir + simnowData + cpuType + "/" + flagFile;
+
+    std::ifstream            flagStream(absPath);
+    std::vector<ECpuidFlag>  out;
+    if (!flagStream.is_open()) {
+        ADD_FAILURE() << "Failed to open flag file: " << absPath;
+        return out;
+    }
+
+    String token;
+    while (std::getline(flagStream, token)) {
+        if (token.empty()) {
+            continue;
+        }
+        const auto flagValue = ECpuidFlagfromString(token);
+        if (flagValue != static_cast<uint64_t>(-1)) {
+            out.push_back(static_cast<ECpuidFlag>(flagValue));
+        } else {
+            ADD_FAILURE() << "Unknown CPUID flag string '" << token
+                          << "' in " << flagFile << " for CPU type " << cpuType;
+        }
+    }
+    return out;
+}
+
 /**
  *  The MockCpuidUtils class is used to mock the CpuidUtils class
  */
@@ -374,6 +409,19 @@ class MockCpuidBase : public testing::Test
                 .WillByDefault(testing::Return(entry.second));
         }
         return csvData;
+    }
+
+    // Shared SetUp() for all mock fixtures. Uses AnyNumber() for CPUID calls
+    // because these are integration-style tests validating X86Cpu behavior
+    // against real simnow CPU data, not unit tests verifying exact call
+    // sequences. The number of CPUID queries varies by CPU type (AMD vs Intel,
+    // different feature support) and may change as the library evolves; strict
+    // counts would be fragile. For verifying specific CPUID query behavior,
+    // add dedicated unit tests with strict expectations.
+    void SetUp() override
+    {
+        EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_))
+            .Times(testing::AnyNumber());
     }
 
   public:
