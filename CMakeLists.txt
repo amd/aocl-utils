@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -50,7 +50,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 include(au_version)
 
-file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_FROM_FILE)
+# Read only version-looking lines so blank lines, trailing newlines, and
+# comment lines in version.txt do not break parsing.
+file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_LINES
+      REGEX "^[0-9]+\\.[0-9]+\\.[0-9]+")
+if (NOT AU_VERSION_LINES)
+    message(FATAL_ERROR "No valid version line found in version.txt")
+endif()
+list (GET AU_VERSION_LINES 0 AU_VERSION_FROM_FILE)
+string (STRIP "${AU_VERSION_FROM_FILE}" AU_VERSION_FROM_FILE)
 au_extract_version_details("AU_VERSION" "${AU_VERSION_FROM_FILE}")
 
 set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATCH}")
