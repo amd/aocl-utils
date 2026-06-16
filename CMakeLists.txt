@@ -50,16 +50,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 include(au_version)
 
-# Read only version-looking lines so blank lines, trailing newlines, and
-# comment lines in version.txt do not break parsing.
-file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_LINES
-      REGEX "^[0-9]+\\.[0-9]+\\.[0-9]+")
+# Read only well-formed version lines so blank lines, trailing newlines, and
+# comment lines in version.txt do not break parsing. The regex matches the
+# same MAJOR.MINOR.PATCH-[suffix] format au_extract_version_details expects,
+# so loose strings (e.g. 1.2.3.4 or "1.2.3 foo") are rejected here rather
+# than silently leaving AU_VERSION_* unset later.
+file (STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" AU_VERSION_LINES
+      REGEX "^[0-9]+\\.[0-9]+\\.[0-9]+-")
 if (NOT AU_VERSION_LINES)
     message(FATAL_ERROR "No valid version line found in version.txt")
 endif()
 list (GET AU_VERSION_LINES 0 AU_VERSION_FROM_FILE)
 string (STRIP "${AU_VERSION_FROM_FILE}" AU_VERSION_FROM_FILE)
 au_extract_version_details("AU_VERSION" "${AU_VERSION_FROM_FILE}")
+if (NOT DEFINED AU_VERSION_MAJOR)
+    message(FATAL_ERROR "Failed to parse version from version.txt: '${AU_VERSION_FROM_FILE}'")
+endif()
 
 set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATCH}")
 if(AU_VERSION_SUFFIX)
