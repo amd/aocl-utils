@@ -29,7 +29,12 @@
 au_module("core")
 
 if (MSVC)
-	add_compile_options(-W4  /Za /DLL)
+	# /Za removed: it disables MS language extensions, which makes cl reject
+	# anonymous-struct-inside-union declarations in the Windows SDK headers
+	# (IORING_*, STORAGE_HW_FIRMWARE_*, ...), producing C2467 errors inside
+	# Microsoft's own headers. /DLL was also removed -- it is a linker flag,
+	# silently ignored by cl when passed via add_compile_options.
+	add_compile_options(/W4)
 else()
 	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
 endif()
