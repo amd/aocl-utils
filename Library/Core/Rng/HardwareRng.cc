@@ -32,7 +32,13 @@
 
 namespace Au::Rng {
 
+#if defined(_MSC_VER)
+// MSVC has no function-level "target" attribute: the rdrand intrinsics from
+// <immintrin.h> are always available, so the attribute expands to nothing.
+#define ATTRIBUTE_RAND
+#else
 #define ATTRIBUTE_RAND __attribute__((__target__("rdrnd")))
+#endif
 //
 // in C++20 Use
 // std::is_trivial<T>::value && std::is_standard_layout<T>::value
@@ -42,7 +48,7 @@ template<typename T,
          size_t W,
          typename = typename std::enable_if<sizeof(T) == W>::type>
 bool
-read_rdrand(T* ptr) __attribute__((__target__("rdrnd")));
+read_rdrand(T* ptr) ATTRIBUTE_RAND;
 
 /**
  * Read random bytes from hardware Rng on x86

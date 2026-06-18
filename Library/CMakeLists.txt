@@ -77,11 +77,16 @@ set(RNG_SRC_FILES
     Core/Rng/HardwareRng.cc
 )
 
-set_source_files_properties(
-  Core/Rng/HardwareRng.cc
-  PROPERTIES
-    COMPILE_FLAGS "-mrdrnd"
-)
+# -mrdrnd enables the RDRAND intrinsics on GCC/Clang. MSVC exposes them
+# unconditionally via <immintrin.h> and rejects the flag, so only set it
+# for non-MSVC toolchains.
+if (NOT MSVC)
+	set_source_files_properties(
+	  Core/Rng/HardwareRng.cc
+	  PROPERTIES
+	    COMPILE_FLAGS "-mrdrnd"
+	)
+endif()
 
 set(AVX2_FILES
   Base64/transform_avx2.cc
