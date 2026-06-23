@@ -40,20 +40,27 @@ endmacro()
 function(au_resolve_shared_deps in_deps out_var)
   set(_resolved "")
   foreach(_dep IN LISTS in_deps)
-    if(_dep MATCHES "^au::(.+)$")
-      set(_mod "${CMAKE_MATCH_1}")
-      # The shared build target for module <mod> is <static-target>_shared.
-      # Reuse setlibname so the static/internal naming stays the single source
-      # of truth (libaoclutils, au_<mod>, au_internal_<mod>).
-      setlibname(${_mod} TRUE _dep_target)
-      if(TARGET ${_dep_target}_shared)
-        list(APPEND _resolved ${_dep_target}_shared)
-      else()
-        # No shared variant built for this dep (e.g. static-only submodule):
-        # fall back to the alias so the link still resolves.
-        list(APPEND _resolved ${_dep})
+    set(_shared_dep "")
+    if(TARGET ${_dep})
+      # Resolve the real target behind an au:: ALIAS via ALIASED_TARGET rather
+      # than recomputing the name -- this works for both public (au_<mod> /
+      # libaoclutils) and PRIVATE/internal (au_internal_<mod>) modules. Guessing
+      # the public name would miss internal deps and silently fall back to the
+      # static alias, dragging /MT objects back into the /MD DLL.
+      get_target_property(_aliased ${_dep} ALIASED_TARGET)
+      if(_aliased AND TARGET ${_aliased}_shared)
+        set(_shared_dep ${_aliased}_shared)
+      elseif(TARGET ${_dep}_shared)
+        # Non-alias in-project target name passed directly.
+        set(_shared_dep ${_dep}_shared)
       endif()
+    endif()
+    if(_shared_dep)
+      list(APPEND _resolved ${_shared_dep})
     else()
+      # External/system dep, header-only INTERFACE, or a dep with no _shared
+      # variant (e.g. static-only submodule): pass through unchanged so the
+      # link still resolves.
       list(APPEND _resolved ${_dep})
     endif()
   endforeach()
