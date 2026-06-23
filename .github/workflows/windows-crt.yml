@@ -19,9 +19,7 @@ on:
 jobs:
   crt-guard:
     name: MSVC CRT duality (static=/MT, shared=/MD)
-    # NOTE: runner label assumed to mirror the CodeQL job's `amd_linux`.
-    # Adjust if the Windows self-hosted runner uses a different label.
-    runs-on: amd_windows
+    runs-on: Windows
 
     steps:
       - name: Checkout repository
