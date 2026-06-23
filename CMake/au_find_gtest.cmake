@@ -39,6 +39,14 @@ FetchContent_Declare(gtest
 # ThreadLocal<Sequence*>) are not __declspec(dllexport)'d and link with
 # undefined-symbol errors in any test EXE that uses gmock (LoggerTest,
 # CpuidTest). Save the outer value, force OFF for the fetch, restore after.
+# Pin googletest to the static CRT (/MT) BEFORE it is configured. Test
+# executables link the /MT static aoclutils lib (the au:: alias), so gtest/gmock
+# must match or lld-link fails with a RuntimeLibrary mismatch. gtest_force_shared_crt
+# defaults ON (=/MD); force it OFF here, and crucially do it *before*
+# FetchContent_MakeAvailable -- setting it afterwards (the previous bug) had no
+# effect because gtest had already been configured against the default.
+set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+
 set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
 set(BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(gtest)
@@ -52,8 +60,6 @@ IF(WIN32)
 	target_link_libraries(gmock PUBLIC gtest)
 	target_link_libraries(gmock_main PUBLIC gtest_main)
 ENDIF()
-
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 option(GTEST_ENABLE_INSTALL "" OFF)
 option(GMOCK_ENABLE_INSTALL "" OFF)

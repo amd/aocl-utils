@@ -36,20 +36,23 @@ set(AU_CXX_FLAGS_RELEASE "-O3" "-Wno-unused")
 list(APPEND CXX_FLAGS_DEBUG "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_DEBUG}")
 list(APPEND CXX_FLAGS_RELEASE "${AU_CXX_FLAGS_COMMON} ${AU_CXX_FLAGS_RELEASE}")
 
-# Project-wide MSVC CRT selection, keyed off the canonical BUILD_SHARED_LIBS
-# switch (which au_options.cmake declares with a default of ON). Setting this
-# globally ensures the library targets AND every test/example consumer get
-# the same CRT, avoiding the "RuntimeLibrary mismatch" link failures the CI
-# caught when this was set per-target while tests inherited the CMake
-# default of /MD. With BUILD_SHARED_LIBS=ON everything uses /MD (so consumers
-# like aocl-crypto built with /MD can link cleanly). With BUILD_SHARED_LIBS
-# =OFF, AU_BUILD_SHARED_LIBS is forced OFF too (only the static lib is built)
-# and everything uses /MT for a self-contained build.
-if(BUILD_SHARED_LIBS)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
+# Project-wide MSVC CRT baseline: /MT (static CRT). This is the default for
+# EVERY target -- the static library, unit tests, examples, and fetched
+# googletest -- so they form one consistent /MT graph and link cleanly against
+# libaoclutils_static.lib (which the au:: alias resolves to in a both-libs
+# build). The shared library is the ONLY exception: au_lib.cmake overrides the
+# shared target (and its _shared dependency edges) to /MD via a per-target
+# MSVC_RUNTIME_LIBRARY property, because a DLL must share the CRT/heap with its
+# /MD consumers.
+#
+# History: keying this global off BUILD_SHARED_LIBS (the previous approach)
+# painted the static archive /MD in the default both-libs build (BUILD_SHARED_LIBS
+# defaults ON while AU_BUILD_STATIC_LIBS is also ON), which broke every /MT
+# downstream consumer at link time (e.g. aocl-sparse). A bare per-target attempt
+# that dropped this global broke the other way: tests fell back to CMake's /MD
+# default and could not link the /MT static lib. /MT-default-here +
+# /MD-override-on-shared is the only shape that satisfies both at once.
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Note that CMAKE_REQUIRED_FLAGS must be a string, not a list
 #set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=${CXX_STD}")

@@ -28,6 +28,38 @@ macro(au_normalize_name name var)
   STRING(REPLACE "::" "__" ${var} ${name})
 endmacro()
 
+# Resolve a DEPENDS list to the shared-linkage variant of any in-project au::
+# module. The shared library must link the _shared build of its au:: deps, not
+# the static target the au::<module> alias points at in a both-libs build --
+# otherwise a /MD shared DLL drags in /MT static-target objects and the MSVC
+# CRT (RuntimeLibrary) mismatch resurfaces internally. External/system deps and
+# header-only INTERFACE deps are passed through unchanged.
+#
+#   in_deps : the raw DEPENDS list (e.g. au::aoclutils;SomeExternal::lib)
+#   out_var : name of the variable to receive the shared-resolved list
+function(au_resolve_shared_deps in_deps out_var)
+  set(_resolved "")
+  foreach(_dep IN LISTS in_deps)
+    if(_dep MATCHES "^au::(.+)$")
+      set(_mod "${CMAKE_MATCH_1}")
+      # The shared build target for module <mod> is <static-target>_shared.
+      # Reuse setlibname so the static/internal naming stays the single source
+      # of truth (libaoclutils, au_<mod>, au_internal_<mod>).
+      setlibname(${_mod} TRUE _dep_target)
+      if(TARGET ${_dep_target}_shared)
+        list(APPEND _resolved ${_dep_target}_shared)
+      else()
+        # No shared variant built for this dep (e.g. static-only submodule):
+        # fall back to the alias so the link still resolves.
+        list(APPEND _resolved ${_dep})
+      endif()
+    else()
+      list(APPEND _resolved ${_dep})
+    endif()
+  endforeach()
+  set(${out_var} "${_resolved}" PARENT_SCOPE)
+endfunction()
+
 macro(setlibname NAME isPublic __target_name)
   if(UNIX)
     # set the target name if it is public or the name not equal to aoclutils
@@ -191,8 +223,11 @@ function(au_cc_library NAME)
 	        ${${fPrefix}_SOURCES}
     	    ${${fPrefix}_HEADERS}
         )
+        # Link the _shared variant of any in-project au:: dependency so the
+        # shared DLL's CRT graph stays /MD end-to-end (see au_resolve_shared_deps).
+        au_resolve_shared_deps("${cclib_DEPENDS}" _shared_depends)
         target_link_libraries(${__target_name}_shared
-	           PUBLIC ${cclib_DEPENDS}
+	           PUBLIC ${_shared_depends}
         )
         set_target_properties(${__target_name}_shared
 	        PROPERTIES
@@ -200,6 +235,11 @@ function(au_cc_library NAME)
 	        CXX_STANDARD_REQUIRED true
 	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
             OUTPUT_NAME ${__target_name}
+            # Shared lib: /MD. The DLL must share the CRT/heap with its /MD
+            # consumers (e.g. aocl-crypto); an embedded /MT CRT splits the heap
+            # and corrupts cross-DLL frees. The static lib + tests stay on the
+            # /MT global default from au_compiler_msvc.cmake.
+            MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
     endif()
   else()
