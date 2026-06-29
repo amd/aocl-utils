@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,7 +39,7 @@ class MockCpuidUtil
     , public ::testing::WithParamInterface<std::tuple<String, VendorInfo>>
 {};
 
-INSTANTIATE_TEST_SUITE_P(CupidUtilstTestSuite,
+INSTANTIATE_TEST_SUITE_P(CpuidUtilsTestSuite,
                          MockCpuidUtil,
                          ::testing::ValuesIn(testParametersCpuidUtils));
 /**
