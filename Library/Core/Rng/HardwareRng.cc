@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,9 +32,16 @@
 
 namespace Au::Rng {
 
-#if defined(_MSC_VER)
-// MSVC has no function-level "target" attribute: the rdrand intrinsics from
-// <immintrin.h> are always available, so the attribute expands to nothing.
+// Only real MSVC (cl.exe) takes the empty-attribute branch: it has no
+// function-level "target" attribute and exposes the rdrand intrinsics from
+// <immintrin.h> unconditionally. Every other compiler -- GCC, upstream Clang,
+// and clang-cl -- needs __target__("rdrnd") before _rdrand16_step is visible.
+// The !defined(__clang__) term is what excludes clang-cl from the MSVC branch:
+// clang-cl defines _MSC_VER for ABI compatibility but uses Clang's backend, so
+// without this it would wrongly get the empty attribute and fail to compile
+// (use of undeclared identifier '_rdrand16_step', seen in the BLIS clang-cl
+// Windows presubmit).
+#if defined(_MSC_VER) && !defined(__clang__)
 #define ATTRIBUTE_RAND
 #else
 #define ATTRIBUTE_RAND __attribute__((__target__("rdrnd")))
