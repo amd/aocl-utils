@@ -77,10 +77,13 @@ set(RNG_SRC_FILES
     Core/Rng/HardwareRng.cc
 )
 
-# -mrdrnd enables the RDRAND intrinsics on GCC/Clang. MSVC exposes them
-# unconditionally via <immintrin.h> and rejects the flag, so only set it
-# for non-MSVC toolchains.
-if (NOT MSVC)
+# -mrdrnd enables the RDRAND intrinsics. Real MSVC (cl.exe) exposes them
+# unconditionally via <immintrin.h> and rejects the flag. Every other
+# toolchain -- GCC, upstream Clang, clang-cl and IntelLLVM -- needs the flag
+# for the intrinsics to be declared. clang-cl reports MSVC=TRUE (it targets the
+# MSVC ABI), so guarding on `NOT MSVC` wrongly starves it of the flag; key off
+# the compiler id instead so only real cl.exe is excluded.
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	set_source_files_properties(
 	  Core/Rng/HardwareRng.cc
 	  PROPERTIES
