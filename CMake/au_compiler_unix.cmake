@@ -25,8 +25,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-# Force cmake to use custom prefix map for source files
-add_compile_options(-fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.)
+# Force cmake to use custom prefix map for source files.
+# Use PROJECT_SOURCE_DIR (this project's own root, set by project()) rather than
+# CMAKE_SOURCE_DIR (the top-level source tree) so the mapping stays correct when
+# AOCL-Utils is built as a subproject, e.g. via add_subdirectory/FetchContent.
+add_compile_options(-fmacro-prefix-map=${PROJECT_SOURCE_DIR}=.)
 
 set(AU_CXX_FLAGS_COMMON "-Wall -Wextra" "-fno-rtti" "-fno-exceptions")
 set(AU_CXX_FLAGS_DEBUG
