@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,10 +48,22 @@ class StatusOr
     inline StatusOr();
     inline StatusOr(Au::Status& sts);
 
-    inline StatusOr(const T& val); // copy ctor
-    inline StatusOr(T&& val);      // move ctor
+    inline StatusOr(const T& val); // from a value (copy)
+    inline StatusOr(T&& val);      // from a value (move)
 
     AUD_DEFAULT_COPY_AND_ASSIGNMENT(StatusOr);
+
+    // User-declaring the copy operations (above) suppresses the implicitly
+    // generated move operations. Without these, StatusOr<T> for a move-only T
+    // (e.g. a type with a unique_ptr member) is neither copyable (copy is
+    // ill-formed) nor movable, so idiomatic uses fail to compile:
+    //     StatusOr<T> f() { auto s = make(); return s; }   // move required
+    //     container.push_back(make());                     // move required
+    // Default the move operations so StatusOr<move-only T> behaves like the
+    // underlying T: movable, not copyable. For a copyable T this is purely
+    // additive (copy is retained, move is gained).
+    StatusOr(StatusOr&&)            = default;
+    StatusOr& operator=(StatusOr&&) = default;
 
     template<typename U>
     StatusOr(const StatusOr<U>& sts);
