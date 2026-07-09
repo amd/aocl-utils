@@ -1,4 +1,4 @@
-#  Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
+#  Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are met:
@@ -50,3 +50,9 @@ repos:
         name: copyrightcheck
         entry: python Library/Tests/copyrightcheck.py
         language: system
+      - id: jira-ticket-scrub
+        name: jira-ticket-scrub
+        entry: python3 scripts/jira_ticket_scrub.py
+        language: system
+        types: [text]
+        exclude: ^\.github/\.ai_pr_platform/
