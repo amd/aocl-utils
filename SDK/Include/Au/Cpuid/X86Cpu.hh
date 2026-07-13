@@ -36,10 +36,13 @@
 #include "Au/Cpuid/CpuidUtils.hh"
 #include "Au/Interface/Cpuid/ICpu.hh"
 #include "Au/Memory/BufferView.hh"
+#include "Au/StatusOr.hh"
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 #define AUD_DEFINE_ENUM(name, type, ...)                                           \
     enum class name : type                                                         \
@@ -381,21 +384,64 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     X86Cpu(CpuidUtils* cUtils, CpuNumT num);
 
     /**
-     * @brief   Default constructor.
+     * @brief   Best-effort constructor probing a deterministic core.
      *
-     * @details This constructor sets the CPU number to info from.
+     * @details Probes CPUID under a deterministic, cross-platform contract and
+     *          never reports failure (it has no return value); on any error it
+     *          degrades to a best-effort probe of the current thread. For a
+     *          variant that *reports* whether the requested core could be
+     *          honored, use buildFromCore().
      *
-     * @warning If num is not "AU_CURRENT_CPU_NUM", then calling this
-     * constructor will result in thread migration to the selected core.
+     *          The target core is resolved as follows, then pinned for the
+     *          whole probe and the original affinity restored afterwards:
+     *          - AU_CURRENT_CPU_NUM: the lowest-numbered core in the calling
+     *            thread's affinity mask. On a hybrid Intel package whose mask
+     *            spans both core types, an E-core (Atom) in the mask is probed
+     *            instead, because the E-core feature set is the crash-safe
+     *            intersection of the cores the thread may migrate to.
+     *          - An explicit, in-mask num: that core (P or E - naming a core
+     *            accepts that core's data). Unchanged by the hybrid logic.
+     *          - An explicit, out-of-mask num: graceful degrade to the lowest
+     *            core in the mask.
      *
-     * @param[in] num  Any valid core number starting from 0.
+     * @warning If a concrete num is honored the calling thread migrates to that
+     *          core for the duration of the probe before being restored.
      *
-     * @note    Default behaviour is invoked by passing AU_CURRENT_CPU_NUM,
-     *          In default behaviour the thread is not pinned to any core,
-     *          cpuid fetches the current CPU thread on which the code is
-     *          running.
+     * @param[in] num  Any valid core number starting from 0, or
+     *                 AU_CURRENT_CPU_NUM (the default) for the crash-safe view
+     *                 of the calling thread.
      */
     X86Cpu(CpuNumT num = AU_CURRENT_CPU_NUM);
+
+    /**
+     * @brief   Strict factory: build an X86Cpu, reporting affinity failures.
+     *
+     * @details Unlike the constructor (which degrades silently), this validates
+     *          the request up front and reports the outcome via Status. When
+     *          num is a concrete core, the calling thread's affinity mask is
+     *          queried and the core checked for membership; if the mask cannot
+     *          be read or num is outside it, an InvalidArgument Status is
+     *          returned and no object is constructed. On success the call
+     *          delegates to the constructor, which honors the same
+     *          deterministic contract.
+     *
+     * @param[in] num  Concrete core number, or AU_CURRENT_CPU_NUM (never
+     *                 rejected - resolves to the crash-safe current-thread
+     *                 view).
+     *
+     * @return    StatusOr<X86Cpu>: the constructed object on success, or an
+     *            InvalidArgument Status if the requested core is unavailable.
+     */
+    static StatusOr<X86Cpu> buildFromCore(CpuNumT num);
+
+    /**
+     * @brief   Move constructor.
+     *
+     * @details Explicitly declared because the user-declared destructor plus
+     *          the unique_ptr<Impl> member suppress implicit move generation,
+     *          which StatusOr<X86Cpu> (returned by buildFromCore) requires.
+     */
+    X86Cpu(X86Cpu&&) noexcept;
 
     /**
      * @brief   Destructor.
@@ -819,6 +865,54 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     const Impl*           pImpl() const { return m_pimpl.get(); }
     Impl*                 pImpl() { return m_pimpl.get(); }
     std::unique_ptr<Impl> m_pimpl;
+
+    /**
+     * @brief   Select the crash-safe target core on a hybrid package.
+     *
+     * @details Given the candidate cores (the calling thread's affinity mask,
+     * in ascending order) and a CPUID source, returns the core to probe: the
+     * first E-core (Atom) if any is reachable, else the first candidate.
+     * Selecting an E-core yields the crash-safe feature intersection (E-core
+     * features are a subset of P-core features for all AOCL-relevant ISA
+     * extensions).
+     *
+     *          `pinFn` pins the calling thread to a given core so that the
+     *          per-core CPUID.1A read reflects that core; it returns true on a
+     *          successful pin. Factored out so the selection policy and the
+     * walk can be exercised by white-box tests with an affinity-aware mock.
+     *
+     * @param[in] candidates  Allowed cores, ascending. Must be non-empty.
+     * @param[in] cUtils      CPUID source (real or mocked).
+     * @param[in] pinFn       Pins the thread to a core; returns true on
+     * success.
+     *
+     * @return  The chosen core number.
+     */
+    static CpuNumT selectHybridTarget(
+        const std::vector<CpuNumT>&         candidates,
+        CpuidUtils&                         cUtils,
+        const std::function<bool(CpuNumT)>& pinFn);
+
+    /**
+     * @brief   Target core for the AU_CURRENT_CPU_NUM path.
+     *
+     * @details The first candidate on a non-hybrid package (the common case),
+     *          or the crash-safe E-core via selectHybridTarget on a hybrid
+     *          package. Constructs a real CpuidUtils to read the hybrid bit.
+     *
+     * @param[in] candidates  Allowed cores, ascending. Must be non-empty.
+     * @param[in] pinFn       Pins the thread to a core; returns true on
+     * success.
+     *
+     * @return  The chosen core number.
+     */
+    static CpuNumT resolveSentinelTarget(
+        const std::vector<CpuNumT>&         candidates,
+        const std::function<bool(CpuNumT)>& pinFn);
+
+#ifdef AU_BUILD_TESTS
+    friend class X86CpuHybridTestPeer;
+#endif
 };
 
 } // namespace Au

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -189,12 +189,17 @@ TEST(X86Cpuid, CheckCpuNumber)
         X86Cpu cpu2{ m_cpu - 1 };
     }
     checkAffinity(currentMask);
-// Verify that an exception is thrown when the core number is greater
-// than the number of phycal cores.
-#ifdef AU_ENABLE_ASSERTIONS
+
+    // An out-of-range / out-of-mask core number must NOT throw or abort
+    // anymore. The constructor now degrades gracefully, probing the first core
+    // of the affinity mask instead. Verify construction succeeds and yields
+    // usable data, and that the original affinity is left intact.
     auto nthreads = std::thread::hardware_concurrency();
-    EXPECT_ANY_THROW(X86Cpu cpu3{ nthreads + 1 });
-#endif
+    EXPECT_NO_THROW({
+        X86Cpu cpu3{ nthreads + 1 };
+        (void)cpu3.isAMD(); // probe data is populated, no crash
+    });
+    checkAffinity(currentMask);
 }
 
 TEST(X86Cpu, BCTEST)

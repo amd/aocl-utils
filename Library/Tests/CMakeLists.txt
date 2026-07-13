@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -69,6 +69,7 @@ set(CPUID_TEST_FILES
     Cpuid/CapiTest.cc
     Cpuid/Mock/CpuidUtilsTest.cc
     Cpuid/Mock/X86CpuTest.cc
+    Cpuid/Mock/X86CpuAffinityTest.cc
     Cpuid/CpuidQemuTest.cc
 )
 

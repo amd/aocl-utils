@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -175,5 +175,37 @@ class CpuidUtils
     static bool hasFlag(ResponseT const& expected, ResponseT const& actual);
     void        updateCacheView(CacheView& cView);
     static void updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp);
+
+    /**
+     * @brief   Check whether the package is a hybrid (heterogeneous) part.
+     *
+     * @details Reads CPUID leaf 0x7, subleaf 0, EDX bit 15 (the Hybrid bit).
+     *          This bit is zero on all AMD parts and all pre-Alder-Lake Intel
+     *          parts, so the cheap (non-hybrid) code path is taken on the vast
+     *          majority of hardware. The bit only reports whether the *package*
+     *          mixes core types; it does not say what *this* core is - use
+     *          getCoreType() (executed on the core in question) for that.
+     *
+     * @return  true if the package advertises the Hybrid bit, false otherwise.
+     */
+    bool isHybrid();
+
+    /**
+     * @brief   Get the type of the core this is executed on.
+     *
+     * @details Reads CPUID leaf 0x1A, subleaf 0, EAX[31:24] - the Native Model
+     *          ID / core type field. This is a *per-core* query: it must be run
+     *          on the core whose type is being probed (the caller pins to the
+     *          core first). Intel defines 0x40 = Core (P-core) and
+     *          0x20 = Atom (E-core).
+     *
+     * @return  The raw core-type byte (e.g. 0x40 for P, 0x20 for E). 0 if the
+     *          leaf is not supported.
+     */
+    Uint32 getCoreType();
 };
+
+/* Intel hybrid core-type values from CPUID.1A:EAX[31:24]. */
+static constexpr Uint32 AU_X86_CORE_TYPE_ATOM = 0x20; /**< E-core (Atom). */
+static constexpr Uint32 AU_X86_CORE_TYPE_CORE = 0x40; /**< P-core (Core).  */
 } // namespace Au

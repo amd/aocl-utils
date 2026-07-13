@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -150,6 +150,25 @@ CpuidUtils::updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp)
     auto partitions = extract32(resp.ebx, 12, 10) + 1;
     cInfo.setSize(static_cast<Uint64>(way) * (partitions)
                   * static_cast<Uint64>(lane) * (sets));
+}
+
+bool
+CpuidUtils::isHybrid()
+{
+    /* CPUID.7, subleaf 0 : EDX[15] is the Hybrid bit. */
+    RequestT  req{ 0x0000'0007, 0, 0, 0 };
+    ResponseT resp = __raw_cpuid(req);
+    return extract32(resp.edx, 15, 1) != 0;
+}
+
+Uint32
+CpuidUtils::getCoreType()
+{
+    /* CPUID.1A, subleaf 0 : EAX[31:24] is the core type. Per-core: this must be
+     * executed on the core being probed (the caller pins first). */
+    RequestT  req{ 0x0000'001A, 0, 0, 0 };
+    ResponseT resp = __raw_cpuid(req);
+    return extract32(resp.eax, 24, 8);
 }
 
 void

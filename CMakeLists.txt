@@ -190,6 +190,9 @@ if (AU_BUILD_TESTS)
   enable_testing()
   include(au_find_gtest)
   include(au_unit_tests)
+  # Expose the test-enabled state to C++ so test-only seams (e.g. friend
+  # declarations for white-box unit tests) compile in only for test builds.
+  add_compile_definitions(AU_BUILD_TESTS)
 endif()
 
 option(INSTALL_GTEST OFF)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,6 +35,16 @@ CpuInfo::CpuInfo(CpuNumT idx)
     : m_logical_core_num{ idx }
     , m_physical_core_num{ idx }
 {
+    /*
+     * idx is stored verbatim, so when X86Cpu is built with AU_CURRENT_CPU_NUM
+     * the sentinel UINT32_MAX is recorded here as the core number. This is
+     * currently harmless: getLogicalIdx()/getPhysicalIdx() are stubs returning
+     * 0 and never read these members, so the stored value is never observable.
+     * X86Cpu's constructor resolves the real target core in its body (it does
+     * not pass the resolved core to this base), so if these accessors are ever
+     * made real, this base will need the resolved core number plumbed in rather
+     * than the raw idx.
+     */
 #if !defined(AU_CPU_ARCH_X86)
     AUD_ASSERT(false, "Not an x86 Cpu");
 #endif
