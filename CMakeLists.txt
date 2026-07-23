@@ -131,9 +131,20 @@ endif()
 
 if(NOT CMAKE_CXX_CLANG_TIDY)
   find_program(CLANG_TIDY "clang-tidy")
-  if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
+  # NOTFOUND is CMake-falsy; avoids MATCHES on an unquoted path (can have
+  # spaces on Windows, e.g. "Program Files").
+  if(CLANG_TIDY)
     if (MSVC)
+      # clang-tidy runs as Clang even over a cl.exe command line, so on
+      # clang-tidy <= 18 it needs -mrdrnd itself to see _rdrand16_step
+      # (cl.exe doesn't; Library/CMakeLists.txt withholds it there).
       set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY};--extra-arg=-EHsc")
+      # -mrdrnd is x86-only; only add it for clang-tidy on an x86/x64 target.
+      string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" _AU_CLANG_TIDY_ARCH)
+      if (_AU_CLANG_TIDY_ARCH MATCHES "^(X86|I[3-6]86|X86_64|AMD64)$")
+        list(APPEND CMAKE_CXX_CLANG_TIDY "--extra-arg=-mrdrnd")
+      endif()
+      unset(_AU_CLANG_TIDY_ARCH)
     else()
       set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
     endif()
