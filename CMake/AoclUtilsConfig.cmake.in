@@ -61,15 +61,20 @@ find_dependency(Threads REQUIRED)
 get_filename_component(AoclUtils_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
 # Include the targets file which defines the actual targets.
-# Probe both the Unix (aoclutils) and Windows (libaoclutils) spellings
-# produced by setlibname() in CMake/au_lib.cmake.
-if(NOT TARGET AoclUtils::aoclutils AND NOT TARGET AoclUtils::aoclutils_shared
-   AND NOT TARGET AoclUtils::libaoclutils AND NOT TARGET AoclUtils::libaoclutils_shared)
+# Probe the current (bare = shared, "_static" = static) spellings as well as the
+# legacy "_shared" suffix and the historic Windows "libaoclutils" spelling, so
+# both old and new installs resolve.
+if(NOT TARGET AoclUtils::aoclutils AND NOT TARGET AoclUtils::aoclutils_static
+   AND NOT TARGET AoclUtils::aoclutils_shared
+   AND NOT TARGET AoclUtils::libaoclutils AND NOT TARGET AoclUtils::libaoclutils_static
+   AND NOT TARGET AoclUtils::libaoclutils_shared)
     include("${AoclUtils_CMAKE_DIR}/AoclUtilsTargets.cmake")
 endif()
 
-# Resolve the canonical main target — handles Unix (aoclutils) and Windows
-# (libaoclutils) spellings, and static-only / shared-only / combined builds.
+# Resolve the canonical main target — handles the Unix (aoclutils) and historic
+# Windows (libaoclutils) spellings, and static-only / shared-only / combined
+# builds. Order the probes: bare (shared) first, then "_static" (static-only
+# install where the bare shared target is absent), then the legacy "_shared".
 foreach(_au_main aoclutils libaoclutils)
     if(TARGET AoclUtils::${_au_main})
         get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::${_au_main} INTERFACE_INCLUDE_DIRECTORIES)
@@ -77,6 +82,14 @@ foreach(_au_main aoclutils libaoclutils)
         set(AoclUtils_STATIC_LIBRARY AoclUtils::${_au_main})
         if(NOT TARGET AoclUtils::aocl-utils)
             add_library(AoclUtils::aocl-utils ALIAS AoclUtils::${_au_main})
+        endif()
+        break()
+    elseif(TARGET AoclUtils::${_au_main}_static)
+        get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::${_au_main}_static INTERFACE_INCLUDE_DIRECTORIES)
+        set(AoclUtils_LIBRARIES AoclUtils::${_au_main}_static)
+        set(AoclUtils_STATIC_LIBRARY AoclUtils::${_au_main}_static)
+        if(NOT TARGET AoclUtils::aocl-utils)
+            add_library(AoclUtils::aocl-utils ALIAS AoclUtils::${_au_main}_static)
         endif()
         break()
     elseif(TARGET AoclUtils::${_au_main}_shared)
@@ -89,8 +102,16 @@ foreach(_au_main aoclutils libaoclutils)
     endif()
 endforeach()
 
+# The shared library is now the BARE target (aoclutils); the legacy "_shared"
+# suffix is still probed for old installs.
 foreach(_au_main aoclutils libaoclutils)
-    if(TARGET AoclUtils::${_au_main}_shared)
+    if(TARGET AoclUtils::${_au_main})
+        set(AoclUtils_SHARED_LIBRARY AoclUtils::${_au_main})
+        if(NOT TARGET AoclUtils::aocl-utils_shared)
+            add_library(AoclUtils::aocl-utils_shared ALIAS AoclUtils::${_au_main})
+        endif()
+        break()
+    elseif(TARGET AoclUtils::${_au_main}_shared)
         set(AoclUtils_SHARED_LIBRARY AoclUtils::${_au_main}_shared)
         if(NOT TARGET AoclUtils::aocl-utils_shared)
             add_library(AoclUtils::aocl-utils_shared ALIAS AoclUtils::${_au_main}_shared)
@@ -102,19 +123,22 @@ endforeach()
 # Check available components/targets — check both static and shared variants
 set(_aoclUtils_available_components "")
 foreach(_au_main aoclutils libaoclutils)
-    if(TARGET AoclUtils::${_au_main} OR TARGET AoclUtils::${_au_main}_shared)
+    if(TARGET AoclUtils::${_au_main} OR TARGET AoclUtils::${_au_main}_static
+       OR TARGET AoclUtils::${_au_main}_shared)
         list(APPEND _aoclUtils_available_components "aocl-utils")
         break()
     endif()
 endforeach()
-if(TARGET AoclUtils::au_cpuid OR TARGET AoclUtils::au_cpuid_shared)
+if(TARGET AoclUtils::au_cpuid OR TARGET AoclUtils::au_cpuid_static
+   OR TARGET AoclUtils::au_cpuid_shared)
     list(APPEND _aoclUtils_available_components "au_cpuid")
 endif()
 
 # Handle component-specific requests
 if(AoclUtils_FIND_COMPONENTS)
     foreach(_comp ${AoclUtils_FIND_COMPONENTS})
-        if(NOT TARGET AoclUtils::${_comp} AND NOT TARGET AoclUtils::${_comp}_shared)
+        if(NOT TARGET AoclUtils::${_comp} AND NOT TARGET AoclUtils::${_comp}_shared
+           AND NOT TARGET AoclUtils::${_comp}_static)
             if(AoclUtils_FIND_REQUIRED_${_comp})
                 set(AoclUtils_FOUND False)
                 set(AoclUtils_NOT_FOUND_MESSAGE "Required component ${_comp} not found")

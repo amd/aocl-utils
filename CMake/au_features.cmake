@@ -50,7 +50,6 @@ set(Logger_DEPENDS "Status")
 
 # Define target names for modules
 set(au_cpuid_TARGET_NAME "au_cpuid")
-set(au_cpuid_SHARED_TARGET_NAME "au_cpuid_shared")
 set(au_core_TARGET_NAME "au_core")
 
 # Add target name validation

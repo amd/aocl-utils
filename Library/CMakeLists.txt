@@ -195,18 +195,17 @@ foreach(__moddir ${AU_SUBMODULE_DIRS})
 endforeach()
 
 # AOCL Build-It-Yourself unified build: every AOCL-Utils source (Core plus all
-# enabled sub-modules) is funnelled into the single static target by au_cc_library.
+# enabled sub-modules) is funnelled by au_cc_library into the umbrella target(s).
 # Compile the same sources into a sibling OBJECT library, created here in the
-# Library/ scope so it inherits the same directory-level flags/includes the static
-# target used, so their objects can be pulled directly into the single libaocl.
+# Library/ scope so it inherits the same directory-level flags/includes the
+# umbrella used, so their objects can be pulled directly into the single libaocl.
 # Placed at the very end so the target's SOURCES are fully populated.
 if(AOCL_TB_UNIFIED_BUILD)
-    if(UNIX)
-        set(_au_main_tgt aoclutils)
-    else()
-        set(_au_main_tgt libaoclutils)
-    endif()
-    if(TARGET ${_au_main_tgt})
-        aocl_tb_objectify(${_au_main_tgt})
+    # Objectify the umbrella: bare "aoclutils" (shared), or "aoclutils_static"
+    # for a static-only build.
+    if(TARGET aoclutils)
+        aocl_tb_objectify(aoclutils)
+    elseif(TARGET aoclutils_static)
+        aocl_tb_objectify(aoclutils_static)
     endif()
 endif()

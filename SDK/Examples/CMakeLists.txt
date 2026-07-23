@@ -32,9 +32,19 @@ list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
 link_directories(${AUROOT}/lib)
 include(au_examples)
 
-# on windows platform, libname to be linked is libaoclutils.
-
-if(WIN32)
+# In-tree the umbrella is a CMake target and resolves to the correct
+# library file on every platform, so link it by target name -- the shared
+# umbrella when present, else the static-only umbrella. Out-of-tree
+# (standalone SDK example build) there is no target and we link by the
+# shipped filename: only a real MSVC/clang-cl toolchain needs the full name
+# (libaoclutils.lib); every GNU-like linker -- Unix and the Windows
+# MinGW/MSYS2/Cygwin toolchains (where WIN32 is also TRUE) -- strips the lib
+# prefix, so it must get the bare "aoclutils" (-laoclutils -> libaoclutils.*).
+if(TARGET aoclutils)
+    set(AU_LIBS aoclutils)
+elseif(TARGET aoclutils_static)
+    set(AU_LIBS aoclutils_static)
+elseif(MSVC)
     set(AU_LIBS libaoclutils)
 else()
     set(AU_LIBS aoclutils)
@@ -76,30 +86,16 @@ endif()
 
 #if built inside the source tree, add dependencies.
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
-    if(WIN32)
-        if(au_cpuid_cpuid)
-            add_dependencies(cpuid_example_cpp libaoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_deprecated_api_example_cpp libaoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_all_flags_example_cpp libaoclutils_shared au_internal_core_shared)
-        endif()
-        if(au_core_Logger)
-            add_dependencies(logger_demo_cpp libaoclutils_shared au_internal_core_shared)
-        endif()
-        if(au_core_ThreadPinning)
-            add_dependencies(thread_pinning_example_cpp libaoclutils_shared au_internal_core_shared)
-        endif()
-    else()
-        if(au_cpuid_cpuid)
-            add_dependencies(cpuid_example_cpp aoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_deprecated_api_example_cpp aoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_all_flags_example_cpp aoclutils_shared au_internal_core_shared)
-        endif()
-        if(au_core_Logger)
-            add_dependencies(logger_demo_cpp aoclutils_shared au_internal_core_shared)
-        endif()
-        if(au_core_ThreadPinning)
-            add_dependencies(thread_pinning_example_cpp aoclutils_shared au_internal_core_shared)
-        endif()
+    if(au_cpuid_cpuid)
+        add_dependencies(cpuid_example_cpp aoclutils au_cpuid)
+        add_dependencies(cpuid_deprecated_api_example_cpp aoclutils au_cpuid)
+        add_dependencies(cpuid_all_flags_example_cpp aoclutils au_internal_core)
+    endif()
+    if(au_core_Logger)
+        add_dependencies(logger_demo_cpp aoclutils au_internal_core)
+    endif()
+    if(au_core_ThreadPinning)
+        add_dependencies(thread_pinning_example_cpp aoclutils au_internal_core)
     endif()
 endif()
 
