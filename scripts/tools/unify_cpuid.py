@@ -31,6 +31,7 @@ class Unifier:
     def __init__(self, sdk_include: Path, generated_config: Path,
                  emit_line_markers: bool = True):
         self.sdk_include = sdk_include.resolve()
+        self.repo_root = self.sdk_include.parent.parent
         self.generated_config = generated_config.resolve()
         self.emit_line_markers = emit_line_markers
         self.included_files: Set[Path] = set()
@@ -67,7 +68,7 @@ class Unifier:
         if not self.emit_line_markers:
             return
         try:
-            rel = file_path.relative_to(self.sdk_include.parent)
+            rel = file_path.relative_to(self.repo_root)
         except ValueError:
             rel = file_path
         self.output_lines.append(f'#line {lineno} "{rel}"')
@@ -177,7 +178,7 @@ class Unifier:
         self.output_lines.append(" * from the multi-header sources:")
         self.output_lines.append(" * ")
         try:
-            entry_rel = entry_file.relative_to(self.sdk_include.parent)
+            entry_rel = entry_file.relative_to(self.repo_root)
         except ValueError:
             entry_rel = entry_file.name
         self.output_lines.append(f" *   Entry: {entry_rel}")
@@ -212,7 +213,7 @@ class Unifier:
         print(f"  Files inlined: {len(self.included_files)}")
         for path in sorted(self.included_files):
             try:
-                rel = path.relative_to(self.sdk_include.parent)
+                rel = path.relative_to(self.repo_root)
             except ValueError:
                 rel = path
             print(f"    - {rel}")
