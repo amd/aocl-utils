@@ -56,7 +56,7 @@ if (NOT DEFINED AU_CXX_STANDARD)
 endif()
 
 if(NOT DEFINED AU_GTEST_TAG)
-  set(AU_GTEST_TAG "release-1.12.1" CACHE STRING "Tag for Google Test")
+  set(AU_GTEST_TAG "v1.17.0" CACHE STRING "Tag for Google Test")
 endif()
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")

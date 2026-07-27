@@ -41,10 +41,9 @@ FetchContent_Declare(gtest
 # CpuidTest). Save the outer value, force OFF for the fetch, restore after.
 # Pin googletest to the static CRT (/MT) BEFORE it is configured. Test
 # executables link the /MT static aoclutils lib (the au:: alias), so gtest/gmock
-# must match or lld-link fails with a RuntimeLibrary mismatch. gtest_force_shared_crt
-# defaults ON (=/MD); force it OFF here, and crucially do it *before*
-# FetchContent_MakeAvailable -- setting it afterwards (the previous bug) had no
-# effect because gtest had already been configured against the default.
+# must match or lld-link fails with a RuntimeLibrary mismatch. Explicitly force
+# gtest_force_shared_crt OFF before FetchContent_MakeAvailable so a preexisting
+# cache value cannot configure GoogleTest against the wrong CRT.
 set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
 
 set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
