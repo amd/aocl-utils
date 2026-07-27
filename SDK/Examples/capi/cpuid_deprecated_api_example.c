@@ -26,8 +26,8 @@
  *
  */
 
-#include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
+/* Links AOCL-Utils library (includes current and legacy alci_* API). */
+#include "Capi/au/cpuid/cpuid_shared.h"
 #include "Capi/au/enum.h"
 
 #include <stdio.h>

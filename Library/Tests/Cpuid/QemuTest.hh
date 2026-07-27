@@ -35,15 +35,7 @@
 
 namespace {
 using namespace Au;
-/**
- * Test parameters for X86Cpu Qemu test
- * 1. Name of the CPU model to be emulated by Qemu
- * 2. Vector containing the following parameters:
- *    1. Name of the CPU model to be emulated by Qemu
- *    2. Vector of boolean values that marks the expected results of
- *      {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4} APIs
- * 3. The Uarch(microarchitecutre) of the CPU.
- */
+/* X86Cpu Qemu test params: CPU model, expected API results, uarch. */
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true, flagAbsent=true, isUarch=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
@@ -73,26 +65,21 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
 };
 // clang-format on
 
-/**
- * Test parameters to verify getVendorInfo Api
- * Vector contains the following parameters:
- * 1. Name of the CPU model to be emulated using Qemu
- * 2. VendorInfo structure containing the expected results.
- */
+/* getVendorInfo test params: CPU model, VendorInfo expectations. */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersVendorInfo = {
     // EPYC-Genoa-v1 commented out: Qemu's model lacks AVX-512 support present in real silicon
-    //{ "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x1, EUarch::Zen4 } } },
-    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1, EUarch::Zen3 } } },
-    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x01, 0x1, EUarch::Zen3 } } },
-    { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0, EUarch::Zen2 } } },
-    { "EPYC-Rome-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0, EUarch::Zen2 } } },
-    { "EPYC-Rome-v3",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0, EUarch::Zen2 } } },
-    { "EPYC-Rome-v4",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0, EUarch::Zen2 } } },
-    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2, EUarch::Zen } } },
-    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2, EUarch::Zen } } },
-    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2, EUarch::Zen } } },
-    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x01, 0x2, EUarch::Zen } } },
+    //{ "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x11, 0x1, EUarch::Zen4 } } },
+    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x01, 0x1, EUarch::Zen3 } } },
+    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x01, 0x1, EUarch::Zen3 } } },
+    { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0, EUarch::Zen2 } } },
+    { "EPYC-Rome-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0, EUarch::Zen2 } } },
+    { "EPYC-Rome-v3",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0, EUarch::Zen2 } } },
+    { "EPYC-Rome-v4",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0, EUarch::Zen2 } } },
+    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x01, 0x2, EUarch::Zen } } },
+    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x01, 0x2, EUarch::Zen } } },
+    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x01, 0x2, EUarch::Zen } } },
+    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x01, 0x2, EUarch::Zen } } },
     { "Opteron_G1-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1, EUarch::Unknown } } },
     { "Opteron_G2-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1, EUarch::Unknown } } },
     { "Opteron_G3-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x02, 0x3, EUarch::Unknown } } },
@@ -108,14 +95,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersVendorInfo = {
 class QemuTestBase :public testing::Test
 {
     protected:
-    /**
-     * @brief Call the Qemu emulator to run the tests
-     * Implemented in a python module named CpuidTest.
-     * @param[in] cpu The type of the cpu to emulate
-     * @param[in] testName The name of the test to runi
-     *
-     * @return bool The result of the test run on the emulated cpu
-     */
+    /* Call Qemu emulator via CpuidTest python module. */
     static bool callQemuEmulator(const char* cpu, const char* testName)
     {
         auto ret = false;
@@ -170,11 +150,7 @@ class QemuTestBase :public testing::Test
 #endif
         return ret;
     }
-    /**
-     * @brief Clean up the test environment
-     *
-     * @return void
-     */
+    /* Clean up test environment. */
     void TearDown() override
     {
         std::string cleanPath = PROJECT_SOURCE_DIR;

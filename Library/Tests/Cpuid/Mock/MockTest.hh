@@ -44,17 +44,7 @@ namespace {
 
 using namespace Au;
 
-/**
- * Test parameters for X86Cpu Mock Test
- * Vector containing the following parameters:
- * 1. Name of the CPU model to be mocked using simnowdata
- * 2. Vector containing the following parameters:
- *    1. Name of the CPU model to be mocked using simnowdata
- *    2. Vector of boolean values that marks the expected results of
- *       {is_AMD, is_Intel, is_X86_64v2, is_X86_64v3, is_X86_64v4}  APIs
- *     and true for hasFlags(Positive/Negative) and isUarch api tests
- * 3. Expected architecture of the CPU
- */
+/* X86Cpu mock test params: CPU model, expected API results, architecture. */
 // clang-format off
 auto isAmd=true, isIntel=true, isX86_64v2=true, isX86_64v3=true, isX86_64v4=true, flagPresent=true,flagAbsent=true, isUarch=true, isZenFamily=true;
 const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX86Cpu = {
@@ -165,107 +155,102 @@ const std::vector<std::tuple<String, std::vector<bool>, EUarch>> testParametersX
     { "MockFutureArch-v1", { isAmd,  !isIntel, isX86_64v2,  isX86_64v3,  !isX86_64v4, flagPresent, flagAbsent, isUarch, isZenFamily}, EUarch::Zen5 },
 };
 // clang-format on
-/**
- * Test parameters for CpuidUtils Mock Test
- * Vector contains the following parameters:
- * 1. Name of the CPU model to be mocked using simnowdata
- * 2. VendorInfo structure containing the expected results.
- */
+/* CpuidUtils mock test params: CPU model, VendorInfo expectations. */
 // clang-format off
 const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
-    { "Venice-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x50, 0x0 } } },
-    { "Venice-Dense-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x51, 0x0 } } },
-    { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x10, 0x0 } } },
-    { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
-    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x02, 0x0 } } },
+    { "Venice-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x50, 0x0 } } },
+    { "Venice-Dense-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x51, 0x0 } } },
+    { "EPYC-Turin-Dense-v2", { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x10, 0x0 } } },
+    { "EPYC-Turin-Dense-v1", { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x11, 0x0 } } },
+    { "EPYC-Turin-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x02, 0x0 } } },
 
     // Zen5 client/mobile/desktop models (Family 0x1A)
-    { "Shimada-Peak-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x08, 0x0 } } },
-    { "Strix-Point-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x24, 0x0 } } },
-    { "Strix-Point-v2",    { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x30, 0x0 } } },
-    { "Strix-Halo-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x38, 0x0 } } },
-    { "Strix-Halo-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x70, 0x0 } } },
-    { "Gorgon-Point-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x40, 0x0 } } },
-    { "Granite-Ridge-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
-    { "Grado-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x44, 0x0 } } },
-    { "Fire-Range-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x48, 0x0 } } },
-    { "Krackan-Point-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x60, 0x0 } } },
-    { "Krackan-Point-v2",  { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x68, 0x0 } } },
-    { "Sarlak-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x77, 0x0 } } },
+    { "Shimada-Peak-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x08, 0x0 } } },
+    { "Strix-Point-v1",    { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x24, 0x0 } } },
+    { "Strix-Point-v2",    { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x30, 0x0 } } },
+    { "Strix-Halo-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x38, 0x0 } } },
+    { "Strix-Halo-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x70, 0x0 } } },
+    { "Gorgon-Point-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x40, 0x0 } } },
+    { "Granite-Ridge-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x44, 0x0 } } },
+    { "Grado-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x44, 0x0 } } },
+    { "Fire-Range-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x48, 0x0 } } },
+    { "Krackan-Point-v1",  { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x60, 0x0 } } },
+    { "Krackan-Point-v2",  { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x68, 0x0 } } },
+    { "Sarlak-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x77, 0x0 } } },
 
     // Zen4 client/desktop/server models (Family 0x19)
-    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x11, 0x1 } } },
-    { "Storm-Peak-V1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x18, 0x0 } } },
-    { "Dragon-Range-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x61, 0x0 } } },
-    { "Raphael-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x61, 0x0 } } },
-    { "Phoenix-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x74, 0x0 } } },
-    { "Phoenix-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x75, 0x0 } } },
-    { "Phoenix2-v1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x78, 0x0 } } },
-    { "Phoenix2-v2",       { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x7c, 0x0 } } },
-    { "Ryzen-MI300C-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x80, 0x0 } } },
-    { "Ryzen-MI300A-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0x90, 0x0 } } },
-    { "Bergamo-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
-    { "Stones-Dense-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
-    { "Siena-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xa0, 0x0 } } },
+    { "EPYC-Genoa-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x11, 0x1 } } },
+    { "Storm-Peak-V1",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x18, 0x0 } } },
+    { "Dragon-Range-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x61, 0x0 } } },
+    { "Raphael-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x61, 0x0 } } },
+    { "Phoenix-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x74, 0x0 } } },
+    { "Phoenix-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x75, 0x0 } } },
+    { "Phoenix2-v1",       { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x78, 0x0 } } },
+    { "Phoenix2-v2",       { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x7c, 0x0 } } },
+    { "Ryzen-MI300C-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x80, 0x0 } } },
+    { "Ryzen-MI300A-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x90, 0x0 } } },
+    { "Bergamo-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xa0, 0x0 } } },
+    { "Stones-Dense-v1",   { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xa0, 0x0 } } },
+    { "Siena-v1",          { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xa0, 0x0 } } },
 
     // Zen3 server models (Family 0x19)
-    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x1 } } },
-    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x01, 0x2 } } },
+    { "EPYC-Milan-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x01, 0x1 } } },
+    { "EPYC-Milan-v2",     { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x01, 0x2 } } },
 
     // Zen3 client/desktop models (Family 0x19)
-    { "Genesis-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x00, 0x0 } } },
-    { "Chagall-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x08, 0x0 } } },
-    { "Vermeer-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x21, 0x0 } } },
-    { "Vermeer-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x21, 0x2 } } },
-    { "Trento-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x31, 0x1 } } },
-    { "Rembrandt-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x40, 0x0 } } },
-    { "Rembrandt-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x44, 0x1 } } },
-    { "Cezanne-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0x50, 0x0 } } },
+    { "Genesis-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x00, 0x0 } } },
+    { "Chagall-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x08, 0x0 } } },
+    { "Vermeer-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x21, 0x0 } } },
+    { "Vermeer-v2",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x21, 0x2 } } },
+    { "Trento-v1",         { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x31, 0x1 } } },
+    { "Rembrandt-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x40, 0x0 } } },
+    { "Rembrandt-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x44, 0x1 } } },
+    { "Cezanne-v1",        { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0x50, 0x0 } } },
 
     // Zen2 server models (Family 0x17)
-    { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
-    { "EPYC-Rome-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
-    { "EPYC-Rome-v3",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
-    { "EPYC-Rome-v4",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
+    { "EPYC-Rome-v1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0 } } },
+    { "EPYC-Rome-v2",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0 } } },
+    { "EPYC-Rome-v3",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0 } } },
+    { "EPYC-Rome-v4",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0 } } },
 
     // Zen2 client/desktop models (Family 0x17)
-    { "Castle-Peak-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x31, 0x0 } } },
-    { "Project-X-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x84, 0x0 } } },
-    { "Cardinal-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x47, 0x0 } } },
-    { "Grey-Hawk-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x60, 0x0 } } },
-    { "Renoir-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x60, 0x0 } } },
-    { "Lucienne-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x68, 0x0 } } },
-    { "Matisse-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x71, 0x0 } } },
-    { "Van-Gogh-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x90, 0x0 } } },
-    { "Mero-V1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0x98, 0x0 } } },
-    { "Mendocino-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen2,    0xa0, 0x0 } } },
+    { "Castle-Peak-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x31, 0x0 } } },
+    { "Project-X-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x84, 0x0 } } },
+    { "Cardinal-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x47, 0x0 } } },
+    { "Grey-Hawk-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x60, 0x0 } } },
+    { "Renoir-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x60, 0x0 } } },
+    { "Lucienne-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x68, 0x0 } } },
+    { "Matisse-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x71, 0x0 } } },
+    { "Van-Gogh-V1",       { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x90, 0x0 } } },
+    { "Mero-V1",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0x98, 0x0 } } },
+    { "Mendocino-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,    0xa0, 0x0 } } },
 
-    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
-    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
-    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
-    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x2 } } },
+    { "EPYC-v1",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x2 } } },
+    { "EPYC-v2",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x2 } } },
+    { "EPYC-v3",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x2 } } },
+    { "EPYC-v4",           { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x2 } } },
 
     // Zen+ client models (Family 0x17)
-    { "Picasso-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
-    { "Colfax-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
-    { "Pinnacle-Ridge-V1", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x08, 0x0 } } },
+    { "Picasso-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x18, 0x0 } } },
+    { "Colfax-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x08, 0x0 } } },
+    { "Pinnacle-Ridge-V1", { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x08, 0x0 } } },
 
     // Zen client/desktop models (Family 0x17)
-    { "Summit-Ridge-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
-    { "Whitehaven-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
-    { "Snowy-Owl-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x01, 0x0 } } },
-    { "Great-Horned-Owl-V1",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
-    { "Raven-V1",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x11, 0x0 } } },
-    { "Banded-Kestrel-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x18, 0x0 } } },
-    { "Raven-V2",             { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x20, 0x0 } } },
+    { "Summit-Ridge-V1",      { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x0 } } },
+    { "Whitehaven-V1",        { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x0 } } },
+    { "Snowy-Owl-V1",         { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x01, 0x0 } } },
+    { "Great-Horned-Owl-V1",  { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x11, 0x0 } } },
+    { "Raven-V1",             { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x11, 0x0 } } },
+    { "Banded-Kestrel-V1",    { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x18, 0x0 } } },
+    { "Raven-V2",             { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x20, 0x0 } } },
 
     // Feature flag fallback tests (unknown model numbers using flag-based detection)
-    { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Zen2,     0x25, 0x0 } } },
-    { "Mock-Zen17-Model25-NoCLWB",  { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
-    { "Mock-Zen17-Model25-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen,     0x25, 0x0 } } },
-    { "Mock-Zen19-ModelB5-AVX512",  { VendorInfo{ EVendor::Amd,   EFamily::Zen4,    0xB5, 0x0 } } },
-    { "Mock-Zen19-ModelB5-VAES",    { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
-    { "Mock-Zen19-ModelB5-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Zen3,    0xB5, 0x0 } } },
+    { "Mock-Zen17-Model25-CLWB",    { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-NoCLWB",  { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x25, 0x0 } } },
+    { "Mock-Zen17-Model25-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Family17h,     0x25, 0x0 } } },
+    { "Mock-Zen19-ModelB5-AVX512",  { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-VAES",    { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xB5, 0x0 } } },
+    { "Mock-Zen19-ModelB5-NoFlags", { VendorInfo{ EVendor::Amd,   EFamily::Family19h,    0xB5, 0x0 } } },
     { "Opteron_G1-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G2-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x06, 0x1 } } },
     { "Opteron_G3-v1",     { VendorInfo{ EVendor::Amd,   EFamily::Unknown, 0x02, 0x3 } } },
@@ -276,7 +261,7 @@ const std::vector<std::tuple<String, VendorInfo>> testParametersCpuidUtils = {
     { "Denverton-v1",      { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x5F, 0x1 } } },
     { "Conroe-v1",         { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x0F, 0x3 } } },
     { "Skylake-Server-v1", { VendorInfo{ EVendor::Intel, EFamily::Unknown, 0x55, 0x4 } } },
-    { "MockFutureArch-v1", { VendorInfo{ EVendor::Amd,   EFamily::Zen5,    0x11, 0x0 } } },
+    { "MockFutureArch-v1", { VendorInfo{ EVendor::Amd,   EFamily::Family1Ah,    0x11, 0x0 } } },
     // clang-format on
 };
 
@@ -313,9 +298,7 @@ loadFlagVector(const String& cpuType, const String& flagFile)
     return out;
 }
 
-/**
- *  The MockCpuidUtils class is used to mock the CpuidUtils class
- */
+/* MockCpuidUtils mocks the CpuidUtils class. */
 class MockCpuidUtils : public CpuidUtils
 {
   public:
@@ -326,25 +309,11 @@ class MockCpuidUtils : public CpuidUtils
     MOCK_METHOD(ResponseT, __raw_cpuid, (RequestT & req), (override)) {};
 };
 
-/**
- * The Base class for both X86Cpu and CpuidUtils Mock tests
- * It contains the common functions and data for both the tests
- */
+/* Base class for X86Cpu and CpuidUtils mock tests. */
 class MockCpuidBase : public testing::Test
 {
   private:
-    /**
-     * @brief parseCSV function is used to parse the CSV file and populate the
-     * map with the request and response data
-     * The format of the file is assumed to be:
-     * {1,0,0,0}:{329300,2048,4294586883,126614525}
-     * where the first{} represents the request and the second{} represents the
-     * response
-     * @param filename is the name of the file to be parsed
-     *
-     * @return map<RequestT, ResponseT> is the map containing the request and
-     * response data
-     */
+    /* parseCSV: parse simnow {req}:{resp} format into map. */
     std::map<RequestT, ResponseT> parseCSV(const String& filename)
     {
         std::map<RequestT, ResponseT> data;
@@ -391,12 +360,7 @@ class MockCpuidBase : public testing::Test
     }
 
   protected:
-    /**
-     * @brief Configure  Mocks the __raw_cpuid function by specifying the
-     * expected request and response data by parsing the CSV file corresponding
-     * to the CPU.
-     *
-     */
+    /* Configure: mock __raw_cpuid from parsed CSV. */
     std::map<RequestT, ResponseT> Configure()
     {
         String projectDir   = PROJECT_SOURCE_DIR;
@@ -411,13 +375,7 @@ class MockCpuidBase : public testing::Test
         return csvData;
     }
 
-    // Shared SetUp() for all mock fixtures. Uses AnyNumber() for CPUID calls
-    // because these are integration-style tests validating X86Cpu behavior
-    // against real simnow CPU data, not unit tests verifying exact call
-    // sequences. The number of CPUID queries varies by CPU type (AMD vs Intel,
-    // different feature support) and may change as the library evolves; strict
-    // counts would be fragile. For verifying specific CPUID query behavior,
-    // add dedicated unit tests with strict expectations.
+    // SetUp: uses AnyNumber() for CPUID calls (integration-style tests, counts vary by CPU).
     void SetUp() override
     {
         EXPECT_CALL(mockCpuidUtils, __raw_cpuid(testing::_))

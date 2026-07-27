@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,11 +26,10 @@
  *
  */
 
-/* C API export shim: re-includes cpuid.h / cpuid_legacy.h with AU_CPUID_API=export, emitting au_cpuid_* / alci_* as real symbols for libaoclutils. */
+/* C-only export shim for libaoclutils_c: emits au_cpuid_* / alci_* as real symbols (same names as libaoclutils), pulling in NO libstdc++. */
 
 #include "Capi/au/macros.h"
 
-/* Set AU_CPUID_API=export + AU_CPUID_IMPLEMENTATION to emit function bodies. */
 #define AU_CPUID_API           AUD_API_EXPORT
 #define AU_CPUID_IMPLEMENTATION
 

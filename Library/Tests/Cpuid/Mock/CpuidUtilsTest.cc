@@ -42,13 +42,7 @@ class MockCpuidUtil
 INSTANTIATE_TEST_SUITE_P(CpuidUtilsTestSuite,
                          MockCpuidUtil,
                          ::testing::ValuesIn(testParametersCpuidUtils));
-/**
- * Testcase for CpuidUtils
- * Tests all the CpuidUtils Functions
- * from the mocked data in the simnowdata folder.
- * Takes testParametersCpuidUtils as input
- * Containing the CPU type and the expected results in VendorInfo structure.
- */
+/* CpuidUtils test from mocked simnowdata, validates against VendorInfo expectations. */
 
 TEST_P(MockCpuidUtil, CpuidUtilsTest)
 {
@@ -69,8 +63,7 @@ TEST_P(MockCpuidUtil, CpuidUtilsTest)
               expectedResults.m_stepping);
 }
 
-// hasFlag(expected, actual) returns true if all bits in expected are set in actual
-// i.e., (expected & actual) == expected
+// hasFlag: (expected & actual) == expected
 struct HasFlagCase { CpuidRegs actual, expected; bool result; const char* desc; };
 // clang-format off
 static const HasFlagCase kHasFlagCases[] = {
@@ -121,21 +114,15 @@ INSTANTIATE_TEST_SUITE_P(All, CpuidUtilsGetMfgInfo, ::testing::ValuesIn(kGetMfgI
 // ---------------------------------------------------------------------------
 // 3. CpuidUtilsGetFamilyBoundary - test getFamily() edge/boundary values
 // ---------------------------------------------------------------------------
-// EAX bit layout for CPUID leaf 1:
-//   ExtFamilyID = bits[27:20], BaseFamilyID = bits[11:8]
-//   If BaseFamilyID >= 0xF, Family = BaseFamilyID + ExtFamilyID
-// For AMD Zen:    Family 0x17 = 0x0F + 0x08 → EAX = (0x08 << 20) | (0x0F << 8) = 0x00800F00
-// For AMD Zen5:   Family 0x1A = 0x0F + 0x0B → EAX = (0x0B << 20) | (0x0F << 8) = 0x00B00F00
-// For Family 0x16: Family 0x16 = 0x0F + 0x07 → EAX = (0x07 << 20) | (0x0F << 8) = 0x00700F00
-// For Family 0x1B: Family 0x1B = 0x0F + 0x0C → EAX = (0x0C << 20) | (0x0F << 8) = 0x00C00F00
+// EAX leaf 1: ExtFam[27:20] BaseFam[11:8]; Family = BaseFam + ExtFam (if BaseFam >= 0xF)
 struct GetFamilyCase { Uint32 eax; EFamily result; const char* desc; };
 static const GetFamilyCase kGetFamilyCases[] = {
-    {0x00800F00, EFamily::Zen,     "Zen (Family 0x17)"           },
+    {0x00800F00, EFamily::Family17h,     "Zen (Family 0x17)"           },
     {0x00000000, EFamily::Unknown, "zero"                        },
     {0x00000100, EFamily::Unknown, "very small (BaseFamily=1)"   },
     {0x00700F00, EFamily::Unknown, "just below Zen (Family 0x16)"},
-    {0x00B00F00, EFamily::Zen5,    "Zen5 (Family 0x1A)"          },
-    {0x00C00F00, EFamily::Unknown, "above max (Family 0x1B)"     },
+    {0x00B00F00, EFamily::Family1Ah,    "Zen5 (Family 0x1A)"          },
+    {0x00C00F00, EFamily::Family1Bh,    "Zen6 (Family 0x1B)"         },
     {0xFFFFFFFF, EFamily::Unknown, "all bits set"                },
 };
 class CpuidUtilsGetFamily : public ::testing::TestWithParam<GetFamilyCase> {};
@@ -182,30 +169,17 @@ TEST(CpuidUtilsStatic, UpdateCacheInfo)
 }
 
 
-// ---------------------------------------------------------------------------
-// 6a. CpuidUtilsGetFamilyID0x1A - test getFamily() with Family ID 0x1A values
-// Note: Family ID 0x1A (Venice/Venice-Dense CPUs) currently maps to
-// EFamily::Zen5 as the library uses EFamily to represent the Zen generation.
-// ---------------------------------------------------------------------------
+// Family ID 0x1A (Venice/Venice-Dense) maps to EFamily::Family1Ah.
 TEST(CpuidUtilsStatic, GetFamilyFamilyID0x1AVenice)
 {
-    // Venice-v1 uses Family ID 0x1A with model 0x50
-    // EAX format: ExtFamily[27:20] | ExtModel[19:16] | BaseFamily[11:8] | BaseModel[7:4]
-    // For Family 0x1A: BaseFamily=0xF, ExtFamily=0x1A-0xF=0x0B
-    // For Model 0x50: BaseModel=0x0, ExtModel=0x5
-    // EAX = (0x0B << 20) | (0x5 << 16) | (0xF << 8) | (0x0 << 4) = 0x00B50F00
-    // Note: getFamily() returns EFamily::Zen5 for Family ID 0x1A
-    EXPECT_EQ(CpuidUtils::getFamily(0x00B50F00), EFamily::Zen5);
+    // Venice-v1: Family 0x1A model 0x50 -> EAX 0x00B50F00
+    EXPECT_EQ(CpuidUtils::getFamily(0x00B50F00), EFamily::Family1Ah);
 }
 
 TEST(CpuidUtilsStatic, GetFamilyFamilyID0x1AVeniceDense)
 {
-    // Venice-Dense-v1 uses Family ID 0x1A with model 0x51
-    // For Family 0x1A: BaseFamily=0xF, ExtFamily=0x0B
-    // For Model 0x51: BaseModel=0x1, ExtModel=0x5
-    // EAX = (0x0B << 20) | (0x5 << 16) | (0xF << 8) | (0x1 << 4) = 0x00B50F10
-    // Note: getFamily() returns EFamily::Zen5 for Family ID 0x1A
-    EXPECT_EQ(CpuidUtils::getFamily(0x00B50F10), EFamily::Zen5);
+    // Venice-Dense-v1: Family 0x1A model 0x51 -> EAX 0x00B50F10
+    EXPECT_EQ(CpuidUtils::getFamily(0x00B50F10), EFamily::Family1Ah);
 }
 
 TEST(CpuidUtilsStatic, GetModelFamilyID0x1AVenice)

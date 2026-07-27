@@ -1,0 +1,147 @@
+# Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+name: "Check CPUID Unification"
+
+on:
+  push:
+    branches: [amd-main, amd-staging]
+    paths:
+      - 'SDK/Include/Capi/au/cpuid/**'
+      - 'SDK/Include/Au/Defs.hh'
+      - 'SDK/Include/Capi/au/**'
+      - 'scripts/tools/unify_cpuid.py'
+      - '.github/workflows/check-unification.yml'
+  pull_request:
+    branches: [amd-main, amd-staging]
+    paths:
+      - 'SDK/Include/Capi/au/cpuid/**'
+      - 'SDK/Include/Au/Defs.hh'
+      - 'SDK/Include/Capi/au/**'
+      - 'scripts/tools/unify_cpuid.py'
+      - '.github/workflows/check-unification.yml'
+
+jobs:
+  check-unification:
+    name: Verify Unified Header is Up-to-Date
+    # Runs on the self-hosted runner (aocl-utils is a private repo behind an org
+    # IP allow-list, so GitHub-hosted runners get a 403 on checkout). The pool
+    # has several runner instances; one of them had a broken pip cmake shim
+    # earlier in its PATH that exited 1 instantly, so whether this check passed
+    # depended on which instance picked up the job. The "Install pinned CMake"
+    # step below makes the cmake binary deterministic regardless of the runner's
+    # PATH, so the real configure step is reliable.
+    runs-on: amd_linux
+    env:
+      CMAKE_VERSION: 3.26.4
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install pinned CMake
+        run: |
+          # Pin a known-good CMake from the official Kitware release rather than
+          # trusting whatever "cmake" happens to be first on the runner's PATH:
+          # a runner instance in this pool had a dangling pip cmake console
+          # script (from cmake import cmake -> ModuleNotFoundError) that exited 1
+          # in ~24ms, which is what made this check flake. Prepending our own
+          # CMake to $GITHUB_PATH shadows any such shim for every later step.
+          set -euo pipefail
+          cmake_dir="$RUNNER_TEMP/cmake-$CMAKE_VERSION"
+          tarball="cmake-$CMAKE_VERSION-linux-x86_64.tar.gz"
+          url="https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/$tarball"
+          # Pinned SHA-256 of the official Kitware tarball. Download to a file and
+          # VERIFY it before extracting -- do NOT pipe curl straight into tar: a
+          # tampered or MITM'd download would otherwise put an attacker-controlled
+          # cmake on $GITHUB_PATH and run it for every later step. Update this hash
+          # whenever CMAKE_VERSION is bumped (from the release's SHA-256 file).
+          sha256="ba1e0dcc710e2f92be6263f9617510b3660fa9dc409ad2fb8190299563f952a0"
+          mkdir -p "$cmake_dir"
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/$tarball" "$url"
+          echo "$sha256  $RUNNER_TEMP/$tarball" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$tarball" -C "$cmake_dir" --strip-components=1
+          rm -f "$RUNNER_TEMP/$tarball"
+          echo "$cmake_dir/bin" >> "$GITHUB_PATH"
+          "$cmake_dir/bin/cmake" --version
+
+      - name: Configure and generate Au/Config.h
+        run: |
+          # Start from a clean build dir: the self-hosted runner reuses its
+          # workspace between runs, so a stale build-unify-check/ from a prior
+          # run must not leak into this configure.
+          rm -rf build-unify-check
+          mkdir -p build-unify-check
+          cd build-unify-check
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++
+          # Config.h is now at build-unify-check/generated/Au/Config.h
+
+      - name: Regenerate unified header
+        run: |
+          python3 scripts/tools/unify_cpuid.py \
+            --entry SDK/Include/Capi/au/cpuid/cpuid_header_only.h \
+            --sdk-include SDK/Include \
+            --generated-config build-unify-check/generated/Au/Config.h \
+            --output SDK/Include/Capi/au/cpuid/au_cpuid_unified_new.h
+
+      - name: Compare with checked-in version
+        run: |
+          if ! diff -u \
+            SDK/Include/Capi/au/cpuid/au_cpuid_unified.h \
+            SDK/Include/Capi/au/cpuid/au_cpuid_unified_new.h; then
+            echo "ERROR: The unified header is out of sync with the sources."
+            echo "Run the following command locally and commit the result:"
+            echo ""
+            echo "  python3 scripts/tools/unify_cpuid.py \\"
+            echo "    --entry SDK/Include/Capi/au/cpuid/cpuid_header_only.h \\"
+            echo "    --sdk-include SDK/Include \\"
+            echo "    --generated-config build-baseline/generated/Au/Config.h \\"
+            echo "    --output SDK/Include/Capi/au/cpuid/au_cpuid_unified.h"
+            echo ""
+            exit 1
+          fi
+          echo "Unified header is up-to-date."
+
+      - name: Verify self-containment
+        run: |
+          mkdir -p build-unify-test
+          gcc -std=c11 -Wall -Wextra -Werror \
+            -I SDK/Include/Capi/au/cpuid \
+            -o build-unify-test/test_self_contained \
+            tests/unification/test_self_contained.c
+          echo "Self-contained compilation succeeded."
+
+      - name: Run self-contained test
+        run: |
+          ./build-unify-test/test_self_contained
+          echo "Self-contained test passed."

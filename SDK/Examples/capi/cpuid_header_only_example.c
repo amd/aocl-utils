@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,13 +26,33 @@
  *
  */
 
-/* C API export shim: re-includes cpuid.h / cpuid_legacy.h with AU_CPUID_API=export, emitting au_cpuid_* / alci_* as real symbols for libaoclutils. */
+/* Header-only CPUID API (no library link). Contrast with cpuid_example.c. */
 
-#include "Capi/au/macros.h"
+#include "Capi/au/cpuid/cpuid_header_only.h"
 
-/* Set AU_CPUID_API=export + AU_CPUID_IMPLEMENTATION to emit function bodies. */
-#define AU_CPUID_API           AUD_API_EXPORT
-#define AU_CPUID_IMPLEMENTATION
+#include <stdio.h>
+#include <string.h>
 
-#include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
+int
+main(void)
+{
+    const int core_num = 0;
+
+    if (au_cpuid_is_amd(core_num)) {
+        printf("AMD CPU detected (header-only build).\n");
+    } else {
+        printf("Non-AMD / unknown CPU detected (header-only build).\n");
+    }
+
+    char buf[16];
+    memset(buf, 0, sizeof(buf));
+    au_cpuid_get_vendor(core_num, buf, sizeof(buf));
+    printf("Raw vendor block:\n%s", buf);
+
+    const char* const flags[] = { "sse2", "avx2" };
+    const int         nflags  = (int)(sizeof(flags) / sizeof(flags[0]));
+    printf("has sse2+avx2: %s\n",
+           au_cpuid_has_flags_all(core_num, flags, nflags) ? "yes" : "no");
+
+    return 0;
+}

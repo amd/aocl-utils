@@ -64,3 +64,58 @@ X86RawData.hh
 )
 
 #target_link_libraries(au_all PUBLIC af::cpuid)
+
+# ---------------------------------------------------------------------------
+# libaoclutils_c : C-only CPUID CAPI library (NO libstdc++)
+#
+# Pilot for the packaging split (PR #268). A single pure-C translation unit
+# (Library/Capi/cpuid_c_export.c) includes the header-only CPUID core with the
+# export attribute set, so it emits the SAME au_cpuid_* / alci_* symbols the
+# combined libaoclutils exports -- but compiled as C, so the object drags in
+# zero libstdc++. Built ALONGSIDE the combined library; the combined library is
+# left untouched.
+#
+# Diamond linkage: shared consumers can interpose either library (symbol
+# identity prevents conflict); static consumers must pick exactly one archive.
+# ---------------------------------------------------------------------------
+set(AOCLUTILS_C_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../Capi/cpuid_c_export.c")
+
+# Force C compilation even though the file lives beside C++ sources.
+set_source_files_properties(${AOCLUTILS_C_SRC} PROPERTIES LANGUAGE C)
+
+if(AU_BUILD_SHARED_LIBS)
+    add_library(aoclutils_c_shared SHARED ${AOCLUTILS_C_SRC})
+    set_target_properties(aoclutils_c_shared PROPERTIES
+        OUTPUT_NAME       aoclutils_c
+        C_STANDARD        11
+        C_STANDARD_REQUIRED ON
+        POSITION_INDEPENDENT_CODE ON
+        # Do NOT let CMake attach the C++ runtime: this must stay libstdc++-free.
+        LINKER_LANGUAGE   C
+        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+    )
+    install(TARGETS aoclutils_c_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+        RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+        LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+        ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+        INCLUDES DESTINATION ${AU_INSTALL_INCLUDE_DIR}
+    )
+endif()
+
+if(AU_BUILD_STATIC_LIBS)
+    add_library(aoclutils_c_static STATIC ${AOCLUTILS_C_SRC})
+    set_target_properties(aoclutils_c_static PROPERTIES
+        OUTPUT_NAME       aoclutils_c
+        C_STANDARD        11
+        C_STANDARD_REQUIRED ON
+        POSITION_INDEPENDENT_CODE ON
+        LINKER_LANGUAGE   C
+        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+    )
+    install(TARGETS aoclutils_c_static EXPORT ${AU_INSTALL_EXPORT_NAME}
+        RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
+        LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
+        ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
+        INCLUDES DESTINATION ${AU_INSTALL_INCLUDE_DIR}
+    )
+endif()

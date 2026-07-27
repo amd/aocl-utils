@@ -201,9 +201,11 @@ if (AU_BUILD_TESTS)
   enable_testing()
   include(au_find_gtest)
   include(au_unit_tests)
-  # Expose the test-enabled state to C++ so test-only seams (e.g. friend
-  # declarations for white-box unit tests) compile in only for test builds.
-  add_compile_definitions(AU_BUILD_TESTS)
+  # AU_BUILD_TESTS is deliberately NOT added here with add_compile_definitions:
+  # that is directory-scoped and would bake the macro into the production
+  # libraries (both the combined libaoclutils and the C-only libaoclutils_c),
+  # shipping any test-only seam guarded by it. It is instead defined PRIVATE on
+  # each test executable in au_cc_test(), so it reaches test binaries only.
 endif()
 
 option(INSTALL_GTEST OFF)

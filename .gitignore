@@ -26,3 +26,5 @@ docs/sphinx
 sanity_test/
 ```
 .cline_storage/
+result.json
+ai-docs/

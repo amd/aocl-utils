@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -125,6 +125,11 @@ function(au_cc_test testName)
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC "${AU_INCLUDE_DIRS}"
   )
+
+  # Expose the test-enabled state to C++ for test-only seams (white-box unit
+  # tests), scoped to this test executable so it never leaks into the shipped
+  # production libraries. See the note in the top-level CMakeLists.txt.
+  target_compile_definitions(${_target_name} PRIVATE AU_BUILD_TESTS)
 
   # Add gtest with main() as dependency
   target_link_libraries(${_target_name} PRIVATE gmock_main)

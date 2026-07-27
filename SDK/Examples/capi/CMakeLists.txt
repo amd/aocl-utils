@@ -39,6 +39,12 @@ if(au_cpuid_cpuid)
                     SOURCES cpuid_deprecated_api_example.c
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
+
+    # Header-only variant: includes cpuid_header_only.h and links NOTHING
+    # (no LIBS on purpose) -- proves the inline entry header is self-contained.
+    au_add_application(cpuid_header_only_example_c
+                    SOURCES cpuid_header_only_example.c
+                    INCLUDES ${AU_INCLUDE_DIRS})
 endif()
 
 # Only build Logger examples if feature is enabled

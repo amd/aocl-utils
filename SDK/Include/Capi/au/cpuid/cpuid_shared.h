@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,13 +26,18 @@
  *
  */
 
-/* C API export shim: re-includes cpuid.h / cpuid_legacy.h with AU_CPUID_API=export, emitting au_cpuid_* / alci_* as real symbols for libaoclutils. */
+/* Library-backed CPUID C API entry point: declarations only; link libaoclutils (C++ + C) or libaoclutils_c (C-only, no libstdc++). Use cpuid_header_only.h to inline instead. */
+#ifndef __AU_CPUID_SHARED_H__
+#define __AU_CPUID_SHARED_H__
 
-#include "Capi/au/macros.h"
+#include "Au/Defs.hh"
+#include "Capi/au/cpuid/au_platform.h"
 
-/* Set AU_CPUID_API=export + AU_CPUID_IMPLEMENTATION to emit function bodies. */
-#define AU_CPUID_API           AUD_API_EXPORT
-#define AU_CPUID_IMPLEMENTATION
+/* Declaration-only linkage: AU_CPUID_API plain, AU_CPUID_NO_IMPLEMENTATION on. DLP export model: same header for static/.dll; library TUs force dllexport. */
+#define AU_CPUID_API
+#define AU_CPUID_NO_IMPLEMENTATION
 
 #include "Capi/au/cpuid/cpuid.h"
 #include "Capi/au/cpuid/cpuid_legacy.h"
+
+#endif /* __AU_CPUID_SHARED_H__ */

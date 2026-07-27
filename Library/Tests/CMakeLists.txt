@@ -69,7 +69,7 @@ set(CPUID_TEST_FILES
     Cpuid/CapiTest.cc
     Cpuid/Mock/CpuidUtilsTest.cc
     Cpuid/Mock/X86CpuTest.cc
-    Cpuid/Mock/X86CpuAffinityTest.cc
+    Cpuid/Mock/AffinitySelectTest.cc
     Cpuid/CpuidQemuTest.cc
 )
 
@@ -176,6 +176,31 @@ if(au_cpuid_cpuid)
     EXTLIBRARY
     Python3
     )
+
+    # ---------------------------------------------------------------------
+    # Standalone CPUID solidity test (assert-based, not gtest): the single
+    # justified new file. It drives the pure-C core via the raw_fn mock hook
+    # replaying simnow data and asserts decoded values against the
+    # authoritative Mock/MockTest.hh table, including ONLY the amalgamated
+    # au_cpuid_unified.h header (no other Capi/au/cpuid header, no
+    # libaoclutils, no libstdc++) to prove the amalgamation is self-contained.
+    # Takes the repo source dir as argv[1] to locate simnowdata.
+    # Coverage/Zen56/Affinity/Parity/C++-unified checks are NOT separate
+    # categories -- they are folded into the existing CpuidTest gtest target
+    # (see CapiTest.cc and Mock/X86CpuTest.cc).
+    # ---------------------------------------------------------------------
+    set(AU_CPUID_STANDALONE_C_TESTS
+        Cpuid/Unified/UnifiedHeaderTest.c
+    )
+    foreach(__caseFile IN LISTS AU_CPUID_STANDALONE_C_TESTS)
+        get_filename_component(__caseName ${__caseFile} NAME_WE)
+        add_executable(${__caseName} ${__caseFile})
+        set_target_properties(${__caseName} PROPERTIES
+            C_STANDARD 11 C_STANDARD_REQUIRED ON)
+        target_include_directories(${__caseName} PRIVATE ${AU_INCLUDE_DIRS})
+        add_test(NAME ${__caseName}
+            COMMAND ${__caseName} ${PROJECT_SOURCE_DIR})
+    endforeach()
 endif()
 ##########
 # Dynamic Loader Tests
