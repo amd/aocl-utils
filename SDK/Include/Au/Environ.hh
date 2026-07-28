@@ -30,6 +30,7 @@
 
 #include "Au/Au.hh"
 
+#include <list>
 #include <map>
 #include <mutex>
 #include <string_view>
@@ -51,8 +52,12 @@ class Environ
      *
      * @return  String  Environtment Variables value or a null string
      */
+    /*
+     * The returned view aliases a value string held in append-only storage that
+     * is never freed or reallocated for the process lifetime, so it stays valid
+     * across any later set()/unset()/init() and across threads.
+     */
     StringView const get(StringView key) const;
-    // StringView get(StringView key) const;
 
   public:
     /**
@@ -87,9 +92,23 @@ class Environ
     bool exists(StringView const& key) const;
 
   private:
+    /*
+     * Internal setter. The caller must already hold m_lock; it appends the value
+     * to the never-freed pool and (re)points the key, so it must not be called
+     * through the locking public setters (m_lock is non-recursive).
+     */
     void _set(String const& key, String const& val);
 
-    using env_mapT = std::map<String, String, std::less<>>;
+    /*
+     * Append-only storage that owns every value string ever handed out. Entries
+     * are never erased, moved, or reallocated for the process lifetime, which is
+     * what keeps a StringView/const char* returned by get() valid after a later
+     * set()/unset()/init(). std::list is used because it guarantees stable node
+     * (and therefore character-buffer) addresses.
+     */
+    using value_poolT = std::list<String>;
+    using env_mapT    = std::map<String, const String*, std::less<>>;
+    value_poolT        m_value_pool;
     env_mapT           m_environ;
     mutable std::mutex m_lock;
     const String       m_empty_string{ "" };

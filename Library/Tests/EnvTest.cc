@@ -30,7 +30,10 @@
 
 #include "gtest/gtest.h"
 
+#include <atomic>
 #include <cstdlib>
+#include <string>
+#include <thread>
 
 #if defined(WIN32) || defined(_WINDOWS)
 auto homeEnv = "USERPROFILE";
@@ -180,6 +183,72 @@ TEST(Environ, checkScopedString)
     }
 
     EXPECT_STREQ(Env::get("SWEETHOME").data(), "yes-it-is-sweet");
+}
+
+TEST(Environ, getViewOutlivesMutation)
+{
+    // A view returned by get() must keep reading its original value even after
+    // the key is overwritten, unset, and the environment re-initialised.
+    Env::set("STABLE_KEY", "original-value");
+
+    StringView captured = Env::get("STABLE_KEY");
+    EXPECT_EQ(captured, "original-value");
+
+    Env::set("STABLE_KEY", "a-different-and-much-longer-replacement-value");
+    Env::unset("STABLE_KEY");
+    {
+        const char* envp[] = {
+            "SOMETHING=else",
+            NULL,
+        };
+        Env::init(envp);
+    }
+
+    EXPECT_EQ(captured, "original-value");
+    EXPECT_STREQ(captured.data(), "original-value");
+}
+
+TEST(Environ, concurrentSetUnsetGetIsSafe)
+{
+    // Concurrent readers and mutators on the same key must not race, crash, or
+    // hand back a dangling view. Meant to run clean under TSan and ASan.
+    Env::set("CONC_KEY", "seed");
+
+    constexpr int    kIters = 20000;
+    std::atomic<bool> go{ false };
+
+    auto waitGo = [&] {
+        while (!go.load(std::memory_order_acquire)) {
+        }
+    };
+
+    std::thread reader([&] {
+        waitGo();
+        for (int i = 0; i < kIters; ++i) {
+            StringView v = Env::get("CONC_KEY");
+            if (!v.empty()) {
+                volatile char c = v.data()[0]; // touch first byte only when present
+                (void)c;
+            }
+        }
+    });
+    std::thread setter([&] {
+        waitGo();
+        for (int i = 0; i < kIters; ++i)
+            Env::set("CONC_KEY", "value-" + std::to_string(i % 8));
+    });
+    std::thread unsetter([&] {
+        waitGo();
+        for (int i = 0; i < kIters; ++i)
+            Env::unset("CONC_KEY");
+    });
+
+    go.store(true, std::memory_order_release);
+    reader.join();
+    setter.join();
+    unsetter.join();
+
+    SUCCEED();
 }
 
 } // namespace

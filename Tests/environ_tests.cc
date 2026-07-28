@@ -148,4 +148,23 @@ TEST(Integration, au_env_is_set)
     }
 }
 
+TEST(Integration, au_env_get_pointer_outlives_mutation)
+{
+    /*
+     * The const char* returned by au_env_get must stay valid and readable after
+     * the key is overwritten and unset (the dangling-pointer / use-after-free
+     * scenario this fix addresses).
+     */
+    au_env_set("STABLE_C_KEY", "c-original-value");
+
+    const char* p = au_env_get("STABLE_C_KEY");
+    EXPECT_STREQ(p, "c-original-value");
+
+    au_env_set("STABLE_C_KEY", "c-replacement-value-that-is-much-longer");
+    au_env_unset("STABLE_C_KEY");
+
+    /* The earlier pointer still reads the original value. */
+    EXPECT_STREQ(p, "c-original-value");
+}
+
 } // namespace
