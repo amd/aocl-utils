@@ -124,7 +124,7 @@ class StatusOr
 
   private:
     Status           m_status;
-    std::optional<T> m_value;
+    std::optional<T> m_value{};
 
     template<typename U>
     friend class StatusOr;

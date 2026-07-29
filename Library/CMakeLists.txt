@@ -36,7 +36,7 @@ if (MSVC)
 	# silently ignored by cl when passed via add_compile_options.
 	add_compile_options(/W4)
 else()
-	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
+	add_compile_options(-Wall $<$<COMPILE_LANGUAGE:CXX>:-Weffc++> -pedantic -fPIC)
 endif()
 
 SET(LOGGER_SRC_FILES "Core/Logger/LogWriter.cc"
