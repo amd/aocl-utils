@@ -104,11 +104,6 @@ install(
   DESTINATION ${AU_INSTALL_INCLUDE_DIR}/Au
 )
 
-message("Installing Version.txt... ")
-install(
-  FILES version.txt
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
-)
 message("Installing binaries... ")
 if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
     set(DEBUG_POSTFIX "-dbg")
