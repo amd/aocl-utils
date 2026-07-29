@@ -170,6 +170,13 @@ if(MSVC)
 else()
   include(au_compiler_unix)
 endif()
+
+# The library uses pthread APIs (thread pinning, logger std::thread). On glibc
+# < 2.34 libpthread is a separate object, so the threads library must be linked
+# explicitly for the shared object to be self-contained. Threads::Threads is a
+# no-op on toolchains/platforms that fold pthread into libc.
+find_package(Threads REQUIRED)
+
 if(AU_ENABLE_CODE_COVERAGE)
     add_compile_options(-O0 -fprofile-arcs -ftest-coverage)
     add_link_options(-lgcov --coverage)

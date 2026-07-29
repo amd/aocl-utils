@@ -178,6 +178,17 @@ au_cc_library(aoclutils
         au::sdk__include
 )
 
+# Link the threads library into the umbrella targets. PRIVATE on the shared
+# object places libpthread in its DT_NEEDED so it is self-contained; PUBLIC on
+# the static archive propagates the usage requirement to consumers, since an
+# archive has no link step of its own.
+if(TARGET aoclutils)
+    target_link_libraries(aoclutils PRIVATE Threads::Threads)
+endif()
+if(TARGET aoclutils_static)
+    target_link_libraries(aoclutils_static PUBLIC Threads::Threads)
+endif()
+
 # Only add enabled submodules
 set(AU_SUBMODULE_DIRS "")
 
