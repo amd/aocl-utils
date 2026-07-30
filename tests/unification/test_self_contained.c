@@ -1,13 +1,13 @@
 /*
- * test_self_contained.c - Verify the unified header is truly self-contained.
+ * test_self_contained.c - Verify the standalone header is truly self-contained.
  *
- * This TU includes ONLY the unified header and exercises the API. It must
- * compile with ONLY the directory containing the unified header on the
- * include path (NO SDK/Include, NO build/generated), and must link with nothing
- * (no libstdc++, no libaoclutils).
+ * This TU includes ONLY the standalone header (au_cpuid_header_only.h) and
+ * exercises the API. It must compile with ONLY the directory containing that
+ * header on the include path (NO SDK/Include, NO build/generated), and must
+ * link with nothing (no libstdc++, no libaoclutils).
  */
 
-#include "au_cpuid_unified.h"
+#include "au_cpuid_header_only.h"
 
 #include <stdio.h>
 
@@ -51,6 +51,6 @@ int main(void)
     au_cpuid_get_vendor(AU_CURRENT_CPU_NUM, vendor_info, sizeof(vendor_info));
     printf("Vendor info (newline-separated):\n%s\n", vendor_info);
 
-    printf("\n=== Self-contained unified header test PASSED ===\n");
+    printf("\n=== Self-contained standalone header test PASSED ===\n");
     return 0;
 }

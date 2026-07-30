@@ -32,7 +32,7 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "Capi/au/cpuid/cpuid_header_only.h"
+#include "Capi/au/cpuid/cpuid_inline.h"
 
 /* assert() must fire in Release too: CMake adds -DNDEBUG there, which turns
  * assert() into a no-op and would make EXPECT-free checks vacuous. gtest's

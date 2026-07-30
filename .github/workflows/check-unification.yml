@@ -109,24 +109,24 @@ jobs:
       - name: Regenerate unified header
         run: |
           python3 scripts/tools/unify_cpuid.py \
-            --entry SDK/Include/Capi/au/cpuid/cpuid_header_only.h \
+            --entry SDK/Include/Capi/au/cpuid/cpuid_inline.h \
             --sdk-include SDK/Include \
             --generated-config build-unify-check/generated/Au/Config.h \
-            --output SDK/Include/Capi/au/cpuid/au_cpuid_unified_new.h
+            --output SDK/Include/Capi/au/cpuid/au_cpuid_header_only_new.h
 
       - name: Compare with checked-in version
         run: |
           if ! diff -u \
-            SDK/Include/Capi/au/cpuid/au_cpuid_unified.h \
-            SDK/Include/Capi/au/cpuid/au_cpuid_unified_new.h; then
+            SDK/Include/Capi/au/cpuid/au_cpuid_header_only.h \
+            SDK/Include/Capi/au/cpuid/au_cpuid_header_only_new.h; then
             echo "ERROR: The unified header is out of sync with the sources."
             echo "Run the following command locally and commit the result:"
             echo ""
             echo "  python3 scripts/tools/unify_cpuid.py \\"
-            echo "    --entry SDK/Include/Capi/au/cpuid/cpuid_header_only.h \\"
+            echo "    --entry SDK/Include/Capi/au/cpuid/cpuid_inline.h \\"
             echo "    --sdk-include SDK/Include \\"
             echo "    --generated-config build-baseline/generated/Au/Config.h \\"
-            echo "    --output SDK/Include/Capi/au/cpuid/au_cpuid_unified.h"
+            echo "    --output SDK/Include/Capi/au/cpuid/au_cpuid_header_only.h"
             echo ""
             exit 1
           fi

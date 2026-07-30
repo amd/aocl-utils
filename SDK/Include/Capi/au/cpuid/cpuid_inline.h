@@ -26,12 +26,15 @@
  *
  */
 
-/* Header-only CPUID C API entry point: inlines the API (static inline), links nothing. Use cpuid_shared.h to link libaoclutils / libaoclutils_c instead. */
-#ifndef __AU_CPUID_HEADER_ONLY_H__
-#define __AU_CPUID_HEADER_ONLY_H__
+/* Inline CPUID C API entry point: emits the API as `static inline`, links nothing. Needs the sibling headers in this directory -- for a self-contained single file, use au_cpuid_header_only.h. Include cpuid.h to link libaoclutils / libaoclutils_c instead. */
+#ifndef __AU_CPUID_INLINE_H__
+#define __AU_CPUID_INLINE_H__
 
-/* AU_CPUID_API left unset: cpuid.h defaults to `static inline` + AU_CPUID_IMPLEMENTATION enabled. */
+/* Opt into inline linkage: storage class `static inline` plus function bodies. cpuid.h defaults to declarations-only, so both must be set explicitly here. */
+#define AU_CPUID_API static inline
+#define AU_CPUID_IMPLEMENTATION
+
 #include "Capi/au/cpuid/cpuid.h"
 #include "Capi/au/cpuid/cpuid_legacy.h"
 
-#endif /* __AU_CPUID_HEADER_ONLY_H__ */
+#endif /* __AU_CPUID_INLINE_H__ */

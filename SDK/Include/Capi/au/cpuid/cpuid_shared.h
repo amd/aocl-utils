@@ -26,16 +26,12 @@
  *
  */
 
-/* Library-backed CPUID C API entry point: declarations only; link libaoclutils (C++ + C) or libaoclutils_c (C-only, no libstdc++). Use cpuid_header_only.h to inline instead. */
+/* Compatibility alias for cpuid.h + cpuid_legacy.h. Declarations-only is now cpuid.h's own default, so this header only adds the deprecated alci_/alcpu_ include; prefer cpuid.h directly. The "shared" name is a misnomer -- it applies equally to the static archive -- and this header is expected to retire with the legacy API. */
 #ifndef __AU_CPUID_SHARED_H__
 #define __AU_CPUID_SHARED_H__
 
 #include "Au/Defs.hh"
 #include "Capi/au/cpuid/au_platform.h"
-
-/* Declaration-only linkage: AU_CPUID_API plain, AU_CPUID_NO_IMPLEMENTATION on. DLP export model: same header for static/.dll; library TUs force dllexport. */
-#define AU_CPUID_API
-#define AU_CPUID_NO_IMPLEMENTATION
 
 #include "Capi/au/cpuid/cpuid.h"
 #include "Capi/au/cpuid/cpuid_legacy.h"

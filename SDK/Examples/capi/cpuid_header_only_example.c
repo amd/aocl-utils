@@ -28,7 +28,7 @@
 
 /* Header-only CPUID API (no library link). Contrast with cpuid_example.c. */
 
-#include "Capi/au/cpuid/cpuid_header_only.h"
+#include "Capi/au/cpuid/cpuid_inline.h"
 
 #include <stdio.h>
 #include <string.h>

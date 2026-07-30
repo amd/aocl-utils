@@ -27,7 +27,7 @@
  */
 
 #include "Au/Cpuid/X86Cpu.hh"
-#include "Capi/au/cpuid/cpuid_header_only.h"
+#include "Capi/au/cpuid/cpuid_inline.h"
 #include "MockTest.hh"
 #include <cstdio>
 #include <cstring>

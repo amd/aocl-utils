@@ -29,7 +29,7 @@
 #ifndef __AU_CPUID_CPUID_H__
 #define __AU_CPUID_CPUID_H__
 
-/* Do NOT include this header directly. Include cpuid_header_only.h (header-only inline) or cpuid_shared.h (declarations only, link .so/.a). */
+/* Library-backed CPUID C API entry point: declarations only; link libaoclutils (C++ + C) or libaoclutils_c (C-only, no libstdc++). Include cpuid_inline.h to inline the API instead, or au_cpuid_header_only.h for the standalone single-file drop-in. */
 
 #include "Au/Config.h"
 #include "Au/Defs.hh"
@@ -42,15 +42,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Linkage-mode mechanism (INTERNAL). AU_CPUID_API sets storage class (default: static inline). AU_CPUID_IMPLEMENTATION emits bodies when defined, else only decls. cpuid_header_only.h emits inline bodies; cpuid_shared.h emits decls only and links .so/.a. Direct include defaults to header-only. */
+/* Linkage-mode mechanism (INTERNAL). AU_CPUID_API sets storage class (default: plain, i.e. declarations resolved by the linked library). AU_CPUID_IMPLEMENTATION emits bodies when defined, else only decls. cpuid_inline.h sets AU_CPUID_API=static inline and opts into bodies; the library TUs set it to the export attribute. A direct include defaults to link-a-library, so misuse fails loudly at link time rather than silently inlining. */
 #ifndef AU_CPUID_API
-#define AU_CPUID_API static inline
-/* No explicit linkage requested -> header-only: emit bodies unless suppressed. */
-#ifndef AU_CPUID_NO_IMPLEMENTATION
-#ifndef AU_CPUID_IMPLEMENTATION
-#define AU_CPUID_IMPLEMENTATION
-#endif
-#endif
+#define AU_CPUID_API
 #endif
 
 AUD_EXTERN_C_BEGIN

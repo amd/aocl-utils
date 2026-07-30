@@ -27,11 +27,11 @@
  */
 
 /*
- * Standalone C11 test for the unified header (au_cpuid_unified.h only, no libs).
+ * Standalone C11 test for the standalone header (au_cpuid_header_only.h only, no libs).
  * Uses simnow-replay mock to validate against MockTest.hh expectations.
  */
 
-#include "Capi/au/cpuid/au_cpuid_unified.h"
+#include "Capi/au/cpuid/au_cpuid_header_only.h"
 
 /* Undef NDEBUG so asserts fire in Release builds. */
 #undef NDEBUG
@@ -261,6 +261,6 @@ main(int argc, char** argv)
     test_venice_v1(repo_root);
     test_family_1bh_synthetic();
 
-    printf("ALL PASS: au_cpuid_unified.h (C11)\n");
+    printf("ALL PASS: au_cpuid_header_only.h (C11)\n");
     return 0;
 }

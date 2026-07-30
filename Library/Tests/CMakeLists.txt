@@ -182,7 +182,7 @@ if(au_cpuid_cpuid)
     # justified new file. It drives the pure-C core via the raw_fn mock hook
     # replaying simnow data and asserts decoded values against the
     # authoritative Mock/MockTest.hh table, including ONLY the amalgamated
-    # au_cpuid_unified.h header (no other Capi/au/cpuid header, no
+    # au_cpuid_header_only.h header (no other Capi/au/cpuid header, no
     # libaoclutils, no libstdc++) to prove the amalgamation is self-contained.
     # Takes the repo source dir as argv[1] to locate simnowdata.
     # Coverage/Zen56/Affinity/Parity/C++-unified checks are NOT separate
