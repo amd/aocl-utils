@@ -50,6 +50,22 @@ option(BUILD_SHARED_LIBS "Build shared libraries by default" ON)
 # out explicitly with -DAU_BUILD_STATIC_LIBS=OFF.
 option(AU_BUILD_STATIC_LIBS "Build static libraries (AOCL policy: default ON)" ON)
 
+option(AU_STATIC_FORCE_CRT_MD "Build the static library against the dynamic MSVC CRT (/MD, /MDd) instead of the default static CRT (/MT, /MTd)" OFF)
+
+# Single source of truth for "does au::<mod> resolve to an /MD target?" --
+# either the static target opted into /MD (AU_STATIC_FORCE_CRT_MD), or there
+# is no static target and the alias falls back to the unconditionally-/MD
+# shared target (AU_BUILD_STATIC_LIBS=OFF). au_find_gtest.cmake,
+# au_unit_tests.cmake, and au_examples.cmake all key off this one variable so
+# gtest/gmock and every in-tree test/example executable stay in lockstep with
+# au_lib.cmake's alias resolution -- a mismatch on any one of them reintroduces
+# an MSVC RuntimeLibrary link error.
+if(AU_STATIC_FORCE_CRT_MD OR NOT AU_BUILD_STATIC_LIBS)
+    set(AU_ALIAS_LINKS_MD_CRT TRUE)
+else()
+    set(AU_ALIAS_LINKS_MD_CRT FALSE)
+endif()
+
 # AU_BUILD_SHARED_LIBS always tracks BUILD_SHARED_LIBS. Force-sync via the
 # cache so the project-specific name remains a single source of truth for
 # downstream cmake code (au_lib.cmake) without diverging from the canonical

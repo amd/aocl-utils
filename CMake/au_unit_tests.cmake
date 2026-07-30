@@ -161,6 +161,14 @@ function(au_cc_test testName)
       #TIMEOUT 120
     )
 
+  # Keep this test EXE's CRT in lockstep with whatever au::<mod>/gtest resolve
+  # to (see AU_ALIAS_LINKS_MD_CRT in au_options.cmake) -- otherwise MSVC fails
+  # to link with a RuntimeLibrary mismatch.
+  if(MSVC AND AU_ALIAS_LINKS_MD_CRT)
+    set_target_properties(${_target_name} PROPERTIES
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+  endif()
+
   #message("Adding Test: " ${_target_name})
 
   if (HAVE_CMAKE_GTEST)

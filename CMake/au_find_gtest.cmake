@@ -39,12 +39,14 @@ FetchContent_Declare(gtest
 # ThreadLocal<Sequence*>) are not __declspec(dllexport)'d and link with
 # undefined-symbol errors in any test EXE that uses gmock (LoggerTest,
 # CpuidTest). Save the outer value, force OFF for the fetch, restore after.
-# Pin googletest to the static CRT (/MT) BEFORE it is configured. Test
-# executables link the /MT static aoclutils lib (the au:: alias), so gtest/gmock
-# must match or lld-link fails with a RuntimeLibrary mismatch. Explicitly force
-# gtest_force_shared_crt OFF before FetchContent_MakeAvailable so a preexisting
-# cache value cannot configure GoogleTest against the wrong CRT.
-set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+# Pin googletest's CRT to match au::<mod> before gtest configures (setting it
+# after has no effect); AU_ALIAS_LINKS_MD_CRT (au_options.cmake) is the single
+# source of truth also consumed by test/example executables.
+if(AU_ALIAS_LINKS_MD_CRT)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+else()
+    set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+endif()
 
 set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
 set(BUILD_SHARED_LIBS OFF)

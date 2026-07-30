@@ -214,6 +214,12 @@ function(au_cc_library NAME)
 	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
             OUTPUT_NAME ${static_output_name}
         )
+        # Opt-in override: build the static lib against /MD instead of the
+        # /MT project default (see au_compiler_msvc.cmake). Off by default.
+        if(AU_STATIC_FORCE_CRT_MD)
+            set_target_properties(${__target_name}_static PROPERTIES
+                MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        endif()
         # The Windows "lib" filename prefix belongs ONLY to the umbrella
         # (libaoclutils_static.lib). Sub-module archives (au_cpuid_static.lib)
         # never had it -- downstream consumers (aocl-crypto) link them by the

@@ -56,6 +56,14 @@ function(au_add_application NAME)
   add_executable(${NAME} ${APP_SOURCES})
   add_executable(${APP_PACKAGE}::${NAME} ALIAS ${NAME})
 
+  # Keep this example EXE's CRT in lockstep with whatever au::<mod>/gtest
+  # resolve to (see AU_ALIAS_LINKS_MD_CRT in au_options.cmake) -- otherwise
+  # MSVC fails to link with a RuntimeLibrary mismatch.
+  if(MSVC AND AU_ALIAS_LINKS_MD_CRT)
+    set_target_properties(${NAME} PROPERTIES
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+  endif()
+
   if(DEFINED APP_LIBS)
     target_link_directories(${NAME} PRIVATE ${CMAKE_BINARY_DIR}/Library)
     target_link_libraries(${NAME}
