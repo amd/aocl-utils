@@ -19,6 +19,13 @@ tests/CTestTestfile.cmake
 tests/Makefile
 tests/cmake_install.cmake
 build/
+# Cover sibling build trees too (build-unify-check/, build-unify-test/, ...) so
+# a CI step reproduced locally cannot be committed by accident. Anchored with a
+# leading slash: unanchored, "build*/" matches at ANY depth and would swallow
+# the tracked Tests/build_sanity_tests/ suite, silently hiding new files there.
+/build*/
+# Scratch output of the unified-header sync check.
+SDK/Include/Capi/au/cpuid/au_cpuid_header_only_new.h
 docs/.doxygen
 docs/_doxygen
 docs/.sphinx

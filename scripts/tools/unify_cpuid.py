@@ -27,12 +27,17 @@ def read_version(sdk_include: Path) -> str:
         return "unknown"
 
 
+# Sentinel standing in for the Au/Config.h include. Deliberately NOT a real
+# filesystem path: resolve_include() hands this back and inline_file() emits a
+# synthetic block on a match, so anything that can equal a real header's
+# resolved path would silently replace that header with the Config stub.
+CONFIG_SENTINEL = Path("<synthetic:Au/Config.h>")
+
+
 class Unifier:
-    def __init__(self, sdk_include: Path, generated_config: Path,
-                 emit_line_markers: bool = True):
+    def __init__(self, sdk_include: Path, emit_line_markers: bool = True):
         self.sdk_include = sdk_include.resolve()
         self.repo_root = self.sdk_include.parent.parent
-        self.generated_config = generated_config.resolve()
         self.emit_line_markers = emit_line_markers
         self.included_files: Set[Path] = set()
         self.output_lines: List[str] = []
@@ -47,9 +52,9 @@ class Unifier:
         # file -- its content is build-config-specific and would break the CI
         # regenerate-and-diff check. Instead inline_file() emits a deterministic
         # synthetic Config.h block (version + AU_WARN_DEPRECATION). Return the
-        # generated_config sentinel path so inline_file() recognises the marker.
+        # sentinel so inline_file() recognises the marker.
         if include_path == "Au/Config.h":
-            return self.generated_config
+            return CONFIG_SENTINEL
 
         # 1. Search relative to the including file's directory (sibling includes)
         sibling = from_file.parent / include_path
@@ -107,7 +112,11 @@ class Unifier:
 
     def inline_file(self, file_path: Path, depth: int = 0):
         """Recursively inline file, processing #includes (quoted inlined, angle-bracket kept)."""
-        file_path = file_path.resolve()
+        # Compare BEFORE resolve(): the sentinel is not a real path and must not
+        # be resolved against the cwd, or it would stop matching.
+        is_config = file_path == CONFIG_SENTINEL
+        if not is_config:
+            file_path = file_path.resolve()
 
         # Dedup: include each file at most once
         if file_path in self.included_files:
@@ -120,7 +129,7 @@ class Unifier:
         # both are reproducible in any environment. Compiler/OS/endian and
         # build-type identity is supplied at compile time by au_platform.h and is
         # intentionally NOT baked here.
-        if file_path == self.generated_config:
+        if is_config:
             self._emit_synthetic_config()
             return
 
@@ -236,12 +245,6 @@ def main():
         help="SDK include directory (e.g., SDK/Include)",
     )
     parser.add_argument(
-        "--generated-config",
-        type=Path,
-        required=True,
-        help="Generated Au/Config.h (e.g., build-baseline/generated/Au/Config.h)",
-    )
-    parser.add_argument(
         "--output",
         type=Path,
         required=True,
@@ -262,13 +265,8 @@ def main():
     if not args.sdk_include.is_dir():
         print(f"Error: SDK include dir does not exist: {args.sdk_include}", file=sys.stderr)
         sys.exit(1)
-    if not args.generated_config.exists():
-        print(f"Error: generated config does not exist: {args.generated_config}", file=sys.stderr)
-        sys.exit(1)
-
     unifier = Unifier(
         args.sdk_include,
-        args.generated_config,
         emit_line_markers=not args.no_line_markers,
     )
     unifier.generate_unified(args.entry, args.output)
