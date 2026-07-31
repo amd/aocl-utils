@@ -8,7 +8,7 @@
  *   Entry: SDK/Include/Capi/au/cpuid/cpuid_inline.h
  *   Au/Config.h replaced by a deterministic synthetic block
  *     (version + AU_WARN_DEPRECATION only; see the generator).
- *   Version: 5.3.1-
+ *   Version: 5.3.2-
  *   Repository: https://github.com/amd/aocl-utils
  * 
  * Source of truth: the individual headers in SDK/Include/.
@@ -96,7 +96,7 @@
 /* depend on the build config. Platform/compiler identity is derived */
 /* from the toolchain's predefined macros by au_platform.h below.     */
 #ifndef AU_PACKAGE_VERSION
-#define AU_PACKAGE_VERSION "5.3.1-"
+#define AU_PACKAGE_VERSION "5.3.2-"
 #endif
 #ifndef AU_WARN_DEPRECATION
 #define AU_WARN_DEPRECATION

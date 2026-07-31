@@ -14,7 +14,7 @@ License: MIT (SPDX: MIT)
 See full license text in Section 3.
 
 SECTION 2: Third-Party Components
-The following third-party components are included in AOCL-Utils v5.2:
+The following third-party components are included in AOCL-Utils v5.3.2:
 
 google-googletest
 Copyright: Google Inc.
