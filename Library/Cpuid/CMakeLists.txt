@@ -103,9 +103,16 @@ if(AU_BUILD_SHARED_LIBS)
 endif()
 
 if(AU_BUILD_STATIC_LIBS)
+    # Windows has no .a/.so split, so without a distinct name the shared
+    # target's import lib silently overwrites this archive (both ".lib").
+    if(UNIX)
+        set(aoclutils_c_static_output_name aoclutils_c)
+    else()
+        set(aoclutils_c_static_output_name aoclutils_c_static)
+    endif()
     add_library(aoclutils_c_static STATIC ${AOCLUTILS_C_SRC})
     set_target_properties(aoclutils_c_static PROPERTIES
-        OUTPUT_NAME       aoclutils_c
+        OUTPUT_NAME       ${aoclutils_c_static_output_name}
         C_STANDARD        11
         C_STANDARD_REQUIRED ON
         POSITION_INDEPENDENT_CODE ON
