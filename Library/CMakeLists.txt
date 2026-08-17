@@ -54,14 +54,6 @@ SET(THREAD_PINNING_SRC_FILES "Core/ThreadPinning.cc"
                              "Capi/threadpinning.cc"
 )
 
-set(BASE64_SRC_FILES
-    Base64/Base64.cc
-    Base64/Base64Encoder.cc
-    Base64/Base64Decoder.cc
-    # CAPIs
-    #Capi/base64.cc
-)
-
 set(MEMORY_SRC_FILES
     Memory/BufferView.cc
 )
@@ -90,16 +82,6 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	    COMPILE_FLAGS "-mrdrnd"
 	)
 endif()
-
-set(AVX2_FILES
-  Base64/transform_avx2.cc
-)
-
-set_source_files_properties(
-  ${AVX2_FILES}
-  PROPERTIES
-    COMPILE_FLAGS "-mavx2"
-)
 
 set(CORE_SRC_FILES
   #Core/Buffer.cc

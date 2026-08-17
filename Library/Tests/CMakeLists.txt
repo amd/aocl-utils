@@ -157,15 +157,6 @@ if (${EXISTS__})
     )
 endif()
 
-#au_cc_test(Base64Test
-#    DIRECTORY
-#        .
-#    SOURCES
-#        Base64Test.cc
-#    DEPENDS
-#        au::base64
-#)
-
 if(au_cpuid_cpuid)
     au_cc_test(CpuidTest
     SOURCES
