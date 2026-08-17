@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -45,6 +45,18 @@ if(au_cpuid_cpuid)
     au_add_application(cpuid_header_only_example_c
                     SOURCES cpuid_header_only_example.c
                     INCLUDES ${AU_INCLUDE_DIRS})
+
+    # Feature-masked dispatch. Ordinary consumer source, linked against the
+    # test-only shim instead of the real library, so AU_CPUID_MOCK_PROFILE can
+    # drive it down its fallback path. Gated on the shim option: the target does not
+    # exist in a default build, and the examples build must not gain a
+    # dependency on it.
+    if(AU_BUILD_MOCKCPUID_SHIM AND TARGET aoclutils_mock_shared)
+        au_add_application(cpuid_mockcpuid_example_c
+                        SOURCES cpuid_mockcpuid_example.c
+                        LIBS aoclutils_mock_shared aoclutils
+                        INCLUDES ${AU_INCLUDE_DIRS})
+    endif()
 endif()
 
 # Only build Logger examples if feature is enabled

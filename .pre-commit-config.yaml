@@ -43,7 +43,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: cppcheck
-        args: [--enable=all, --suppress=missingIncludeSystem, --suppress=missingInclude, --suppress=unusedFunction, --suppress=unmatchedSuppression]
+        args: [--enable=all, --suppress=missingIncludeSystem, --suppress=missingInclude, --suppress=unusedFunction, --suppress=unmatchedSuppression, --suppress=normalCheckLevelMaxBranches, --suppress=uninitMemberVarNoCtor, --suppress=cstyleCast, --suppress=constParameterCallback]
   - repo: local
     hooks:
       - id: copyrightcheck

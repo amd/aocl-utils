@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -177,6 +177,13 @@ set(AU_SUBMODULE_DIRS "")
 # Check if CPUID is enabled
 if(au_cpuid_cpuid)
     list(APPEND AU_SUBMODULE_DIRS "Cpuid")
+endif()
+
+# Test-only CPUID masking shim. Masks the CPUID core, so it is gated on the same
+# switch as the module it shims. Added ahead of Tests/ because the MockCpuid
+# tests link its target and so need it to already exist.
+if(au_cpuid_cpuid AND AU_BUILD_MOCKCPUID_SHIM)
+    add_subdirectory(MockCpuid)
 endif()
 
 if(AU_BUILD_TESTS)

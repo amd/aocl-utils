@@ -34,6 +34,10 @@ option(AU_ENABLE_SLOW_TESTS "Option to Enable SLOW tests" OFF)
 option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
 option(AU_ENABLE_ASSERTIONS "Enable asserts in the code" OFF)
 option(AU_ENABLE_OLD_API "Enable OLD alci_* APIs" OFF)
+# Test-only CPUID masking shim (libaoclutils_mock and libaoclutils_mock_c). OFF
+# keeps it out of
+# every normal build; the real library is never modified either way.
+option(AU_BUILD_MOCKCPUID_SHIM "Build the test-only CPUID masking shim" OFF)
 option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
 option(AU_BUILD_WITH_TSAN "Enable TSAN Options on build" OFF)
 option(AU_BUILD_WITH_MEMSAN "Enable MEMSAN Options on build" OFF)

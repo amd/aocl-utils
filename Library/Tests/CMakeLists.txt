@@ -193,6 +193,10 @@ if(au_cpuid_cpuid)
             COMMAND ${__caseName} ${PROJECT_SOURCE_DIR})
     endforeach()
 endif()
+
+if(AU_BUILD_MOCKCPUID_SHIM AND au_cpuid_cpuid)
+    add_subdirectory(MockCpuid)
+endif()
 ##########
 # Dynamic Loader Tests
 ##########
