@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,6 +35,8 @@ CpuInfo::CpuInfo(CpuNumT idx)
     : m_logical_core_num{ idx }
     , m_physical_core_num{ idx }
 {
+    /* idx stored verbatim (sentinel included). If getLogicalIdx/getPhysicalIdx become
+     * real, plumb in X86Cpu's resolved core, not raw idx. */
 #if !defined(AU_CPU_ARCH_X86)
     AUD_ASSERT(false, "Not an x86 Cpu");
 #endif
@@ -46,7 +48,7 @@ operator<<(std::ostream& os, EGoverner const& gov) // NOLINT
     using G = EGoverner;
 
     switch (gov) {
-        // clang-format off
+            // clang-format off
         case G::ePerformance:os << "Performance";break;
         case G::ePowersave:os << "Power Save";break;
         case G::eUserspace:os << "User Defined";break;

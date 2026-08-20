@@ -12,7 +12,7 @@
                 "AU_VENDOR_CONTACT": "AOCL <aocl@amd.com>",
                 "AU_PROJ_PREFIX": "AU",
                 "AU_CXX_STANDARD": "17",
-                "AU_GTEST_TAG": "release-1.12.1"
+                "AU_GTEST_TAG": "v1.17.0"
             }
         },
         {

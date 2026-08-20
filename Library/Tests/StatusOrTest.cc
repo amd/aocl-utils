@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,9 @@
 
 #include "Au/StatusOr.hh"
 
-#include "type_traits"
+#include <memory>
+#include <type_traits>
+#include <utility>
 
 #include "gtest/gtest.h"
 
@@ -70,6 +72,69 @@ TEST(StatusOr, Value)
 
 TEST(StatusOr, asdf) {}
 
+// A minimal move-only type: models any StatusOr payload that owns a resource
+// (e.g. a pimpl'd handle held via unique_ptr, like X86Cpu). Copyable is
+// deliberately disabled so the tests below exercise the move path only.
+namespace {
+    struct MoveOnly
+    {
+        std::unique_ptr<int> p;
+        explicit MoveOnly(int v)
+            : p{ std::make_unique<int>(v) }
+        {
+        }
+        MoveOnly(MoveOnly&&)                 = default;
+        MoveOnly& operator=(MoveOnly&&)      = default;
+        MoveOnly(const MoveOnly&)            = delete;
+        MoveOnly& operator=(const MoveOnly&) = delete;
+    };
+} // namespace
+
+// Regression: StatusOr wrapping a move-only T must itself be movable.
+// User-declared copy ops on StatusOr previously suppressed the implicit move
+// ctor/assignment, leaving StatusOr<MoveOnly> neither copyable nor movable, so
+// the idiomatic factory patterns below failed to compile. The prior tests only
+// moved the *contents* of a StatusOr, never the StatusOr object itself, which
+// is why the gap went unnoticed until a move-only return type (X86Cpu) used it.
+static_assert(std::is_move_constructible<StatusOr<MoveOnly>>(),
+              "StatusOr<move-only> must be move-constructible");
+static_assert(std::is_move_assignable<StatusOr<MoveOnly>>(),
+              "StatusOr<move-only> must be move-assignable");
+static_assert(!std::is_copy_constructible<StatusOr<MoveOnly>>(),
+              "StatusOr<move-only> must not be copy-constructible");
+
+TEST(StatusOr, MoveOnlyPayloadIsMovable)
+{
+    // Move-construct the wrapper (the "return sor;" forwarding pattern).
+    StatusOr<MoveOnly> a{ MoveOnly{ 42 } };
+    StatusOr<MoveOnly> b{ std::move(a) };
+    ASSERT_TRUE(b.ok());
+    EXPECT_EQ(*b.value().p, 42);
+
+    // Move-assign the wrapper.
+    StatusOr<MoveOnly> c{ MoveOnly{ 7 } };
+    c = std::move(b);
+    ASSERT_TRUE(c.ok());
+    EXPECT_EQ(*c.value().p, 42);
+}
+
+// Mirrors how X86Cpu::buildFromCore is consumed: a factory returning
+// StatusOr<move-only> by value, whose result is returned again through a named
+// local (needs the wrapper's move ctor, not copy elision).
+static StatusOr<MoveOnly>
+makeMoveOnly(int v)
+{
+    StatusOr<MoveOnly> s{ MoveOnly{ v } };
+    return s;
+}
+
+TEST(StatusOr, MoveOnlyFactoryForwarding)
+{
+    auto s = makeMoveOnly(99);
+    ASSERT_TRUE(s.ok());
+    EXPECT_EQ(*s.value().p, 99);
+}
+
 TEST(StatusOr, WithQualifierStar)
 {
     static_assert(
@@ -94,21 +159,19 @@ TEST(StatusOr, WithQualifierStar)
 // Operator arrow with qualifiers
 TEST(StatusOr, WithQualifierArrow)
 {
-    static_assert(
-        std::is_same<
-            const int*,
-            decltype(std::declval<const StatusOr<int>&>().operator->())>(),
-        "invalid qualifiers");
+    static_assert(std::is_same<const int*,
+                               decltype(std::declval<const StatusOr<int>&>()
+                                            .operator->())>(),
+                  "invalid qualifiers");
     static_assert(
         std::is_same<int*,
                      decltype(std::declval<StatusOr<int>&>().operator->())>(),
         "invalid qualifier");
 
-    static_assert(
-        std::is_same<
-            const int*,
-            decltype(std::declval<const StatusOr<int>&&>().operator->())>(),
-        "invalid qualifier");
+    static_assert(std::is_same<const int*,
+                               decltype(std::declval<const StatusOr<int>&&>()
+                                            .operator->())>(),
+                  "invalid qualifier");
 
     static_assert(
         std::is_same<int*,

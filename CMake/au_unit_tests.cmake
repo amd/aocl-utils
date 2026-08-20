@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -126,6 +126,11 @@ function(au_cc_test testName)
     PUBLIC "${AU_INCLUDE_DIRS}"
   )
 
+  # Expose the test-enabled state to C++ for test-only seams (white-box unit
+  # tests), scoped to this test executable so it never leaks into the shipped
+  # production libraries. See the note in the top-level CMakeLists.txt.
+  target_compile_definitions(${_target_name} PRIVATE AU_BUILD_TESTS)
+
   # Add gtest with main() as dependency
   target_link_libraries(${_target_name} PRIVATE gmock_main)
 
@@ -155,6 +160,14 @@ function(au_cc_test testName)
       CXX_STANDARD_REQUIRED true
       #TIMEOUT 120
     )
+
+  # Keep this test EXE's CRT in lockstep with whatever au::<mod>/gtest resolve
+  # to (see AU_ALIAS_LINKS_MD_CRT in au_options.cmake) -- otherwise MSVC fails
+  # to link with a RuntimeLibrary mismatch.
+  if(MSVC AND AU_ALIAS_LINKS_MD_CRT)
+    set_target_properties(${_target_name} PROPERTIES
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+  endif()
 
   #message("Adding Test: " ${_target_name})
 

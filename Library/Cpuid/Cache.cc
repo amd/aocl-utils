@@ -35,10 +35,11 @@
 #include <ostream>
 #include <sstream>
 
-namespace Au {
+namespace Au { namespace cache_attr {
 
-using CacheLevel = cache_attr::ELevel;
-using CacheType  = cache_attr::EType;
+/* Defined in cache_attr for ADL (see CacheInfo.hh note). */
+using CacheLevel = ELevel;
+using CacheType  = EType;
 
 std::ostream&
 operator<<(std::ostream& os, CacheLevel const& level) // NOLINT
@@ -71,4 +72,4 @@ operator<<(std::ostream& os, CacheType const& type) // NOLINT
     return os;
 }
 
-} // namespace Au
+}} // namespace cache_attr, namespace Au

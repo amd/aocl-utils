@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,4 +60,12 @@
 #define ALC_E_FLAG_MOVDIR64B         161 // ECpuidFlag::movdir64b
 #define ALC_E_FLAG_AVX512VPINTERSECT 162 // ECpuidFlag::avx512_vpintersect
 #define ALC_E_FLAG_X2AVIC            163 // ECpuidFlag::x2avic
-#define ALC_CPUID_FLAG_MAX           164 // ECpuidFlag::Max
+#define ALC_E_FLAG_CLZERO            164 // ECpuidFlag::clzero
+#define ALC_E_FLAG_AVX512_BMM        165 // ECpuidFlag::avx512_bmm
+#define ALC_E_FLAG_AVX512_FP16       166 // ECpuidFlag::avx512_fp16
+#define ALC_E_FLAG_AVX_IFMA          167 // ECpuidFlag::avx_ifma
+#define ALC_E_FLAG_AVX_VNNI_INT8     168 // ECpuidFlag::avx_vnni_int8
+#define ALC_E_FLAG_AVX_NE_CONVERT    169 // ECpuidFlag::avx_ne_convert
+#define ALC_E_FLAG_AVX_VNNI_INT16    170 // ECpuidFlag::avx_vnni_int16
+#define ALC_E_FLAG_AVX10             171 // ECpuidFlag::avx10
+#define ALC_CPUID_FLAG_MAX           172 // ECpuidFlag::Max

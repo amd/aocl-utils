@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,27 @@ FetchContent_Declare(gtest
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG ${AU_GTEST_TAG}
 )
+
+# Force googletest and googlemock to build as static libraries even when this
+# project's BUILD_SHARED_LIBS is ON. With BUILD_SHARED_LIBS=ON propagating in
+# the gtest subdir, gmock builds as a DLL but its internal globals (Mutex,
+# ThreadLocal<Sequence*>) are not __declspec(dllexport)'d and link with
+# undefined-symbol errors in any test EXE that uses gmock (LoggerTest,
+# CpuidTest). Save the outer value, force OFF for the fetch, restore after.
+# Pin googletest's CRT to match au::<mod> before gtest configures (setting it
+# after has no effect); AU_ALIAS_LINKS_MD_CRT (au_options.cmake) is the single
+# source of truth also consumed by test/example executables.
+if(AU_ALIAS_LINKS_MD_CRT)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+else()
+    set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+endif()
+
+set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
+set(BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(gtest)
+set(BUILD_SHARED_LIBS "${_au_save_build_shared_libs}")
+unset(_au_save_build_shared_libs)
 
 #
 # On Windows: Prevent overriding the parent project's compiler/linker settings
@@ -41,8 +61,6 @@ IF(WIN32)
 	target_link_libraries(gmock PUBLIC gtest)
 	target_link_libraries(gmock_main PUBLIC gtest_main)
 ENDIF()
-
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 option(GTEST_ENABLE_INSTALL "" OFF)
 option(GMOCK_ENABLE_INSTALL "" OFF)

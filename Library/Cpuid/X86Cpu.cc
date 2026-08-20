@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,88 +27,61 @@
  */
 
 #include "Au/Config.h"
+#include "Au/Cpuid/CpuidUtils.hh"
 #include "X86RawData.hh"
-#include <thread>
-#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
-#include <sched.h>
-#include <unistd.h>
-#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
-#include <sys/syscall.h>
-#define gettid() syscall(SYS_gettid)
-#endif
-#elif defined(AU_TARGET_OS_IS_WINDOWS)
-#include <Windows.h>
-#include <direct.h>
-#include <io.h>
-#endif
 
 namespace Au {
+
+/*
+ * All affinity logic (selection, pinning, hybrid E-core, multi-group) now lives in
+ * the pure-C core resolver (au_cpuid_init). X86Cpu is a pure decoder that forwards
+ * cpu_num to the core. AU_CURRENT_CPU_NUM (UINT32_MAX) casts to -1, matching the
+ * core's sentinel.
+ */
 
 X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
     : CpuInfo{ num }
     , m_pimpl{ new X86Cpu::Impl{ cUtils } }
 {
-    // TODO: Thread pinning.
-    pImpl()->update();
+    /* MOCK path: core skips selection/pinning. Non-strict. */
+    m_resolved = pImpl()->update((int)num, /*strict=*/false);
 }
 
 X86Cpu::X86Cpu(CpuNumT num)
+    : X86Cpu{ num, /*strict=*/false }
+{
+}
+
+X86Cpu::X86Cpu(CpuNumT num, bool strict)
     : CpuInfo{ num }
     , m_pimpl{ new X86Cpu::Impl{} }
 {
-    /* switch to the correct cpunum,
-     * using sched_setaffinity() */
-
-    auto nthreads = std::thread::hardware_concurrency();
-    if (num != AU_CURRENT_CPU_NUM)
-        AUD_ASSERT(num < nthreads, "Invalid Cpuid Number");
-    if (num > nthreads)
-        num = AU_CURRENT_CPU_NUM;    // fallback to default behaviour
-    if (num != AU_CURRENT_CPU_NUM) { // In the default behaviour, the cpuid is
-                                     // quried on the current cpu.
-#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
-        cpu_set_t currentMask;
-        cpu_set_t newMask;
-        cpu_set_t testMask;
-        auto      tid = gettid();
-        int result    = sched_getaffinity(tid, sizeof(cpu_set_t), &currentMask);
-
-        AUD_ASSERT(result == 0, "Failed to get thread affinity.");
-        if (result > 0)
-            std::cout << "Failed to get thread affinity\n";
-        CPU_ZERO(&newMask);
-        CPU_SET(num, &newMask);
-        result = sched_setaffinity(tid, sizeof(cpu_set_t), &newMask);
-        if (result > 0)
-            std::cout << "Failed to set thread affinity\n";
-        AUD_ASSERT(result == 0, "Failed to set thread affinity.");
-        sched_getaffinity(tid, sizeof(cpu_set_t), &testMask);
-
-#elif defined(AU_TARGET_OS_IS_WINDOWS)
-        DWORD threadId    = GetCurrentThreadId();
-        auto  mask        = (static_cast<DWORD_PTR>(1) << num);
-        auto  currentMask = SetThreadAffinityMask(&threadId, mask);
-#endif
-        pImpl()->update();
-#if defined(AU_TARGET_OS_IS_LINUX) && !defined(__CYGWIN__)
-        result = sched_setaffinity(tid, sizeof(cpu_set_t), &currentMask);
-        AUD_ASSERT(result == 0, "Failed to set thread affinity.");
-        if (result > 0)
-            std::cout << "Failed to set thread affinity\n";
-#elif defined(AU_TARGET_OS_IS_WINDOWS)
-        auto newMask = SetThreadAffinityMask(&threadId, currentMask);
-#endif
-    } else {
-        pImpl()->update();
-    }
+    /* C core handles all selection/pinning/restore. strict=false degrades; strict=true fails on out-of-mask. */
+    m_resolved = pImpl()->update((int)num, strict);
 }
+
+StatusOr<X86Cpu>
+X86Cpu::buildFromCore(CpuNumT num)
+{
+    /* Strict resolve: out-of-mask core returns InvalidArgument. */
+    X86Cpu cpu{ num, /*strict=*/true };
+    if (!cpu.m_resolved) {
+        Status sts = StatusInvalidArgument(
+            "X86Cpu::buildFromCore: requested core is outside affinity mask");
+        return sts;
+    }
+    return cpu;
+}
+
+X86Cpu::X86Cpu(X86Cpu&&) noexcept = default;
 
 X86Cpu::~X86Cpu() = default;
 
 void
 X86Cpu::update()
 {
-    pImpl()->update();
+    /* Re-resolve non-strict on stored cpu_num (core owns affinity). */
+    m_resolved = pImpl()->update();
 }
 
 bool

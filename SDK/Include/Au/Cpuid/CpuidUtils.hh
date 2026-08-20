@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,9 +32,6 @@
 #include "Au/Cpuid/CacheInfo.hh"
 #include "Au/Types.hh"
 
-#include <iostream>
-#include <type_traits>
-
 namespace Au {
 /* ID return values */
 struct CpuidRegs
@@ -50,15 +47,9 @@ struct CpuidRegs
                && edx == Reg.edx;
     }
 
-    /* following is required for making this key in a std::map */
+    /* Required for std::map key. Overflow harmless (ordering is insignificant). */
     bool operator<(CpuidRegs const& Reg) const
     {
-        /* Windows requires all comparators to follow strict weak ordering.
-         * The below definition follows the constraint.
-         * Note: The overflow that might occur doesn't affect the usecase,
-         * as this is used for the ordering of keys in the map and the order
-         * is insignificant.
-         */
         return eax + ebx + ecx + edx < Reg.eax + Reg.ebx + Reg.ecx + Reg.edx;
     }
 
@@ -77,6 +68,11 @@ using CacheType  = CacheInfo::CacheType;
 /**
  * @enum  Vendor
  * @brief CPU vendors.
+ *
+ * @note  Mirror of the C enum @c au_vendor_t in
+ *        SDK/Include/Capi/au/cpuid/cpuid_flags.h. The two MUST stay
+ *        value-for-value identical (the C core and C++ wrapper cast between
+ *        them). If you edit this enum, update au_vendor_t too, and vice versa.
  */
 enum class EVendor : Uint32
 {
@@ -85,17 +81,22 @@ enum class EVendor : Uint32
     Other    /**< Others. */
 };
 
-/* Processor family info */
+/**
+ * @brief Processor family info.
+ *
+ * @note  Mirror of the C enum @c au_family_t in
+ *        SDK/Include/Capi/au/cpuid/cpuid_flags.h. The two MUST stay
+ *        value-for-value identical. If you edit this enum, update au_family_t
+ *        too, and vice versa.
+ */
 enum class EFamily : Uint16
 {
-    Unknown  = 0x0,
-    Zen      = 0x17,
-    Zen_Plus = 0x17,
-    Zen2     = 0x17,
-    Zen3     = 0x19,
-    Zen4     = 0x19,
-    Zen5     = 0x1A,
-    Max      = 0x1A, /* Always set to latest family ID */
+    Unknown   = 0x0,
+    Family17h = 0x17, /* Zen, Zen+, Zen2 */
+    Family19h = 0x19, /* Zen3, Zen4      */
+    Family1Ah = 0x1A, /* Zen5, Zen6      */
+    Family1Bh = 0x1B, /* Zen6 (future)   */
+    Max       = 0x1B, /* Always set to latest family ID */
 };
 
 class CpuidUtils
@@ -103,77 +104,63 @@ class CpuidUtils
   public:
     virtual ~CpuidUtils() {}
     /**
-     * \brief   Function to query CPUID instruction based on EAX input
-     * parameter.
-     *
-     * Function which has assembly code to query CPUID instruction
-     * based on EAX input value. EAX should have valid value to
-     * get CPUID information and other EBX, ECX, EDX should have 0s.
-     * In some cases, ECX also will have valid values.
-     *
+     * \brief   Query CPUID instruction based on EAX (and sometimes ECX).
      * \param[in] req Request structure containing EAX, EBX, ECX, EDX values.
      * \param[out] resp regs pointer which has EAX, EBX, ECX, EDX values.
      */
     virtual ResponseT __raw_cpuid(RequestT& req);
     /**
-     * \brief   Get CPU Vendor info from CPUID instruction.
-     *
-     * It identifies AMD and Intel Cpus. Tags anyother vendor as Other.
-     *
+     * \brief   Get CPU Vendor from CPUID (AMD, Intel, or Other).
      * \param[in]  ResponseT    The CPUID Register Data.
      * @return The EVendor [AMD, Intel or Other]
      */
     static EVendor getMfgInfo(ResponseT const& regs);
     /**
-     * \brief       Get Family ID from given 32-bit input value.
-     *
-     * Family[7:0] = (ExtendedFamily[7:0] + {0000b,BaseFamily[3:0]})
-     * where ExtendedFamily[7:0] = var[27:20], BaseFamily[3:0] = var[11, 8]
-     *
+     * \brief       Get Family ID from given 32-bit value.
+     * \details     Family[7:0] = ExtendedFamily[7:0] + BaseFamily[3:0].
      * \param[in]   var  32-bit value.
-     *
-     * \return      Returns Family ID value.
-     * Note: Returns the minimum value of the family ID.
-     * Eg: Zen, ZenPlus and zen2 has same family ID. even if the CPU belongs to
-     * the Zen2 family, it returns Zen2 the function return Zen
+     * \return      Family ID.
      */
     static EFamily getFamily(Uint32 var);
     /**
-     * \brief       Get Model number from given input value.
-     *
-     *  Model[7:0] = {ExtendedModel[3:0],BaseModel[3:0]}
-     *  where ExtendedModel[3:0] = var[29:16], BaseModel[3:0] = var[7, 4]
-     *
+     * \brief       Get Model number from given value.
+     * \details     Model[7:0] = {ExtendedModel[3:0], BaseModel[3:0]}.
      * \param[in]   var  32-bit value.
-     *
-     * \return      Returns Model number value.
+     * \return      Model number.
      */
     static Uint16 getModel(Uint32 var);
     /**
-     * \brief       Get Stepping ID from given input value.
-     *
-     * Get Stepping ID from given input value.
-     * Model[7:0] = {ExtendedModel[3:0],BaseModel[3:0]}
-     * where ExtendedModel[3:0] = var[29:16], BaseModel[3:0] = var[7, 4]
-     * For now, model number is stepping. TODO: need to revisit for each family.
-     *
+     * \brief       Get Stepping ID from given value.
      * \param[in]   var  32-bit value.
-     *
-     * \return      Returns Stepping ID value.
+     * \return      Stepping ID.
      */
     static Uint16 getStepping(Uint32 var);
     /**
-     * @details Issues the cpuid instruction using EAX/ECX gets response and
-     * checks a flag in appropriate register
-     *
-     * @param[in] expected Expected bit(s) to check
-     *
-     * @param[in] actual   Actula value of E{A,B,C,D}X after 'cpuid' issued
-     *
-     * @return true if cpu has flag, false otherwise
+     * @brief   Check if expected bits are set in actual CPUID response.
+     * @param[in] expected Expected bit(s) to check.
+     * @param[in] actual   Actual E{A,B,C,D}X after cpuid.
+     * @return true if flag present, false otherwise.
      */
     static bool hasFlag(ResponseT const& expected, ResponseT const& actual);
     void        updateCacheView(CacheView& cView);
     static void updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp);
+
+    /**
+     * @brief   Check if package is hybrid (leaf 0x7.0 EDX[15]).
+     * @details Reports package-level heterogeneity; use getCoreType() for per-core type.
+     * @return  true if Hybrid bit set, false otherwise.
+     */
+    bool isHybrid();
+
+    /**
+     * @brief   Get core type (leaf 0x1A.0 EAX[31:24]).
+     * @details Per-core query; must run on target core. Intel: 0x40=P-core, 0x20=E-core.
+     * @return  Raw core-type byte; 0 if unsupported.
+     */
+    Uint32 getCoreType();
 };
+
+/* Intel hybrid core-type values (CPUID.1A:EAX[31:24]). */
+static constexpr Uint32 AU_X86_CORE_TYPE_ATOM = 0x20; /**< E-core. */
+static constexpr Uint32 AU_X86_CORE_TYPE_CORE = 0x40; /**< P-core. */
 } // namespace Au

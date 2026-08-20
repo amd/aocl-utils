@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -50,8 +50,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 include(au_version)
 
-file (STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/version.txt AU_VERSION_FROM_FILE)
+# Read only well-formed version lines so blank lines, trailing newlines, and
+# comment lines in version.txt do not break parsing. The regex matches the
+# same MAJOR.MINOR.PATCH-[suffix] format au_extract_version_details expects,
+# so loose strings (e.g. 1.2.3.4 or "1.2.3 foo") are rejected here rather
+# than silently leaving AU_VERSION_* unset later.
+file (STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" AU_VERSION_LINES
+      REGEX "^[0-9]+\\.[0-9]+\\.[0-9]+-")
+if (NOT AU_VERSION_LINES)
+    message(FATAL_ERROR "No valid version line found in version.txt")
+endif()
+list (GET AU_VERSION_LINES 0 AU_VERSION_FROM_FILE)
+string (STRIP "${AU_VERSION_FROM_FILE}" AU_VERSION_FROM_FILE)
 au_extract_version_details("AU_VERSION" "${AU_VERSION_FROM_FILE}")
+if (NOT DEFINED AU_VERSION_MAJOR)
+    message(FATAL_ERROR "Failed to parse version from version.txt: '${AU_VERSION_FROM_FILE}'")
+endif()
 
 set(AU_VERSION_STRING "${AU_VERSION_MAJOR}.${AU_VERSION_MINOR}.${AU_VERSION_PATCH}")
 if(AU_VERSION_SUFFIX)
@@ -117,9 +131,20 @@ endif()
 
 if(NOT CMAKE_CXX_CLANG_TIDY)
   find_program(CLANG_TIDY "clang-tidy")
-  if(NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND")
+  # NOTFOUND is CMake-falsy; avoids MATCHES on an unquoted path (can have
+  # spaces on Windows, e.g. "Program Files").
+  if(CLANG_TIDY)
     if (MSVC)
+      # clang-tidy runs as Clang even over a cl.exe command line, so on
+      # clang-tidy <= 18 it needs -mrdrnd itself to see _rdrand16_step
+      # (cl.exe doesn't; Library/CMakeLists.txt withholds it there).
       set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY};--extra-arg=-EHsc")
+      # -mrdrnd is x86-only; only add it for clang-tidy on an x86/x64 target.
+      string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" _AU_CLANG_TIDY_ARCH)
+      if (_AU_CLANG_TIDY_ARCH MATCHES "^(X86|I[3-6]86|X86_64|AMD64)$")
+        list(APPEND CMAKE_CXX_CLANG_TIDY "--extra-arg=-mrdrnd")
+      endif()
+      unset(_AU_CLANG_TIDY_ARCH)
     else()
       set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
     endif()
@@ -145,6 +170,13 @@ if(MSVC)
 else()
   include(au_compiler_unix)
 endif()
+
+# The library uses pthread APIs (thread pinning, logger std::thread). On glibc
+# < 2.34 libpthread is a separate object, so the threads library must be linked
+# explicitly for the shared object to be self-contained. Threads::Threads is a
+# no-op on toolchains/platforms that fold pthread into libc.
+find_package(Threads REQUIRED)
+
 if(AU_ENABLE_CODE_COVERAGE)
     add_compile_options(-O0 -fprofile-arcs -ftest-coverage)
     add_link_options(-lgcov --coverage)
@@ -176,6 +208,11 @@ if (AU_BUILD_TESTS)
   enable_testing()
   include(au_find_gtest)
   include(au_unit_tests)
+  # AU_BUILD_TESTS is deliberately NOT added here with add_compile_definitions:
+  # that is directory-scoped and would bake the macro into the production
+  # libraries (both the combined libaoclutils and the C-only libaoclutils_c),
+  # shipping any test-only seam guarded by it. It is instead defined PRIVATE on
+  # each test executable in au_cc_test(), so it reaches test binaries only.
 endif()
 
 option(INSTALL_GTEST OFF)

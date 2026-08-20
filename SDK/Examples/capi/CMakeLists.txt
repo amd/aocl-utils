@@ -39,6 +39,12 @@ if(au_cpuid_cpuid)
                     SOURCES cpuid_deprecated_api_example.c
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
+
+    # Header-only variant: includes cpuid_inline.h and links NOTHING
+    # (no LIBS on purpose) -- proves the inline entry header is self-contained.
+    au_add_application(cpuid_header_only_example_c
+                    SOURCES cpuid_header_only_example.c
+                    INCLUDES ${AU_INCLUDE_DIRS})
 endif()
 
 # Only build Logger examples if feature is enabled
@@ -66,27 +72,14 @@ if(au_core_ThreadPinning)
 endif()
 
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
-    if(WIN32)
-        if(au_cpuid_cpuid)
-            add_dependencies(cpuid_example_c libaoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_deprecated_api_example_c libaoclutils_shared au_cpuid_shared)
-        endif()
-        if(au_core_Logger)
-            add_dependencies(logger_demo_c libaoclutils_shared)
-        endif()
-        if(au_core_ThreadPinning)
-            add_dependencies(thread_pinning_example_c libaoclutils_shared)
-        endif()
-    else()
-        if(au_cpuid_cpuid)
-            add_dependencies(cpuid_example_c aoclutils_shared au_cpuid_shared)
-            add_dependencies(cpuid_deprecated_api_example_c aoclutils_shared au_cpuid_shared)
-        endif()
-        if(au_core_Logger)
-            add_dependencies(logger_demo_c aoclutils_shared)
-        endif()
-        if(au_core_ThreadPinning)
-            add_dependencies(thread_pinning_example_c aoclutils_shared)
-        endif()
+    if(au_cpuid_cpuid)
+        add_dependencies(cpuid_example_c aoclutils au_cpuid)
+        add_dependencies(cpuid_deprecated_api_example_c aoclutils au_cpuid)
+    endif()
+    if(au_core_Logger)
+        add_dependencies(logger_demo_c aoclutils)
+    endif()
+    if(au_core_ThreadPinning)
+        add_dependencies(thread_pinning_example_c aoclutils)
     endif()
 endif()

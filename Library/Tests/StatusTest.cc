@@ -25,8 +25,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Au/Error.hh"
 #include "Au/Status.hh"
+#include "Au/Error.hh"
 #include "Au/Types.hh"
 
 #include "gtest/gtest.h"

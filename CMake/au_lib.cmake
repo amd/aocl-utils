@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,40 +24,73 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+# ---------------------------------------------------------------------------
+# Target-naming convention (identical on Linux and Windows), defined here ONCE
+# and assumed by the comments below:
+#   <base>         -> SHARED library  (aoclutils        -> libaoclutils.so/.dll)
+#   <base>_static  -> STATIC library  (aoclutils_static -> libaoclutils.a/_static.lib)
+# Umbrella base is "aoclutils"; sub-modules are au_<mod> (public) or
+# au_internal_<mod> (private). The Windows "lib" filename prefix is applied via a
+# target PROPERTY (PREFIX/IMPORT_PREFIX) on the umbrella only, never baked into
+# the target name. The au::<mod> alias points at the _static target.
+# ---------------------------------------------------------------------------
+
 macro(au_normalize_name name var)
   STRING(REPLACE "::" "__" ${var} ${name})
 endmacro()
 
+# Resolve a DEPENDS list to the shared-linkage variant of any in-project au::
+# module. The shared library must link the _shared build of its au:: deps, not
+# the static target the au::<module> alias points at in a both-libs build --
+# otherwise a /MD shared DLL drags in /MT static-target objects and the MSVC
+# CRT (RuntimeLibrary) mismatch resurfaces internally. External/system deps and
+# header-only INTERFACE deps are passed through unchanged.
+#
+#   in_deps : the raw DEPENDS list (e.g. au::aoclutils;SomeExternal::lib)
+#   out_var : name of the variable to receive the shared-resolved list
+function(au_resolve_shared_deps in_deps out_var)
+  set(_resolved "")
+  foreach(_dep IN LISTS in_deps)
+    set(_shared_dep "")
+    if(TARGET ${_dep})
+      # The au::<mod> alias resolves to the _static target, so an au:: dep passed
+      # here would drag /MT static objects into this /MD shared DLL and resurface
+      # the MSVC CRT (RuntimeLibrary) mismatch. Resolve the alias via
+      # ALIASED_TARGET and map it to its shared sibling (the bare name).
+      get_target_property(_aliased ${_dep} ALIASED_TARGET)
+      if(_aliased)
+        # Alias (e.g. au::core -> au_internal_core_static) -> bare name.
+        string(REGEX REPLACE "_static$" "" _bare "${_aliased}")
+        if(TARGET ${_bare})
+          set(_shared_dep ${_bare})
+        endif()
+      else()
+        # Non-alias in-project target: map a _static name to the bare name.
+        string(REGEX REPLACE "_static$" "" _bare "${_dep}")
+        if(TARGET ${_bare})
+          set(_shared_dep ${_bare})
+        endif()
+      endif()
+    endif()
+    if(_shared_dep)
+      list(APPEND _resolved ${_shared_dep})
+    else()
+      # External/system dep, header-only INTERFACE, or a dep with no shared
+      # (bare) variant: pass through unchanged so the link still resolves.
+      list(APPEND _resolved ${_dep})
+    endif()
+  endforeach()
+  set(${out_var} "${_resolved}" PARENT_SCOPE)
+endfunction()
+
 macro(setlibname NAME isPublic __target_name)
-  if(UNIX)
-    # set the target name if it is public or the name not equal to aoclutils
-    if(${isPublic})
-      if(${NAME} STREQUAL "aoclutils")
-          set(__target_name "aoclutils")
-      else()
-          set(__target_name "au_${NAME}")
-      endif()
-    else()
-      if(${NAME} STREQUAL "aoclutils")
-          set(__target_name "aoclutils")
-      else()
-          set(__target_name "au_internal_${NAME}")
-      endif()
-    endif()
+  # Target names per the convention at the top of this file.
+  if(${NAME} STREQUAL "aoclutils")
+      set(__target_name "aoclutils")
+  elseif(${isPublic})
+      set(__target_name "au_${NAME}")
   else()
-    if(${isPublic})
-      if(${NAME} STREQUAL "aoclutils")
-          set(__target_name "libaoclutils")
-      else()
-          set(__target_name "au_${NAME}")
-      endif()
-    else()
-      if(${NAME} STREQUAL "aoclutils")
-          set(__target_name "libaoclutils")
-      else()
-          set(__target_name "au_internal_${NAME}")
-      endif()
-    endif()
+      set(__target_name "au_internal_${NAME}")
   endif()
 endmacro()
 
@@ -138,20 +171,16 @@ function(au_cc_library NAME)
   set(tmp_src_list ${${fPrefix}_SOURCES})
   list(FILTER tmp_src_list INCLUDE REGEX "\\.cc$")
 
-  if(UNIX)
-    set(libaoclutils "aoclutils")
-  else()
-    set(libaoclutils "libaoclutils")
-  endif()
+  set(libaoclutils "aoclutils")  # umbrella base name (see convention at top)
 
   if(${AU_BUILD_STATIC_LIBS})
-    if (TARGET ${libaoclutils})
-        target_sources(${libaoclutils} PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+    if (TARGET ${libaoclutils}_static)
+        target_sources(${libaoclutils}_static PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
     endif()
   endif()
   if(${AU_BUILD_SHARED_LIBS})
-    if (TARGET ${libaoclutils}_shared)
-        target_sources(${libaoclutils}_shared  PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
+    if (TARGET ${libaoclutils})
+        target_sources(${libaoclutils}  PRIVATE ${${fPrefix}_SOURCES} ${${fPrefix}_HEADERS})
     endif()
   endif()
 
@@ -159,48 +188,83 @@ function(au_cc_library NAME)
     set(isPublic ${cclib_PUBLIC})
     setlibname(${NAME} ${isPublic} __target_name)
 
-    if(UNIX)
-      set(output_name ${__target_name})
-    else()
-      set(output_name ${__target_name}_static)
-    endif()
     if(${AU_BUILD_STATIC_LIBS})
-        add_library(${__target_name} STATIC "")
-        target_sources(${__target_name}
+        # STATIC target = "<base>_static". OUTPUT_NAME keeps the shipped file
+        # byte-identical: Unix "<base>" -> libaoclutils.a; Windows
+        # "<base>_static" + PREFIX "lib" -> libaoclutils_static.lib.
+        if(UNIX)
+          set(static_output_name ${__target_name})
+        else()
+          set(static_output_name ${__target_name}_static)
+        endif()
+        add_library(${__target_name}_static STATIC "")
+        target_sources(${__target_name}_static
 	        PRIVATE
 	        ${${fPrefix}_SOURCES}
     	    ${${fPrefix}_HEADERS})
 
-        target_link_libraries(${__target_name}
+        target_link_libraries(${__target_name}_static
 	        PUBLIC ${cclib_DEPENDS}
         )
 
+        set_target_properties(${__target_name}_static
+	        PROPERTIES
+	        CXX_STANDARD ${AU_CXX_STANDARD}
+	        CXX_STANDARD_REQUIRED true
+	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
+            OUTPUT_NAME ${static_output_name}
+        )
+        # Opt-in override: build the static lib against /MD instead of the
+        # /MT project default (see au_compiler_msvc.cmake). Off by default.
+        if(AU_STATIC_FORCE_CRT_MD)
+            set_target_properties(${__target_name}_static PROPERTIES
+                MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        endif()
+        # The Windows "lib" filename prefix belongs ONLY to the umbrella
+        # (libaoclutils_static.lib). Sub-module archives (au_cpuid_static.lib)
+        # never had it -- downstream consumers (aocl-crypto) link them by the
+        # bare name, so do NOT prefix them.
+        if(WIN32 AND "${__target_name}" STREQUAL "aoclutils")
+            set_target_properties(${__target_name}_static PROPERTIES PREFIX "lib")
+        endif()
+    endif()
+    if(${AU_BUILD_SHARED_LIBS})
+        # SHARED target = BARE name. OUTPUT_NAME "<base>" + PREFIX "lib" on
+        # Windows -> libaoclutils.dll + import libaoclutils.lib; Unix ->
+        # libaoclutils.so.
+        add_library(${__target_name} SHARED "")
+        target_sources(${__target_name}
+	        PRIVATE
+	        ${${fPrefix}_SOURCES}
+    	    ${${fPrefix}_HEADERS}
+        )
+        # Link the shared (bare) variant of any in-project au:: dependency so the
+        # shared DLL's CRT graph stays /MD end-to-end (see au_resolve_shared_deps).
+        au_resolve_shared_deps("${cclib_DEPENDS}" _shared_depends)
+        target_link_libraries(${__target_name}
+	           PUBLIC ${_shared_depends}
+        )
         set_target_properties(${__target_name}
 	        PROPERTIES
 	        CXX_STANDARD ${AU_CXX_STANDARD}
 	        CXX_STANDARD_REQUIRED true
 	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-            OUTPUT_NAME ${output_name}
+            OUTPUT_NAME ${__target_name}
+            # Shared lib: /MD. The DLL must share the CRT/heap with its /MD
+            # consumers (e.g. aocl-crypto); an embedded /MT CRT splits the heap
+            # and corrupts cross-DLL frees. The static lib + tests stay on the
+            # /MT global default from au_compiler_msvc.cmake.
+            MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
-    endif()
-    if(${AU_BUILD_SHARED_LIBS})
-        #target_link_libraries(au::all PUBLIC ${__target_name})
-        add_library(${__target_name}_shared SHARED "")
-        target_sources(${__target_name}_shared
-	        PRIVATE
-	        ${${fPrefix}_SOURCES}
-    	    ${${fPrefix}_HEADERS}
-        )
-        target_link_libraries(${__target_name}_shared
-	           PUBLIC ${cclib_DEPENDS}
-        )
-        set_target_properties(${__target_name}_shared
-	        PROPERTIES
-	        CXX_STANDARD ${AU_CXX_STANDARD}
-	        CXX_STANDARD_REQUIRED true
-	        INCLUDE_DIRECTORIES "${AU_INCLUDE_DIRS}"
-        OUTPUT_NAME ${__target_name}
-        )
+        # The Windows "lib" prefix belongs ONLY to the umbrella target: its DLL is
+        # libaoclutils.dll (PREFIX) and its import lib libaoclutils.lib
+        # (IMPORT_PREFIX -- named separately from PREFIX). Sub-modules (au_cpuid)
+        # ship bare au_cpuid.dll / au_cpuid.lib as before the rename; aocl-crypto
+        # links au_cpuid.lib by that exact name, so must NOT be prefixed.
+        if(WIN32 AND "${__target_name}" STREQUAL "aoclutils")
+            set_target_properties(${__target_name} PROPERTIES
+                PREFIX "lib" IMPORT_PREFIX "lib")
+        endif()
     endif()
   else()
     add_library(${__target_name} INTERFACE)
@@ -211,7 +275,7 @@ function(au_cc_library NAME)
   if (cclib_PUBLIC)
     if(UNIX)
         if(${AU_BUILD_STATIC_LIBS})
-            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+            install(TARGETS ${__target_name}_static EXPORT ${AU_INSTALL_EXPORT_NAME}
                 RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
@@ -219,7 +283,7 @@ function(au_cc_library NAME)
         )
         endif()
         if(${AU_BUILD_SHARED_LIBS})
-            install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
                   RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
                   LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                   ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
@@ -228,24 +292,29 @@ function(au_cc_library NAME)
         endif()
     else()
         if(${AU_BUILD_STATIC_LIBS})
-            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
+            install(TARGETS ${__target_name}_static EXPORT ${AU_INSTALL_EXPORT_NAME}
                 RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
-                LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
-                ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
-            )
-            install(TARGETS ${__target_name} EXPORT
-                RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
             )
         endif()
         if(${AU_BUILD_SHARED_LIBS})
-            install(TARGETS ${__target_name}_shared EXPORT ${AU_INSTALL_EXPORT_NAME}
+            install(TARGETS ${__target_name} EXPORT ${AU_INSTALL_EXPORT_NAME}
                 RUNTIME DESTINATION ${AU_INSTALL_BIN_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_BIN_DIR}
             )
-            install(TARGETS ${__target_name}_shared
+            # Second (non-EXPORT) install of the SAME shared target into lib/.
+            # This is NOT dead cruft: the EXPORT install above records the import
+            # lib under bin/ (ARCHIVE -> BIN_DIR), but downstream consumers that
+            # link by explicit path expect the import lib (and DLL) under
+            # <prefix>/lib/ -- the aocl-crypto Windows presub links
+            # lib/libaoclutils.lib + lib/au_cpuid.lib, so removing this drops
+            # those files and breaks its lld-link step. No EXPORT here (the target
+            # is already in the export set) so it adds files only, not a second
+            # export entry. Mirrors the pre-existing green install layout, which
+            # shipped both the DLL and the import lib into lib/ as well.
+            install(TARGETS ${__target_name}
                 RUNTIME DESTINATION ${AU_INSTALL_LIB_DIR}
                 LIBRARY DESTINATION ${AU_INSTALL_LIB_DIR}
                 ARCHIVE DESTINATION ${AU_INSTALL_ARCHIVE_DIR}
@@ -253,12 +322,14 @@ function(au_cc_library NAME)
         endif()
     endif()
   endif()
-  if (${AU_BUILD_STATIC_LIBS} AND ${AU_BUILD_SHARED_LIBS})
-      add_library(au::${AU_MODULE} ALIAS ${__target_name})
-  elseif (${AU_BUILD_STATIC_LIBS})
-      add_library(au::${AU_MODULE} ALIAS ${__target_name})
+  # The au::<mod> alias keeps pointing at the STATIC target on ALL platforms
+  # (byte-identical to prior behavior): in-tree /MT tests/examples must not pull
+  # in the /MD shared DLL. Fall back to the bare (shared) target only when no
+  # static variant is built.
+  if (${AU_BUILD_STATIC_LIBS})
+      add_library(au::${AU_MODULE} ALIAS ${__target_name}_static)
   elseif (${AU_BUILD_SHARED_LIBS})
-      add_library(au::${AU_MODULE} ALIAS ${__target_name}_shared)
+      add_library(au::${AU_MODULE} ALIAS ${__target_name})
   endif()
 
 endfunction(au_cc_library)

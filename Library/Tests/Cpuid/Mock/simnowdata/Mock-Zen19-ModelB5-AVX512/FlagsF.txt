@@ -1,2 +1,5 @@
-
-test
+mpx
+vmx
+est
+xop
+_3dnow

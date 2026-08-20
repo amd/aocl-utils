@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -38,8 +38,44 @@ option(AU_BUILD_WITH_ASAN "Enable ASAN Options on build" OFF)
 option(AU_BUILD_WITH_TSAN "Enable TSAN Options on build" OFF)
 option(AU_BUILD_WITH_MEMSAN "Enable MEMSAN Options on build" OFF)
 option(AU_ENABLE_CODE_COVERAGE "Enable Code coverage on build" OFF)
-option(AU_BUILD_STATIC_LIBS "Build static libraries" ON)
-option(AU_BUILD_SHARED_LIBS "Build shared libraries" ON)
+# Default the stock CMake BUILD_SHARED_LIBS switch to ON so this project
+# behaves canonically: callers using the standard CMake idiom get a shared
+# library by default, while -DBUILD_SHARED_LIBS=OFF cleanly disables it.
+# Declaring it via option() also types the cache entry (avoids the
+# :UNINITIALIZED label) and is a no-op if a parent project or the user
+# already set it on the command line.
+option(BUILD_SHARED_LIBS "Build shared libraries by default" ON)
+
+# AOCL policy: the static library is built by default. Users may still opt
+# out explicitly with -DAU_BUILD_STATIC_LIBS=OFF.
+option(AU_BUILD_STATIC_LIBS "Build static libraries (AOCL policy: default ON)" ON)
+
+option(AU_STATIC_FORCE_CRT_MD "Build the static library against the dynamic MSVC CRT (/MD, /MDd) instead of the default static CRT (/MT, /MTd)" OFF)
+
+# Single source of truth for "does au::<mod> resolve to an /MD target?" --
+# either the static target opted into /MD (AU_STATIC_FORCE_CRT_MD), or there
+# is no static target and the alias falls back to the unconditionally-/MD
+# shared target (AU_BUILD_STATIC_LIBS=OFF). au_find_gtest.cmake,
+# au_unit_tests.cmake, and au_examples.cmake all key off this one variable so
+# gtest/gmock and every in-tree test/example executable stay in lockstep with
+# au_lib.cmake's alias resolution -- a mismatch on any one of them reintroduces
+# an MSVC RuntimeLibrary link error.
+if(AU_STATIC_FORCE_CRT_MD OR NOT AU_BUILD_STATIC_LIBS)
+    set(AU_ALIAS_LINKS_MD_CRT TRUE)
+else()
+    set(AU_ALIAS_LINKS_MD_CRT FALSE)
+endif()
+
+# AU_BUILD_SHARED_LIBS always tracks BUILD_SHARED_LIBS. Force-sync via the
+# cache so the project-specific name remains a single source of truth for
+# downstream cmake code (au_lib.cmake) without diverging from the canonical
+# switch. This also handles the reconfigure case where the user toggles
+# BUILD_SHARED_LIBS in an existing build dir whose AU_BUILD_SHARED_LIBS was
+# cached from a previous run -- BUILD_SHARED_LIBS wins, no manual cache
+# fix-up needed.
+set(AU_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}
+    CACHE BOOL "Build shared libraries (mirrors BUILD_SHARED_LIBS)" FORCE)
+
 option(AU_CMAKE_VERBOSE "Set cmake verbosity" OFF)
 
 # Sub options for docs
@@ -97,6 +133,3 @@ elseif(AU_BUILD_TYPE_DEBUG)
 elseif(AU_BUILD_TYPE_RELWITHDEBINFO)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PROJECT_BINARY_DIR}/RelWithDebInfo)
 endif()
-
-
-option(AU_BUILD_SHARED_LIBS "Build shared libraries" OFF)

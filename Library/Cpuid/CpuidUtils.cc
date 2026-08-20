@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,106 +27,78 @@
  */
 
 #include "Au/Cpuid/CpuidUtils.hh"
-#include "Au/Config.h"
-#include "Au/Misc.hh"
-#include <iostream>
-#ifdef _WIN32
-#include <intrin.h>
-#endif
+#include "Au/Misc.hh" /* extract32/valueToEnum, used by updateCacheInfo */
+#include "Capi/au/cpuid/cpuid_core.h"
+
 namespace Au {
+
+/* Thin C++ shims over the pure-C core (cpuid_core.h). Enum casts are identity. */
+
+static inline au_cpuid_regs_t
+toCRegs(ResponseT const& r)
+{
+    au_cpuid_regs_t c = { r.eax, r.ebx, r.ecx, r.edx };
+    return c;
+}
+
+namespace {
+    /* Bridge C core raw hook to C++ virtual __raw_cpuid (for mocks/SimNow). */
+    void isHybridTrampoline(uint32_t         eax,
+                            uint32_t         ecx,
+                            au_cpuid_regs_t* out,
+                            void*            ctx)
+    {
+        CpuidUtils* u = static_cast<CpuidUtils*>(ctx);
+        RequestT    req{ eax, 0, ecx, 0 };
+        ResponseT   r = u->__raw_cpuid(req);
+        out->eax      = r.eax;
+        out->ebx      = r.ebx;
+        out->ecx      = r.ecx;
+        out->edx      = r.edx;
+    }
+} // namespace
+
 ResponseT
 CpuidUtils::__raw_cpuid(RequestT& req)
 {
-    ResponseT resp;
-#ifdef _WIN32
-    int cpuInfo[4] = { -1 }; // Array to store the cpuid output
-    if (req.eax == 0x00000007
-        || (req.eax == 0x00000001 && req.ecx == 0x00000001)) {
-        __cpuidex(cpuInfo, req.eax, req.ecx);
-    } else {
-        __cpuid(cpuInfo, req.eax);
-    }
-
-    resp.eax = cpuInfo[0];
-    resp.ebx = cpuInfo[1];
-    resp.ecx = cpuInfo[2];
-    resp.edx = cpuInfo[3];
-#else
-    if (req.eax == 0x00000007
-        || (req.eax == 0x00000001 && req.ecx == 0x00000001)) {
-        asm volatile(
-            "cpuid"
-            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "a"(req.eax), "c"(req.ecx));
-    } else {
-        asm volatile(
-            "cpuid"
-            : "=a"(resp.eax), "=b"(resp.ebx), "=c"(resp.ecx), "=d"(resp.edx)
-            : "a"(req.eax), "b"(0), "c"(req.ecx), "d"(0));
-    }
-#endif
-    return resp;
+    au_cpuid_regs_t out;
+    au_cpuid_raw(req.eax, req.ecx, &out);
+    return ResponseT{ out.eax, out.ebx, out.ecx, out.edx };
 }
 
 EVendor
 CpuidUtils::getMfgInfo(ResponseT const& regs)
 {
-    if (regs.ebx == 0x68747541 && regs.ecx == 0x444d4163
-        && regs.edx == 0x69746e65) {
-        return EVendor::Amd;
-    }
-    if (regs.ebx == 0x756e6547 && regs.ecx == 0x6c65746e
-        && regs.edx == 0x49656e69) {
-        return EVendor::Intel;
-    }
-    return EVendor::Other;
+    au_cpuid_regs_t r = toCRegs(regs);
+    return static_cast<EVendor>(au_cpuid_vendor(&r));
 }
 
-// clang-format off
-/**-----------------------------------------------------------------------------------------------------------+
- * |                                      Processor Version Information                                       |
- * -----------------------------------------------------------------------------------------------------------+
- * |                                                    EAX = 1                                               |
- * -----------------------------------------------------------------------------------------------------------+
- * |  31 .. 28  | 27 .. 25 .. 20  |  19 18 17 16  |  15  14  | 13 12    |  11 10 9 8  |  7 6 5 4  |  3 2 1 0  |
- * -----------------------------------------------------------------------------------------------------------+
- * |  Reserved  | Ext Family ID   |  Ext Model ID | Reserved | Cpu Type |  Family ID  |   Model   | Stepping  |
- * -----------------------------------------------------------------------------------------------------------+
- *
- *
- * Family[7:0] = (ExtendedFamily[7:0] + {0000b,BaseFamily[3:0]})
- *       where ExtendedFamily[7:0] = EAX[27:20],
- *             BaseFamily[3:0]     = EAX[11:8]
- */
-// clang-format on
+/* CPUID.1 EAX layout: Family = ExtFam[27:20] + BaseFam[11:8]. */
 
 EFamily
 CpuidUtils::getFamily(Uint32 var)
 {
-    auto family =
-        static_cast<Uint16>(extract32(var, 20, 8) + extract32(var, 8, 4));
-    if (family < *(EFamily::Zen) || family > *(EFamily::Max))
-        return EFamily::Unknown;
-    return valueToEnum<EFamily, Uint16>(family);
+    return static_cast<EFamily>(au_cpuid_family(var));
 }
 
 Uint16
 CpuidUtils::getModel(Uint32 var)
 {
-    return static_cast<Uint16>(extract32(var, 16, 4) << 4
-                               | extract32(var, 4, 4));
+    return au_cpuid_model(var);
 }
 
 Uint16
 CpuidUtils::getStepping(Uint32 var)
 {
-    return static_cast<Uint16>(extract32(var, 0, 4));
+    return au_cpuid_stepping(var);
 }
 
 bool
 CpuidUtils::hasFlag(ResponseT const& expected, ResponseT const& actual)
 {
-    return (expected & actual) == expected;
+    au_cpuid_regs_t e = toCRegs(expected);
+    au_cpuid_regs_t a = toCRegs(actual);
+    return au_cpuid_has_bits(&e, &a);
 }
 
 void
@@ -150,6 +122,18 @@ CpuidUtils::updateCacheInfo(CacheInfo& cInfo, ResponseT const& resp)
     auto partitions = extract32(resp.ebx, 12, 10) + 1;
     cInfo.setSize(static_cast<Uint64>(way) * (partitions)
                   * static_cast<Uint64>(lane) * (sets));
+}
+
+bool
+CpuidUtils::isHybrid()
+{
+    return au_cpuid_read_is_hybrid(&isHybridTrampoline, this);
+}
+
+Uint32
+CpuidUtils::getCoreType()
+{
+    return au_cpuid_read_core_type(&isHybridTrampoline, this);
 }
 
 void

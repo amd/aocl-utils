@@ -31,7 +31,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 # from sphinx.builders.html import StandaloneHTMLBuilder
 
+import re as _re
 from importlib import metadata as _metadata
+from pathlib import Path as _Path
 from packaging import version as _version
 
 try:
@@ -53,7 +55,30 @@ _rocm_version_expected = "1.0.0"
 project = 'AOCL-UTILS'
 copyright = '2024, AMD'
 author = 'AMD'
-release = '5.0.1'
+# Derived from the repo-root version.txt so the docs cannot drift from the
+# shipped version -- this line sat at 5.0.1 through the 5.1, 5.2, 5.3 and 5.3.1
+# releases because it was hardcoded.
+#
+# The pattern deliberately mirrors CMakeLists.txt's file(STRINGS ... REGEX
+# "^[0-9]+\.[0-9]+\.[0-9]+-") rather than approximating it: like CMake it
+# selects the first well-formed line and ignores the rest, so a suffixed
+# version (5.0.0-dev1, 1.0.1-rc1 -- both shipped) yields its MAJOR.MINOR.PATCH
+# instead of being skipped, and a stray line such as a build date cannot be
+# mistaken for the version.
+_VERSION_RE = _re.compile(r"^([0-9]+\.[0-9]+\.[0-9]+)-")
+_version_file = _Path(__file__).resolve().parent.parent / "version.txt"
+release = next(
+    (
+        _m.group(1)
+        for _m in (
+            _VERSION_RE.match(line.strip())
+            for line in _version_file.read_text().splitlines()
+        )
+        if _m
+    ),
+    "unknown",
+)
+version = release
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

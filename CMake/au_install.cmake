@@ -56,15 +56,45 @@ if (UNIX)
   )
 endif()
 
-install(EXPORT ${AU_INSTALL_EXPORT_NAME}
-  DESTINATION ${AU_INSTALL_CMAKE_CONFIG_DIR}
-  NAMESPACE au::
-  FILE ${AU_INSTALL_CMAKE_CONFIG_NAME}
-)
+# Function to install CMake package configuration files
+function(au_install_package_config)
+    include(CMakePackageConfigHelpers)
+
+    # Configure the main config file
+    configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/CMake/AoclUtilsConfig.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/AoclUtilsConfig.cmake"
+        INSTALL_DESTINATION "${AU_INSTALL_CMAKE_CONFIG_DIR}"
+    )
+
+    # Configure the version file using CMake's standard helper
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/AoclUtilsConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
+    # Install the export targets file
+    install(EXPORT ${AU_INSTALL_EXPORT_NAME}
+        FILE ${AU_INSTALL_CMAKE_TARGETS_FILE_NAME}
+        NAMESPACE AoclUtils::
+        DESTINATION "${AU_INSTALL_CMAKE_CONFIG_DIR}"
+    )
+
+    # Install the configured config files
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/AoclUtilsConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/AoclUtilsConfigVersion.cmake"
+        DESTINATION "${AU_INSTALL_CMAKE_CONFIG_DIR}"
+    )
+endfunction()
+
+# Call the package config installation function
+au_install_package_config()
 
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/CMake/
-    DESTINATION ${AU_INSTALL_LIB_DIR}/CMake
+    DESTINATION ${AU_INSTALL_ADDITIONAL_FILES_DIR}/cmake
   FILES_MATCHING PATTERN "*.cmake"
 )
 
@@ -74,11 +104,6 @@ install(
   DESTINATION ${AU_INSTALL_INCLUDE_DIR}/Au
 )
 
-message("Installing Version.txt... ")
-install(
-  FILES version.txt
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
-)
 message("Installing binaries... ")
 if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
     set(DEBUG_POSTFIX "-dbg")
@@ -93,7 +118,7 @@ set(CPACK_PACKAGE_DESCRIPTION           "AOCL Foundations")
 set(CPACK_PACKAGE_VENDOR                "AMD")
 set(CPACK_PACKAGE_DESCRIPTION_FILE      "${CMAKE_CURRENT_SOURCE_DIR}/Readme.md")
 set(CPACK_RESOURCE_FILE_README          "${CMAKE_CURRENT_SOURCE_DIR}/Readme.md")
-set(CPACK_RESOURCE_FILE_LICENSE         "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_RESOURCE_FILE_LICENSE         "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY     "${CMAKE_INSTALL_PREFIX}")
 set(CPACK_PACKAGE_VERSION_MAJOR         ${AU_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR         ${AU_VERSION_MINOR})

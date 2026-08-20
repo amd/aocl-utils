@@ -77,7 +77,7 @@ typedef Uint32 CpuNumT;
 class AUD_API_EXPORT ICpu
 {
   protected:
-    virtual ~ICpu(){};
+    virtual ~ICpu() {};
 
   public:
     /**

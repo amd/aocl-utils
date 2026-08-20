@@ -56,10 +56,10 @@ if (NOT DEFINED AU_CXX_STANDARD)
 endif()
 
 if(NOT DEFINED AU_GTEST_TAG)
-  set(AU_GTEST_TAG "release-1.12.1" CACHE STRING "Tag for Google Test")
+  set(AU_GTEST_TAG "v1.17.0" CACHE STRING "Tag for Google Test")
 endif()
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
 
-set(AU_INSTALL_CMAKE_CONFIG_NAME "aocl-utils-config.cmake")
-set(AU_INSTALL_EXPORT_NAME aocl_utils)
+set(AU_INSTALL_CMAKE_TARGETS_FILE_NAME "AoclUtilsTargets.cmake")
+set(AU_INSTALL_EXPORT_NAME AoclUtilsTargets)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,12 +29,23 @@
 #ifndef __AU_CPUID_CPUID_H__
 #define __AU_CPUID_CPUID_H__
 
+/* Library-backed CPUID C API entry point: declarations only; link libaoclutils (C++ + C) or libaoclutils_c (C-only, no libstdc++). Include cpuid_inline.h to inline the API instead, or au_cpuid_header_only.h for the standalone single-file drop-in. */
+
 #include "Au/Config.h"
 #include "Au/Defs.hh"
 #include "Capi/au/au.h"
 
+#include "Capi/au/cpuid/cpuid_core.h"
+
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Linkage-mode mechanism (INTERNAL). AU_CPUID_API sets storage class (default: plain, i.e. declarations resolved by the linked library). AU_CPUID_IMPLEMENTATION emits bodies when defined, else only decls. cpuid_inline.h sets AU_CPUID_API=static inline and opts into bodies; the library TUs set it to the export attribute. A direct include defaults to link-a-library, so misuse fails loudly at link time rather than silently inlining. */
+#ifndef AU_CPUID_API
+#define AU_CPUID_API
+#endif
 
 AUD_EXTERN_C_BEGIN
 
@@ -50,501 +61,402 @@ typedef Uint32 au_cpu_flag_t;
 #endif
 
 /**
- * @brief          Check if the processor vendor is AMD.
- *
- * @details        This function will work on all AMD processors.
- *                 |    AOCL 5.2    |  au_cpuid_is_amd()  |
- *                 |:--------------:|:-------------------:|
- *                 |    Skylake     |        False        |
- *                 |   Bulldozer    |        True         |
- *                 |     Zen1/1+    |        True         |
- *                 |      Zen2      |        True         |
- *                 |      Zen3      |        True         |
- *                 |      Zen4      |        True         |
- *                 |    Zen[X>4]    |        True         |
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num  Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is designed by AMD.
+ * @brief Check if the processor vendor is AMD.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is designed by AMD.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_is_amd(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Get Cpu vendor info.
- *
- * @details        vendor_info [VendorID,FamilyID, ModelID, SteppingID,
- * UarchID], is a set of new line separated values.
- *
- * User must provide a buffer of size >= 16 bytes to store the vendor info.
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[out]     vend_info Vendor info array containing newline-separated
- * values: VendorID, FamilyID, ModelID, SteppingID, UarchID
- * @param[in]      size      Size of Vendor info array in bytes.
- *
- * @return         None
+ * @brief Get CPU vendor info (newline-separated: VendorID, FamilyID, ModelID, SteppingID, UarchID).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs. Buffer size >= 16 bytes required.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @param[out] vend_info Vendor info array.
+ * @param[in] size Size of vendor info array in bytes.
  */
-AUD_API_EXPORT void
+AU_CPUID_API void
 au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size);
 
 /**
- * @brief          Allows caller to check if the processor arch is Zen1/1+.
- *
- * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen()  |
- *                 |:--------------:|:------------------------:|
- *                 |    Skylake     |          False           |
- *                 |   Bulldozer    |          False           |
- *                 |     Zen1/1+    |          True            |
- *                 |      Zen2      |          True            |
- *                 |   Zen[3,4,5]   |          True            |
- *                 |   Zen[X>5]     |          True            |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen1/1+ architecture.
+ * @brief Check if processor arch is Zen1/1+ or newer (Zen1+ through Zen6+).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen1/1+ or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZENPLUS.
- *
- * @details        This function is only meant for Zen based processors.
- *                 NOTE: ZenPlus enum is disabled, this API now returns
- *                 same result as au_cpuid_arch_is_zen() for backward
- *                 compatibility.
- *                 |    AOCL 5.2    |  au_cpuid_arch_is_zenplus()  |
- *                 |:--------------:|:----------------------------:|
- *                 |    Skylake     |           False              |
- *                 |   Bulldozer    |           False              |
- *                 |     Zen1/1+    |           True               |
- *                 |      Zen2      |           True               |
- *                 |   Zen[3,4,5]   |           True               |
- *                 |   Zen[X>5]     |           True               |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen1/1+ or higher architecture.
+ * @brief Check if processor arch is ZENPLUS or newer (alias of au_cpuid_arch_is_zen for backward compat).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen1/1+ or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZEN2.
- *
- * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen2()  |
- *                 |:--------------:|:-------------------------:|
- *                 |    Skylake     |          False            |
- *                 |   Bulldozer    |          False            |
- *                 |     Zen1/1+    |          False            |
- *                 |      Zen2      |          True             |
- *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          True             |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen2 architecture.
+ * @brief Check if processor arch is Zen2 or newer.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen2 or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZEN3.
- *
- * @details        This function is only meant for Zen based processors.
- *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen3()  |
- *                 |:--------------:|:-------------------------:|
- *                 |    Skylake     |          False            |
- *                 |   Bulldozer    |          False            |
- *                 |     Zen1/1+    |          False            |
- *                 |      Zen2      |          False            |
- *                 |   Zen[3,4,5]   |          True             |
- *                 |   Zen[X>5]     |          True             |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen3 architecture.
+ * @brief Check if processor arch is Zen3 or newer.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen3 or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZEN4.
- *
- * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.2   |  au_cpuid_arch_is_zen4()  |
- *                 |:-----------:|:-------------------------:|
- *                 |   Skylake   |          False            |
- *                 |  Bulldozer  |          False            |
- *                 |   Zen[X<3]  |          False            |
- *                 |    Zen3     |          False            |
- *                 |   Zen[4,5]  |          True             |
- *                 |   Zen[X>5]  |          True             |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen4 architecture.
+ * @brief Check if processor arch is Zen4 or newer.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen4 or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is ZEN5.
- *
- * @details        This function is only meant for Zen based processors.
- *                 |   AOCL 5.2   |  au_cpuid_arch_is_zen5()  |
- *                 |:------------:|:------------------------:|
- *                 |   Skylake    |          False           |
- *                 |  Bulldozer   |          False           |
- *                 |   Zen[X<4]   |          False           |
- *                 |    Zen4      |          False           |
- *                 |    Zen5      |          True            |
- *                 |   Zen[X>5]   |          True            |
- *
- *  <a href="#c-api-behaviour-summary"> C-API Behaviour Summary </a>
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- * will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is Zen5 architecture.
+ * @brief Check if processor arch is Zen5 or newer.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen5 or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num);
 
 /**
- * @brief     Checks if processor is x86_64-v2 compliant
- *
- * @details   Based on GCC following flags account for x86_64-v2
- *            (in addition to x86_64 [sse, sse2])
- *
- *            cx16       lahf_lm
- *            popcnt     sse4_1
- *            sse4_2     ssse3
- *
- *            Output of this API will be same as
- *            hasFlag(ECpuidFlag::sse)   && hasFlag(ECpuidFlag::sse2)   &&
- *            hasFlag(ECpuidFlag::cx16)  && hasFlag(ECpuidFlag::lahf_lm)&&
- *            hasFlag(ECpuidFlag::popcnt)&& hasFlag(ECpuidFlag::sse4_1) &&
- *            hasFlag(ECpuidFlag::sse4_2)&& hasFlag(ECpuidFlag::ssse3)
- *
- *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v2()  |
- *            |:--------------:|:-----------------------------:|
- *            |  Sandybridge   |            True               |
- *            |   Broadwell    |            True               |
- *            |    Skylake     |            True               |
- *            |   Bulldozer    |            True               |
- *            |    Zen1/1+     |            True               |
- *            |     Zen2       |            True               |
- *            |     Zen3       |            True               |
- *            |     Zen4       |            True               |
- *            |     Zen5       |            True               |
- *            |   Zen[X>5]     |            True               |
- *
- * @param[in]      cpu_num   CPU number.
- *
- * @return         1/true if processor architecture is x86_64v2.
+ * @brief Check if processor arch is Zen6 or newer.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is Zen6 or newer.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
+au_cpuid_arch_is_zen6(au_cpu_num_t cpu_num);
+
+/**
+ * @brief Check if processor is x86_64-v2 compliant (baseline + cx16, lahf_lm, popcnt, sse4_1, sse4_2, ssse3).
+ * @param[in] cpu_num CPU number.
+ * @return true if processor is x86_64-v2 compliant.
+ */
+AU_CPUID_API bool
 au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num);
 
 /**
- * @brief     Checks if processor is x86_64-v3 compliant
- *
- * @details   Based on GCC following flags account for x86_64-v3
- *            (in addition to x86_64-v2)
- *
- *            avx    avx2    bmi1
- *            bmi2   f16c    fma
- *            abm    movbe   xsave
- *
- *            Output of this API will be same as        isX86_64v2() &&
- *            hasFlag(ECpuidFlag::avx)  && hasFlag(ECpuidFlag::avx2) &&
- *            hasFlag(ECpuidFlag::bmi1) && hasFlag(ECpuidFlag::bmi2) &&
- *            hasFlag(ECpuidFlag::f16c) && hasFlag(ECpuidFlag::fma)  &&
- *            hasFlag(ECpuidFlag::abm)  && hasFlag(ECpuidFlag::movbe)&&
- *            hasFlag(ECpuidFlag::xsave)
- *
- *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v3()  |
- *            |:--------------:|:-----------------------------:|
- *            |  Sandybridge   |            False              |
- *            |   Broadwell    |            True               |
- *            |    Skylake     |            True               |
- *            |   Bulldozer    |            True               |
- *            |    Zen1/1+     |            True               |
- *            |     Zen2       |            True               |
- *            |     Zen3       |            True               |
- *            |     Zen4       |            True               |
- *            |     Zen5       |            True               |
- *            |   Zen[X>5]     |            True               |
- *
- * @param[in]      cpu_num   CPU number.
- *
- * @return         1/true if processor architecture is x86_64v3.
+ * @brief Check if processor is x86_64-v3 compliant (v2 + avx, avx2, bmi1, bmi2, f16c, fma, abm, movbe, xsave).
+ * @param[in] cpu_num CPU number.
+ * @return true if processor is x86_64-v3 compliant.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num);
 
 /**
- * @brief     Checks if processor is x86_64-v4 compliant
- *
- * @details   Based on GCC following flags account for x86_64-v4
- *            (in addition to x86_64-v2 + x86_64-v3)
- *
- *            avx512f   avx512bw  avx512cd
- *            avx512dq  avx512vl
- *
- *            Output of this API will be same as  isX86_64v3() &&
- *            hasFlag(ECpuidFlag::avx512f)  &&
- *            hasFlag(ECpuidFlag::avx512bw) &&
- *            hasFlag(ECpuidFlag::avx512cd) &&
- *            hasFlag(ECpuidFlag::avx512dq) &&
- *            hasFlag(ECpuidFlag::avx512vl)
- *
- *            |    AOCL 5.2    |  au_cpuid_arch_is_x86_64v4()  |
- *            |:--------------:|:-----------------------------:|
- *            |   Sandybridge  |            False              |
- *            |    Broadwell   |            False              |
- *            |     Skylake    |            True               |
- *            |    Bulldozer   |            True               |
- *            |     Zen1/1+    |            True               |
- *            |      Zen2      |            True               |
- *            |      Zen3      |            True               |
- *            |      Zen4      |            True               |
- *            |      Zen5      |            True               |
- *            |   Zen[X>5]     |            True               |
- *
- * @param[in]      cpu_num   CPU number.
- *
- * @return         1/true if processor architecture is x86_64v4.
+ * @brief Check if processor is x86_64-v4 compliant (v3 + avx512f, avx512bw, avx512cd, avx512dq, avx512vl).
+ * @param[in] cpu_num CPU number.
+ * @return true if processor is x86_64-v4 compliant.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the processor arch is part of the
- * Zen family.
- *
- * @details        This function is meant for Zen based processors.
- *                 |    AOCL 5.2    |  au_cpuid_arch_is_zen_family()  |
- *                 |:--------------:|:-------------------------------:|
- *                 |    Skylake     |              False              |
- *                 |   Bulldozer    |              False              |
- *                 |     Zen1/1+    |              True               |
- *                 |      Zen2      |              True               |
- *                 |      Zen3      |              True               |
- *                 |      Zen4      |              True               |
- *                 |      Zen5      |              True               |
- *                 |   Zen[X>5]     |              True               |
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- *
- * @return         Boolean, true if processor is part of the Zen family.
+ * @brief Check if processor is part of the Zen family (Zen1 through Zen6+).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @return true if processor is part of the Zen family.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_arch_is_zen_family(au_cpu_num_t cpu_num);
 
 /**
- * @brief          Allows caller to check if the flags are available.
- *
- * @details        List of supported flags: sse3, pclmulqdq, dtes64, monitor,
- *       dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm,
- *       pcid, dca, sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline,
- *       aes, xsave, osxsave, avx, f16c, rdrand, hypervisor, fpu, vme,
- *       de, pse, tsc, msr, pae, mce, cx8, apic, sep, mtrr, pge, mca,
- *       cmov, pat, pse36, pn, clflush, ds, acpi, mmx, fxsr, sse, sse2,
- *       ss, ht, tm, ia64, pbe, arat, fsgsbase, tsc_adjust, bmi1, hle,
- *       avx2, smep, bmi2, erms, invpcid, rtm, mpx, avx512f, avx512dq,
- *       rdseed, adx, smap, avx512ifma, pcommit, clflushopt, clwb,
- *       avx512pf, avx512er, avx512cd, sha_ni, avx512bw, avx512vl,
- *       avx512vbmi, umip, pku, ospke, avx512_vpopcntdq, la57, rdpid,
- *       avx512_4vnniw, avx512_4fmaps, avx512_bf16, avxvnni, xsaveopt,
- *       xsavec, xgetbv1, xsaves, lahf_lm, cmp_legacy, svm, extapic,
- *       cr8legacy, abm, sse4a, misalignsse, _3dnowprefetch, osvw, ibs,
- *       xop, skinit, wdt, lwp, fma4, tce, nodeid_msr, tbm, topoext,
- *       perfctr_core, perfctr_nb, syscall, nxxd, mmxext, fxsr_opt,
- *       pdpe1gb, rdtscp, lmi64, _3dnowext, _3dnow, invtsc, npt, lbrv,
- *       svm_lock, nrip_save, tsc_scale, vmcb_clean, flushbyasid,
- *       decodeassists, pause_filter, pfthreshold, xstore, xstore_en,
- *       xcrypt, xcrypt_en, ace2, ace2_en, phe, phe_en, pmm, pmm_en,
- *       vaes, vpclmulqdq, avx512_vnni, avx512_bitalg, avx512vbmi2,
- *       movdiri, movdir64b, avx512_vpintersect, x2avic
- *
- * @warning        If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this
- * function will result in thread migration to the selected core.
- * @warning        The API is deprecated. Use au_cpuid_has_flags instead.
- *
- * @param[in]      cpu_num     Any valid core number starting from 0.
- * @param[in]      flag_array  CPU feature flag names.
- * @param[in]      count       Number of flags in the list.
- *
- * @return         An array with Boolean value corresponding to each flag given
- *                 in flag_array. If the value is true, the flag is available.
+ * @brief Check if the package is a hybrid (heterogeneous) part (CPUID 0x7.0 EDX bit 15).
+ * @return true if the package advertises the Hybrid bit (zero on all AMD, pre-Alder-Lake Intel).
+ */
+AU_CPUID_API bool
+au_cpuid_is_hybrid(void);
+
+/**
+ * @brief Get the core type of the currently executing core (CPUID 0x1A.0 EAX[31:24]).
+ * @return Raw core-type byte (Intel: 0x40=P-core, 0x20=E-core), or 0 if unsupported.
+ */
+AU_CPUID_API uint32_t
+au_cpuid_get_core_type(void);
+
+/**
+ * @brief Check if CPU feature flags are available (deprecated, use au_cpuid_has_flags instead).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @warning Deprecated. Use au_cpuid_has_flags instead.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @param[in] flag_array CPU feature flag names.
+ * @param[in] count Number of flags in the list.
+ * @return Boolean array corresponding to each flag in flag_array.
  */
 AU_DEPRECATED_API_X("Use au_cpuid_has_flags instead.")
-AUD_API_EXPORT bool*
+AU_CPUID_API bool*
 au_cpuid_has_flag(au_cpu_num_t      cpu_num,
                   const char* const flag_array[],
                   int               count);
 
 /**
- * @brief          Allows caller to check if all the flags are available.
- *
- * @details        List of supported flags: sse3, pclmulqdq, dtes64, monitor,
- *                 dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm,
- * pcid, dca, sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline, aes, xsave,
- * osxsave, avx, f16c, rdrand, hypervisor, fpu, vme, de, pse, tsc, msr, pae,
- * mce, cx8, apic, sep, mtrr, pge, mca, cmov, pat, pse36, pn, clflush, ds, acpi,
- * mmx, fxsr, sse, sse2, ss, ht, tm, ia64, pbe, arat, fsgsbase, tsc_adjust,
- * bmi1, hle, avx2, smep, bmi2, erms, invpcid, rtm, mpx, avx512f, avx512dq,
- * rdseed, adx, smap, avx512ifma, pcommit, clflushopt, clwb, avx512pf, avx512er,
- * avx512cd, sha_ni, avx512bw, avx512vl, avx512vbmi, umip, pku, ospke,
- * avx512_vpopcntdq, la57, rdpid, avx512_4vnniw, avx512_4fmaps, avx512_bf16,
- * avxvnni, xsaveopt, xsavec, xgetbv1, xsaves, lahf_lm, cmp_legacy, svm,
- * extapic, cr8legacy, abm, sse4a, misalignsse, _3dnowprefetch, osvw, ibs, xop,
- * skinit, wdt, lwp, fma4, tce, nodeid_msr, tbm, topoext, perfctr_core,
- * perfctr_nb, syscall, nxxd, mmxext, fxsr_opt, pdpe1gb, rdtscp, lmi64,
- * _3dnowext, _3dnow, invtsc, npt, lbrv, svm_lock, nrip_save, tsc_scale,
- * vmcb_clean, flushbyasid, decodeassists, pause_filter, pfthreshold, xstore,
- * xstore_en, xcrypt, xcrypt_en, ace2, ace2_en, phe, phe_en, pmm, pmm_en, vaes,
- * vpclmulqdq, avx512_vnni, avx512_bitalg, avx512vbmi2, movdiri, movdir64b,
- * avx512_vpintersect, x2avic
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[in]      flag_array  CPU feature flag names.
- * @param[in]      count   Number of flags in the list.
- *
- * @return         Boolean, true if all flags are available.
+ * @brief Check if all CPU feature flags in the list are available.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @param[in] flag_array CPU feature flag names.
+ * @param[in] count Number of flags in the list.
+ * @return true if all flags are available.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_has_flags_all(au_cpu_num_t      cpu_num,
                        const char* const flag_array[],
                        int               count);
 
 /**
- * @brief          Allows caller to check if any of the flags are available.
- *
- * @details        List of supported flags: sse3, pclmulqdq, dtes64, monitor,
- *                 dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm,
- * pcid, dca, sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline, aes, xsave,
- * osxsave, avx, f16c, rdrand, hypervisor, fpu, vme, de, pse, tsc, msr, pae,
- * mce, cx8, apic, sep, mtrr, pge, mca, cmov, pat, pse36, pn, clflush, ds, acpi,
- * mmx, fxsr, sse, sse2, ss, ht, tm, ia64, pbe, arat, fsgsbase, tsc_adjust,
- * bmi1, hle, avx2, smep, bmi2, erms, invpcid, rtm, mpx, avx512f, avx512dq,
- * rdseed, adx, smap, avx512ifma, pcommit, clflushopt, clwb, avx512pf, avx512er,
- * avx512cd, sha_ni, avx512bw, avx512vl, avx512vbmi, umip, pku, ospke,
- * avx512_vpopcntdq, la57, rdpid, avx512_4vnniw, avx512_4fmaps, avx512_bf16,
- * avxvnni, xsaveopt, xsavec, xgetbv1, xsaves, lahf_lm, cmp_legacy, svm,
- * extapic, cr8legacy, abm, sse4a, misalignsse, _3dnowprefetch, osvw, ibs, xop,
- * skinit, wdt, lwp, fma4, tce, nodeid_msr, tbm, topoext, perfctr_core,
- * perfctr_nb, syscall, nxxd, mmxext, fxsr_opt, pdpe1gb, rdtscp, lmi64,
- * _3dnowext, _3dnow, invtsc, npt, lbrv, svm_lock, nrip_save, tsc_scale,
- * vmcb_clean, flushbyasid, decodeassists, pause_filter, pfthreshold, xstore,
- * xstore_en, xcrypt, xcrypt_en, ace2, ace2_en, phe, phe_en, pmm, pmm_en, vaes,
- * vpclmulqdq, avx512_vnni, avx512_bitalg, avx512vbmi2, movdiri, movdir64b,
- * avx512_vpintersect, x2avic
- *
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[in]      flag_array  CPU feature flag names.
- * @param[in]      count   Number of flags in the list.
- *
- * @return         Boolean, true if any of the flags are available.
+ * @brief Check if any of the CPU feature flags in the list are available.
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @param[in] flag_array CPU feature flag names.
+ * @param[in] count Number of flags in the list.
+ * @return true if any of the flags are available.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_has_flags_any(au_cpu_num_t      cpu_num,
                        const char* const flag_array[],
                        int               count);
 
 /**
- * @brief          Allows caller to check if the flag is available.
- *
- * @details        List of supported flags: sse3, pclmulqdq, dtes64, monitor,
- dscpl, vmx, smx, est, tm2, ssse3, cid, fma, cx16, xtpr, pdcm, pcid, dca,
- sse4_1, sse4_2, x2apic, movbe, popcnt, tsc_deadline, aes, xsave, osxsave, avx,
- f16c, rdrand, hypervisor, fpu, vme, de, pse, tsc, msr, pae, mce, cx8, apic,
- sep, mtrr, pge, mca, cmov, pat, pse36, pn, clflush, ds, acpi, mmx, fxsr, sse,
- sse2, ss, ht, tm, ia64, pbe, arat, fsgsbase, tsc_adjust, bmi1, hle, avx2, smep,
- bmi2, erms, invpcid, rtm, mpx, avx512f, avx512dq, rdseed, adx, smap,
- avx512ifma, pcommit, clflushopt, clwb, avx512pf, avx512er, avx512cd, sha_ni,
- avx512bw, avx512vl, avx512vbmi, umip, pku, ospke, avx512_vpopcntdq, la57,
- rdpid, avx512_4vnniw, avx512_4fmaps, avx512_bf16, avxvnni, xsaveopt, xsavec,
- xgetbv1, xsaves, lahf_lm, cmp_legacy, svm, extapic, cr8legacy, abm, sse4a,
- misalignsse, _3dnowprefetch, osvw, ibs, xop, skinit, wdt, lwp, fma4, tce,
- nodeid_msr, tbm, topoext, perfctr_core, perfctr_nb, syscall, nxxd, mmxext,
- fxsr_opt, pdpe1gb, rdtscp, lmi64, _3dnowext, _3dnow, invtsc, npt, lbrv,
- svm_lock, nrip_save, tsc_scale, vmcb_clean, flushbyasid, decodeassists,
- pause_filter, pfthreshold, xstore, xstore_en, xcrypt, xcrypt_en, ace2, ace2_en,
- phe, phe_en, pmm, pmm_en, vaes, vpclmulqdq, avx512_vnni, avx512_bitalg,
- avx512vbmi2, movdiri, movdir64b, avx512_vpintersect, x2avic"
- *  @warning If cpu_num is not "AU_CURRENT_CPU_NUM", then calling this function
- *  will result in thread migration to the selected core.
- *
- * @param[in]      cpu_num   Any valid core number starting from 0.
- * @param[in]      flag_array  CPU feature flag names.
- * @param[in]      count   Number of flags in the list.
- *
- * @return         A boolean indicating presence or absence of the features
- combined. (It’s a logical AND of result of each flag).
-
+ * @brief Check if all CPU feature flags in the list are available (logical AND).
+ * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
+ * @param[in] cpu_num Any valid core number starting from 0.
+ * @param[in] flag_array CPU feature flag names.
+ * @param[in] count Number of flags in the list.
+ * @return true if all flags are available (logical AND).
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_has_flags(au_cpu_num_t      cpu_num,
                    const char* const flag_array[],
                    int               count);
 /**
- * @brief          Portable API to check if an error has occured
+ * @brief          Portable API to check if an error has occurred
  *
  * @param          err  Actual error number
  *
- * @return         1/true if error occorured, false otherwise.
+ * @return         1/true if error occurred, false otherwise.
  */
-AUD_API_EXPORT bool
+AU_CPUID_API bool
 au_cpuid_is_error(au_error_t err);
+
+/* Header-only implementation: each entry point resolves a handle (one cpuid sweep) and decodes it. Emitted only when AU_CPUID_IMPLEMENTATION is set. */
+#if defined(AU_CPUID_IMPLEMENTATION)
+
+/* Resolve a fully-populated handle for cpu_num using the real cpuid. Non-strict: out-of-mask cpu_num degrades to first-allowed core. */
+static inline au_cpu_info_t
+au_capi_resolve(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c;
+    c.raw_fn  = NULL;
+    c.raw_ctx = NULL;
+    au_cpuid_init(&c, (int)cpu_num, false);
+    return c;
+}
+
+AU_CPUID_API bool
+au_cpuid_is_amd(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_amd(&c);
+}
+
+AU_CPUID_API void
+au_cpuid_get_vendor(au_cpu_num_t cpu_num, char* vend_info, size_t size)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    snprintf(vend_info,
+             size,
+             "%u\n%u\n%u\n%u\n%u\n",
+             (unsigned)c.vendor,
+             (unsigned)c.family,
+             (unsigned)c.model,
+             (unsigned)c.stepping,
+             (unsigned)c.uarch);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zenplus(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZENPLUS, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen2(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN2, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen3(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN3, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen4(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN4, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen5(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN5, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen6(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_uarch(&c, AU_UARCH_ZEN6, false);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_x86_64v2(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_x86_64v2(&c);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_x86_64v3(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_x86_64v3(&c);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_x86_64v4(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_x86_64v4(&c);
+}
+
+AU_CPUID_API bool
+au_cpuid_arch_is_zen_family(au_cpu_num_t cpu_num)
+{
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    return au_cpuid_info_is_zen_family(&c);
+}
+
+AU_CPUID_API bool
+au_cpuid_is_hybrid(void)
+{
+    return au_cpuid_read_is_hybrid(NULL, NULL);
+}
+
+AU_CPUID_API uint32_t
+au_cpuid_get_core_type(void)
+{
+    return au_cpuid_read_core_type(NULL, NULL);
+}
+
+AU_CPUID_API bool*
+au_cpuid_has_flag(au_cpu_num_t      cpu_num,
+                  const char* const flag_array[],
+                  int               count)
+{
+    if (count <= 1)
+        return NULL;
+
+    au_cpu_info_t c      = au_capi_resolve(cpu_num);
+    bool*         result = (bool*)malloc((size_t)count * sizeof(bool));
+    if (!result)
+        return NULL;
+
+    for (int i = 0; i < count; i++) {
+        result[i] = au_cpuid_info_has_flag(
+            &c, au_cpuid_flag_from_string(flag_array[i]));
+    }
+    return result;
+}
+
+AU_CPUID_API bool
+au_cpuid_has_flags_all(au_cpu_num_t      cpu_num,
+                       const char* const flag_array[],
+                       int               count)
+{
+    if (count <= 0)
+        return false;
+
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    for (int i = 0; i < count; i++) {
+        if (!au_cpuid_info_has_flag(&c,
+                                    au_cpuid_flag_from_string(flag_array[i])))
+            return false;
+    }
+    return true;
+}
+
+AU_CPUID_API bool
+au_cpuid_has_flags_any(au_cpu_num_t      cpu_num,
+                       const char* const flag_array[],
+                       int               count)
+{
+    if (count <= 0)
+        return false;
+
+    au_cpu_info_t c = au_capi_resolve(cpu_num);
+    for (int i = 0; i < count; i++) {
+        if (au_cpuid_info_has_flag(&c,
+                                   au_cpuid_flag_from_string(flag_array[i])))
+            return true;
+    }
+    return false;
+}
+
+AU_CPUID_API bool
+au_cpuid_has_flags(au_cpu_num_t      cpu_num,
+                   const char* const flag_array[],
+                   int               count)
+{
+    if (count <= 0)
+        return false;
+
+    au_cpu_info_t c      = au_capi_resolve(cpu_num);
+    bool          result = true;
+    for (int i = 0; i < count; i++) {
+        result = result
+                 && au_cpuid_info_has_flag(
+                     &c, au_cpuid_flag_from_string(flag_array[i]));
+    }
+    return result;
+}
+
+AU_CPUID_API bool
+au_cpuid_is_error(au_error_t err)
+{
+    if ((int32_t)err)
+        return true;
+    return false;
+}
+
+#endif /* AU_CPUID_IMPLEMENTATION */
 
 AUD_EXTERN_C_END
 

@@ -1,0 +1,168 @@
+#
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+
+# AoclUtilsConfig.cmake - CMake configuration file for AOCL-Utils
+#
+# This file is used by find_package(AoclUtils) to locate and configure
+# the AOCL Utilities library.
+#
+# After successful configuration, the following targets are available:
+#   AoclUtils::aocl-utils        - Main utilities library target
+#   AoclUtils::au_cpuid          - CPUID library target (if built)
+#
+# Variables set by this configuration:
+#   AoclUtils_FOUND         - True if AOCL-Utils was found
+#   AoclUtils_VERSION       - Version of AOCL-Utils found
+#   AoclUtils_INCLUDE_DIRS  - Include directories for AOCL-Utils
+#   AoclUtils_LIBRARIES     - Libraries to link against (for legacy support)
+
+@PACKAGE_INIT@
+
+# Include required CMake modules
+include(CMakeFindDependencyMacro)
+
+# Set version information
+set(AoclUtils_VERSION @PROJECT_VERSION@)
+set(AoclUtils_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(AoclUtils_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(AoclUtils_VERSION_PATCH @PROJECT_VERSION_PATCH@)
+
+# Find required dependencies
+# These dependencies are required for AOCL-Utils to function properly
+
+# Find Threads (required for threading support)
+find_dependency(Threads REQUIRED)
+
+# Get the directory where this config file is located
+get_filename_component(AoclUtils_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Include the targets file which defines the actual targets.
+# Probe the current (bare = shared, "_static" = static) spellings as well as the
+# legacy "_shared" suffix and the historic Windows "libaoclutils" spelling, so
+# both old and new installs resolve.
+if(NOT TARGET AoclUtils::aoclutils AND NOT TARGET AoclUtils::aoclutils_static
+   AND NOT TARGET AoclUtils::aoclutils_shared
+   AND NOT TARGET AoclUtils::libaoclutils AND NOT TARGET AoclUtils::libaoclutils_static
+   AND NOT TARGET AoclUtils::libaoclutils_shared)
+    include("${AoclUtils_CMAKE_DIR}/AoclUtilsTargets.cmake")
+endif()
+
+# Resolve the canonical main target — handles the Unix (aoclutils) and historic
+# Windows (libaoclutils) spellings, and static-only / shared-only / combined
+# builds. Order the probes: bare (shared) first, then "_static" (static-only
+# install where the bare shared target is absent), then the legacy "_shared".
+foreach(_au_main aoclutils libaoclutils)
+    if(TARGET AoclUtils::${_au_main})
+        get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::${_au_main} INTERFACE_INCLUDE_DIRECTORIES)
+        set(AoclUtils_LIBRARIES AoclUtils::${_au_main})
+        set(AoclUtils_STATIC_LIBRARY AoclUtils::${_au_main})
+        if(NOT TARGET AoclUtils::aocl-utils)
+            add_library(AoclUtils::aocl-utils ALIAS AoclUtils::${_au_main})
+        endif()
+        break()
+    elseif(TARGET AoclUtils::${_au_main}_static)
+        get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::${_au_main}_static INTERFACE_INCLUDE_DIRECTORIES)
+        set(AoclUtils_LIBRARIES AoclUtils::${_au_main}_static)
+        set(AoclUtils_STATIC_LIBRARY AoclUtils::${_au_main}_static)
+        if(NOT TARGET AoclUtils::aocl-utils)
+            add_library(AoclUtils::aocl-utils ALIAS AoclUtils::${_au_main}_static)
+        endif()
+        break()
+    elseif(TARGET AoclUtils::${_au_main}_shared)
+        get_target_property(AoclUtils_INCLUDE_DIRS AoclUtils::${_au_main}_shared INTERFACE_INCLUDE_DIRECTORIES)
+        set(AoclUtils_LIBRARIES AoclUtils::${_au_main}_shared)
+        if(NOT TARGET AoclUtils::aocl-utils)
+            add_library(AoclUtils::aocl-utils ALIAS AoclUtils::${_au_main}_shared)
+        endif()
+        break()
+    endif()
+endforeach()
+
+# The shared library is now the BARE target (aoclutils); the legacy "_shared"
+# suffix is still probed for old installs.
+foreach(_au_main aoclutils libaoclutils)
+    if(TARGET AoclUtils::${_au_main})
+        set(AoclUtils_SHARED_LIBRARY AoclUtils::${_au_main})
+        if(NOT TARGET AoclUtils::aocl-utils_shared)
+            add_library(AoclUtils::aocl-utils_shared ALIAS AoclUtils::${_au_main})
+        endif()
+        break()
+    elseif(TARGET AoclUtils::${_au_main}_shared)
+        set(AoclUtils_SHARED_LIBRARY AoclUtils::${_au_main}_shared)
+        if(NOT TARGET AoclUtils::aocl-utils_shared)
+            add_library(AoclUtils::aocl-utils_shared ALIAS AoclUtils::${_au_main}_shared)
+        endif()
+        break()
+    endif()
+endforeach()
+
+# Check available components/targets — check both static and shared variants
+set(_aoclUtils_available_components "")
+foreach(_au_main aoclutils libaoclutils)
+    if(TARGET AoclUtils::${_au_main} OR TARGET AoclUtils::${_au_main}_static
+       OR TARGET AoclUtils::${_au_main}_shared)
+        list(APPEND _aoclUtils_available_components "aocl-utils")
+        break()
+    endif()
+endforeach()
+if(TARGET AoclUtils::au_cpuid OR TARGET AoclUtils::au_cpuid_static
+   OR TARGET AoclUtils::au_cpuid_shared)
+    list(APPEND _aoclUtils_available_components "au_cpuid")
+endif()
+
+# Handle component-specific requests
+if(AoclUtils_FIND_COMPONENTS)
+    foreach(_comp ${AoclUtils_FIND_COMPONENTS})
+        if(NOT TARGET AoclUtils::${_comp} AND NOT TARGET AoclUtils::${_comp}_shared
+           AND NOT TARGET AoclUtils::${_comp}_static)
+            if(AoclUtils_FIND_REQUIRED_${_comp})
+                set(AoclUtils_FOUND False)
+                set(AoclUtils_NOT_FOUND_MESSAGE "Required component ${_comp} not found")
+                return()
+            elseif(NOT AoclUtils_FIND_QUIETLY)
+                message(STATUS "Optional component ${_comp} not available")
+            endif()
+        endif()
+    endforeach()
+endif()
+
+# Mark package as found
+set(AoclUtils_FOUND True)
+
+# Print status message
+if(NOT AoclUtils_FIND_QUIETLY)
+    message(STATUS "Found AOCL-Utils: ${AoclUtils_VERSION}")
+    if(TARGET AoclUtils::aocl-utils)
+        message(STATUS "  Main library: AoclUtils::aocl-utils")
+    endif()
+    if(TARGET AoclUtils::au_cpuid)
+        message(STATUS "  CPUID library: AoclUtils::au_cpuid")
+    endif()
+    if(_aoclUtils_available_components)
+        message(STATUS "  Available components: ${_aoclUtils_available_components}")
+    endif()
+endif()

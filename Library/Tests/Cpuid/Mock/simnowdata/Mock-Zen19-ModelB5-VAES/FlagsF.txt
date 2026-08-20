@@ -1,2 +1,6 @@
-
-test
+mpx
+vmx
+est
+xop
+avx512f
+_3dnow

@@ -181,7 +181,7 @@ class Logger
         }
 
         std::time_t now       = std::time(nullptr);
-        String timestamp = std::asctime(std::localtime(&now));
+        String      timestamp = std::asctime(std::localtime(&now));
         timestamp =
             timestamp.substr(0, timestamp.length() - 1); // Remove newline
 

@@ -29,9 +29,14 @@
 au_module("core")
 
 if (MSVC)
-	add_compile_options(-W4  /Za /DLL)
+	# /Za removed: it disables MS language extensions, which makes cl reject
+	# anonymous-struct-inside-union declarations in the Windows SDK headers
+	# (IORING_*, STORAGE_HW_FIRMWARE_*, ...), producing C2467 errors inside
+	# Microsoft's own headers. /DLL was also removed -- it is a linker flag,
+	# silently ignored by cl when passed via add_compile_options.
+	add_compile_options(/W4)
 else()
-	add_compile_options(-Wall -Weffc++ -pedantic -fPIC)
+	add_compile_options(-Wall $<$<COMPILE_LANGUAGE:CXX>:-Weffc++> -pedantic -fPIC)
 endif()
 
 SET(LOGGER_SRC_FILES "Core/Logger/LogWriter.cc"
@@ -72,11 +77,19 @@ set(RNG_SRC_FILES
     Core/Rng/HardwareRng.cc
 )
 
-set_source_files_properties(
-  Core/Rng/HardwareRng.cc
-  PROPERTIES
-    COMPILE_FLAGS "-mrdrnd"
-)
+# -mrdrnd enables the RDRAND intrinsics. Real MSVC (cl.exe) exposes them
+# unconditionally via <immintrin.h> and rejects the flag. Every other
+# toolchain -- GCC, upstream Clang, clang-cl and IntelLLVM -- needs the flag
+# for the intrinsics to be declared. clang-cl reports MSVC=TRUE (it targets the
+# MSVC ABI), so guarding on `NOT MSVC` wrongly starves it of the flag; key off
+# the compiler id instead so only real cl.exe is excluded.
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	set_source_files_properties(
+	  Core/Rng/HardwareRng.cc
+	  PROPERTIES
+	    COMPILE_FLAGS "-mrdrnd"
+	)
+endif()
 
 set(AVX2_FILES
   Base64/transform_avx2.cc
@@ -165,6 +178,17 @@ au_cc_library(aoclutils
         au::sdk__include
 )
 
+# Link the threads library into the umbrella targets. PRIVATE on the shared
+# object places libpthread in its DT_NEEDED so it is self-contained; PUBLIC on
+# the static archive propagates the usage requirement to consumers, since an
+# archive has no link step of its own.
+if(TARGET aoclutils)
+    target_link_libraries(aoclutils PRIVATE Threads::Threads)
+endif()
+if(TARGET aoclutils_static)
+    target_link_libraries(aoclutils_static PUBLIC Threads::Threads)
+endif()
+
 # Only add enabled submodules
 set(AU_SUBMODULE_DIRS "")
 
@@ -180,3 +204,19 @@ endif()
 foreach(__moddir ${AU_SUBMODULE_DIRS})
     add_subdirectory(${__moddir})
 endforeach()
+
+# AOCL Build-It-Yourself unified build: every AOCL-Utils source (Core plus all
+# enabled sub-modules) is funnelled by au_cc_library into the umbrella target(s).
+# Compile the same sources into a sibling OBJECT library, created here in the
+# Library/ scope so it inherits the same directory-level flags/includes the
+# umbrella used, so their objects can be pulled directly into the single libaocl.
+# Placed at the very end so the target's SOURCES are fully populated.
+if(AOCL_TB_UNIFIED_BUILD)
+    # Objectify the umbrella: bare "aoclutils" (shared), or "aoclutils_static"
+    # for a static-only build.
+    if(TARGET aoclutils)
+        aocl_tb_objectify(aoclutils)
+    elseif(TARGET aoclutils_static)
+        aocl_tb_objectify(aoclutils_static)
+    endif()
+endif()

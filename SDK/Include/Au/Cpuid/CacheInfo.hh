@@ -84,25 +84,17 @@ namespace cache_attr {
         Unified,    /**< Unified Cache. */
         Unknown     /**< Unable to determine. */
     };
+
+    /* Stream operators in cache_attr namespace for ADL (required for GoogleTest). */
+    std::ostream& operator<<(std::ostream& os, ELevel const& lvl);
+    std::ostream& operator<<(std::ostream& os, EWritePolicy const& lvl);
+    std::ostream& operator<<(std::ostream& os, EAllocatePolicy const& lvl);
+    std::ostream& operator<<(std::ostream& os, EType const& lvl);
 } // namespace cache_attr
-
-std::ostream&
-operator<<(std::ostream& os, cache_attr::ELevel const& lvl);
-
-std::ostream&
-operator<<(std::ostream& os, cache_attr::EWritePolicy const& lvl);
-
-std::ostream&
-operator<<(std::ostream& os, cache_attr::EAllocatePolicy const& lvl);
-
-std::ostream&
-operator<<(std::ostream& os, cache_attr::EType const& lvl);
 
 /**
  * \class   CacheInfo
- * \brief   Class to get cache info.
- *
- * Details include core size, type, level, line size, number of ways.
+ * \brief   Cache info: size, type, level, line size, ways.
  */
 class CacheInfo
 {
@@ -129,23 +121,14 @@ class CacheInfo
     size_t getSize() const { return m_size; }
 
     /**
-     * @brief   Get number of ways to access Cache based on Cache Level and
-     * Cache Type.
-     *
-     * Ex: 4-way cache will have 4 cache blocks.
-     *
-     * @return  Returns number of ways to access Cache.
+     * @brief   Get number of ways (e.g. 4-way = 4 blocks).
+     * @return  Number of ways.
      */
     Uint64 getWay() const { return m_way; }
 
     /**
-     * @brief   Get cache line size (in bytes) to access Cache based on
-     * Cache Level and Cache Type.
-     *
-     * Ex: 4-way cache will have 4 cache blocks. Each block size is called
-     * as cache line size.
-     *
-     * @return  Returns cache line size.
+     * @brief   Get cache line size in bytes.
+     * @return  Cache line size.
      */
     Uint64 getLane() const { return m_lane; }
 
@@ -231,13 +214,7 @@ class CacheInfo
     Uint64     m_lane = 0; /**< Cache line size in bytes. */
     Uint64     m_way  = 0; /**< Cache number of ways. */
 
-    /* TODO: add support for the following if needed */
-    //  uint64_t  m_partitions; /**< Cache physical line partitions
-    //  uint8_t   m_associativity;    /**< 1 = fully associative cache
-    //  uint8_t   m_self_initialization;  /**< 1 = Cache is self initializing;
-    //                                            cache does not need
-    //                                            software initialization
-    //
+    /* TODO: add m_partitions, m_associativity, m_self_initialization if needed */
 };
 
 class AUD_API_EXPORT CacheView final

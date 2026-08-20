@@ -151,36 +151,11 @@ class CpuTopology
         LogicalProcessorInformation cacheInfo(RelationCache);
         LogicalProcessorInformation groupInfo(RelationGroup);
 
-#ifdef AU_COMPILER_IS_MSVC
-        for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
-            // Collect the physical core -> logical core mapping
-            processorMap.push_back(
-                { std::make_pair(pInfo->u.Processor.GroupMask->Mask,
-                                 pInfo->u.Processor.GroupMask->Group) });
-        }
-
-        for (; auto cInfo = cacheInfo.Current(); cacheInfo.MoveNext()) {
-            // Collect the L3 Cache --> Logical core mapping
-            if (cInfo->u.Cache.Level == 3
-                && (cInfo->u.Cache.Type == CacheData
-                    || cInfo->u.Cache.Type == CacheUnified)) {
-                std::vector<CoreMask> cachePMap;
-                for (auto i = 0; i < cInfo->u.Cache.GroupCount; i++)
-                    cachePMap.push_back(
-                        std::make_pair(cInfo->u.Cache.u.GroupMasks[i].Mask,
-                                       cInfo->u.Cache.u.GroupMasks[i].Group));
-                if (cachePMap.size() != 0)
-                    cacheMap.push_back(cachePMap);
-            }
-        }
-        for (; auto gInfo = groupInfo.Current(); groupInfo.MoveNext()) {
-            // Collect the Group --> Logical core mapping
-            for (auto i = 0; i < gInfo->u.Group.ActiveGroupCount; i++)
-                groupMap.push_back(std::make_pair(
-                    gInfo->u.Group.GroupInfo[i].ActiveProcessorMask,
-                    gInfo->u.Group.GroupInfo[i].ActiveProcessorCount));
-        }
-#else
+        // The SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX / CACHE_RELATIONSHIP
+        // members live inside the SDK's DUMMYUNIONNAME union. With MS language
+        // extensions enabled (the default once /Za is dropped), that union is
+        // anonymous, so the members are accessed directly without a ".u."
+        // qualifier -- identical to every non-MSVC SDK toolchain.
         for (; auto pInfo = processorInfo.Current(); processorInfo.MoveNext()) {
             // Collect the physical core -> logical core mapping
             processorMap.push_back(
@@ -209,7 +184,6 @@ class CpuTopology
                     gInfo->Group.GroupInfo[i].ActiveProcessorMask,
                     gInfo->Group.GroupInfo[i].ActiveProcessorCount));
         }
-#endif
     }
 };
 } // namespace Au
