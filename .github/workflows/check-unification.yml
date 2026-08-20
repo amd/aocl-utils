@@ -39,7 +39,7 @@ on:
       # is blamed on the next PR that happens to touch the paths above.
       - 'version.txt'
       # Compiled and run by the self-containment steps below.
-      - 'tests/unification/test_self_contained.c'
+      - 'Tests/unification/test_self_contained.c'
   pull_request:
     branches: [amd-main, amd-staging]
     paths:
@@ -53,7 +53,7 @@ on:
       # is blamed on the next PR that happens to touch the paths above.
       - 'version.txt'
       # Compiled and run by the self-containment steps below.
-      - 'tests/unification/test_self_contained.c'
+      - 'Tests/unification/test_self_contained.c'
 
 jobs:
   check-unification:
@@ -118,7 +118,7 @@ jobs:
           gcc -std=c11 -Wall -Wextra -Werror \
             -I SDK/Include/Capi/au/cpuid \
             -o build-unify-test/test_self_contained \
-            tests/unification/test_self_contained.c
+            Tests/unification/test_self_contained.c
           echo "Self-contained compilation succeeded."
 
       - name: Run self-contained test
