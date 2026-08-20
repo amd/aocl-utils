@@ -25,6 +25,9 @@ AOCL-Utils is designed for integration with the other AOCL libraries. Each proje
 * Implement logger support.
 * CMake: Upgrade version to 3.26.
 * Few bug fixes.
+* CPUID: Preserve the 24-byte `Au::X86Cpu` ABI layout by keeping mutable
+  resolution state in the opaque implementation object. Consumers rebuilt
+  against the ABI-fixed release are required when mixing with older packages.
 
 
 Please refer AOCL User Guide for supported Operating Systems and Compilers.

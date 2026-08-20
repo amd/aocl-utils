@@ -33,10 +33,10 @@
 namespace Au {
 
 /*
- * All affinity logic (selection, pinning, hybrid E-core, multi-group) now lives in
- * the pure-C core resolver (au_cpuid_init). X86Cpu is a pure decoder that forwards
- * cpu_num to the core. AU_CURRENT_CPU_NUM (UINT32_MAX) casts to -1, matching the
- * core's sentinel.
+ * All affinity logic (selection, pinning, hybrid E-core, multi-group) now lives
+ * in the pure-C core resolver (au_cpuid_init). X86Cpu is a pure decoder that
+ * forwards cpu_num to the core. AU_CURRENT_CPU_NUM (UINT32_MAX) casts to -1,
+ * matching the core's sentinel.
  */
 
 X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
@@ -44,7 +44,7 @@ X86Cpu::X86Cpu(CpuidUtils* cUtils, CpuNumT num)
     , m_pimpl{ new X86Cpu::Impl{ cUtils } }
 {
     /* MOCK path: core skips selection/pinning. Non-strict. */
-    m_resolved = pImpl()->update((int)num, /*strict=*/false);
+    pImpl()->setResolved(pImpl()->update((int)num, /*strict=*/false));
 }
 
 X86Cpu::X86Cpu(CpuNumT num)
@@ -56,8 +56,9 @@ X86Cpu::X86Cpu(CpuNumT num, bool strict)
     : CpuInfo{ num }
     , m_pimpl{ new X86Cpu::Impl{} }
 {
-    /* C core handles all selection/pinning/restore. strict=false degrades; strict=true fails on out-of-mask. */
-    m_resolved = pImpl()->update((int)num, strict);
+    /* C core handles all selection/pinning/restore. strict=false degrades;
+     * strict=true fails on out-of-mask. */
+    pImpl()->setResolved(pImpl()->update((int)num, strict));
 }
 
 StatusOr<X86Cpu>
@@ -65,7 +66,7 @@ X86Cpu::buildFromCore(CpuNumT num)
 {
     /* Strict resolve: out-of-mask core returns InvalidArgument. */
     X86Cpu cpu{ num, /*strict=*/true };
-    if (!cpu.m_resolved) {
+    if (!cpu.pImpl()->resolved()) {
         Status sts = StatusInvalidArgument(
             "X86Cpu::buildFromCore: requested core is outside affinity mask");
         return sts;
@@ -81,7 +82,7 @@ void
 X86Cpu::update()
 {
     /* Re-resolve non-strict on stored cpu_num (core owns affinity). */
-    m_resolved = pImpl()->update();
+    pImpl()->setResolved(pImpl()->update());
 }
 
 bool

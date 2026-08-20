@@ -38,116 +38,117 @@
 #include "Au/Memory/BufferView.hh"
 #include "Au/StatusOr.hh"
 
+#include <cctype>
 #include <map>
 #include <memory>
 #include <sstream>
 #include <vector>
 
-#define AUD_DEFINE_ENUM(name, type, ...)                                           \
-    enum class name : type                                                         \
-    {                                                                              \
-        Min,                                                                       \
-        __VA_ARGS__,                                                               \
-        Max,                                                                       \
-    };                                                                             \
-    inline std::stringstream& operator<<(std::stringstream&  os,                   \
-                                         std::vector<String> values)               \
-    {                                                                              \
-        String                   str = #__VA_ARGS__;                               \
-        std::map<String, Uint64> flags;                                            \
-        Uint64                   flagsCounter = 1;                                 \
-        std::stringstream        ss(str);                                          \
-        String                   token;                                            \
-        const size_t             maxEnumSize =                                     \
-            static_cast<size_t>(name::Max) - 1; /* Maximum enum size */            \
-                                                                                   \
-        size_t enumCount = 0;                                                      \
-                                                                                   \
-        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
-            token        = (enumCount == 0) ? token                                \
-                                            : token.substr(1, token.length() - 1); \
-            flags[token] = flagsCounter++;                                         \
-            enumCount++;                                                           \
-        }                                                                          \
-                                                                                   \
-        for (const auto& value : values) {                                         \
-            if (flags.find(value) != flags.end()) {                                \
-                os << flags[value] << ":";                                         \
-            }                                                                      \
-        }                                                                          \
-        return os;                                                                 \
-    }                                                                              \
-    inline uint64_t name##fromString(const std::string& str)                       \
-    {                                                                              \
-        std::string       s = #__VA_ARGS__;                                        \
-        std::stringstream ss(s);                                                   \
-        std::string       token;                                                   \
-        uint64_t          index       = 1;                                         \
-        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;        \
-        size_t            enumCount   = 0;                                         \
-        std::string       input       = str;                                       \
-                                                                                   \
-        /* First trim whitespace characters */                                     \
-        auto trim = [](std::string& s) {                                           \
-            auto start = s.find_first_not_of(" \t\n\r\f\v\n");                     \
-            if (start == std::string::npos) {                                      \
-                s.clear();                                                         \
-                return;                                                            \
-            }                                                                      \
-            auto end = s.find_last_not_of(" \t\n\r\f\v\n");                        \
-            s        = s.substr(start, end - start + 1);                           \
-        };                                                                         \
-                                                                                   \
-        trim(input);                                                               \
-                                                                                   \
-        /* Handle empty or whitespace-only string */                               \
-        if (input.empty()) {                                                       \
-            return -1;                                                             \
-        }                                                                          \
-                                                                                   \
-        /* Validate input - must contain only alphanumeric and _ chars */          \
-        for (char c : input) {                                                     \
-            if (!std::isalnum(c) && c != '_') {                                    \
-                return -1;                                                         \
-            }                                                                      \
-        }                                                                          \
-                                                                                   \
-        /* Process enum values */                                                  \
-        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
-            trim(token);                                                           \
-            if (token == input) {                                                  \
-                return index;                                                      \
-            }                                                                      \
-            index++;                                                               \
-            enumCount++;                                                           \
-        }                                                                          \
-        return -1;                                                                 \
-    }                                                                              \
-    inline std::string name##toString(Uint64 value)                                \
-    {                                                                              \
-        String            str = #__VA_ARGS__;                                      \
-        std::stringstream ss(str);                                                 \
-        Uint64            current = 1;                                             \
-        String            token;                                                   \
-        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;        \
-        size_t            enumCount   = 0;                                         \
-                                                                                   \
-        if (value == 0) {                                                          \
-            return "UNDEF";                                                        \
-        }                                                                          \
-                                                                                   \
-        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {          \
-            if (current == value) {                                                \
-                if (enumCount == 0) {                                              \
-                    return token;                                                  \
-                }                                                                  \
-                token = token.substr(1, token.length() - 1);                       \
-                return token;                                                      \
-            }                                                                      \
-            current++;                                                             \
-            enumCount++;                                                           \
-        }                                                                          \
-        return "UNDEF";                                                            \
+#define AUD_DEFINE_ENUM(name, type, ...)                                       \
+    enum class name : type                                                     \
+    {                                                                          \
+        Min,                                                                   \
+        __VA_ARGS__,                                                           \
+        Max,                                                                   \
+    };                                                                         \
+    inline std::stringstream& operator<<(std::stringstream&  os,               \
+                                         std::vector<String> values)           \
+    {                                                                          \
+        String                   str = #__VA_ARGS__;                           \
+        std::map<String, Uint64> flags;                                        \
+        Uint64                   flagsCounter = 1;                             \
+        std::stringstream        ss(str);                                      \
+        String                   token;                                        \
+        const size_t             maxEnumSize =                                 \
+            static_cast<size_t>(name::Max) - 1; /* Maximum enum size */        \
+                                                                               \
+        size_t enumCount = 0;                                                  \
+                                                                               \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {      \
+            token = (enumCount == 0) ? token                                   \
+                                     : token.substr(1, token.length() - 1);    \
+            flags[token] = flagsCounter++;                                     \
+            enumCount++;                                                       \
+        }                                                                      \
+                                                                               \
+        for (const auto& value : values) {                                     \
+            if (flags.find(value) != flags.end()) {                            \
+                os << flags[value] << ":";                                     \
+            }                                                                  \
+        }                                                                      \
+        return os;                                                             \
+    }                                                                          \
+    inline uint64_t name##fromString(const std::string& str)                   \
+    {                                                                          \
+        std::string       s = #__VA_ARGS__;                                    \
+        std::stringstream ss(s);                                               \
+        std::string       token;                                               \
+        uint64_t          index       = 1;                                     \
+        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;    \
+        size_t            enumCount   = 0;                                     \
+        std::string       input       = str;                                   \
+                                                                               \
+        /* First trim whitespace characters */                                 \
+        auto trim = [](std::string& s) {                                       \
+            auto start = s.find_first_not_of(" \t\n\r\f\v\n");                 \
+            if (start == std::string::npos) {                                  \
+                s.clear();                                                     \
+                return;                                                        \
+            }                                                                  \
+            auto end = s.find_last_not_of(" \t\n\r\f\v\n");                    \
+            s        = s.substr(start, end - start + 1);                       \
+        };                                                                     \
+                                                                               \
+        trim(input);                                                           \
+                                                                               \
+        /* Handle empty or whitespace-only string */                           \
+        if (input.empty()) {                                                   \
+            return -1;                                                         \
+        }                                                                      \
+                                                                               \
+        /* Validate input - must contain only alphanumeric and _ chars */      \
+        for (char c : input) {                                                 \
+            if (!std::isalnum(static_cast<unsigned char>(c)) && c != '_') {    \
+                return -1;                                                     \
+            }                                                                  \
+        }                                                                      \
+                                                                               \
+        /* Process enum values */                                              \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {      \
+            trim(token);                                                       \
+            if (token == input) {                                              \
+                return index;                                                  \
+            }                                                                  \
+            index++;                                                           \
+            enumCount++;                                                       \
+        }                                                                      \
+        return -1;                                                             \
+    }                                                                          \
+    inline std::string name##toString(Uint64 value)                            \
+    {                                                                          \
+        String            str = #__VA_ARGS__;                                  \
+        std::stringstream ss(str);                                             \
+        Uint64            current = 1;                                         \
+        String            token;                                               \
+        const size_t      maxEnumSize = static_cast<size_t>(name::Max) - 1;    \
+        size_t            enumCount   = 0;                                     \
+                                                                               \
+        if (value == 0) {                                                      \
+            return "UNDEF";                                                    \
+        }                                                                      \
+                                                                               \
+        while (std::getline(ss, token, ',') && enumCount < maxEnumSize) {      \
+            if (current == value) {                                            \
+                if (enumCount == 0) {                                          \
+                    return token;                                              \
+                }                                                              \
+                token = token.substr(1, token.length() - 1);                   \
+                return token;                                                  \
+            }                                                                  \
+            current++;                                                         \
+            enumCount++;                                                       \
+        }                                                                      \
+        return "UNDEF";                                                        \
     }
 
 namespace Au {
@@ -395,21 +396,25 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
     /**
      * @brief   Best-effort constructor probing a deterministic core.
-     * @details Probes CPUID with a deterministic, cross-platform contract. Never
-     *          fails; degrades to the current thread on error. For a variant that
-     *          reports failure, use buildFromCore(). Resolves and pins: AU_CURRENT
-     *          -> lowest-allowed (or E-core for hybrid Intel); specific in-mask ->
-     *          that core; specific out-of-mask -> degrade to lowest.
-     * @warning If a concrete num is honored, the calling thread is pinned to that
-     *          core for the probe, then restored.
-     * @param[in] num  Core number, or AU_CURRENT_CPU_NUM (default) for crash-safe.
+     * @details Probes CPUID with a deterministic, cross-platform contract. It
+     * never fails; on error, it degrades to the current thread. For a variant
+     * that reports failure, use buildFromCore().
+     *
+     * Resolves and pins:
+     * - AU_CURRENT -> lowest-allowed (or E-core for hybrid Intel)
+     * - specific in-mask -> that core
+     * - specific out-of-mask -> lowest allowed core
+     * @warning If a concrete num is honored, the calling thread is pinned to
+     * that core for the probe, then restored.
+     * @param[in] num  Core number, or AU_CURRENT_CPU_NUM (default) for
+     * crash-safe.
      */
     X86Cpu(CpuNumT num = AU_CURRENT_CPU_NUM);
 
     /**
      * @brief   Strict factory: build an X86Cpu, reporting affinity failures.
-     * @details Validates the core request; returns InvalidArgument if the core is
-     *          outside the affinity mask. AU_CURRENT_CPU_NUM never fails.
+     * @details Validates the core request; returns InvalidArgument if the core
+     * is outside the affinity mask. AU_CURRENT_CPU_NUM never fails.
      * @param[in] num  Concrete core number, or AU_CURRENT_CPU_NUM.
      * @return    StatusOr<X86Cpu>: the object on success, or InvalidArgument.
      */
@@ -433,21 +438,24 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
     /**
      * @brief     Checks if processor is x86_64-v2 compliant.
-     * @details   x86-64-v2 = x86-64 + cx16, lahf_lm, popcnt, sse4_1, sse4_2, ssse3.
+     * @details   x86-64-v2 = x86-64 + cx16, lahf_lm, popcnt, sse4_1, sse4_2,
+     * ssse3.
      * @return    true if all features present, false otherwise.
      */
     bool isX86_64v2() const;
 
     /**
      * @brief     Checks if processor is x86_64-v3 compliant.
-     * @details   x86-64-v3 = v2 + avx, avx2, bmi1, bmi2, f16c, fma, abm, movbe, xsave.
+     * @details   x86-64-v3 = v2 + avx, avx2, bmi1, bmi2, f16c, fma, abm, movbe,
+     * xsave.
      * @return    true if all features present, false otherwise.
      */
     bool isX86_64v3() const;
 
     /**
      * @brief     Checks if processor is x86_64-v4 compliant.
-     * @details   x86-64-v4 = v3 + avx512f, avx512bw, avx512cd, avx512dq, avx512vl.
+     * @details   x86-64-v4 = v3 + avx512f, avx512bw, avx512cd, avx512dq,
+     * avx512vl.
      * @return    true if all features present, false otherwise.
      */
     bool isX86_64v4() const;
@@ -495,14 +503,16 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
 
     /**
      * @brief     Get microarchitecture from CPUID.
-     * @details   Returns Zen/Zen2/Zen3/Zen4/Zen5/Zen6 for AMD; Unknown for others.
+     * @details   Returns Zen/Zen2/Zen3/Zen4/Zen5/Zen6 for AMD; Unknown for
+     * others.
      * @return    Microarchitecture of CPU.
      */
     EUarch getUarch() const;
 
     /**
      * @brief     Check if CPU microarchitecture matches input.
-     * @details   strict=false: Zen4 matches Zen/Zen2/Zen3/Zen4. strict=true: exact match only.
+     * @details   strict=false: Zen4 matches Zen/Zen2/Zen3/Zen4. strict=true:
+     * exact match only.
      * @param[in] uarch   Microarchitecture to check.
      * @param[in] strict  If true, exact match required.
      * @return    true if match, false otherwise.
@@ -510,14 +520,16 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     bool isUarch(EUarch uarch, bool strict = false) const;
 
     /**
-     * @brief     Check if CPU is Zen family (Zen, Zen2, Zen3, Zen4, Zen5, Zen6).
+     * @brief     Check if CPU is Zen family (Zen, Zen2, Zen3, Zen4, Zen5,
+     * Zen6).
      * @return    true if Zen family, false otherwise.
      */
     bool isZenFamily() const;
 
     /**
      * @brief     Get the VendorInfo object.
-     * @details   Contains vendor, family, model, stepping, and microarchitecture.
+     * @details   Contains vendor, family, model, stepping, and
+     * microarchitecture.
      * @return    VendorInfo
      */
     VendorInfo getVendorInfo() const;
@@ -538,7 +550,8 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     /**
      * @brief   Strict-aware delegating constructor (internal).
      * @details Forwards to C core resolver (au_cpuid_init). strict=true reports
-     *          failures; strict=false degrades. All selection/pinning in C core.
+     *          failures; strict=false degrades. All selection/pinning in C
+     * core.
      */
     X86Cpu(CpuNumT num, bool strict);
 
@@ -547,10 +560,14 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     Impl*                 pImpl() { return m_pimpl.get(); }
     std::unique_ptr<Impl> m_pimpl;
 
-    /* True on successful resolve; false only when strict specific-core is out-of-mask. */
-    bool m_resolved = true;
-
-    /* All affinity logic now lives in the pure-C core resolver (au_cpuid_init). */
+    /* All affinity logic now lives in the pure-C core resolver (au_cpuid_init).
+     */
 };
+
+#if defined(__x86_64__) || defined(_M_X64)
+static_assert(
+    sizeof(X86Cpu) == 24,
+    "X86Cpu ABI is frozen at 24 bytes; put new state in X86Cpu::Impl");
+#endif
 
 } // namespace Au
