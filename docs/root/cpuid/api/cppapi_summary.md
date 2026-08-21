@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026, Advanced Micro Devices. All rights reserved. -->
+
 # C++-API Behaviour Summary
 
 ## Behaviour of `X86Cpu.isUarch`
@@ -8,7 +10,12 @@ X86Cpu.isUarch supports two arguments.
 
 With strict argument set to "False" which is the default behaviour.
 
-| AOCL 5.2   | isUarch(Zen) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) | isUarch(Zen6) |
+`EUarch::ZenPlus` remains in the enum for compatibility with existing callers,
+but the current decoder treats it as equivalent to `Zen`; ZenPlus is not
+detected as a separate microarchitecture yet. The `Zen1/1+` rows below
+therefore describe the supported cumulative behavior.
+
+| AOCL 5.3.2 | isUarch(Zen) | isUarch(Zen2) | isUarch(Zen3) | isUarch(Zen4) | isUarch(Zen5) | isUarch(Zen6) |
 | :--------: | :----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
 |  Skylake   |    False     |     False     |     False     |     False     |     False     |     False     |
 | Bulldozer  |    False     |     False     |     False     |     False     |     False     |     False     |
@@ -22,7 +29,7 @@ With strict argument set to "False" which is the default behaviour.
 
 With strict argument set to "True".
 
-| AOCL 5.2   | isUarch(Zen,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) | isUarch(Zen6,1) |
+| AOCL 5.3.2 | isUarch(Zen,1) | isUarch(Zen2,1) | isUarch(Zen3,1) | isUarch(Zen4,1) | isUarch(Zen5,1) | isUarch(Zen6,1) |
 | :--------: | :------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 |  Skylake   |     False      |      False      |      False      |      False      |      False      |      False      |
 | Bulldozer  |     False      |      False      |      False      |      False      |      False      |      False      |
@@ -36,7 +43,7 @@ With strict argument set to "True".
 
 There is one additional API `isZenFamily` which detects if the CPU is based on Zen architecture.
 
-|  AOCL 5.2  | isZenFamily |
+|  AOCL 5.3.2 | isZenFamily |
 | :--------: | :---------: |
 |  Skylake   |    False    |
 | Bulldozer  |    False    |
@@ -47,6 +54,10 @@ There is one additional API `isZenFamily` which detects if the CPU is based on Z
 |    Zen5    |     True    |
 |    Zen6    |     True    |
 |  Zen[X>6]  |     True    |
+
+The current `X86Cpu` surface also provides `isAMD()`, `isIntel()`,
+`isX86_64v2()`, `isX86_64v3()`, `isX86_64v4()`, `hasFlag()`, `hasFlags()`,
+`hasAllFlags()`, and `getVendorInfo()`.
 
 ## Behaviour of `Cpu.isUarch` API for AOCL 4.2
 

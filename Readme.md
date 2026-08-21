@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026, Advanced Micro Devices. All rights reserved. -->
+
 # AOCL-UTILS
 
 AOCL-Utils is an effort to extract common functionalities across
@@ -15,9 +17,10 @@ libraries. Its main features include:
   - RNG
 
 **NOTE:**
-This library detects only AMD "Zen" CPUs. There are no plans to support other x86
-implementations. Some utilities may fail or behave unexpectedly on older AMD
-architectures.
+The library provides AMD Zen microarchitecture detection and also reports
+generic x86 vendor and feature information for Intel-compatible consumers and
+tests. Some AMD-specific utilities may fail or behave unexpectedly on older
+AMD architectures.
 
 Core module is internal to AOCL-Utils. To use its features, link to libaoclutils, which
 combines all available utility modules.
@@ -57,16 +60,19 @@ The project is structured as follows:
 
 - `Tests`: This directory contains the necessary unit tests for the project.
 
-- `Tools`: The necessary tools to work with the project.
+- `CMake`: CMake modules, presets, and build helpers.
 
 - `scripts`: Utility scripts to work with the project.
+
+- `docs`: Doxygen, Sphinx, API, and test-plan documentation.
 
 ## BUILD AND INSTALL
 
 ### Dependencies
 
-Refer [supported package matrix document](https://docs.amd.com/r/en-US/63866-AOCL-utils/Supported-package-Matrix)
-(supported_package_matrix.md file)
+Refer to the [supported package matrix](docs/SupportedPackageMatrix.md), which
+is the project's source of truth for supported compilers, generators, and
+runtime/test dependencies.
 
 ### Getting started
 
@@ -82,69 +88,80 @@ cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G "Unix Makefiles" 
 #### Checkout the latest code
 
 ```console
-    git clone
+    git clone <repository-url> aocl-utils
     cd aocl-utils
 ```
 
 #### Configure
 
 ```console
-    cmake -B  default -DCMAKE_INSTALL_PREFIX=install_dir
+    cmake -S . -B default -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=install_dir
 ```
 
 #### Build
 
 ```console
-    cmake --build default --config release -j
+    cmake --build default --config Release -j
 ```
 
 #### Install
 
 ```console
-    cmake --install default --config release
+    cmake --install default --config Release
 ```
 This command places:
 
 1. Header files in `<Install Path>/include`
-2. Static and dynamic libraries for au_core and au_cpuid
+2. Static and dynamic libraries for the enabled modules and `aoclutils`
 
 **Note:**
-   1. This command creates lib/lib64 directory for the binaries. To have custom library path, use CMAKE_INSTALL_LIBDIR.
-   2. Rightly update the include path and library path in the project to link with the installed libraries. or use LD_LIBRARY_PATH to point to the installed library path.(PATH environment variable in windows)
-   3. Refer to the [API documentation](https://docs.amd.com/r/en-US/63866-AOCL-utils) and examples in the Example folder to understand how to link and use the modules.
+   1. Libraries are installed under `<Install Path>/<CMAKE_INSTALL_LIBDIR>`
+      (normally `lib`). Set `CMAKE_INSTALL_LIBDIR` to choose another path.
+   2. Update the include and library paths in consumers, or use
+      `LD_LIBRARY_PATH` on Linux and `PATH` on Windows.
+   3. Refer to the local [Sphinx API documentation](docs/index.rst) and
+      examples to understand how to link and use the modules. Public AMD API
+      references may link to their published AMD documentation where appropriate.
 
 **Important:**
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
    removed in a future release. See the API documentation for the newer APIs.
-2. Old APIs can be enabled with `AU_ENABLE_OLD_API=ON` during the build, otherwise deprecated
-   warnings will be shown.
+2. Legacy APIs remain available for compatibility. Set
+   `AU_ENABLE_OLD_API=ON` to suppress their deprecation warnings.
 3. The aoclutils module combines au_core and au_cpuid.
 4. The aoclutils module is the default module for all functionalities.
 
 ## Testing
 
-Build with `AU_BUILD_TESTS=ON` to enable tests:
+Configure and build with `AU_BUILD_TESTS=ON`:
 ```console
-ctest -C Release
+cmake -S . -B default -DCMAKE_BUILD_TYPE=Release -DAU_BUILD_TESTS=ON
+cmake --build default --config Release -j
+ctest --test-dir default -C Release --output-on-failure
 ```
-QEMU (`qemu-x86_64`) is required for running tests on Linux distributions. On Windows, tests
-are disabled because QEMU-user is unavailable there.
+
+QEMU (`qemu-x86_64`) is required for the emulated CPUID cases on Linux:
 
 ```console
     sudo apt-get install qemu-user # For Ubuntu
     sudo dnf install qemu-user # For Fedora/RHEL/CentOS
-    # qemu tests are disable on windows as qemu-user is not available on windows
+    # QEMU-backed CPUID cases are unavailable on Windows
 ```
+
+Other direct-link tests, including the Mock-CPUID tests, can run on Windows;
+only Linux loader-specific cases are skipped there.
 
 ## Examples
 
 Build with `AU_BUILD_EXAMPLES=ON` to enable examples:
 ```console
-cmake -B build -DAU_BUILD_EXAMPLES=ON -G Ninja
-cmake --build build --config Release
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DAU_BUILD_EXAMPLES=ON
+cmake --build build --config Release -j
 ```
 
-The binaries are in the default/release folder. Refer to the SDK/Examples folder Readme.md for details on out of tree compilation.
+The binaries are in `build/Release`. Refer to
+`SDK/Examples/Readme.md` for in-tree and standalone example details.
 
 ## List of build options
 
@@ -154,13 +171,20 @@ Build Flags                              Description                  Default   
 AU_BUILD_DOCS                            Generate Docs during build   OFF       ON
 AU_BUILD_EXAMPLES                        Build examples               OFF       ON
 AU_BUILD_TESTS                           Build tests                  OFF       ON
-AU_BUILD_TYPE                            Build type                   Release   Debug, Developer
-AU_ENABLE_OLD_API                        Enable OLD alci_* APIs       OFF       ON
+CMAKE_BUILD_TYPE                         Build type                   Release   Debug, Developer, RelWithDebInfo
+AU_ENABLE_FEATURES                       Select modules/features      all       module:feature,...
+AU_BUILD_MOCKCPUID_SHIM                  Build test-only CPUID shim   OFF       ON
+AU_ENABLE_OLD_API                        Suppress legacy API warnings OFF       ON
 AU_BUILD_SHARED_LIBS                     Build shared libraries       ON        OFF
 AU_BUILD_STATIC_LIBS                     Build static libraries       ON        OFF
+AU_STATIC_FORCE_CRT_MD                   Use dynamic MSVC CRT static   OFF       ON
 AU_BUILD_WITH_ASAN                       Enable ASAN options          OFF       ON
 AU_BUILD_WITH_TSAN                       Enable TSAN options          OFF       ON
 AU_BUILD_WITH_MEMSAN                     Enable MEMSAN options        OFF       ON
+AU_ENABLE_CODE_COVERAGE                  Enable code coverage         OFF       ON
+AU_ENABLE_SLOW_TESTS                     Enable slow tests             OFF       ON
+AU_ENABLE_BROKEN_TESTS                   Enable broken tests           OFF       ON
+AU_ENABLE_ASSERTIONS                     Enable assertions             OFF       ON
 ```
 
 ## List of functionalities provided by each utils modules
@@ -183,8 +207,8 @@ AU_BUILD_WITH_MEMSAN                     Enable MEMSAN options        OFF       
 
 | Functionality                | Headerfiles(C)        | Headerfiles(C++)         |
 |------------------------------|-----------------------|--------------------------|
-| cpu architecture detection   | Capi/au/cpuid.h       | Au/Cpuid/X86Cpu.hh       |
-| cpuid feature flag detection | Capi/au/cpuid.h       | Au/Cpuid/X86Cpu.hh       |
+| cpu architecture detection   | Capi/au/cpuid/cpuid.h | Au/Cpuid/X86Cpu.hh       |
+| cpuid feature flag detection | Capi/au/cpuid/cpuid.h | Au/Cpuid/X86Cpu.hh       |
 | Deprecated APIs              | Bcl/alci/arch.h       | Bcl/alci/cxx/cpu.hh      |
 
 #### Current API Stack(Cpuid)
@@ -194,7 +218,8 @@ AU_BUILD_WITH_MEMSAN                     Enable MEMSAN options        OFF       
 **Note**
 
 1. The APIs in the grey box are deprecated and will be removed in the future release.
-2. X86Cpu.hh(CPP)/cpuid.h(C) is the new header file that contains the new APIs.
+2. `Au/Cpuid/X86Cpu.hh` (C++) and `Capi/au/cpuid/cpuid.h` (C) contain the
+   current library-backed APIs.
 
 ### aoclutils
 
@@ -202,7 +227,6 @@ AU_BUILD_WITH_MEMSAN                     Enable MEMSAN options        OFF       
 
 The C headers are in the \<installpath\>/include/Capi folder and the C++ headers are in the include/Au folder.
 Deprecated APIs are in the include/alci folder.
-**Note: Refer to [API documentation](https://docs.amd.com/r/en-US/63866-AOCL-utils/Cpuid-API-Reference) and Examples in Examples folder to understand how to link and use the modules.**
 
 ## Integration with other projects
 

@@ -15,13 +15,14 @@ Phase 1 provides two link-time libraries:
 Both are off by default and are not installed.
 
 ```sh
-cmake -B build -DAU_BUILD_MOCKCPUID_SHIM=ON -DAU_BUILD_TESTS=ON
+cmake -S . -B build -DAU_BUILD_MOCKCPUID_SHIM=ON -DAU_BUILD_TESTS=ON
 cmake --build build
 ```
 
 Python 3 (Interpreter) is a build-time prerequisite when
 `AU_BUILD_MOCKCPUID_SHIM=ON`, because the baked profile table is generated from
-the CPUID mock data, consistently with the Python-linked CPUID tests.
+the CPUID mock data. When `AU_BUILD_TESTS=ON`, the CPUID test target additionally
+requires the Python 3 Development components (headers and libraries).
 
 ## Use
 
@@ -30,13 +31,16 @@ put the mock before the real library so the mock supplies the CPUID symbols and
 the real library supplies the rest of the AOCL-Utils surface:
 
 ```sh
-cc my_test.c -laoclutils_mock -laoclutils
+cc -I SDK/Include -I build/generated \
+    -L build/Library/MockCpuid -L build/Library \
+    my_test.c -laoclutils_mock -laoclutils
 ```
 
 For an already-built consumer, preload the mock library over the real one:
 
 ```sh
-LD_PRELOAD=./libaoclutils_mock.so \
+LD_LIBRARY_PATH=build/Library/MockCpuid:build/Library \
+LD_PRELOAD=build/Library/MockCpuid/libaoclutils_mock.so \
     AU_CPUID_MOCK_PROFILE=rome ./my_test
 ```
 
@@ -44,7 +48,9 @@ The C-only variant is selected in the same way with `libaoclutils_mock_c` and
 `libaoclutils_c`:
 
 ```sh
-cc my_test.c -laoclutils_mock_c -laoclutils_c
+cc -I SDK/Include -I build/generated \
+    -L build/Library/MockCpuid -L build/Library/Cpuid \
+    my_test.c -laoclutils_mock_c -laoclutils_c
 ```
 
 Profiles are baked from
@@ -79,15 +85,19 @@ are not thread-safe with concurrent queries.
 ## Safety and strict mode
 
 A profile can request features absent on the host or an identity newer than,
-or from another vendor than, the host. Those requests are refused. The safe
-feature subset still applies, but the refused portion is reported on stderr.
+or from another vendor than, the host. Host-absent feature bits are warned
+about and narrowed out; an unsafe identity is refused. In both cases the safe
+feature subset is applied and the diagnostic is reported on stderr.
 
 Strict mode is on by default. Set `AU_CPUID_MOCK_STRICT=0`, `false`, `no`, or
 `off` to make an upward, cross-vendor, or unclassifiable identity, or an unknown
-profile, warn and continue with the safe subset instead of aborting. Any other
-value remains strict, so a typo cannot silently make CI permissive. Host-absent
-features in an ordinary named profile are normal downward narrowing and are
-never fatal. There is no strict-mode setter in Phase 1.
+profile, warn and continue instead of aborting. An unknown profile returns
+`AU_MOCK_ERR_NO_PROFILE` and leaves the current policy unchanged (initially,
+the process reports the real host); it does not silently create a safe profile.
+Any other strict-mode value remains strict, so a typo cannot silently make CI
+permissive. Host-absent features in an ordinary named profile are normal
+downward narrowing and are never fatal. There is no strict-mode setter in
+Phase 1.
 
 Pre-Zen profiles (the `Opteron_G*` and `phenom` entries) have no registry
 microarchitecture, so identity mocking for them is unavailable: they narrow
@@ -102,11 +112,13 @@ left as the host identity and is reported as refused.
 ## Tests
 
 ```sh
-ctest --test-dir build -R -i MockCpuid --output-on-failure
+ctest --test-dir build -R MockCpuid --output-on-failure --no-tests=error
 ```
 
 The harness builds consumers twice from each source (real and mock), checks
 the subset property, profile identity and reset behavior, exercises the
-sentinel and strict-mode paths, verifies direct linking and `LD_PRELOAD`,
-checks C and C++ consumers, runs a lower dispatch kernel, and compares the
-mock's `au_cpuid_*` / `alci_*` symbol set with the real library.
+sentinel and strict-mode paths, verifies direct linking and the Linux
+`LD_PRELOAD` cases, and checks C and C++ consumers. It runs a lower dispatch
+kernel and compares the mock's `au_cpuid_*` / `alci_*` symbol set with the real
+library when `nm` is available. Non-Linux runs skip the loader-specific cases,
+and platforms without a suitable `nm` do not register the parity tests.

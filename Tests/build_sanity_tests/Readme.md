@@ -1,9 +1,12 @@
+<!-- Copyright (C) 2026, Advanced Micro Devices. All rights reserved. -->
+
 ## Introduction
 
 The build sanity test is a test suite that is run on the build artifacts to ensure that the build is not broken. It runs on different supported packages and checks if the build is successful. The test suite is run on the following packages:
 
-All combinations of cmake 3.22 to 3.30, and gcc 14, 13, 12, 11, 10, 9 and clang 17, 16, 15, 14 along with clang-tidy validations
-with make and ninja generators on ubuntu24.04. base docker image using robot framework.
+The active matrix covers CMake 3.26 through 3.31 with GCC 9 through 14 and
+Clang 14 through 17, including clang-tidy validation, with Make and Ninja
+generators on an Ubuntu 24.04 base image using Robot Framework.
 
 ## TODO
 
@@ -19,11 +22,12 @@ with make and ninja generators on ubuntu24.04. base docker image using robot fra
    3. python3
    4. robotframework
    5. pipx
-   6. parobots
+   6. pabot (from robotframework-pabot)
 2. Clone this repository
-3. pabot --testlevelsplit --processes 9 Tests/build_sanity_tests/docker/build_sanity_test.robot from project root directory.
+3. From the project root, run:
+   `pabot --testlevelsplit --processes 9 Tests/build_sanity_tests/docker/build_sanity_test.robot`
     1. Run individual test cases:
 
         ```console
-        python3 Tests/build_sanity_tests/run_build_sanity_test.py c_compiler cxx_compiler cmake_version
+        python3 Tests/build_sanity_tests/build_sanity_test.py c_compiler cxx_compiler cmake_version
         ```
