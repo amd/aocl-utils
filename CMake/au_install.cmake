@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,9 +25,15 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+set(AU_INSTALL_DIR_PERMISSIONS
+    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE
+    WORLD_READ WORLD_EXECUTE)
+
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/SDK/Include/
   DESTINATION include
+  DIRECTORY_PERMISSIONS ${AU_INSTALL_DIR_PERMISSIONS}
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
 install(
@@ -39,6 +45,7 @@ install(
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/SDK/Bcl/
   DESTINATION include
+  DIRECTORY_PERMISSIONS ${AU_INSTALL_DIR_PERMISSIONS}
   FILES_MATCHING REGEX ".*\\.(h|hh)")
 
 #install(TARGETS ${AU_INSTALL_TARGETS}
@@ -95,6 +102,7 @@ au_install_package_config()
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/CMake/
     DESTINATION ${AU_INSTALL_ADDITIONAL_FILES_DIR}/cmake
+  DIRECTORY_PERMISSIONS ${AU_INSTALL_DIR_PERMISSIONS}
   FILES_MATCHING PATTERN "*.cmake"
 )
 
@@ -103,6 +111,22 @@ install(
   FILES ${AU_CONFIG_OUTPUT_FILE}
   DESTINATION ${AU_INSTALL_INCLUDE_DIR}/Au
 )
+
+if(AU_BUILD_TESTS AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(AU_INSTALL_PERMISSIONS_CHECK_DESTDIR
+      "${CMAKE_BINARY_DIR}/install_permissions_check_root")
+  set(AU_INSTALL_PERMISSIONS_CHECK_PREFIX
+      "${AU_INSTALL_PERMISSIONS_CHECK_DESTDIR}${CMAKE_INSTALL_PREFIX}")
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/CMake/au_install_permissions_check.sh.in"
+    "${CMAKE_BINARY_DIR}/au_install_permissions_check.sh"
+    @ONLY)
+
+  add_test(
+    NAME aoclutils_InstallPermissionsCheck
+    COMMAND bash "${CMAKE_BINARY_DIR}/au_install_permissions_check.sh"
+            $<CONFIG>)
+endif()
 
 message("Installing binaries... ")
 if (${CMAKE_BUILD_TYPE} MATCHES "DEBUG")

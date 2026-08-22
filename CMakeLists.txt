@@ -162,6 +162,17 @@ set(AU_TARGET_IS_LITTLE_ENDIAN TRUE)
 endif()
 
 include(au_options)
+
+# Keep install directories deterministic instead of inheriting the build host's
+# umask. A group-writable library directory lets another group member replace
+# an installed library even when the library file itself is not writable.
+if(UNIX)
+  set(CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
+      OWNER_READ OWNER_WRITE OWNER_EXECUTE
+      GROUP_READ GROUP_EXECUTE
+      WORLD_READ WORLD_EXECUTE)
+endif()
+
 add_compile_definitions(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 add_compile_definitions(PROJECT_BUILD_DIR="${PROJECT_BINARY_DIR}")
 

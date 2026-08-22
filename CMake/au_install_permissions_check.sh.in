@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+
+set -euo pipefail
+
+build_dir="@CMAKE_BINARY_DIR@"
+destdir="@AU_INSTALL_PERMISSIONS_CHECK_DESTDIR@"
+prefix="@AU_INSTALL_PERMISSIONS_CHECK_PREFIX@"
+libdir="${prefix}/@CMAKE_INSTALL_LIBDIR@"
+incdir="${prefix}/@CMAKE_INSTALL_INCLUDEDIR@"
+config="${1:-}"
+
+fail() {
+    echo "InstallPermissionsCheck FAILED: $1" >&2
+    exit 1
+}
+
+case "${destdir}" in
+    "${build_dir}"/*) ;;
+    *) fail "refusing to clean path outside the build tree: ${destdir}" ;;
+esac
+
+# A clean tree and permissive group umask reproduce the packaging condition
+# that originally produced group-writable install directories.
+rm -rf -- "${destdir}"
+umask 0002
+
+install_args=(--install "${build_dir}" --component Unspecified)
+if [ -n "${config}" ]; then
+    install_args+=(--config "${config}")
+fi
+DESTDIR="${destdir}" "@CMAKE_COMMAND@" "${install_args[@]}"
+
+[ -d "${prefix}" ] || fail "install prefix was not created: ${prefix}"
+
+writable="$(find "${prefix}" -type d -perm /022 -print)"
+[ -z "${writable}" ] || fail "group/other-writable installed director(ies):
+${writable}"
+
+for directory in "${libdir}" "${incdir}"; do
+    [ -d "${directory}" ] || fail "expected directory was not installed: ${directory}"
+    mode="$(stat -c '%a' "${directory}")"
+    [ "${mode}" = "755" ] \
+        || fail "directory ${directory} has mode ${mode}, expected 755"
+done
+
+ndirs="$(find "${prefix}" -type d | wc -l)"
+echo "InstallPermissionsCheck PASSED: ${ndirs} directories checked under umask 0002"
