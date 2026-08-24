@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,6 +54,18 @@ __getStaticSystemEnv()
     return gsSystem;
 }
 
+using snapshot_mapT   = std::map<String, String, std::less<>>;
+using snapshot_storeT = std::map<const Environ*, snapshot_mapT>;
+
+static StringView const
+snapshotValue(const Environ* instance, const String& key, const String& value)
+{
+    thread_local snapshot_storeT snapshot_store;
+    auto&                        snapshots = snapshot_store[instance];
+    auto snapshot = snapshots.insert_or_assign(key, value).first;
+    return snapshot->second;
+}
+
 Environ&
 Env::getUserEnv()
 {
@@ -71,8 +83,14 @@ Env::get(StringView const& key)
 {
     AUD_ASSERT(key.length() != 0, "Key is empty");
 
-    if (Env::getUserEnv().exists(key))
-        return Env::getUserEnv().get(key);
+    auto& user_env = Env::getUserEnv();
+    {
+        std::lock_guard<std::mutex> lock(user_env.m_lock);
+        auto&                       entries = user_env._entries();
+        auto                        got     = entries.find(key);
+        if (got != entries.end())
+            return snapshotValue(&user_env, got->first, got->second);
+    }
 
     return Env::getSystemEnv().get(key);
 }
@@ -96,14 +114,13 @@ Env::unset(String const& key)
 void
 Env::init(const char** envp)
 {
-    AUD_ASSERT(envp, "Key is empty");
+    AUD_ASSERT(envp, "Environment array is null");
 
     Env::getUserEnv().init(envp);
 }
 
 Environ::Environ()
-    : m_value_pool{}
-    , m_environ{}
+    : m_environ{}
     , m_lock{}
 {
     std::lock_guard<std::mutex> lock(m_lock);
@@ -118,18 +135,19 @@ Environ::get(StringView const key) const
     AUD_ASSERT(key.length() != 0, "Key is empty");
 
     /*
-     * Look up and read within a single critical section. exists()/at() must not
-     * be used here: they take m_lock themselves and it is non-recursive. The
-     * returned view spans a whole pooled std::string (never a sub-view), so its
-     * data() stays null-terminated for the C API.
+     * Copy under the lock into per-instance, per-key thread-local storage. This
+     * avoids a view into a map node that another thread can erase. Other
+     * instances and keys use different stable nodes; getting this key from this
+     * instance again refreshes its snapshot and may invalidate the previous
+     * view. Snapshots are released when the thread exits.
      */
     std::lock_guard<std::mutex> lock(m_lock);
 
     auto got = m_environ.find(key);
-    if (got != m_environ.end())
-        return *got->second;
+    if (got == m_environ.end())
+        return m_empty_string;
 
-    return m_empty_string;
+    return snapshotValue(this, got->first, got->second);
 }
 
 void
@@ -147,10 +165,6 @@ Environ::unset(String const& key)
     AUD_ASSERT(key.length() != 0, "Key is empty");
 
     std::lock_guard<std::mutex> lock(m_lock);
-    /*
-     * Remove the key from the lookup map only. The pooled value string is left
-     * alive so any pointer/view already returned for it remains valid.
-     */
     m_environ.erase(key);
 }
 
@@ -174,20 +188,7 @@ Environ::_set(String const& key, String const& val)
     /* Precondition: m_lock is held by the caller. */
     AUD_ASSERT(key.length() != 0, "Key is empty");
 
-    auto got = m_environ.find(key);
-
-    /*
-     * Reusing the existing pooled value for an identical overwrite avoids
-     * appending a duplicate that would live for the process lifetime.
-     */
-    if (got != m_environ.end() && *got->second == val)
-        return;
-
-    const String& stored = m_value_pool.emplace_back(val);
-    if (got != m_environ.end())
-        got->second = &stored;
-    else
-        m_environ.emplace(key, &stored);
+    m_environ[key] = val;
 }
 
 void
@@ -197,10 +198,7 @@ Environ::init(const char** envp)
 
     std::lock_guard<std::mutex> lock(m_lock);
 
-    /*
-     * Reset the lookup map as a single critical section. Previously pooled value
-     * strings are intentionally retained so earlier get() results stay valid.
-     */
+    /* Replace the environment as a single critical section. */
     m_environ.clear();
 
     for (auto e = envp; e && *e; ++e) {

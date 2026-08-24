@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,10 +52,15 @@ au_env_init(const char** envp);
  * @detail Searches in system env, and user env
  *         When set in both environments, User env overrides system env.
  *
- * @param[in]  name Name of the environment varible to search
+ * @param[in]  name Name of the environment variable to search
  *
- * @return NULL if the environment is not set
- *         pointer to char array (null-terminated)string if set.
+ * @return  NULL if `name` is NULL. Otherwise a null-terminated pointer to the
+ *          value, or to an empty string ("") if the key is not set (never NULL
+ *          for a valid `name`). The pointer is valid until the next
+ *          au_env_get() for the same name on the same thread or until that
+ *          thread exits. Calls for other names and concurrent mutations do not
+ *          invalidate it. Do not use the pointer from another thread; copy the
+ *          value to retain it longer.
  */
 AUD_API_EXPORT const char*
 au_env_get(const char* name);
@@ -65,7 +70,7 @@ au_env_get(const char* name);
  *
  * @detail Sets the User Env variable
  *
- * @param[in]  name Name of the environment varible to set
+ * @param[in]  name Name of the environment variable to set
  * @param[in]  val  Value of the variable as string
  *
  * @return NULL if the environment is not set
