@@ -149,6 +149,24 @@ QEMU (`qemu-x86_64`) is required for the emulated CPUID cases on Linux:
     # QEMU-backed CPUID cases are unavailable on Windows
 ```
 
+**GCC 8.x / AOCC note:** When `AU_BUILD_TESTS=ON` on Linux, the CPUID QEMU
+test uses C++17 `std::filesystem`. GCC/G++ 8.x keeps that implementation in a
+separate `libstdc++fs` library. The same requirement applies to
+Clang/Clang++ (including AOCC) when it selects a GCC 8.x toolchain. Configure
+with `-lstdc++fs` in `CMAKE_CXX_STANDARD_LIBRARIES`:
+
+```console
+cmake -S . -B default -DCMAKE_BUILD_TYPE=Release \
+    -DAU_BUILD_TESTS=ON \
+    -DCMAKE_CXX_STANDARD_LIBRARIES="-lstdc++fs"
+```
+
+Append this flag to any existing `CMAKE_CXX_STANDARD_LIBRARIES` values, such
+as `-lpthread`, `-ldl`, or `-lutil`. Modern libstdc++ versions generally do
+not need this flag; if a version still ships a compatibility `libstdc++fs`
+archive, passing it is harmless. A libc++-only toolchain does not provide
+`libstdc++fs`, so passing this flag there fails.
+
 Other direct-link tests, including the Mock-CPUID tests, can run on Windows;
 only Linux loader-specific cases are skipped there.
 

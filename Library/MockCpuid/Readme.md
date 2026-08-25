@@ -24,6 +24,15 @@ Python 3 (Interpreter) is a build-time prerequisite when
 the CPUID mock data. When `AU_BUILD_TESTS=ON`, the CPUID test target additionally
 requires the Python 3 Development components (headers and libraries).
 
+On Linux, if GCC/G++ 8.x is used directly, or if Clang/Clang++ (including AOCC)
+selects a GCC 8.x toolchain, append
+`-DCMAKE_CXX_STANDARD_LIBRARIES="-lstdc++fs"` to the configure command above.
+The CPUID QEMU test uses C++17 `std::filesystem`, whose GCC 8.x implementation
+is provided by that separate library. Modern libstdc++ versions generally do
+not need this flag; if a version still ships a compatibility `libstdc++fs`
+archive, passing it is harmless. A libc++-only toolchain does not provide
+`libstdc++fs`, so passing this flag there fails.
+
 ## Use
 
 The normal consumer source is unchanged. For a direct shared-library link,

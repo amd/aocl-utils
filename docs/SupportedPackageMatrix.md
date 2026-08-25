@@ -49,6 +49,27 @@ implementation. Tests additionally require GoogleTest, Python 3, and
 
 **Note:** Installation of required packages may vary by platform. In some cases, one might need to explicitly link dependency libraries such as -lstdc++ or -lpthread, especially on older distributions that do not link them automatically.
 
+### C++17 filesystem on GCC 8.x
+
+When `AU_BUILD_TESTS=ON` on Linux, the CPUID QEMU test uses C++17
+`std::filesystem`. GCC/G++ 8.x provides its filesystem implementation in the
+separate `libstdc++fs` library; it moved into the main `libstdc++` in GCC 9.
+The same applies to Clang/Clang++ (including AOCC) when the compiler selects a
+GCC 8.x toolchain. Add the library to `CMAKE_CXX_STANDARD_LIBRARIES` when
+configuring the test build:
+
+```console
+cmake -S . -B default -DCMAKE_BUILD_TYPE=Release \
+    -DAU_BUILD_TESTS=ON \
+    -DCMAKE_CXX_STANDARD_LIBRARIES="-lstdc++fs"
+```
+
+Append `-lstdc++fs` to any existing value, such as `-lpthread`, `-ldl`, or
+`-lutil`. Modern libstdc++ versions generally do not need this flag; if a
+version still ships a compatibility `libstdc++fs` archive, passing it is
+harmless. A libc++-only toolchain does not provide `libstdc++fs`, so passing
+this flag there fails.
+
 ## Checklist
 
 1. **While linking to the new combined binary**
