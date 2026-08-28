@@ -232,31 +232,6 @@ TEST_P(MockX86CpuExtended, IsUarchNonStrictLower)
     }
 }
 
-/* IsAvailable: validate deprecated isAvailable() matches hasFlag(). */
-TEST_P(MockX86CpuExtended, IsAvailable)
-{
-    const auto params  = GetParam();
-    const auto cpuType = std::get<0>(params);
-
-    filename           = cpuType;
-    Configure();
-    X86Cpu cpu{ &mockCpuidUtils, 0 };
-
-    // Verify equivalence with hasFlag for true flags
-    auto trueFlags = loadFlagVector(cpuType, "FlagsT.txt");
-    ASSERT_FALSE(trueFlags.empty())
-        << "Failed to load true flag data for CPU: " << cpuType;
-    for (const auto& flag : trueFlags)
-        EXPECT_EQ(cpu.isAvailable(flag), cpu.hasFlag(flag));
-
-    // Verify equivalence with hasFlag for false flags
-    auto falseFlags = loadFlagVector(cpuType, "FlagsF.txt");
-    ASSERT_FALSE(falseFlags.empty())
-        << "Failed to load false flag data for CPU: " << cpuType;
-    for (const auto& flag : falseFlags)
-        EXPECT_EQ(cpu.isAvailable(flag), cpu.hasFlag(flag));
-}
-
 // ===================================================================
 // Data-driven isUarch test cases - add new cases here when adding CPUs
 // ===================================================================

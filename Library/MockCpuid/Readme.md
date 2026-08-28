@@ -128,6 +128,6 @@ The harness builds consumers twice from each source (real and mock), checks
 the subset property, profile identity and reset behavior, exercises the
 sentinel and strict-mode paths, verifies direct linking and the Linux
 `LD_PRELOAD` cases, and checks C and C++ consumers. It runs a lower dispatch
-kernel and compares the mock's `au_cpuid_*` / `alci_*` symbol set with the real
-library when `nm` is available. Non-Linux runs skip the loader-specific cases,
-and platforms without a suitable `nm` do not register the parity tests.
+kernel and compares the mock's `au_cpuid_*` symbol set with the real library
+when `nm` is available. Non-Linux runs skip the loader-specific cases, and
+platforms without a suitable `nm` do not register the parity tests.

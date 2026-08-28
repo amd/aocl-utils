@@ -126,10 +126,15 @@ This command places:
       AMD documentation where appropriate.
 
 **Important:**
-1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
-   removed in a future release. See the API documentation for the newer APIs.
-2. Legacy APIs remain available for compatibility. Set
-   `AU_ENABLE_OLD_API=ON` to suppress their deprecation warnings.
+1. The legacy 4.0-style `alci_*`/`alcpu_*` CPUID APIs have been removed, along with the
+   last two deprecated entry points: `Au::X86Cpu::isAvailable()` (C++) and the singular
+   `au_cpuid_has_flag()` (C). Use `hasFlag()` and `au_cpuid_has_flags()` respectively --
+   note the latter takes an array of flag-name strings plus a count and returns a plain
+   `bool`, so unlike the removed singular form there is nothing to free. See the
+   [migration guide](docs/root/cpuid/api/legacy_api_migration_summary.md) for the
+   old->new mapping.
+2. Deprecation warnings for any remaining deprecated APIs are shown by default and can be
+   turned off by configuring with `-DAU_WARN_DEPRECATION=OFF`.
 3. The aoclutils module combines au_core and au_cpuid.
 4. The aoclutils module is the default module for all functionalities.
 
@@ -193,7 +198,6 @@ AU_BUILD_TESTS                           Build tests                  OFF       
 CMAKE_BUILD_TYPE                         Build type                   Release   Debug, Developer, RelWithDebInfo
 AU_ENABLE_FEATURES                       Select modules/features      all       module:feature,...
 AU_BUILD_MOCKCPUID_SHIM                  Build test-only CPUID shim   OFF       ON
-AU_ENABLE_OLD_API                        Suppress legacy API warnings OFF       ON
 AU_BUILD_SHARED_LIBS                     Build shared libraries       ON        OFF
 AU_BUILD_STATIC_LIBS                     Build static libraries       ON        OFF
 AU_STATIC_FORCE_CRT_MD                   Use dynamic MSVC CRT static   OFF       ON
@@ -204,6 +208,7 @@ AU_ENABLE_CODE_COVERAGE                  Enable code coverage         OFF       
 AU_ENABLE_SLOW_TESTS                     Enable slow tests             OFF       ON
 AU_ENABLE_BROKEN_TESTS                   Enable broken tests           OFF       ON
 AU_ENABLE_ASSERTIONS                     Enable assertions             OFF       ON
+AU_WARN_DEPRECATION                      Warn on deprecated API use   ON        OFF
 ```
 
 ## List of functionalities provided by each utils modules
@@ -228,7 +233,6 @@ AU_ENABLE_ASSERTIONS                     Enable assertions             OFF      
 |------------------------------|-----------------------|--------------------------|
 | cpu architecture detection   | Capi/au/cpuid/cpuid.h | Au/Cpuid/X86Cpu.hh       |
 | cpuid feature flag detection | Capi/au/cpuid/cpuid.h | Au/Cpuid/X86Cpu.hh       |
-| Deprecated APIs              | Bcl/alci/arch.h       | Bcl/alci/cxx/cpu.hh      |
 
 #### Current API Stack(Cpuid)
 
@@ -245,7 +249,6 @@ AU_ENABLE_ASSERTIONS                     Enable assertions             OFF      
 - All features of au_cpuid and au_core combined.
 
 The C headers are in the \<installpath\>/include/Capi folder and the C++ headers are in the include/Au folder.
-Deprecated APIs are in the include/alci folder.
 **Note: Refer to the local [Sphinx API documentation](docs/index.rst), the
 [Sphinx build guide](docs/SphinxBuildGuide.md), and the examples under
 `SDK/Examples` to understand how to build and use the modules. Public AMD API

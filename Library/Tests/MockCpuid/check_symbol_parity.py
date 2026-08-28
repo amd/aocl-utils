@@ -28,9 +28,9 @@
 """Fail if libaoclutils and the mock shim export different CPUID APIs.
 
 A consumer swaps one library for the other, so the shim must export every
-au_cpuid_* / alci_* entry point the real library does. When it does not, the
-consumer fails to link -- late, confusingly, and in someone else's build. This
-turns that into a build-time failure here.
+au_cpuid_* entry point the real library does. When it does not, the consumer
+fails to link -- late, confusingly, and in someone else's build. This turns
+that into a build-time failure here.
 
 Missing symbols are always an error. Extra ones are too: an entry point the shim
 exports and the real library does not means the two have diverged, and the
@@ -44,7 +44,7 @@ import sys
 
 # The surface a consumer can link against. Internal static-inline helpers from
 # the header-only core never reach .dynsym, so this needs no exclusion list.
-API_RE = re.compile(r"^(au_cpuid_|alci_)")
+API_RE = re.compile(r"^au_cpuid_")
 
 
 def exported(lib, nm):
@@ -86,7 +86,7 @@ def main():
     shim = exported(args.shim, args.nm)
 
     if not real:
-        sys.exit(f"error: no au_cpuid_*/alci_* symbols found in {args.real}; "
+        sys.exit(f"error: no au_cpuid_* symbols found in {args.real}; "
                  f"the check would pass vacuously, so treat it as a failure")
 
     missing = sorted(real - shim)
@@ -100,7 +100,7 @@ def main():
         for s in missing:
             print(f"  {s}")
         print("\nA consumer linking the shim will fail to link. The shim "
-              "re-includes cpuid.h/cpuid_legacy.h, so an entry point declared "
+              "re-includes cpuid.h, so an entry point declared "
               "there is emitted automatically -- a gap here means the new API "
               "lives somewhere those headers do not reach.")
     if extra:

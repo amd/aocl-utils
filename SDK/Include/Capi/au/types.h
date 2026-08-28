@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,8 +40,7 @@
 #include <stdlib.h>
 #endif
 
-#define AU_CURRENT_CPU_NUM   UINT32_MAX
-#define ALCI_CURRENT_CPU_NUM AU_CURRENT_CPU_NUM
+#define AU_CURRENT_CPU_NUM UINT32_MAX
 typedef int8_t  Int8;
 typedef int16_t Int16;
 typedef int32_t Int32;

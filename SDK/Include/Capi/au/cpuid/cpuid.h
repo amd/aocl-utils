@@ -190,21 +190,6 @@ AU_CPUID_API uint32_t
 au_cpuid_get_core_type(void);
 
 /**
- * @brief Check if CPU feature flags are available (deprecated, use au_cpuid_has_flags instead).
- * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
- * @warning Deprecated. Use au_cpuid_has_flags instead.
- * @param[in] cpu_num Any valid core number starting from 0.
- * @param[in] flag_array CPU feature flag names.
- * @param[in] count Number of flags in the list.
- * @return Boolean array corresponding to each flag in flag_array.
- */
-AU_DEPRECATED_API_X("Use au_cpuid_has_flags instead.")
-AU_CPUID_API bool*
-au_cpuid_has_flag(au_cpu_num_t      cpu_num,
-                  const char* const flag_array[],
-                  int               count);
-
-/**
  * @brief Check if all CPU feature flags in the list are available.
  * @warning If cpu_num is not AU_CURRENT_CPU_NUM, thread migration occurs.
  * @param[in] cpu_num Any valid core number starting from 0.
@@ -374,26 +359,6 @@ AU_CPUID_API uint32_t
 au_cpuid_get_core_type(void)
 {
     return au_cpuid_read_core_type(NULL, NULL);
-}
-
-AU_CPUID_API bool*
-au_cpuid_has_flag(au_cpu_num_t      cpu_num,
-                  const char* const flag_array[],
-                  int               count)
-{
-    if (count <= 1)
-        return NULL;
-
-    au_cpu_info_t c      = au_capi_resolve(cpu_num);
-    bool*         result = (bool*)malloc((size_t)count * sizeof(bool));
-    if (!result)
-        return NULL;
-
-    for (int i = 0; i < count; i++) {
-        result[i] = au_cpuid_info_has_flag(
-            &c, au_cpuid_flag_from_string(flag_array[i]));
-    }
-    return result;
 }
 
 AU_CPUID_API bool

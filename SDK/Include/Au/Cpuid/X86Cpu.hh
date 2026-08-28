@@ -490,18 +490,6 @@ class AUD_API_EXPORT X86Cpu final : public CpuInfo
     bool hasAllFlags(Au::Memory::BufferView<ECpuidFlag> const& eflags) const;
 
     /**
-     * @brief     Deprecated. Use hasFlag instead.
-     * @param[in] eflag    ECpuidFlag to check.
-     * @return    true if flag is available and usable, false otherwise.
-     */
-#ifdef AU_WARN_DEPRECATION
-    [[deprecated("Use hasFlag instead.")]] bool
-#else
-    bool
-#endif
-    isAvailable(ECpuidFlag const& eflag) const;
-
-    /**
      * @brief     Get microarchitecture from CPUID.
      * @details   Returns Zen/Zen2/Zen3/Zen4/Zen5/Zen6 for AMD; Unknown for
      * others.

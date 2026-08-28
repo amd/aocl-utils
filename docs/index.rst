@@ -67,8 +67,10 @@ The project is structured as follows:
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
    removed in a future release. See the API documentation for the newer APIs.
 
-2. Legacy APIs remain available for compatibility. Set
-   ``AU_ENABLE_OLD_API=ON`` to suppress their deprecation warnings.
+2. The legacy 4.0-style ``alci_*`` CPUID APIs have been removed. See
+   :ref:`cpuid_migration_guide` for the old->new API mapping. Deprecation warnings for
+   remaining deprecated APIs are shown by default and can be turned off by configuring with
+   ``-DAU_WARN_DEPRECATION=OFF``.
 
 3. The aoclutils module combines au_core and au_cpuid.
 

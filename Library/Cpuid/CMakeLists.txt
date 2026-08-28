@@ -70,7 +70,7 @@ X86RawData.hh
 #
 # Pilot for the packaging split (PR #268). A single pure-C translation unit
 # (Library/Capi/cpuid_c_export.c) includes the header-only CPUID core with the
-# export attribute set, so it emits the SAME au_cpuid_* / alci_* symbols the
+# export attribute set, so it emits the SAME au_cpuid_* symbols the
 # combined libaoclutils exports -- but compiled as C, so the object drags in
 # zero libstdc++. Built ALONGSIDE the combined library; the combined library is
 # left untouched.

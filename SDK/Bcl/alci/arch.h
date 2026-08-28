@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,6 +30,5 @@
 #define __ARCH_H__
 
 #include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
 
 #endif /* __ARCH_H__ */

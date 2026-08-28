@@ -21,15 +21,3 @@ Cpuid C-APIs
 
    Generated C API details are unavailable because the optional Breathe
    extension is not installed.
-
-Cpuid C-APIs Legacy
--------------------
-.. ifconfig:: 'breathe' in extensions
-
-   .. doxygenfile:: cpuid_legacy.h
-      :project: aoclutils
-
-.. ifconfig:: 'breathe' not in extensions
-
-   Generated legacy C API details are unavailable because the optional Breathe
-   extension is not installed.

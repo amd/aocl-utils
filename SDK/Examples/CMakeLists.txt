@@ -57,11 +57,6 @@ if(au_cpuid_cpuid)
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
 
-    au_add_application(cpuid_deprecated_api_example_cpp
-                    SOURCES cpuid_deprecated_api_example.cc
-                    LIBS ${AU_LIBS}
-                    INCLUDES ${AU_INCLUDE_DIRS})
-
     au_add_application(cpuid_all_flags_example_cpp
                     SOURCES cpuid_all_flags_example.cc
                     LIBS ${AU_LIBS}
@@ -88,7 +83,6 @@ endif()
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(au_cpuid_cpuid)
         add_dependencies(cpuid_example_cpp aoclutils au_cpuid)
-        add_dependencies(cpuid_deprecated_api_example_cpp aoclutils au_cpuid)
         add_dependencies(cpuid_all_flags_example_cpp aoclutils au_internal_core)
     endif()
     if(au_core_Logger)

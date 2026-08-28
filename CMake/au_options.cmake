@@ -33,7 +33,6 @@ option(AU_BUILD_EXAMPLES "Enable examples" OFF)
 option(AU_ENABLE_SLOW_TESTS "Option to Enable SLOW tests" OFF)
 option(AU_ENABLE_BROKEN_TESTS "Option to Enable BROKEN tests" OFF)
 option(AU_ENABLE_ASSERTIONS "Enable asserts in the code" OFF)
-option(AU_ENABLE_OLD_API "Enable OLD alci_* APIs" OFF)
 # Test-only CPUID masking shim (libaoclutils_mock and libaoclutils_mock_c). OFF
 # keeps it out of
 # every normal build; the real library is never modified either way.
@@ -98,12 +97,10 @@ if (CMAKE_BUILD_TYPE AND
   message(FATAL_ERROR "Invalid value for CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 endif()
 
-# Handle deprecated APIs
-if(${AU_ENABLE_OLD_API})
-    set(AU_WARN_DEPRECATION FALSE)
-else()
-    set(AU_WARN_DEPRECATION TRUE)
-endif()
+# Emit deprecation warnings for deprecated APIs by default. Previously this was
+# forced OFF when the (now-removed) AU_ENABLE_OLD_API toggle was set; with the
+# legacy alci_* surface gone it defaults ON, while still being overridable.
+option(AU_WARN_DEPRECATION "Emit warnings when deprecated APIs are used" ON)
 
 cmake_dependent_option(AU_BUILD_TYPE_RELEASE "" ON "upper_CMAKE_BUILD_TYPE STREQUAL RELEASE" OFF)
 cmake_dependent_option(AU_BUILD_TYPE_DEBUG "" ON "upper_CMAKE_BUILD_TYPE STREQUAL DEBUG" OFF)
@@ -114,8 +111,7 @@ mark_as_advanced(AU_BUILD_TYPE_RELEASE
 	AU_BUILD_TYPE_DEBUG
 	AU_BUILD_TYPE_DEVELOPER
     AU_BUILD_TYPE_RELWITHDEBINFO
-    AU_ENABLE_ASSERTIONS
-    AU_WARN_DEPRECATION)
+    AU_ENABLE_ASSERTIONS)
 
 if (AU_CMAKE_VERBOSE AND FALSE)
 message(

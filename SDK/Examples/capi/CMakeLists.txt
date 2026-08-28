@@ -35,11 +35,6 @@ if(au_cpuid_cpuid)
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
 
-    au_add_application(cpuid_deprecated_api_example_c
-                    SOURCES cpuid_deprecated_api_example.c
-                    LIBS ${AU_LIBS}
-                    INCLUDES ${AU_INCLUDE_DIRS})
-
     # Header-only variant: includes cpuid_inline.h and links NOTHING
     # (no LIBS on purpose) -- proves the inline entry header is self-contained.
     au_add_application(cpuid_header_only_example_c
@@ -86,7 +81,6 @@ endif()
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(au_cpuid_cpuid)
         add_dependencies(cpuid_example_c aoclutils au_cpuid)
-        add_dependencies(cpuid_deprecated_api_example_c aoclutils au_cpuid)
     endif()
     if(au_core_Logger)
         add_dependencies(logger_demo_c aoclutils)

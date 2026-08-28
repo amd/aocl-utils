@@ -30,10 +30,10 @@
  * The whole of the C surface of libaoclutils_mock_c, and the common masked
  * CPUID portion of libaoclutils_mock.
  *
- * The au_cpuid_* and alci_* entry points are intentionally not hand-written
- * here. Including the same cpuid.h / cpuid_legacy.h bodies the real library
- * compiles emits them with the CPUID-reaching calls redirected through the
- * mask and AU_CPUID_API set to the export attribute.
+ * The au_cpuid_* entry points are intentionally not hand-written here.
+ * Including the same cpuid.h body the real library compiles emits them with
+ * the CPUID-reaching calls redirected through the mask and AU_CPUID_API set
+ * to the export attribute.
  *
  * That is what keeps the surface in sync. A new entry point added to cpuid.h
  * appears in this library on the next build, with masking applied, because it
@@ -54,10 +54,10 @@
 #include "au_mockcpuid.h"
 
 /* au_capi_resolve (defined inside cpuid.h, shared by every flag/uarch entry
- * point including alci_cpu_has_flag) zeroes the hook and calls au_cpuid_init.
- * Redirecting au_cpuid_init therefore reaches all of them at once, and keeps
- * au_capi_resolve's own definition intact rather than shadowing it. The
- * masking init re-arms the hook that au_capi_resolve just cleared. */
+ * point) zeroes the hook and calls au_cpuid_init. Redirecting au_cpuid_init
+ * therefore reaches all of them at once, and keeps au_capi_resolve's own
+ * definition intact rather than shadowing it. The masking init re-arms the
+ * hook that au_capi_resolve just cleared. */
 #define au_cpuid_init(c, cpu_num, strict) au_mock_cpuid_init(c, cpu_num, strict)
 
 /* au_cpuid_is_hybrid / au_cpuid_get_core_type bypass the resolver and read
@@ -72,7 +72,6 @@
 #define AU_CPUID_IMPLEMENTATION
 
 #include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
 
 /* The control API lives in this same translation unit as the query bodies, so
  * its setters and the query hook share one mutable policy object. */

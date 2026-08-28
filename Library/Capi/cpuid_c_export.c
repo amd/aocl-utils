@@ -26,7 +26,7 @@
  *
  */
 
-/* C-only export shim for libaoclutils_c: emits au_cpuid_* / alci_* as real symbols (same names as libaoclutils), pulling in NO libstdc++. */
+/* C-only export shim for libaoclutils_c: emits au_cpuid_* as real symbols (same names as libaoclutils), pulling in NO libstdc++. */
 
 #include "Capi/au/macros.h"
 
@@ -34,4 +34,3 @@
 #define AU_CPUID_IMPLEMENTATION
 
 #include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"

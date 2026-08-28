@@ -232,48 +232,48 @@ TEST(X86Cpu, BCTEST)
 
     std::cout << "Features supported:\n-------------------\n";
     std::cout << "AVX support   : "
-              << (core.isAvailable(ALC_E_FLAG_AVX) ? "YES" : "NO") << "\n";
+              << (core.hasFlag(ALC_E_FLAG_AVX) ? "YES" : "NO") << "\n";
     std::cout << "AVX2 support  : "
-              << (core.isAvailable(ALC_E_FLAG_AVX2) ? "YES" : "NO") << "\n";
+              << (core.hasFlag(ALC_E_FLAG_AVX2) ? "YES" : "NO") << "\n";
     std::cout << "AVX512 support: "
-              << (core.isAvailable(ALC_E_FLAG_AVX512F) ? "YES" : "NO") << "\n";
+              << (core.hasFlag(ALC_E_FLAG_AVX512F) ? "YES" : "NO") << "\n";
 
-    if (core.isAvailable(ALC_E_FLAG_AVX512F)) {
+    if (core.hasFlag(ALC_E_FLAG_AVX512F)) {
         std::cout << "  AVX512DQ         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512DQ) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512DQ) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512PF         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512PF) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512PF) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512ER         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512ER) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512ER) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512CD         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512CD) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512CD) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512BW         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512BW) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512BW) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512VL         : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512VL) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512VL) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_IFMA      : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_IFMA) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_IFMA) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_VNNI      : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_VNNI) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_VNNI) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_BITALG    : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_BITALG) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_BITALG) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_VBMI      : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_VBMI) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_VBMI) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_VBMI2     : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_VBMI2) ? "YES" : "NO")
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_VBMI2) ? "YES" : "NO")
                   << "\n";
         std::cout << "  AVX512_VPOPCNTDQ : "
-                  << (core.isAvailable(ALC_E_FLAG_AVX512_VPOPCNTDQ) ? "YES"
+                  << (core.hasFlag(ALC_E_FLAG_AVX512_VPOPCNTDQ) ? "YES"
                                                                     : "NO")
                   << "\n";
     }

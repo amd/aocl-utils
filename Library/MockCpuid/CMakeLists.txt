@@ -28,8 +28,8 @@
 # ---------------------------------------------------------------------------
 # Mock-CPUID link shims.
 #
-# The C variant emits the complete au_cpuid_* / alci_* surface and contains no
-# C++ source or C++ runtime dependency. The C++ variant re-emits that same C
+# The C variant emits the complete au_cpuid_* surface and contains no C++
+# source or C++ runtime dependency. The C++ variant re-emits that same C
 # surface and X86Cpu over the redirected core, then uses the real umbrella
 # library for the non-CPUID C++ surface.
 # ---------------------------------------------------------------------------

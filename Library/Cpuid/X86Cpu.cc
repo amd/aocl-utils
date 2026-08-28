@@ -116,12 +116,6 @@ X86Cpu::isIntel() const
 }
 
 bool
-X86Cpu::isAvailable(ECpuidFlag const& eflag) const
-{
-    return hasFlag(eflag);
-}
-
-bool
 X86Cpu::hasFlag(ECpuidFlag const& eflag) const
 {
     return pImpl()->hasFlag(eflag);

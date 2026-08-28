@@ -26,7 +26,7 @@
  *
  */
 
-/* Compatibility alias for cpuid.h + cpuid_legacy.h. Declarations-only is now cpuid.h's own default, so this header only adds the deprecated alci_/alcpu_ include; prefer cpuid.h directly. The "shared" name is a misnomer -- it applies equally to the static archive -- and this header is expected to retire with the legacy API. */
+/* Deprecated compatibility alias for cpuid.h, kept so existing includes keep compiling. It adds nothing: declarations-only is cpuid.h's own default, and the legacy alci_/alcpu_ header it used to bundle is gone. The "shared" name was always a misnomer -- it applies equally to the static archive. Include cpuid.h directly; this header will be removed in a future release. */
 #ifndef __AU_CPUID_SHARED_H__
 #define __AU_CPUID_SHARED_H__
 
@@ -34,6 +34,5 @@
 #include "Capi/au/cpuid/au_platform.h"
 
 #include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
 
 #endif /* __AU_CPUID_SHARED_H__ */
