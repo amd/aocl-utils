@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -33,16 +33,43 @@
 
 import re as _re
 from importlib import metadata as _metadata
+import importlib.util as _importlib_util
 from pathlib import Path as _Path
 from packaging import version as _version
 
 try:
     _rocm_version = _metadata.version('rocm-docs-core')
-except _metadata.PackageNotFoundError as e:
+except _metadata.PackageNotFoundError:
     _rocm_version = None
-    print("Please install rocm-docs-core package!")
-    print("pip install rocm-docs-core")
-    raise e
+
+_breathe_available = _importlib_util.find_spec('breathe') is not None
+
+if not _breathe_available:
+    from docutils import nodes as _nodes
+    from docutils.parsers.rst import Directive as _Directive
+    from docutils.parsers.rst import directives as _directives
+
+    class _UnavailableDoxygenDirective(_Directive):
+        required_arguments = 1
+        optional_arguments = 0
+        has_content = False
+        option_spec = {
+            'project': _directives.unchanged,
+            'members-only': _directives.flag,
+        }
+
+        def run(self):
+            return [
+                _nodes.paragraph(
+                    text='Generated API details require the optional Breathe '
+                    'extension.'
+                )
+            ]
+
+    def setup(app):
+        for _name in ('doxygenclass', 'doxygenenum', 'doxygenfile'):
+            app.add_directive(_name, _UnavailableDoxygenDirective)
+        return {'version': '1.0', 'parallel_read_safe': True}
 
 _rocm_version_expected = "1.0.0"
 
@@ -94,9 +121,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.inheritance_diagram',
     'myst_parser',
-    'breathe',
     ]
-# myst_enable_extensions = ["colon_fence"]
+if _breathe_available:
+    extensions.append('breathe')
 
 # Enable numbering of figures, tables, code-blocks and sections
 numfig = True
@@ -114,36 +141,41 @@ source_suffix = {
     '.txt': 'markdown',
     '.md': 'markdown',
 }
-breathe_show_define_initializer = True
 
 if _rocm_version is None or _version.parse(_rocm_version) < _version.parse(_rocm_version_expected):
-    print("Old version of rocm-docs-core detected, falling back")
-    templates_path = ['_template_fallback']
+    templates_path = [] if _rocm_version is None else ['_template_fallback']
+    html_theme = 'alabaster'
+    html_theme_options = {}
 else:
     templates_path = ['_template']
+    html_theme = 'rocm_docs_theme'
+    html_theme_options = {
+        "link_main_doc": False,
+        "flavor": "local",
+        "repository_provider": None,
+    }
 
+if _breathe_available:
+    breathe_show_define_initializer = True
+    breathe_default_project = "aoclutils"
+    breathe_default_members = ('members', 'undoc-members')
 
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'CMakeLists.txt']
+exclude_patterns = [
+    '_build',
+    'sphinx/_build',
+    'Thumbs.db',
+    '.DS_Store',
+    'CMakeLists.txt',
+]
 
-f = open(".sphinx/_toc.yml.in", "w")
-f.write("root: index")
-f.close()
-
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
-html_title = 'Home'
-html_theme = 'rocm_docs_theme'
-html_theme_options = {
-    "link_main_doc": False,
-    "flavor": "local",
-    "repository_provider" : None,
-}
+_toc_file = _Path(__file__).resolve().parent / ".sphinx" / "_toc.yml.in"
+_toc_file.parent.mkdir(parents=True, exist_ok=True)
+_toc_content = "root: index\n"
+if not _toc_file.exists() or _toc_file.read_text() != _toc_content:
+    _toc_file.write_text(_toc_content)
 
 # -- Breathe configuration -------------------------------------------------
-breathe_default_project = "aoclutils"
-breathe_default_members = ('members', 'undoc-members')
+html_title = 'Home'
 myst_title_to_header = True
 myst_heading_anchors = 3
 suppress_warnings = ["myst.header", "myst.xref_missing", "autosectionlabel.*", "toc.not_included"]

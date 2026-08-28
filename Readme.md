@@ -120,9 +120,10 @@ This command places:
       (normally `lib`). Set `CMAKE_INSTALL_LIBDIR` to choose another path.
    2. Update the include and library paths in consumers, or use
       `LD_LIBRARY_PATH` on Linux and `PATH` on Windows.
-   3. Refer to the local [Sphinx API documentation](docs/index.rst) and
-      examples to understand how to link and use the modules. Public AMD API
-      references may link to their published AMD documentation where appropriate.
+   3. Refer to the local [Sphinx API documentation](docs/index.rst) and the
+      [Sphinx build guide](docs/SphinxBuildGuide.md) to understand the current
+      APIs and examples. Public AMD API references may link to their published
+      AMD documentation where appropriate.
 
 **Important:**
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
@@ -245,6 +246,10 @@ AU_ENABLE_ASSERTIONS                     Enable assertions             OFF      
 
 The C headers are in the \<installpath\>/include/Capi folder and the C++ headers are in the include/Au folder.
 Deprecated APIs are in the include/alci folder.
+**Note: Refer to the local [Sphinx API documentation](docs/index.rst), the
+[Sphinx build guide](docs/SphinxBuildGuide.md), and the examples under
+`SDK/Examples` to understand how to build and use the modules. Public AMD API
+references may link to their published AMD documentation where appropriate.**
 
 ## Integration with other projects
 

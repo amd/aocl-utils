@@ -1,3 +1,5 @@
+.. Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+
 .. AOCL-UTILS documentation master file, created by
    sphinx-quickstart on Thu Mar 14 16:16:42 2024.
    You can adapt this file completely to your liking, but it should at least
@@ -16,6 +18,8 @@ AOCL-Utils
     root/logger/api/index
     root/status/api/index
     root/threadpinning/api/index
+    SphinxBuildGuide
+    SupportedPackageMatrix
 
 .. _introduction:
 
@@ -36,9 +40,10 @@ libraries. Its main features include:
   - RNG
 
 *NOTE:*
-This library detects only AMD "Zen" CPUs. There are no plans to support other x86
-implementations. Some utilities may fail or behave unexpectedly on older AMD
-architectures.
+The library provides AMD Zen microarchitecture detection and also reports
+generic x86 vendor and feature information for Intel-compatible consumers and
+tests. Some AMD-specific utilities may fail or behave unexpectedly on older
+AMD architectures.
 
 Core module is internal to AOCL-Utils. To use its features, link to libaoclutils, which
 combines all available utility modules.
@@ -53,7 +58,7 @@ The project is structured as follows:
 
 - `Tests`: This directory contains the necessary unit tests for the project.
 
-- `Tools`: The necessary tools to work with the project.
+- `CMake`: CMake modules, presets, and build helpers.
 
 - `scripts`: Utility scripts to work with the project.
 
@@ -62,8 +67,8 @@ The project is structured as follows:
 1. Most CPUID APIs (and their headers) introduced in 4.2 are deprecated; they will be
    removed in a future release. See the API documentation for the newer APIs.
 
-2. Old APIs can be enabled with ``AU_ENABLE_OLD_API=ON`` during the build, otherwise deprecated
-   warnings will be shown.
+2. Legacy APIs remain available for compatibility. Set
+   ``AU_ENABLE_OLD_API=ON`` to suppress their deprecation warnings.
 
 3. The aoclutils module combines au_core and au_cpuid.
 

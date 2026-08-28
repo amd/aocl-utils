@@ -26,8 +26,6 @@
 #
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
-include(FindSphinx)
-find_package(Sphinx)
 find_package(Doxygen REQUIRED)
 find_package(Sphinx REQUIRED)
 
@@ -66,9 +64,14 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
 add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
 
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
-file(MAKE_DIRECTORY ${SPHINX_SOURCE}/.sphinx)
-set(SPHINX_BUILD ${SPHINX_SOURCE}/sphinx/_build/html)
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
+file(GLOB_RECURSE SPHINX_DOC_FILES CONFIGURE_DEPENDS
+     "${SPHINX_SOURCE}/*.rst"
+     "${SPHINX_SOURCE}/*.md"
+     "${SPHINX_SOURCE}/*.yml"
+     "${SPHINX_SOURCE}/*.py")
+list(FILTER SPHINX_DOC_FILES EXCLUDE REGEX "/\\.sphinx/")
 
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
                    COMMAND
@@ -78,7 +81,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
                    ${SPHINX_SOURCE} ${SPHINX_BUILD}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                    DEPENDS
-                   # Other docs files you want to track should go here (or in some variable)
+                   ${SPHINX_DOC_FILES}
                    ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
                    ${DOXYGEN_INDEX_FILE}
                    MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py

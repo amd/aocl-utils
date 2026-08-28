@@ -8,7 +8,7 @@ One of the compilers and generators on the platform must be installed to build t
 
 ## Supported Compilers and Generators
 
-The enforced minimums on `amd-main` are:
+The enforced minimums on the supported baseline are:
 
 | Toolchain | Minimum | Active build-sanity matrix |
 |-----------|---------|-----------------------------|
@@ -25,14 +25,14 @@ The library uses the standard C++ libraries and the platform threads
 implementation. Tests additionally require GoogleTest, Python 3, and
 `qemu-x86_64` for Linux emulation cases.
 
-#### au_cpuid
+#### CPUID module
 
 | Package    |Notes |
 | -----------|----- |
 | libstdc++  |      |
 | libc++     |      |
 
-#### au_core
+#### Core module
 
 | Package    |Notes |
 | -----------|----- |
