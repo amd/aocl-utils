@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,7 @@ namespace Au {
 
 namespace cache_attr {
     /**
-     *  \enum WritePolicy
+     *  \enum EWritePolicy
      *  \brief Cache policy.
      */
     enum class EWritePolicy : Uint32
@@ -50,7 +50,7 @@ namespace cache_attr {
     };
 
     /**
-     * @enum AllocatePolicy
+     * @enum EAllocatePolicy
      * @brief Cache allocation type.
      */
     enum class EAllocatePolicy : Uint32
@@ -60,7 +60,7 @@ namespace cache_attr {
     };
 
     /**
-     * @enum alc_cache_level_t
+     * @enum ELevel
      * @brief Cache levels.
      */
     enum class ELevel
@@ -74,7 +74,7 @@ namespace cache_attr {
     };
 
     /**
-     * @enum alc_cache_type_t
+     * @enum EType
      * @brief Cache types.
      */
     enum class EType
@@ -85,7 +85,8 @@ namespace cache_attr {
         Unknown     /**< Unable to determine. */
     };
 
-    /* Stream operators in cache_attr namespace for ADL (required for GoogleTest). */
+    /* Stream operators in cache_attr namespace for ADL (required for
+     * GoogleTest). */
     std::ostream& operator<<(std::ostream& os, ELevel const& lvl);
     std::ostream& operator<<(std::ostream& os, EWritePolicy const& lvl);
     std::ostream& operator<<(std::ostream& os, EAllocatePolicy const& lvl);
@@ -214,7 +215,8 @@ class CacheInfo
     Uint64     m_lane = 0; /**< Cache line size in bytes. */
     Uint64     m_way  = 0; /**< Cache number of ways. */
 
-    /* TODO: add m_partitions, m_associativity, m_self_initialization if needed */
+    /* TODO: add m_partitions, m_associativity, m_self_initialization if needed
+     */
 };
 
 class AUD_API_EXPORT CacheView final

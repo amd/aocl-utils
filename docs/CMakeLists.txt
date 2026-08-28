@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -43,8 +43,6 @@ set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
 set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/xml/index.xml)
 set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
 set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-set(DOXYFILE_OUT ${CMAKE_CURRENT_SOURCE_DIR}/.doxygen/Doxyfile)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.doxygen)
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}/xml)
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html)
@@ -59,7 +57,8 @@ configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                   MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
+                   MAIN_DEPENDENCY ${DOXYFILE_IN}
+                   DEPENDS ${DOXYFILE_OUT}
                    COMMENT "Generating docs"
                    VERBATIM)
 

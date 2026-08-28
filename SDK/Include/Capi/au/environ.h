@@ -100,9 +100,10 @@ au_env_unset(const char* name);
  *              AU_BLIS_DEBUG=1
  *              AU_BLIS_DEBUG=TRUE
  *           all above will return 'true' or 1 when called like below
- * @example
+ * @code
  *    if (au_env_is_enabled("AU_BLIS_DEBUG")) {
  *    }
+ * @endcode
  *
  * However it will return 'false' for following cases (string values are case-
  * insensitive)
@@ -124,9 +125,10 @@ au_env_is_enabled(const char*);
  *              AU_BLIS_DEBUG=TRUE/FALSE
  *           all above will return 'true' or 1 when called like below
  *
- * @example
+ * @code
  *    if (au_env_is_set("AU_BLIS_DEBUG")) {
  *    }
+ * @endcode
  *
  * However it will return 'false' only if the variable is empty or not set.
  */
