@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2024-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2024-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -37,11 +37,28 @@ def get_files():
     files = os.popen(cmd).read()
     return files
 
+def is_binary(file):
+    """Sniff a small chunk for NUL bytes (same heuristic as git/grep -I) so
+    binary assets (images, archives, ...) aren't forced to carry a text
+    copyright banner. Unreadable files (permission error, broken symlink,
+    deleted between the caller's isfile() check and this open) are treated
+    as binary too -- skip them rather than let the hook crash."""
+    try:
+        with open(file, 'rb') as f:
+            return b'\0' in f.read(8192)
+    except OSError:
+        return True
+
 def get_notice(file):
     # open the file and read the first 5 lines
     # if the line contains the word "Copyright"
     # return the line
-    with open(file, 'r') as f:
+    #
+    # errors='replace': is_binary() only catches files with a NUL in the
+    # first 8KB, so a binary file with no early NUL can still reach here.
+    # Never raise UnicodeDecodeError -- just fail to find "Copyright" as if
+    # the garbled text weren't there.
+    with open(file, 'r', errors='replace') as f:
         for i in range(5):
             line = f.readline()
             if "Copyright" in line:
@@ -52,7 +69,7 @@ def scan_files(files):
     current_year = str(datetime.datetime.now().year)
     found = False
     for file in files.split('\n'):
-        if os.path.isfile(file):
+        if os.path.isfile(file) and not is_binary(file):
             notice = get_notice(file)
             if notice is None:
                 print(file)

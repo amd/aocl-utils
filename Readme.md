@@ -236,13 +236,18 @@ AU_WARN_DEPRECATION                      Warn on deprecated API use   ON        
 
 #### Current API Stack(Cpuid)
 
-<img src="CPUID_API_STACK.png" alt="Current Cpuid API stack" width="500"/>
+<img src="CPUID_API_STACK.png" alt="Current Cpuid API stack" width="900"/>
 
 **Note**
 
-1. The APIs in the grey box are deprecated and will be removed in the future release.
-2. `Au/Cpuid/X86Cpu.hh` (C++) and `Capi/au/cpuid/cpuid.h` (C) contain the
-   current library-backed APIs.
+1. `Au/Cpuid/X86Cpu.hh` (C++) and `Capi/au/cpuid/cpuid.h` (C) contain the
+   current library-backed APIs. The legacy `alci_*`/`alcpu_*` C API has been
+   removed; see the
+   [migration guide](docs/root/cpuid/api/legacy_api_migration_summary.md)
+   for the old->new mapping.
+2. CPUID also ships as a standalone library (`au_cpuid`), a libstdc++-free
+   C-only library (`aoclutils_c`), and a header-only single file. See the
+   [Integration Guide](docs/IntegrationGuide.md) for the full breakdown.
 
 ### aoclutils
 
@@ -253,6 +258,10 @@ The C headers are in the \<installpath\>/include/Capi folder and the C++ headers
 [Sphinx build guide](docs/SphinxBuildGuide.md), and the examples under
 `SDK/Examples` to understand how to build and use the modules. Public AMD API
 references may link to their published AMD documentation where appropriate.**
+
+For a full breakdown of which header and which library (`aoclutils`,
+`au_cpuid`, `aoclutils_c`, or the CPUID header-only path) to use for a given
+API, see the [Integration Guide](docs/IntegrationGuide.md).
 
 ## Integration with other projects
 

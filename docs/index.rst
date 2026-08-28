@@ -14,6 +14,7 @@ AOCL-Utils
     :numbered:
     :caption: Table of Contents:
 
+    IntegrationGuide
     root/cpuid/api/index
     root/logger/api/index
     root/status/api/index
