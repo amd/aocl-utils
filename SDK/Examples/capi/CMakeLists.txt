@@ -68,12 +68,12 @@ if(au_core_ThreadPinning)
     if (NOT WIN32)
         au_add_application(thread_pinning_example_c
                     SOURCES thread_pinning_example_linux.c
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
     else()
         au_add_application(thread_pinning_example_c
                     SOURCES thread_pinning_example_windows.c
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
     endif()
 endif()

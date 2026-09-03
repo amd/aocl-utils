@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,11 @@ list(APPEND CMAKE_MODULE_PATH ${AUROOT}/lib/CMake)
 list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
 link_directories(${AUROOT}/lib)
 include(au_examples)
+
+# Thread-pinning examples call the platform thread APIs directly. Keep this
+# target-based so CMake selects -pthread, -lpthread, or no extra flag as
+# appropriate for the configured platform and toolchain.
+find_package(Threads REQUIRED)
 
 # In-tree the umbrella is a CMake target and resolves to the correct
 # library file on every platform, so link it by target name -- the shared
@@ -75,7 +80,7 @@ endif()
 if(au_core_ThreadPinning)
     au_add_application(thread_pinning_example_cpp
                     SOURCES thread_pinning_example.cc
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
 endif()
 
