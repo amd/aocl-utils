@@ -45,6 +45,7 @@ import subprocess
 import sys
 
 LD_PRELOAD_SUPPORTED = platform.system() == "Linux"
+AU_VENDOR_AMD = 1
 
 
 class Failure(Exception):
@@ -274,6 +275,7 @@ def main():
     host_identity = parse_identity(host_metadata)
     print(f"host identity: {host_metadata.get('identity', '?')} "
           f"({sum(host_flags.values())} features)")
+    host_is_amd = host_identity[0] == AU_VENDOR_AMD
 
     def test_passthrough():
         _, output, error = run(args.safety_shim)
@@ -325,8 +327,14 @@ def main():
             raise Failure(f"unknown-uarch refusal was not reported: {error!r}")
         if "host's microarchitecture is not in the uarch registry" in error:
             raise Failure(f"unknown-uarch refusal blamed the host: {error!r}")
-    case("unknown uarch: identity substitution fails closed",
-         test_unknown_uarch_identity)
+    if host_is_amd:
+        case("unknown uarch: identity substitution fails closed",
+             test_unknown_uarch_identity)
+    else:
+        label = "unknown-uarch-identity"
+        reason = "AMD profile refusal path requires an AMD host"
+        skipped.append((label, reason))
+        print(f"  SKIP  {label}: {reason}")
 
     def test_rome_correctness():
         _, output, _ = run(
@@ -340,10 +348,10 @@ def main():
             raise Failure("rome retained host AVX-512F")
         # The test box is Zen3, but retain a meaningful skip for older or
         # non-AMD hosts where Rome identity is not a downward request.
-        if host_identity[0] == 1 and host_identity[4] > 3:
+        if host_is_amd and host_identity[4] > 3:
             if identity[4] != 3:
                 raise Failure(f"rome uarch was {identity[4]}, expected Zen2 (3)")
-            if identity[0] != 1:
+            if identity[0] != AU_VENDOR_AMD:
                 raise Failure("rome changed an AMD host to a non-AMD identity")
     case("rome masks features and presents a downward identity",
          test_rome_correctness)
@@ -433,7 +441,7 @@ def main():
                 args.programmatic, {"AU_CPUID_MOCK_STRICT": "0"}
             )
             check_programmatic_continue(rc, output, error)
-            if host_identity[0] == 1 and "unclassified_status=6" not in output:
+            if host_is_amd and "unclassified_status=6" not in output:
                 raise Failure(
                     "pre-Zen AMD profile did not return "
                     "AU_MOCK_ERR_IDENTITY_UNCLASSIFIED"
@@ -506,7 +514,7 @@ def main():
         cpp = parse_cpp(output)
         if cpp["avx512f"] and not c_flags.get("avx512f", False):
             raise Failure("C++ X86Cpu reported AVX-512F absent from C result")
-        if host_identity[0] == 1 and host_identity[4] > 3:
+        if host_is_amd and host_identity[4] > 3:
             if cpp["uarch"] != parse_identity(c_metadata)[4]:
                 raise Failure("C++ and C mocked uarch identities differ")
     case("C++ consumer: X86Cpu receives the masked profile", test_cpp_profile)
@@ -557,7 +565,13 @@ def main():
             check_equal(states["host"], states["reset"], f"API reset ({label})")
             if states["host"].get("avx512f") and states["rome"].get("avx512f"):
                 raise Failure(f"API Rome profile retained AVX-512F ({label})")
-    case("C API: profile, reset, and reserved CPU selector", test_api)
+    if host_is_amd:
+        case("C API: profile, reset, and reserved CPU selector", test_api)
+    else:
+        label = "c-api-rome"
+        reason = "hard-coded Rome identity case requires an AMD host"
+        skipped.append((label, reason))
+        print(f"  SKIP  {label}: {reason}")
 
     print()
     print(f"MockCpuid summary: passed={passed} failed={failed} "
