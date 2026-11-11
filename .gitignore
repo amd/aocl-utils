@@ -1,3 +1,4 @@
+# Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
 .vscode
 .ccls
 .dir-locals.el
@@ -29,7 +30,6 @@ SDK/Include/Capi/au/cpuid/au_cpuid_header_only_new.h
 docs/.doxygen
 docs/_doxygen
 docs/.sphinx
-docs/sphinx
 sanity_test/
 ```
 .cline_storage/

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2023-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,6 +32,10 @@
 
 #include <cstdlib>
 
+#ifndef TEST
+#define TEST(suite, name) void suite##_##name()
+#endif
+
 #if defined(WIN32) || defined(_WINDOWS)
 auto homeEnv = "USERPROFILE";
 #else
@@ -43,6 +47,20 @@ namespace {
 TEST(Integration, au_env_get)
 {
     EXPECT_STREQ(au_env_get(homeEnv), std::getenv(homeEnv));
+}
+
+TEST(Integration, au_env_get_null_name)
+{
+    EXPECT_EQ(au_env_get(nullptr), nullptr);
+}
+
+TEST(Integration, au_env_get_missing_name)
+{
+    // A system environment entry is split at its first '=', so this string
+    // cannot be represented as a key in the system store.
+    const auto missing_name = "AOCL_UTILS_TEST_MISSING=INVALID";
+    au_env_unset(missing_name);
+    EXPECT_STREQ(au_env_get(missing_name), "");
 }
 
 TEST(Integration, au_env_set)
@@ -148,23 +166,35 @@ TEST(Integration, au_env_is_set)
     }
 }
 
-TEST(Integration, au_env_get_pointer_outlives_mutation)
+TEST(Integration, au_env_get_pointer_survives_mutation_without_intervening_get)
 {
     /*
-     * The const char* returned by au_env_get must stay valid and readable after
-     * the key is overwritten and unset (the dangling-pointer / use-after-free
-     * scenario this fix addresses).
+     * The returned pointer refers to a per-key snapshot, not the map node, so
+     * overwriting and unsetting the backing key cannot leave it dangling.
      */
     au_env_set("STABLE_C_KEY", "c-original-value");
 
-    const char* p = au_env_get("STABLE_C_KEY");
-    EXPECT_STREQ(p, "c-original-value");
+    const char* captured = au_env_get("STABLE_C_KEY");
+    EXPECT_STREQ(captured, "c-original-value");
 
     au_env_set("STABLE_C_KEY", "c-replacement-value-that-is-much-longer");
     au_env_unset("STABLE_C_KEY");
 
     /* The earlier pointer still reads the original value. */
-    EXPECT_STREQ(p, "c-original-value");
+    EXPECT_STREQ(captured, "c-original-value");
+}
+
+TEST(Integration, au_env_get_pointers_for_different_keys_remain_independent)
+{
+    au_env_set("C_FIRST_KEY", "c-first-value");
+    au_env_set("C_SECOND_KEY", "c-second-value");
+
+    const char* first     = au_env_get("C_FIRST_KEY");
+    auto        getSecond = [] { return au_env_get("C_SECOND_KEY"); };
+    const char* second    = getSecond();
+
+    EXPECT_STREQ(first, "c-first-value");
+    EXPECT_STREQ(second, "c-second-value");
 }
 
 } // namespace

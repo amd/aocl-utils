@@ -47,7 +47,8 @@ struct CpuidRegs
                && edx == Reg.edx;
     }
 
-    /* Required for std::map key. Overflow harmless (ordering is insignificant). */
+    /* Required for std::map key. Overflow harmless (ordering is insignificant).
+     */
     bool operator<(CpuidRegs const& Reg) const
     {
         return eax + ebx + ecx + edx < Reg.eax + Reg.ebx + Reg.ecx + Reg.edx;
@@ -66,7 +67,7 @@ using ResponseT = CpuidRegs;
 using CacheLevel = CacheInfo::CacheLevel;
 using CacheType  = CacheInfo::CacheType;
 /**
- * @enum  Vendor
+ * @enum  EVendor
  * @brief CPU vendors.
  *
  * @note  Mirror of the C enum @c au_vendor_t in
@@ -147,14 +148,16 @@ class CpuidUtils
 
     /**
      * @brief   Check if package is hybrid (leaf 0x7.0 EDX[15]).
-     * @details Reports package-level heterogeneity; use getCoreType() for per-core type.
+     * @details Reports package-level heterogeneity; use getCoreType() for
+     * per-core type.
      * @return  true if Hybrid bit set, false otherwise.
      */
     bool isHybrid();
 
     /**
      * @brief   Get core type (leaf 0x1A.0 EAX[31:24]).
-     * @details Per-core query; must run on target core. Intel: 0x40=P-core, 0x20=E-core.
+     * @details Per-core query; must run on target core. Intel: 0x40=P-core,
+     * 0x20=E-core.
      * @return  Raw core-type byte; 0 if unsupported.
      */
     Uint32 getCoreType();

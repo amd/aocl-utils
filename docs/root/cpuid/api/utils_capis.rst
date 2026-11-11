@@ -1,3 +1,5 @@
+.. Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+
 .. _api_c_cpuid:
 
 Cpuid C-APIs
@@ -10,10 +12,12 @@ Cpuid C-APIs
 
 Cpuid C-APIs
 ------------
-.. doxygenfile:: cpuid.h
-   :project: aoclutils
+.. ifconfig:: 'breathe' in extensions
 
-Cpuid C-APIs Legacy
--------------------
-.. doxygenfile:: cpuid_legacy.h
-   :project: aoclutils
+   .. doxygenfile:: cpuid.h
+      :project: aoclutils
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated C API details are unavailable because the optional Breathe
+   extension is not installed.

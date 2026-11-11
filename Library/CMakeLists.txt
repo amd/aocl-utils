@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -54,14 +54,6 @@ SET(THREAD_PINNING_SRC_FILES "Core/ThreadPinning.cc"
                              "Capi/threadpinning.cc"
 )
 
-set(BASE64_SRC_FILES
-    Base64/Base64.cc
-    Base64/Base64Encoder.cc
-    Base64/Base64Decoder.cc
-    # CAPIs
-    #Capi/base64.cc
-)
-
 set(MEMORY_SRC_FILES
     Memory/BufferView.cc
 )
@@ -90,16 +82,6 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	    COMPILE_FLAGS "-mrdrnd"
 	)
 endif()
-
-set(AVX2_FILES
-  Base64/transform_avx2.cc
-)
-
-set_source_files_properties(
-  ${AVX2_FILES}
-  PROPERTIES
-    COMPILE_FLAGS "-mavx2"
-)
 
 set(CORE_SRC_FILES
   #Core/Buffer.cc
@@ -195,6 +177,13 @@ set(AU_SUBMODULE_DIRS "")
 # Check if CPUID is enabled
 if(au_cpuid_cpuid)
     list(APPEND AU_SUBMODULE_DIRS "Cpuid")
+endif()
+
+# Test-only CPUID masking shim. Masks the CPUID core, so it is gated on the same
+# switch as the module it shims. Added ahead of Tests/ because the MockCpuid
+# tests link its target and so need it to already exist.
+if(au_cpuid_cpuid AND AU_BUILD_MOCKCPUID_SHIM)
+    add_subdirectory(MockCpuid)
 endif()
 
 if(AU_BUILD_TESTS)

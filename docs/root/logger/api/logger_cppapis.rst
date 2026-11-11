@@ -1,3 +1,5 @@
+.. Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+
 .. _logger_api_cpp:
 
 Logger C++-APIs
@@ -9,27 +11,51 @@ Logger C++-APIs
 Class LoggerFactory
 -------------------
 
-.. doxygenclass:: Au::Logger::LoggerFactory
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::Logger::LoggerFactory
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.
 
 Class LogWriter
 ----------------
 
-.. doxygenclass:: Au::Logger::LogWriter
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::Logger::LogWriter
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.
 
 Class LogManager
 ----------------
 
-.. doxygenclass:: Au::Logger::LogManager
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::Logger::LogManager
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.
 
 Class Message
 -------------
 
-.. doxygenclass:: Au::Logger::Message
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::Logger::Message
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.

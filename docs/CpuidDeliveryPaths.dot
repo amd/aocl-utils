@@ -1,0 +1,53 @@
+// Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+//
+// Source for CpuidDeliveryPaths.png, referenced from IntegrationGuide.md.
+// Regenerate after any change with:
+//   dot -Tpng CpuidDeliveryPaths.dot -o CpuidDeliveryPaths.png
+digraph CpuidDelivery {
+    graph [rankdir=TB, fontname="Helvetica", nodesep=0.45, ranksep=0.5, bgcolor="transparent"];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontcolor="white", fontsize=14, penwidth=1.4, color="#0d1b2a", margin="0.18,0.12"];
+
+    labelloc="t";
+    label="AOCL-Utils CPUID: header + library delivery paths";
+    fontsize=18;
+    fontname="Helvetica-Bold";
+    // Neutral grey (not black/white) so the title stays legible on both
+    // light and dark renderer backgrounds now that the canvas is transparent.
+    fontcolor="#8b949e";
+
+    subgraph cluster_header_only {
+        label="Header-only (no library)";
+        fontname="Helvetica-Bold"; fontsize=13; fontcolor="#3d246c";
+        style="rounded"; color="#3d246c"; margin=14;
+
+        ho_hdr  [label="au_cpuid_header_only.h\n(static inline)", fillcolor="#6a4c9c"];
+        ho_lib  [label="inlined into your TU\nno library, no link step", fillcolor="#3d246c"];
+        ho_hdr -> ho_lib [color="#3d246c", penwidth=1.6];
+    }
+
+    subgraph cluster_c_only {
+        label="C API, no libstdc++";
+        fontname="Helvetica-Bold"; fontsize=13; fontcolor="#0d5c63";
+        style="rounded"; color="#0d5c63"; margin=14;
+
+        co_hdr [label="cpuid.h  (C API)", fillcolor="#17a2b8"];
+        co_lib [label="libaoclutils_c.so / .a\npure C, zero libstdc++", fillcolor="#0d5c63"];
+        co_hdr -> co_lib [color="#0d5c63", penwidth=1.6];
+    }
+
+    subgraph cluster_full {
+        label="C + C++ API";
+        fontname="Helvetica-Bold"; fontsize=13; fontcolor="#a15c00";
+        style="rounded"; color="#a15c00"; margin=14;
+
+        f_hdr [label="cpuid.h (C)  +  X86Cpu.hh (C++)", fillcolor="#f39c12"];
+        f_lib [label="libau_cpuid.so / .a  (CPUID only)\nor\nlibaoclutils.so / .a  (umbrella)", fillcolor="#a15c00"];
+        f_hdr -> f_lib [color="#a15c00", penwidth=1.6];
+    }
+
+    core [label="au_cpuid_* core  —  CPUID instruction decode", shape=box, style="rounded,filled", fillcolor="#0a2540", fontsize=14, width=6];
+
+    ho_lib -> core [color="#3d246c", penwidth=1.6];
+    co_lib -> core [color="#0d5c63", penwidth=1.6];
+    f_lib  -> core [color="#a15c00", penwidth=1.6];
+}

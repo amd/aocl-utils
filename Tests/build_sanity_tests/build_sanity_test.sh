@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (C) 2022-2024, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -78,25 +78,25 @@ Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --version >>$log
 
 set -e
 # configure the project
-Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -DAU_ENABLE_OLD_API=TRUE -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
-    -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER 2>&1 >$log_folder/configure_make.log
+Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
+    -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER >$log_folder/configure_make.log 2>&1
 
-Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -G Ninja -DAU_ENABLE_OLD_API=TRUE -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
-    -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER 2>&1 >$log_folder/configure_ninja.log
+Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake -G Ninja -DAU_BUILD_TESTS=TRUE -DAU_BUILD_EXAMPLES=TRUE -DCMAKE_BUILD_TYPE=RELEASE \
+    -B Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja -DCMAKE_C_COMPILER=/usr/bin/$C_COMPILER -DCMAKE_CXX_COMPILER=/usr/bin/$CXX_COMPILER >$log_folder/configure_ninja.log 2>&1
 
 # build the project
 touch build_make.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --build \
-    Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make --config Release -j 2>&1 >$log_folder/build_make.log
+    Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make --config Release -j >$log_folder/build_make.log 2>&1
 
 touch build_ninja.log
 Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/cmake --build \
-    Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja --config Release -j 2>&1 >$log_folder/build_ninja.log
+    Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_ninja --config Release -j >$log_folder/build_ninja.log 2>&1
 
 # test the project
 touch test_make.log
 export PYTHONPYCACHEPREFIX=Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make; Tests/sanity_test/cmake-$CMAKE_VERSION.0-linux-x86_64/bin/ctest -C release \
-    --test-dir Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make 2>&1 >$log_folder/test_make.log
+    --test-dir Tests/sanity_test/cmake-$CMAKE_VERSION/build-${C_COMPILER}_make >$log_folder/test_make.log 2>&1
 #touch test_ninja.log
 #ninja test
 

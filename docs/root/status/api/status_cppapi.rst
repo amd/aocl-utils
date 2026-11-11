@@ -1,3 +1,5 @@
+.. Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+
 .. _api_cpp_status:
 
 Status C++-APIs
@@ -8,9 +10,15 @@ Status C++-APIs
 
 Class Status
 ------------
-.. doxygenclass:: Au::Status
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::Status
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.
 
 .. Extra Status Functions
 .. ----------------------
@@ -44,6 +52,12 @@ Class Status
 
 Class GenericError
 ------------------
-.. doxygenclass:: Au::GenericError
-   :project: aoclutils
-   :members-only:
+.. ifconfig:: 'breathe' in extensions
+
+   .. doxygenclass:: Au::GenericError
+      :project: aoclutils
+      :members-only:
+
+.. ifconfig:: 'breathe' not in extensions
+
+   Generated details for this class require the optional Breathe extension.

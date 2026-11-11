@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,7 +30,6 @@
 
 #include "Au/Au.hh"
 
-#include <list>
 #include <map>
 #include <mutex>
 #include <string_view>
@@ -50,12 +49,13 @@ class Environ
      *
      * @param[in]   key  Readonly reference to a String like object
      *
-     * @return  String  Environtment Variables value or a null string
-     */
-    /*
-     * The returned view aliases a value string held in append-only storage that
-     * is never freed or reallocated for the process lifetime, so it stays valid
-     * across any later set()/unset()/init() and across threads.
+     * @return  StringView of the value, or an empty string view ("") if the
+     *          key is not set — never a null view. The returned view is valid
+     *          until the next get() for the same key on this Environ instance
+     *          and thread, thread exit, or destruction of this Environ. Other
+     *          instances, other keys, and concurrent set()/unset()/init() calls
+     *          do not invalidate it. Do not use the view from another thread;
+     *          copy it to retain the value beyond these limits.
      */
     StringView const get(StringView key) const;
 
@@ -92,23 +92,18 @@ class Environ
     bool exists(StringView const& key) const;
 
   private:
+    friend class Env;
+
     /*
-     * Internal setter. The caller must already hold m_lock; it appends the value
-     * to the never-freed pool and (re)points the key, so it must not be called
-     * through the locking public setters (m_lock is non-recursive).
+     * Internal setter. The caller must already hold m_lock; it mutates the map
+     * directly, so it must not be called through the locking public setters
+     * (m_lock is non-recursive).
      */
     void _set(String const& key, String const& val);
 
-    /*
-     * Append-only storage that owns every value string ever handed out. Entries
-     * are never erased, moved, or reallocated for the process lifetime, which is
-     * what keeps a StringView/const char* returned by get() valid after a later
-     * set()/unset()/init(). std::list is used because it guarantees stable node
-     * (and therefore character-buffer) addresses.
-     */
-    using value_poolT = std::list<String>;
-    using env_mapT    = std::map<String, const String*, std::less<>>;
-    value_poolT        m_value_pool;
+    using env_mapT = std::map<String, String, std::less<>>;
+    env_mapT& _entries() noexcept { return m_environ; }
+
     env_mapT           m_environ;
     mutable std::mutex m_lock;
     const String       m_empty_string{ "" };
@@ -133,7 +128,12 @@ class Env
      *
      * @param[in]    key  Name of the key to get
      *
-     * return StringView of the value for given 'key'
+     * @return  StringView of the value, or an empty string view ("") if the
+     *          key is not set — never a null view. The returned view is valid
+     *          until the next get() for the same key on the same thread or
+     *          until that thread exits. Calls for other keys and concurrent
+     *          set()/unset()/init() do not invalidate it. Do not use the view
+     *          from another thread; copy it to retain the value longer.
      */
     static StringView const get(StringView const& key);
 

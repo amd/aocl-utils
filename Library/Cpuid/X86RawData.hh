@@ -37,24 +37,30 @@ using EFlag = ECpuidFlag;
 
 /**
  * @brief Thin C++ wrapper over the pure-C CPUID core (cpuid_core.h).
- * @details Holds au_cpu_info_t handle; enum casts are identity. ABI: one pointer (unique_ptr<Impl>).
+ * @details Holds au_cpu_info_t handle; enum casts are identity. ABI: one
+ * pointer (unique_ptr<Impl>).
  */
 class X86Cpu::Impl
 {
   public:
-    /* Test/mock constructor: routes core cpuid reads through injected CpuidUtils. */
+    /* Test/mock constructor: routes core cpuid reads through injected
+     * CpuidUtils. */
     explicit Impl(CpuidUtils* cUtils);
     Impl();
     Impl(const Impl& other)            = default;
     Impl& operator=(const Impl& other) = default;
     ~Impl()                            = default;
 
-    /* Resolve CPUID for cpu_num. Delegates all selection/pinning to au_cpuid_init.
-     * Returns false only on strict failure (specific core out-of-mask). */
+    /* Resolve CPUID for cpu_num. Delegates all selection/pinning to
+     * au_cpuid_init. Returns false only on strict failure (specific core
+     * out-of-mask). */
     bool update(int cpu_num, bool strict);
 
     /* Re-resolve on last cpu_num, non-strict. */
     bool update();
+
+    bool resolved() const { return m_resolved; }
+    void setResolved(bool value) { m_resolved = value; }
 
     bool isIntel() const;
     bool isAMD() const;
@@ -79,7 +85,8 @@ class X86Cpu::Impl
                                  void*            ctx);
 
     au_cpu_info_t m_info{};
-    CpuidUtils*   m_cutils = nullptr; /* mock object, not owned */
+    CpuidUtils*   m_cutils   = nullptr; /* mock object, not owned */
+    bool          m_resolved = true;
 };
 
 } // namespace Au

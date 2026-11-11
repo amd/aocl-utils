@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -35,16 +35,23 @@ if(au_cpuid_cpuid)
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
 
-    au_add_application(cpuid_deprecated_api_example_c
-                    SOURCES cpuid_deprecated_api_example.c
-                    LIBS ${AU_LIBS}
-                    INCLUDES ${AU_INCLUDE_DIRS})
-
     # Header-only variant: includes cpuid_inline.h and links NOTHING
     # (no LIBS on purpose) -- proves the inline entry header is self-contained.
     au_add_application(cpuid_header_only_example_c
                     SOURCES cpuid_header_only_example.c
                     INCLUDES ${AU_INCLUDE_DIRS})
+
+    # Feature-masked dispatch. Ordinary consumer source, linked against the
+    # test-only shim instead of the real library, so AU_CPUID_MOCK_PROFILE can
+    # drive it down its fallback path. Gated on the shim option: the target does not
+    # exist in a default build, and the examples build must not gain a
+    # dependency on it.
+    if(AU_BUILD_MOCKCPUID_SHIM AND TARGET aoclutils_mock_shared)
+        au_add_application(cpuid_mockcpuid_example_c
+                        SOURCES cpuid_mockcpuid_example.c
+                        LIBS aoclutils_mock_shared aoclutils
+                        INCLUDES ${AU_INCLUDE_DIRS})
+    endif()
 endif()
 
 # Only build Logger examples if feature is enabled
@@ -61,12 +68,12 @@ if(au_core_ThreadPinning)
     if (NOT WIN32)
         au_add_application(thread_pinning_example_c
                     SOURCES thread_pinning_example_linux.c
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
     else()
         au_add_application(thread_pinning_example_c
                     SOURCES thread_pinning_example_windows.c
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
     endif()
 endif()
@@ -74,7 +81,6 @@ endif()
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(au_cpuid_cpuid)
         add_dependencies(cpuid_example_c aoclutils au_cpuid)
-        add_dependencies(cpuid_deprecated_api_example_c aoclutils au_cpuid)
     endif()
     if(au_core_Logger)
         add_dependencies(logger_demo_c aoclutils)

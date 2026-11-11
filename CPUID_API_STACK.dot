@@ -1,0 +1,68 @@
+// Copyright (C) 2026, Advanced Micro Devices. All rights reserved.
+//
+// Source for CPUID_API_STACK.png, referenced from Readme.md.
+// Regenerate after any change with:
+//   dot -Tpng CPUID_API_STACK.dot -o CPUID_API_STACK.png
+//
+// Deliberately NOT a single linear stack: the C API and C++ API are two
+// independent, parallel consumers of the same C core (au_cpuid_init /
+// au_cpuid_info_*), not layered on top of one another.
+digraph CpuidApiStack {
+    graph [fontname="Helvetica", bgcolor="transparent"];
+    node [shape=plain, fontname="Helvetica"];
+
+    stack [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="4" CELLPADDING="8">
+          <TR>
+            <TD>
+              <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="4" CELLPADDING="8">
+                <TR>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_is_amd</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_get_vendor</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zen</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zenplus</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zen2</FONT></TD>
+                </TR>
+                <TR>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zen3</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zen4</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_arch_is_zen5</FONT></TD>
+                  <TD BGCOLOR="#1B959E" STYLE="ROUNDED"><FONT COLOR="white">au_cpuid_has_flags</FONT></TD>
+                  <TD></TD>
+                </TR>
+                <TR>
+                  <TD BGCOLOR="#1B959E" COLSPAN="5"><FONT COLOR="white" POINT-SIZE="18">Capi</FONT></TD>
+                </TR>
+              </TABLE>
+            </TD>
+            <TD>
+              <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="4" CELLPADDING="8">
+                <TR>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">Constructor</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isAMD</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isIntel</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isX86_64v2</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isX86_64v3</FONT></TD>
+                </TR>
+                <TR>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isX86_64v4</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">hasFlags</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">isUarch</FONT></TD>
+                  <TD BGCOLOR="#FA8006" STYLE="ROUNDED"><FONT COLOR="white">getVendorInfo</FONT></TD>
+                  <TD></TD>
+                </TR>
+                <TR>
+                  <TD BGCOLOR="#FA8006" COLSPAN="5"><FONT COLOR="white" POINT-SIZE="18">Cpp api</FONT></TD>
+                </TR>
+              </TABLE>
+            </TD>
+          </TR>
+          <TR>
+            <TD BGCOLOR="#0B3D57" COLSPAN="2"><FONT COLOR="white" POINT-SIZE="18">C Core  (au_cpuid_init / au_cpuid_info_*)</FONT></TD>
+          </TR>
+          <TR>
+            <TD BGCOLOR="#002060" COLSPAN="2"><FONT COLOR="white" POINT-SIZE="20">CPUID INSTRUCTION</FONT></TD>
+          </TR>
+        </TABLE>
+    >];
+}

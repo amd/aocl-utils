@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2025, Advanced Micro Devices. All rights reserved.
+# Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -32,6 +32,11 @@ list(APPEND AU_INCLUDE_DIRS ${AUROOT}/include)
 link_directories(${AUROOT}/lib)
 include(au_examples)
 
+# Thread-pinning examples call the platform thread APIs directly. Keep this
+# target-based so CMake selects -pthread, -lpthread, or no extra flag as
+# appropriate for the configured platform and toolchain.
+find_package(Threads REQUIRED)
+
 # In-tree the umbrella is a CMake target and resolves to the correct
 # library file on every platform, so link it by target name -- the shared
 # umbrella when present, else the static-only umbrella. Out-of-tree
@@ -57,11 +62,6 @@ if(au_cpuid_cpuid)
                     LIBS ${AU_LIBS}
                     INCLUDES ${AU_INCLUDE_DIRS})
 
-    au_add_application(cpuid_deprecated_api_example_cpp
-                    SOURCES cpuid_deprecated_api_example.cc
-                    LIBS ${AU_LIBS}
-                    INCLUDES ${AU_INCLUDE_DIRS})
-
     au_add_application(cpuid_all_flags_example_cpp
                     SOURCES cpuid_all_flags_example.cc
                     LIBS ${AU_LIBS}
@@ -80,7 +80,7 @@ endif()
 if(au_core_ThreadPinning)
     au_add_application(thread_pinning_example_cpp
                     SOURCES thread_pinning_example.cc
-                    LIBS ${AU_LIBS}
+                    LIBS ${AU_LIBS} Threads::Threads
                     INCLUDES ${AU_INCLUDE_DIRS})
 endif()
 
@@ -88,7 +88,6 @@ endif()
 if(AU_BUILD_EXAMPLES AND AU_BUILD_SHARED_LIBS)
     if(au_cpuid_cpuid)
         add_dependencies(cpuid_example_cpp aoclutils au_cpuid)
-        add_dependencies(cpuid_deprecated_api_example_cpp aoclutils au_cpuid)
         add_dependencies(cpuid_all_flags_example_cpp aoclutils au_internal_core)
     endif()
     if(au_core_Logger)

@@ -157,15 +157,6 @@ if (${EXISTS__})
     )
 endif()
 
-#au_cc_test(Base64Test
-#    DIRECTORY
-#        .
-#    SOURCES
-#        Base64Test.cc
-#    DEPENDS
-#        au::base64
-#)
-
 if(au_cpuid_cpuid)
     au_cc_test(CpuidTest
     SOURCES
@@ -201,6 +192,10 @@ if(au_cpuid_cpuid)
         add_test(NAME ${__caseName}
             COMMAND ${__caseName} ${PROJECT_SOURCE_DIR})
     endforeach()
+endif()
+
+if(AU_BUILD_MOCKCPUID_SHIM AND au_cpuid_cpuid)
+    add_subdirectory(MockCpuid)
 endif()
 ##########
 # Dynamic Loader Tests

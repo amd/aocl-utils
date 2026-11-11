@@ -35,6 +35,5 @@
 #define AU_CPUID_IMPLEMENTATION
 
 #include "Capi/au/cpuid/cpuid.h"
-#include "Capi/au/cpuid/cpuid_legacy.h"
 
 #endif /* __AU_CPUID_INLINE_H__ */

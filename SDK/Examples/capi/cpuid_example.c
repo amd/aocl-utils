@@ -27,7 +27,7 @@
  */
 
 /* Links AOCL-Utils library (libaoclutils or libaoclutils_c). For header-only, see cpuid_header_only_example.c. */
-#include "Capi/au/cpuid/cpuid_shared.h"
+#include "Capi/au/cpuid/cpuid.h"
 
 #include <stdio.h>
 #include <string.h>

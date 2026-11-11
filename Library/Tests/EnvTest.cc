@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022, Advanced Micro Devices. All rights reserved.
+ * Copyright (C) 2022-2026, Advanced Micro Devices. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,6 +34,11 @@
 #include <cstdlib>
 #include <string>
 #include <thread>
+#include <vector>
+
+#ifndef TEST
+#define TEST(suite, name) void suite##_##name()
+#endif
 
 #if defined(WIN32) || defined(_WINDOWS)
 auto homeEnv = "USERPROFILE";
@@ -91,13 +96,15 @@ TEST(Environ, checkInit)
 
 TEST(Environ, setExistingUserEnv)
 {
-    auto orig_home = Env::get(homeEnv);
-    auto dummytxt  = "abcd";
+    // A same-key get intervenes below, so retain the original in owning
+    // storage.
+    String orig_home{ Env::get(homeEnv) };
+    auto   dummytxt = "abcd";
 
     Env::set(homeEnv, dummytxt);
     EXPECT_EQ(Env::get(homeEnv), dummytxt);
 
-    Env::set(homeEnv, String(orig_home));
+    Env::set(homeEnv, orig_home);
     EXPECT_EQ(Env::get(homeEnv), orig_home);
 }
 
@@ -156,7 +163,8 @@ TEST(Environ, checkSystemEnv)
     // modifications to Userenv
     // should not change system env
 
-    auto orig_home = Env::get(homeEnv);
+    // Same-key gets intervene before restore, so retain the original value.
+    String orig_home{ Env::get(homeEnv) };
 
     Env::set(homeEnv, "abcd");
     EXPECT_STREQ(Env::get(homeEnv).data(), "abcd");
@@ -165,7 +173,7 @@ TEST(Environ, checkSystemEnv)
     // cached values.
     EXPECT_STRNE(Env::get(homeEnv).data(), std::getenv(homeEnv));
 
-    Env::set(homeEnv, orig_home.data());
+    Env::set(homeEnv, orig_home);
     EXPECT_STREQ(Env::get(homeEnv).data(), std::getenv(homeEnv));
 }
 
@@ -185,10 +193,10 @@ TEST(Environ, checkScopedString)
     EXPECT_STREQ(Env::get("SWEETHOME").data(), "yes-it-is-sweet");
 }
 
-TEST(Environ, getViewOutlivesMutation)
+TEST(Environ, getViewSurvivesMutationWithoutInterveningGet)
 {
-    // A view returned by get() must keep reading its original value even after
-    // the key is overwritten, unset, and the environment re-initialised.
+    // A view aliases a per-key snapshot, so mutating the backing map does not
+    // invalidate it until this thread gets the same key again.
     Env::set("STABLE_KEY", "original-value");
 
     StringView captured = Env::get("STABLE_KEY");
@@ -208,13 +216,75 @@ TEST(Environ, getViewOutlivesMutation)
     EXPECT_STREQ(captured.data(), "original-value");
 }
 
+TEST(Environ, getViewsForDifferentKeysRemainIndependent)
+{
+    Env::set("FIRST_KEY", "first-value");
+    Env::set("SECOND_KEY", "second-value");
+
+    StringView first     = Env::get("FIRST_KEY");
+    auto       getSecond = [] { return Env::get("SECOND_KEY"); };
+    StringView second    = getSecond();
+
+    EXPECT_EQ(first, "first-value");
+    EXPECT_EQ(second, "second-value");
+}
+
+TEST(Environ, getViewsForDifferentInstancesRemainIndependent)
+{
+    Environ first_env;
+    Environ second_env;
+    first_env.set("SHARED_KEY", "first-instance-value");
+    second_env.set("SHARED_KEY", "second-instance-value");
+
+    StringView first  = first_env.get("SHARED_KEY");
+    StringView second = second_env.get("SHARED_KEY");
+
+    EXPECT_EQ(first, "first-instance-value");
+    EXPECT_EQ(second, "second-instance-value");
+}
+
+TEST(Environ, concurrentUserMutationPreservesSystemFallback)
+{
+    const char* system_value = std::getenv(homeEnv);
+    ASSERT_NE(system_value, nullptr);
+    ASSERT_NE(*system_value, '\0');
+    Env::unset(homeEnv);
+
+    constexpr int       kIters = 100000;
+    std::atomic<bool>   go{ false };
+    std::atomic<size_t> missing{ 0 };
+
+    std::thread writer([&] {
+        while (!go.load(std::memory_order_acquire)) {
+        }
+        for (int i = 0; i < kIters; ++i) {
+            Env::set(homeEnv, "override");
+            Env::unset(homeEnv);
+        }
+    });
+    std::thread reader([&] {
+        go.store(true, std::memory_order_release);
+        for (int i = 0; i < kIters; ++i) {
+            if (Env::get(homeEnv).empty())
+                missing.fetch_add(1, std::memory_order_relaxed);
+        }
+    });
+
+    writer.join();
+    reader.join();
+    EXPECT_EQ(missing.load(), 0U);
+}
+
 TEST(Environ, concurrentSetUnsetGetIsSafe)
 {
     // Concurrent readers and mutators on the same key must not race, crash, or
-    // hand back a dangling view. Meant to run clean under TSan and ASan.
+    // hand back a dangling view. Each reader reads only its own get() result
+    // (its private per-key snapshot) while other threads churn the map, so
+    // this must be clean under TSan and ASan.
     Env::set("CONC_KEY", "seed");
 
-    constexpr int    kIters = 20000;
+    constexpr int     kIters   = 20000;
+    constexpr int     kReaders = 4;
     std::atomic<bool> go{ false };
 
     auto waitGo = [&] {
@@ -222,16 +292,23 @@ TEST(Environ, concurrentSetUnsetGetIsSafe)
         }
     };
 
-    std::thread reader([&] {
-        waitGo();
-        for (int i = 0; i < kIters; ++i) {
-            StringView v = Env::get("CONC_KEY");
-            if (!v.empty()) {
-                volatile char c = v.data()[0]; // touch first byte only when present
-                (void)c;
+    std::vector<std::thread> readers;
+    for (int r = 0; r < kReaders; ++r) {
+        readers.emplace_back([&] {
+            waitGo();
+            for (int i = 0; i < kIters; ++i) {
+                StringView v = Env::get("CONC_KEY");
+                if (!v.empty()) {
+                    // Read every byte of this thread's own snapshot; a shared
+                    // or dangling buffer would surface as a race/UAF here.
+                    volatile char c = 0;
+                    for (char ch : v)
+                        c = ch;
+                    (void)c;
+                }
             }
-        }
-    });
+        });
+    }
     std::thread setter([&] {
         waitGo();
         for (int i = 0; i < kIters; ++i)
@@ -244,7 +321,8 @@ TEST(Environ, concurrentSetUnsetGetIsSafe)
     });
 
     go.store(true, std::memory_order_release);
-    reader.join();
+    for (auto& t : readers)
+        t.join();
     setter.join();
     unsetter.join();
 

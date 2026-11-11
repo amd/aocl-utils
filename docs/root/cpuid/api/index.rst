@@ -8,3 +8,4 @@ Cpuid API Reference
 
     utils_capis.rst
     utils_cppapis.rst
+    legacy_api_migration.rst

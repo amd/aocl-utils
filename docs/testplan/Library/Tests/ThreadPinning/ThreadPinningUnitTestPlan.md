@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026, Advanced Micro Devices. All rights reserved. -->
+
 # The Threadpinning module testplan
 
 ## The thread pinning module
@@ -16,8 +18,9 @@ To have a compreshensive test coverage for the threadpinning API
 ## APIs tested
 
 ``` bash
-* ThreadPinning::pinThreads()       -- Cpp API   -- External API
-* Affinity::getAffinityVector()     -- Cpp API   -- Internal Using mock tests
+* Au::ThreadPinning::pinThreads()   -- C++ API   -- External API
+* Au::AffinityVector::getAffinityVector()
+                                    -- Internal implementation used by mock tests
 * au_pin_threads_core()             -- C API     -- External API
 * au_pin_threads_logical()          -- C API     -- External API
 * au_pin_threads_spread()           -- C API     -- External API
@@ -34,8 +37,10 @@ combinations of 5 variables are tested. They are:
 * **Hyperthreading**
 * **Cache sharing**
 
-The below tests tests getAffinityVector() API which is an internal API by creating a mock environment described by each entry in the test matrix.
-and verifies that the affinity vector returned is as expected.
+The mock tests exercise the internal `Au::AffinityVector` implementation by
+creating the environment described by each matrix entry and verifying the
+resulting affinity vector. `AffinityVector` is not part of the public SDK; the
+public C++ entry point is `Au::ThreadPinning::pinThreads()`.
 
 | ID | No. of core groups | Hyperthreading | Cache groups | No of threads | Pinning strategy |
 |----|--------------------|----------------|--------------|---------------|------------------|
